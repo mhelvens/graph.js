@@ -6,7 +6,9 @@ module.exports = function (grunt) {
 
 	[ 'grunt-contrib-uglify',
 	  'grunt-contrib-compress',
-	  'grunt-contrib-watch'
+	  'grunt-contrib-watch',
+	  'grunt-contrib-copy',
+	  'grunt-karma'
 	].map(grunt.loadNpmTasks);
 
 
@@ -48,6 +50,25 @@ module.exports = function (grunt) {
 		smallBanner: "/* <%= pkg.name %> - v<%= pkg.version %> - <%= grunt.template.today(\"yyyy-mm-dd\") %> */",
 
 
+		////////////////////////////////////////
+		//// Copying file to dist directory ////
+		////////////////////////////////////////
+
+
+		copy: {
+			dist: {
+				files: [
+					{
+						expand: true,
+						flatten: true,
+						src:  "<%= dirs.js %>/<%= pkg.name %>.js",
+						dest: "<%= dirs.build %>"
+					}
+				]
+			}
+		},
+
+
 		//////////////////////
 		//// Minification ////
 		//////////////////////
@@ -78,14 +99,26 @@ module.exports = function (grunt) {
 				src:     "<%= dirs.build %>/<%= pkg.name %>.min.js",
 				dest:    "<%= dirs.build %>/<%= pkg.name %>.min.js.gz"
 			}
-		}
+		},
 
 
 		/////////////////
 		//// Testing ////
 		/////////////////
 
-		// TODO: I myself run karma/jasmine through WebStorm; I have not yet succeeded in running it through Grunt
+
+		karma: {
+			dev:  {
+				options: {
+					configFile: 'karma.dev-conf.js'
+				}
+			},
+			dist: {
+				options: {
+					configFile: 'karma.dist-conf.js'
+				}
+			}
+		}
 
 
 	});
@@ -96,6 +129,10 @@ module.exports = function (grunt) {
 	////////////////////////
 
 
-	grunt.registerTask("dist", [ "uglify:dist", "compress:dist" ]);
+	grunt.registerTask("test:dev", [ "karma:dev" ]);
+
+	grunt.registerTask("test:dist", [ "karma:dist" ]);
+
+	grunt.registerTask("dist", [ "copy:dist", "uglify:dist", "compress:dist" ]);
 
 };
