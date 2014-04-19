@@ -1,4 +1,4 @@
-js-graph
+js-graph [![Build Status](https://travis-ci.org/mhelvens/js-graph.svg?branch=master)](https://travis-ci.org/mhelvens/js-graph)
 ========
 
 `js-graph` is a javascript library for storing arbitrary data in mathematical (di)graphs,
