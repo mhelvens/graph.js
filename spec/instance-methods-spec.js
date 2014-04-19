@@ -261,6 +261,7 @@ define(["js-graph", "matchers"], function (Graph) {/////////////////////////////
 		describeMethod('eachVertexFrom', function () {
 
 			it("throws an error if the given vertex does not exist", function () {
+				expectItWhenBoundWith('newKey', function () {}).toThrow();
 				expectItWhenBoundWith('newKey', function () {}).toThrowSpecific(Graph.VertexNotExistsError, {'newKey': undefined});
 			});
 
@@ -293,6 +294,7 @@ define(["js-graph", "matchers"], function (Graph) {/////////////////////////////
 		describeMethod('eachVertexTo', function () {
 
 			it("throws an error if the given vertex does not exist", function () {
+				expectItWhenBoundWith('newKey', function () {}).toThrow();
 				expectItWhenBoundWith('newKey', function () {}).toThrowSpecific(Graph.VertexNotExistsError, {'newKey': undefined});
 			});
 
@@ -353,6 +355,8 @@ define(["js-graph", "matchers"], function (Graph) {/////////////////////////////
 
 		function it_throwsErrorIfVertexExists() {
 			it("throws an error if a vertex with the given key already exists", function () {
+				expectItWhenBoundWith('k1').toThrow();
+				expectItWhenBoundWith('k2').toThrow();
 				expectItWhenBoundWith('k1').toThrowSpecific(Graph.VertexExistsError, { vertices: {'k1': 'oldValue1'} });
 				expectItWhenBoundWith('k2').toThrowSpecific(Graph.VertexExistsError, { vertices: {'k2': undefined} });
 			});
@@ -360,14 +364,19 @@ define(["js-graph", "matchers"], function (Graph) {/////////////////////////////
 
 		function it_throwsErrorIfVertexDoesNotExist() {
 			it("throws an error if a vertex with the given key does not exist", function () {
+				expectItWhenBoundWith('newKey').toThrow();
 				expectItWhenBoundWith('newKey').toThrowSpecific(Graph.VertexNotExistsError, { vertices: {'newKey': undefined} });
 			});
 		}
 
 		function it_throwsErrorIfEdgesAreConnected() {
 			it("throws an error if there are edges connected to that vertex", function () {
+				expectItWhenBoundWith('k2').toThrow();
+				expectItWhenBoundWith('k3').toThrow();
+				expectItWhenBoundWith('k4').toThrow();
 				expectItWhenBoundWith('k2').toThrowSpecific(Graph.HasConnectedEdgesError, { key: 'k2' });
 				expectItWhenBoundWith('k3').toThrowSpecific(Graph.HasConnectedEdgesError, { key: 'k3' });
+				expectItWhenBoundWith('k4').toThrowSpecific(Graph.HasConnectedEdgesError, { key: 'k4' });
 			});
 		}
 
@@ -561,6 +570,8 @@ define(["js-graph", "matchers"], function (Graph) {/////////////////////////////
 
 		function it_throwsErrorIfEdgeExists() {
 			it("throws an error if an edge with the given keys already exists", function () {
+				expectItWhenBoundWith('k2', 'k3').toThrow();
+				expectItWhenBoundWith('k3', 'k4').toThrow();
 				expectItWhenBoundWith('k2', 'k3').toThrowSpecific(Graph.EdgeExistsError, { edges: {'k2': {'k3': 'oldValue23'}} });
 				expectItWhenBoundWith('k3', 'k4').toThrowSpecific(Graph.EdgeExistsError, { edges: {'k3': {'k4': undefined}} });
 			});
@@ -568,12 +579,16 @@ define(["js-graph", "matchers"], function (Graph) {/////////////////////////////
 
 		function it_throwsErrorIfEdgeDoesNotExist() {
 			it("throws an error if an edge with the given keys does not exist", function () {
+				expectItWhenBoundWith('k1', 'k2').toThrow();
 				expectItWhenBoundWith('k1', 'k2').toThrowSpecific(Graph.EdgeNotExistsError, { edges: {'k1': {'k2': undefined}} });
 			});
 		}
 
 		function it_throwsErrorIfVerticesDoNotExist() {
 			it("throws an error if the required vertices do not exist", function () {
+				expectItWhenBoundWith('newKey1', 'newKey2').toThrow();
+				expectItWhenBoundWith('k1', 'newKey3').toThrow();
+				expectItWhenBoundWith('newKey4', 'k2').toThrow();
 				expectItWhenBoundWith('newKey1', 'newKey2').toThrowSpecific(Graph.VertexNotExistsError, { vertices: {'newKey1': undefined, 'newKey2': undefined} });
 				expectItWhenBoundWith('k1', 'newKey3').toThrowSpecific(Graph.VertexNotExistsError, { vertices: {'newKey3': undefined} });
 				expectItWhenBoundWith('newKey4', 'k2').toThrowSpecific(Graph.VertexNotExistsError, { vertices: {'newKey4': undefined} });
@@ -1094,6 +1109,41 @@ define(["js-graph", "matchers"], function (Graph) {/////////////////////////////
 		});
 
 
+		describe("event subscription methods", function () {
+
+			it("register each handler only once", function () {
+				var counter = 0;
+				var handler = function () {
+					++counter;
+				};
+				graph.onAddVertex(handler);
+				graph.onAddVertex(handler);
+				graph.addNewVertex('newKey', 'newValue');
+				expect(counter).toBe(1);
+			});
+
+			it("quietly ignore multiple removals of the same handler", function () {
+				var counter = 0;
+				graph.onAddVertex(function () { // adding a handler before the main handler
+					++counter;
+				});
+				var removeCallback = graph.onAddVertex(function () {
+					counter += 10;
+				});
+				graph.onAddVertex(function () { // adding a handler after the main handler
+					++counter;
+				});
+				graph.addNewVertex('newKey', 'newValue');
+				expect(counter).toBe(12);
+				removeCallback();
+				removeCallback();
+				graph.addNewVertex('newKey2', 'newValue2');
+				expect(counter).toBe(14); // meaning: the other two handlers are not accidentally removed
+			});
+
+		});
+
+
 		// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
 
 
@@ -1216,6 +1266,7 @@ define(["js-graph", "matchers"], function (Graph) {/////////////////////////////
 				//        |     /
 				//       n23 <-"
 
+				expectItWhenBoundWith(function () {}).toThrow();
 				expectItWhenBoundWith(function () {}).toThrowSpecific(Graph.CycleError, {});
 
 				try {
@@ -1234,6 +1285,7 @@ define(["js-graph", "matchers"], function (Graph) {/////////////////////////////
 
 				graph.createEdge('n1', 'n1');
 
+				expectItWhenBoundWith(function () {}).toThrow();
 				expectItWhenBoundWith(function () {}).toThrowSpecific(Graph.CycleError, {});
 
 				try {
