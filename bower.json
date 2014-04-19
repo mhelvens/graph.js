@@ -15,9 +15,9 @@
 		".gitignore"
 	],
 	"dependencies"   : {
-		"requirejs": "~2.1.10"
 	},
 	"devDependencies": {
+		"requirejs": "~2.1.10",
 		"jasmine": "~2.0.0"
 	}
 }
