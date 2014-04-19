@@ -1,0 +1,23 @@
+{
+	"name"           : "js-graph",
+	"version"        : "0.1.0",
+	"description"    : "a javascript library for storing arbitrary data in mathematical (di)graphs, as well as traversing and analyzing them in various ways",
+	"ignore"         : [
+		"lib",
+		"spec",
+		"src",
+		"node_modules",
+		"bower_components",
+		"Gruntfile.js",
+		"package.json",
+		"bower.json",
+		".travis.yml",
+		".gitignore"
+	],
+	"dependencies"   : {
+		"requirejs": "~2.1.10"
+	},
+	"devDependencies": {
+		"jasmine": "~2.0.0"
+	}
+}
