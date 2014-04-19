@@ -21,4 +21,4 @@ require.config({
 	}
 });
 
-console.info('running development unit-tests');
+console.info('running distribution unit-tests');

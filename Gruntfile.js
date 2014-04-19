@@ -5,8 +5,8 @@ module.exports = function (grunt) {
 	//// loading grunt plugins
 
 	[ 'grunt-contrib-uglify',
-	  'grunt-contrib-watch',
-	  'grunt-karma'
+	  'grunt-contrib-compress',
+	  'grunt-contrib-watch'
 	].map(grunt.loadNpmTasks);
 
 
@@ -29,7 +29,7 @@ module.exports = function (grunt) {
 		//////////////////
 
 
-		pkg: grunt.file.readJSON("package.json"),
+		pkg:         grunt.file.readJSON("package.json"),
 		banner: "\n" +
 		        "/*\n" +
 		        " * -------------------------------------------------------\n" +
@@ -45,6 +45,7 @@ module.exports = function (grunt) {
 		        " * -------------------------------------------------------\n" +
 		        " */\n" +
 		        "\n",
+		smallBanner: "/* <%= pkg.name %> - v<%= pkg.version %> - <%= grunt.template.today(\"yyyy-mm-dd\") %> */",
 
 
 		//////////////////////
@@ -53,16 +54,38 @@ module.exports = function (grunt) {
 
 
 		uglify: {
-			options: {
-				mangle: false,
-				banner: "<%= banner %>"
-			},
-			dist:    {
-				files: {
+			dist: {
+				options: {
+					banner:    "<%= smallBanner %>",
+					sourceMap: true,
+					report:    'gzip'
+				},
+				files:   {
 					"<%= dirs.build %>/<%= pkg.name %>.min.js": "<%= dirs.js %>/<%= pkg.name %>.js"
 				}
 			}
+		},
+
+
+		/////////////////////
+		//// Compression ////
+		/////////////////////
+
+
+		compress: {
+			dist: {
+				options: { mode: 'gzip' },
+				src:     "<%= dirs.build %>/<%= pkg.name %>.min.js",
+				dest:    "<%= dirs.build %>/<%= pkg.name %>.min.js.gz"
+			}
 		}
+
+
+		/////////////////
+		//// Testing ////
+		/////////////////
+
+		// TODO: I myself run karma/jasmine through WebStorm; I have not yet succeeded in running it through Grunt
 
 
 	});
@@ -73,8 +96,6 @@ module.exports = function (grunt) {
 	////////////////////////
 
 
-	grunt.registerTask("default", [ "uglify" ]);
-
-	// TODO: I myself run Karma through WebStorm; I have not yet succeeded in running it through Grunt
+	grunt.registerTask("dist", [ "uglify:dist", "compress:dist" ]);
 
 };

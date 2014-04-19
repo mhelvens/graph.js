@@ -29,7 +29,7 @@ module.exports = function (config) {
 		// pre-process matching files before serving them to the browser
 		// available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
 		preprocessors: {
-			'src/**/*.js': ['coverage']
+			// NOTE: coverage analysis on the minified file would be meaningless
 		},
 
 
