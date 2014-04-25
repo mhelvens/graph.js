@@ -8,7 +8,8 @@ module.exports = function (grunt) {
 	  'grunt-contrib-compress',
 	  'grunt-contrib-watch',
 	  'grunt-contrib-copy',
-	  'grunt-karma'
+	  'grunt-karma',
+	  'grunt-karma-coveralls'
 	].map(grunt.loadNpmTasks);
 
 
@@ -59,10 +60,10 @@ module.exports = function (grunt) {
 			dist: {
 				files: [
 					{
-						expand: true,
+						expand:  true,
 						flatten: true,
-						src:  "<%= dirs.js %>/<%= pkg.name %>.js",
-						dest: "<%= dirs.build %>"
+						src:     "<%= dirs.js %>/<%= pkg.name %>.js",
+						dest:    "<%= dirs.build %>"
 					}
 				]
 			}
@@ -108,15 +109,56 @@ module.exports = function (grunt) {
 
 
 		karma: {
-			dev:  {
-				options: {
-					configFile: 'karma.dev-conf.js'
+			options: {
+				basePath:         '',
+				frameworks:       [ 'jasmine', 'requirejs' ],
+				exclude:          [],
+				preprocessors:    { 'src/**/*.js': ['coverage'] },
+				reporters:        ['progress', 'coverage'],
+				runnerPort:       9876,
+				colors:           true,
+				logLevel:         'INFO',
+				autoWatch:        false,
+				browsers:         ['PhantomJS'],
+				singleRun:        true,
+				coverageReporter: {
+					reporters: [
+						{ type: 'lcov', dir: 'coverage' },
+//						{ type: 'html', dir: 'coverage' },
+						{ type: 'text-summary' }
+					]
 				}
 			},
-			dist: {
+			dev:     {
 				options: {
-					configFile: 'karma.dist-conf.js'
+					files: [ 'spec/main-dev.js', {pattern: '**/*.js', included: false} ]
 				}
+			},
+			dist:    {
+				options: {
+					files: [ 'spec/main-dist.js', {pattern: '**/*.js', included: false} ]
+				}
+			}
+		},
+
+
+		//////////////////
+		//// Coverage ////
+		//////////////////
+
+		coveralls: {
+			options: {
+				coverage_dir: 'coverage'
+			},
+			dev:     {
+				force:  false,
+				dryRun: true,
+				debug:  true
+			},
+			dist:    {
+				force:  true,
+				dryRun: false,
+				debug:  false
 			}
 		}
 
@@ -129,9 +171,11 @@ module.exports = function (grunt) {
 	////////////////////////
 
 
-	grunt.registerTask("test:dev", [ "karma:dev" ]);
-
+	grunt.registerTask("test:dev",  [ "karma:dev"  ]);
 	grunt.registerTask("test:dist", [ "karma:dist" ]);
+
+	grunt.registerTask("coverage:dev",  [ "coveralls:dev"  ]);
+	grunt.registerTask("coverage:dist", [ "coveralls:dist" ]);
 
 	grunt.registerTask("dist", [ "copy:dist", "uglify:dist", "compress:dist" ]);
 

@@ -248,13 +248,9 @@
 				throw new JsGraph.EdgeNotExistsError(from, to);
 			}
 
-			if (typeof _edges[from] !== 'undefined') {
-				var valueOfRemovedEdge = _edges[from][to];
-				delete _edges[from][to];
-			}
-			if (typeof _reverseEdges[to] !== 'undefined') {
-				delete _reverseEdges[to][from];
-			}
+			var valueOfRemovedEdge = _edges[from][to];
+			delete _edges[from][to];
+			delete _reverseEdges[to][from];
 			_edgeCount -= 1;
 			_removeEdgeCallbacks.fire(from, to, valueOfRemovedEdge);
 		};
@@ -415,6 +411,19 @@
 
 
 //  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//  // Utility /////////////////////////////////////////////////////////////////////////////////////////////////////////
+//  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+	function set2dObj(A, one, two, val) {
+		if (typeof A[one] === 'undefined') {
+			A[one] = {};
+		}
+		A[one][two] = val;
+	}
+
+
+//  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //  // Callbacks ///////////////////////////////////////////////////////////////////////////////////////////////////////
 //  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -475,9 +484,7 @@
 		};
 
 		that.vertices = {};
-		if (typeof key !== 'undefined') {
-			that.v(key, value);
-		}
+		that.v(key, value);
 
 		refreshMessage();
 	});
@@ -499,9 +506,7 @@
 		};
 
 		that.vertices = {};
-		if (typeof key !== 'undefined') {
-			that.v(key);
-		}
+		that.v(key);
 
 		refreshMessage();
 	});
@@ -525,18 +530,13 @@
 		}
 
 		that.e = function (from, to, value) {
-			if (typeof (that.edges[from]) === 'undefined') {
-				that.edges[from] = {};
-			}
-			that.edges[from][to] = value;
+			set2dObj(that.edges, from, to, value);
 			refreshMessage();
 			return that;
 		};
 
 		that.edges = {};
-		if (typeof from !== 'undefined' && typeof to !== 'undefined') {
-			that.e(from, to, value);
-		}
+		that.e(from, to, value);
 
 		refreshMessage();
 	});
@@ -560,18 +560,13 @@
 		}
 
 		that.e = function (from, to) {
-			if (typeof (that.edges[from]) === 'undefined') {
-				that.edges[from] = {};
-			}
-			that.edges[from][to] = undefined;
+			set2dObj(that.edges, from, to, undefined);
 			refreshMessage();
 			return that;
 		};
 
 		that.edges = {};
-		if (typeof from !== 'undefined' && typeof to !== 'undefined') {
-			that.e(from, to);
-		}
+		that.e(from, to);
 
 		refreshMessage();
 	});
