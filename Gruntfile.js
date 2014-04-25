@@ -57,13 +57,23 @@ module.exports = function (grunt) {
 
 
 		copy: {
-			dist: {
+			source: {
 				files: [
 					{
 						expand:  true,
 						flatten: true,
 						src:     "<%= dirs.js %>/<%= pkg.name %>.js",
 						dest:    "<%= dirs.build %>"
+					}
+				]
+			},
+			lcov: {
+				files: [
+					{
+						expand:  true,
+						flatten: true,
+						src:     ["coverage/*/lcov.info"],
+						dest:    "coverage"
 					}
 				]
 			}
@@ -110,37 +120,33 @@ module.exports = function (grunt) {
 
 		karma: {
 			options: {
-				basePath:      '',
-				frameworks:    [ 'jasmine', 'requirejs' ],
-				exclude:       [],
-				preprocessors: { 'src/**/*.js': ['coverage'] },
-				reporters:     ['progress', 'coverage'],
-				runnerPort:    9876,
-				colors:        true,
-				logLevel:      'INFO',
-				autoWatch:     false,
-				browsers:      ['PhantomJS'],
-				singleRun:     true
+				basePath:   '',
+				frameworks: [ 'jasmine', 'requirejs' ],
+				exclude:    [],
+				runnerPort: 9876,
+				colors:     true,
+				logLevel:   'INFO',
+				autoWatch:  false,
+				browsers:   ['PhantomJS'],
+				singleRun:  true
 			},
 			dev:     {
 				options: {
 					files:            [ 'spec/main-dev.js', {pattern: '**/*.js', included: false} ],
+					reporters:        ['progress', 'coverage'],
+					preprocessors:    { 'src/**/*.js': ['coverage'] },
 					coverageReporter: {
 						reporters: [
-							{ type: 'html', dir: 'coverage' },
-							{ type: 'text-summary' }
+							{ type: 'text-summary' },
+							{ type: 'lcovonly'}
 						]
 					}
 				}
 			},
 			dist:    {
 				options: {
-					files:            [ 'spec/main-dist.js', {pattern: '**/*.js', included: false} ],
-					coverageReporter: {
-						reporters: [
-							{ type: 'lcov', dir: 'coverage' }
-						]
-					}
+					files:     [ 'spec/main-dist.js', {pattern: '**/*.js', included: false} ],
+					reporters: ['progress']
 				}
 			}
 		},
@@ -152,13 +158,7 @@ module.exports = function (grunt) {
 
 		coveralls: {
 			dev:  {
-				src:     'coverage/**/lcov.info',
-				options: {
-					force: false
-				}
-			},
-			dist: {
-				src:     'coverage/**/lcov.info',
+				src:     'coverage/lcov.info',
 				options: {
 					force: true
 				}
@@ -177,9 +177,8 @@ module.exports = function (grunt) {
 	grunt.registerTask("test:dev", [ "karma:dev"  ]);
 	grunt.registerTask("test:dist", [ "karma:dist" ]);
 
-	grunt.registerTask("coverage:dev", [ "coveralls:dev"  ]);
-	grunt.registerTask("coverage:dist", [ "coveralls:dist" ]);
+	grunt.registerTask("coverage:dev", [ "copy:lcov", "coveralls:dev"  ]);
 
-	grunt.registerTask("dist", [ "copy:dist", "uglify:dist", "compress:dist" ]);
+	grunt.registerTask("dist", [ "copy:source", "uglify:dist", "compress:dist" ]);
 
 };

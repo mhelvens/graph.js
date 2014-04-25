@@ -7,7 +7,7 @@ install:
  - npm install
  - bower install
 script:
- - grunt test:dev
  - grunt dist
  - grunt test:dist
- - grunt coverage:dist
+ - grunt test:dev
+ - grunt coverage:dev
