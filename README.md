@@ -1,7 +1,7 @@
 js-graph
 ========
-[![Build Status](https://travis-ci.org/mhelvens/js-graph.svg?branch=master)](https://travis-ci.org/mhelvens/js-graph)
-[![Coverage Status](https://coveralls.io/repos/mhelvens/js-graph/badge.png?branch=master)](https://coveralls.io/r/mhelvens/js-graph?branch=master)
+[![Build Status](http://img.shields.io/travis/mhelvens/js-graph.svg)](https://travis-ci.org/mhelvens/js-graph)
+[![Coverage Status](http://img.shields.io/coveralls/mhelvens/js-graph.svg)](https://coveralls.io/r/mhelvens/js-graph?branch=master)
 
 `js-graph` is a javascript library for storing arbitrary data in mathematical (di)graphs,
 as well as traversing and analyzing them in various ways. It was originally created to
