@@ -3,8 +3,8 @@
 module.exports = function (grunt) {
 
 	//// loading grunt plugins
-
-	[ 'grunt-contrib-uglify',
+	[
+		'grunt-contrib-uglify',
 		'grunt-contrib-watch',
 		'grunt-contrib-copy',
 		'grunt-karma',

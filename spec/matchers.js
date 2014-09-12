@@ -1,8 +1,8 @@
 'use strict';
 
 beforeEach(function () {
-	(jasmine.addMatchers ? jasmine : this).addMatchers({
-		toBeReachable: function () {
+	jasmine.addMatchers({
+		toBeReachable: function (/*util, customEqualityTesters*/) {
 			return {
 				compare: function () {
 					var result = {};
@@ -12,9 +12,7 @@ beforeEach(function () {
 				}
 			};
 		},
-		toThrowSpecific: function () {
-			var util = arguments[0]; // using 'arguments' to avoid argument count warning
-			var customEqualityTesters = arguments[1];
+		toThrowSpecific: function (util, customEqualityTesters) {
 			return {
 				compare: function (actual, expectedType, expectedContent) {
 					var result = {};
@@ -46,12 +44,9 @@ beforeEach(function () {
 				}
 			};
 		},
-		toEqualOneOf: function () {
-			var util = arguments[0]; // using 'arguments' to avoid argument count warning
-			var customEqualityTesters = arguments[1];
+		toEqualOneOf: function (util, customEqualityTesters) {
 			return {
-				compare: function () {
-					var actual = arguments[0];
+				compare: function (actual, expected) {
 					var candidates = Array.prototype.slice.call(arguments, 1);
 					var result = {};
 

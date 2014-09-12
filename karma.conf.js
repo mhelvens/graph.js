@@ -4,7 +4,7 @@ module.exports = function (config) {
 	config.set({
 		basePath: '',
 		frameworks: [ 'jasmine' ],
-		files: [ 'dist/js-graph.js', 'spec/matchers.js', 'spec/**/*.js' ],
+		files: [ 'dist/js-graph.js', 'spec/matchers.js', 'spec/**/*-spec.js' ],
 		exclude: [],
 		preprocessors: { 'dist/js-graph.js': ['coverage'] },
 		reporters: ['progress', 'coverage'],
