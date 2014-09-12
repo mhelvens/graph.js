@@ -1271,6 +1271,12 @@ describe("method", function () {////////////////////////////////////////////////
 					  ['n3', 'n23', 'n2'],
 					  ['n2', 'n3', 'n23']
 				);
+				var cycleInMessage = err.message.substring(err.message.indexOf(':')+1).trim();
+				expect(cycleInMessage).toEqualOneOf(
+					  'n23,n2,n3',
+					  'n3,n23,n2',
+					  'n2,n3,n23'
+				);
 			}
 		});
 
@@ -1286,6 +1292,8 @@ describe("method", function () {////////////////////////////////////////////////
 				callItWith(function () {});
 			} catch (err) {
 				expect(err.cycle).toEqual(['n1']);
+				var cycleInMessage = err.message.substring(err.message.indexOf(':')+1).trim();
+				expect(cycleInMessage).toEqual('n1');
 			}
 		});
 
