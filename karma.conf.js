@@ -3,10 +3,10 @@
 module.exports = function (config) {
 	config.set({
 		basePath: '',
-		frameworks: [ 'jasmine', 'requirejs' ],
-		files: [ 'spec/main-dev.js', {pattern: '**/*.js', included: false} ],
+		frameworks: [ 'jasmine' ],
+		files: [ 'dist/js-graph.js', 'spec/matchers.js', 'spec/**/*.js' ],
 		exclude: [],
-		preprocessors: { 'src/**/*.js': ['coverage'] },
+		preprocessors: { 'dist/js-graph.js': ['coverage'] },
 		reporters: ['progress', 'coverage'],
 		coverageReporter: {
 			reporters: [

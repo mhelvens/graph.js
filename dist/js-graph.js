@@ -579,7 +579,7 @@
 
 
 	JsGraph.CycleError = newError("CycleError", function (cycle) {
-		this.message = "This graph contains a cycle: " + this.cycle;
+		this.message = "This graph contains a cycle: " + cycle;
 		this.cycle = cycle;
 	});
 
