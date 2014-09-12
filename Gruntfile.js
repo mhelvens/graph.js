@@ -117,38 +117,13 @@ module.exports = function (grunt) {
 		//// Testing ////
 		/////////////////
 
-
 		karma: {
-			options: {
-				basePath:   '',
-				frameworks: [ 'jasmine', 'requirejs' ],
-				exclude:    [],
-				runnerPort: 9876,
-				colors:     true,
-				logLevel:   'INFO',
-				autoWatch:  false,
-				browsers:   ['PhantomJS'],
-				singleRun:  true
-			},
-			dev:     {
-				options: {
-					files:            [ 'spec/main-dev.js', {pattern: '**/*.js', included: false} ],
-					reporters:        ['progress', 'coverage'],
-					preprocessors:    { 'src/**/*.js': ['coverage'] },
-					coverageReporter: {
-						reporters: [
-							{ type: 'text-summary' },
-							{ type: 'lcovonly'}
-						]
-					}
-				}
-			},
-			dist:    {
-				options: {
-					files:     [ 'spec/main-dist.js', {pattern: '**/*.js', included: false} ],
-					reporters: ['progress']
-				}
-			}
+			dev: { options: (function () {
+				var karmaConfig;
+				require('./karma.conf.js')({ set: function (config) { karmaConfig = config } });
+				//noinspection JSUnusedAssignment
+				return karmaConfig;
+			}()) }
 		},
 
 

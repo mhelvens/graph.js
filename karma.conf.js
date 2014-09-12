@@ -2,17 +2,22 @@
 
 module.exports = function (config) {
 	config.set({
-		basePath:      '',
-		frameworks:    [ 'jasmine', 'requirejs' ],
-		files:         [ 'spec/main-dev.js', {pattern: '**/*.js', included: false} ],
-		exclude:       [],
+		basePath: '',
+		frameworks: [ 'jasmine', 'requirejs' ],
+		files: [ 'spec/main-dev.js', {pattern: '**/*.js', included: false} ],
+		exclude: [],
 		preprocessors: { 'src/**/*.js': ['coverage'] },
-		reporters:     ['progress'],
-		port:          9876,
-		colors:        true,
-		logLevel:      config.LOG_INFO,
-		autoWatch:     false,
-		browsers:      ['Chrome'],
-		singleRun:     true
-	});
+		reporters: ['progress', 'coverage'],
+		coverageReporter: {
+			reporters: [
+				{ type: 'text-summary' },
+				{ type: 'lcovonly'}
+			]
+		},
+		port: 9876,
+		colors: true,
+		autoWatch: false,
+		browsers: ['PhantomJS'],
+		singleRun: true
+	})
 };
