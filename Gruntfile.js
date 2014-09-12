@@ -5,11 +5,10 @@ module.exports = function (grunt) {
 	//// loading grunt plugins
 
 	[ 'grunt-contrib-uglify',
-	  'grunt-contrib-compress',
-	  'grunt-contrib-watch',
-	  'grunt-contrib-copy',
-	  'grunt-karma',
-	  'grunt-coveralls'
+		'grunt-contrib-watch',
+		'grunt-contrib-copy',
+		'grunt-karma',
+		'grunt-coveralls'
 	].map(grunt.loadNpmTasks);
 
 
@@ -22,7 +21,7 @@ module.exports = function (grunt) {
 
 
 		dirs: {
-			js:    "src",
+			js: "src",
 			build: "dist"
 		},
 
@@ -32,22 +31,22 @@ module.exports = function (grunt) {
 		//////////////////
 
 
-		pkg:         grunt.file.readJSON("package.json"),
+		pkg: grunt.file.readJSON("package.json"),
 		banner: "\n" +
-		        "/*\n" +
-		        " * -------------------------------------------------------\n" +
-		        " * Project: <%= pkg.title %>\n" +
-		        " * Version: <%= pkg.version %>\n" +
-		        " *\n" +
-		        " * Author:  <%= pkg.author.name %>\n" +
-		        " * Site:    <%= pkg.author.url %>\n" +
-		        " * Contact: <%= pkg.author.email %>\n" +
-		        " *\n" +
-		        " *\n" +
-		        " * Copyright (c) <%= grunt.template.today(\"yyyy\") %> <%= pkg.author.name %>\n" +
-		        " * -------------------------------------------------------\n" +
-		        " */\n" +
-		        "\n",
+			  "/*\n" +
+			  " * -------------------------------------------------------\n" +
+			  " * Project: <%= pkg.title %>\n" +
+			  " * Version: <%= pkg.version %>\n" +
+			  " *\n" +
+			  " * Author:  <%= pkg.author.name %>\n" +
+			  " * Site:    <%= pkg.author.url %>\n" +
+			  " * Contact: <%= pkg.author.email %>\n" +
+			  " *\n" +
+			  " *\n" +
+			  " * Copyright (c) <%= grunt.template.today(\"yyyy\") %> <%= pkg.author.name %>\n" +
+			  " * -------------------------------------------------------\n" +
+			  " */\n" +
+			  "\n",
 		smallBanner: "/* <%= pkg.name %> - v<%= pkg.version %> - <%= grunt.template.today(\"yyyy-mm-dd\") %> */",
 
 
@@ -60,20 +59,20 @@ module.exports = function (grunt) {
 			source: {
 				files: [
 					{
-						expand:  true,
+						expand: true,
 						flatten: true,
-						src:     "<%= dirs.js %>/<%= pkg.name %>.js",
-						dest:    "<%= dirs.build %>"
+						src: "<%= dirs.js %>/<%= pkg.name %>.js",
+						dest: "<%= dirs.build %>"
 					}
 				]
 			},
 			lcov: {
 				files: [
 					{
-						expand:  true,
+						expand: true,
 						flatten: true,
-						src:     ["coverage/*/lcov.info"],
-						dest:    "coverage"
+						src: ["coverage/*/lcov.info"],
+						dest: "coverage"
 					}
 				]
 			}
@@ -88,27 +87,13 @@ module.exports = function (grunt) {
 		uglify: {
 			dist: {
 				options: {
-					banner:    "<%= smallBanner %>",
+					banner: "<%= smallBanner %>",
 					sourceMap: true,
-					report:    'gzip'
+					report: 'gzip'
 				},
-				files:   {
+				files: {
 					"<%= dirs.build %>/<%= pkg.name %>.min.js": "<%= dirs.js %>/<%= pkg.name %>.js"
 				}
-			}
-		},
-
-
-		/////////////////////
-		//// Compression ////
-		/////////////////////
-
-
-		compress: {
-			dist: {
-				options: { mode: 'gzip' },
-				src:     "<%= dirs.build %>/<%= pkg.name %>.min.js",
-				dest:    "<%= dirs.build %>/<%= pkg.name %>.min.js.gz"
 			}
 		},
 
@@ -132,11 +117,9 @@ module.exports = function (grunt) {
 		//////////////////
 
 		coveralls: {
-			dev:  {
-				src:     'coverage/lcov.info',
-				options: {
-					force: true
-				}
+			dev: {
+				src: 'coverage/lcov.info',
+				options: { force: true }
 			}
 		}
 
@@ -152,6 +135,6 @@ module.exports = function (grunt) {
 
 	grunt.registerTask("coverage:dev", [ "copy:lcov", "coveralls:dev"  ]);
 
-	grunt.registerTask("dist", [ "copy:source", "uglify:dist", "compress:dist" ]);
+	grunt.registerTask("dist", [ "copy:source", "uglify:dist" ]);
 
 };
