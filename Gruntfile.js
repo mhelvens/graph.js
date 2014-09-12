@@ -148,9 +148,7 @@ module.exports = function (grunt) {
 	//// Register Tasks ////
 	////////////////////////
 
-
 	grunt.registerTask("test:dev", [ "karma:dev"  ]);
-	grunt.registerTask("test:dist", [ "karma:dist" ]);
 
 	grunt.registerTask("coverage:dev", [ "copy:lcov", "coveralls:dev"  ]);
 

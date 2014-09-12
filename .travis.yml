@@ -8,6 +8,5 @@ install:
  - bower install
 script:
  - grunt dist
- - grunt test:dist
  - grunt test:dev
  - grunt coverage:dev
