@@ -227,6 +227,38 @@ describe("method", function () {////////////////////////////////////////////////
 	});
 
 
+	describeMethod('successors', function () {
+
+		it_throwsErrorIfVertexDoesNotExist();
+		it_throwsNothingIfVertexExists();
+
+		it("returns an array of all successor keys", function () {
+			expectItWhenCalledWith('k1').toEqual([]);
+			expectItWhenCalledWith('k2').toEqualOneOf(['k3', 'k5'], ['k5', 'k3']);
+			expectItWhenCalledWith('k3').toEqual(['k4']);
+			expectItWhenCalledWith('k4').toEqual([]);
+			expectItWhenCalledWith('k5').toEqual(['k3']);
+		})
+
+	});
+
+
+	describeMethod('predecessors', function () {
+
+		it_throwsErrorIfVertexDoesNotExist();
+		it_throwsNothingIfVertexExists();
+
+		it("returns an array of all predecessor keys", function () {
+			expectItWhenCalledWith('k1').toEqual([]);
+			expectItWhenCalledWith('k2').toEqual([]);
+			expectItWhenCalledWith('k3').toEqualOneOf(['k2', 'k5'], ['k5', 'k2']);
+			expectItWhenCalledWith('k4').toEqual(['k3']);
+			expectItWhenCalledWith('k5').toEqual(['k2']);
+		})
+
+	});
+
+
 	describeMethod('eachVertex', function () {
 
 		it("throws nothing when passed a non-throwing function", function () {
@@ -382,7 +414,11 @@ describe("method", function () {////////////////////////////////////////////////
 
 	function it_throwsNothingIfVertexExists() {
 		it("throws no exceptions if a vertex with that key exists", function () {
+			expectItWhenBoundWith('k1').not.toThrow();
+			expectItWhenBoundWith('k2').not.toThrow();
 			expectItWhenBoundWith('k3').not.toThrow();
+			expectItWhenBoundWith('k4').not.toThrow();
+			expectItWhenBoundWith('k5').not.toThrow();
 		});
 	}
 

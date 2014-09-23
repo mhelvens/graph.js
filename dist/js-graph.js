@@ -301,6 +301,22 @@
 		};
 
 
+		that.successors = function (from) {
+			if (!that.hasVertex(from)) {
+				throw new JsGraph.VertexNotExistsError(from);
+			}
+			return Object.keys(_edges[from]);
+		};
+
+
+		that.predecessors = function (to) {
+			if (!that.hasVertex(to)) {
+				throw new JsGraph.VertexNotExistsError(to);
+			}
+			return Object.keys(_reverseEdges[to]);
+		};
+
+
 		///////////////////////////////////////////////////////////////////////////////////////////
 
 
