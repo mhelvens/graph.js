@@ -2,7 +2,7 @@
 	"name": "js-graph",
 	"version": "0.2.0",
 	"title": "Javascript Graph Datastructure",
-	"homepage": "http://mhelvens.net",
+	"homepage": "https://github.com/mhelvens/js-graph",
 	"description": "a javascript library for storing arbitrary data in mathematical (di)graphs, as well as traversing and analyzing them in various ways",
 	"main": "dist/js-graph.js",
 	"author": {
