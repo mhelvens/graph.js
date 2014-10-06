@@ -281,6 +281,29 @@ describe("method", function () {////////////////////////////////////////////////
 			expect(verticesFound).toEqual(originalVertices);
 		});
 
+		it("stops iteration if and when the callback returns false", function () {
+			var counter = 0;
+			callItWith(function (/*key, value*/) {
+				counter += 1;
+				if (counter === 3) { return false }
+			});
+			expect(counter).toEqual(3);
+		});
+
+		it("does not stop iteration when the callback returns a non-false falsey value", function () {
+			var counter;
+
+			[undefined, null, 0, "", NaN].forEach
+			(function (falsey) {
+				counter = 0;
+				callItWith(function (/*key, value*/) {
+					counter += 1;
+					if (counter === 1) { return falsey }
+				});
+				expect(counter).toEqual(5);
+			});
+		});
+
 	});
 
 
@@ -311,6 +334,29 @@ describe("method", function () {////////////////////////////////////////////////
 			expect(valuesFound).toEqual({
 				'k3': [undefined, 'oldValue23'],
 				'k5': ['oldValue5', undefined]
+			});
+		});
+
+		it("stops iteration if and when the callback returns false", function () {
+			var counter = 0;
+			callItWith('k2', function (/*key, value*/) {
+				counter += 1;
+				if (counter === 1) { return false }
+			});
+			expect(counter).toEqual(1);
+		});
+
+		it("does not stop iteration when the callback returns a non-false falsey value", function () {
+			var counter;
+
+			[undefined, null, 0, "", NaN].forEach
+			(function (falsey) {
+				counter = 0;
+				callItWith('k2', function (/*key, value*/) {
+					counter += 1;
+					if (counter === 1) { return falsey }
+				});
+				expect(counter).toEqual(2);
 			});
 		});
 
@@ -347,6 +393,29 @@ describe("method", function () {////////////////////////////////////////////////
 			});
 		});
 
+		it("stops iteration if and when the callback returns false", function () {
+			var counter = 0;
+			callItWith('k3', function (/*key, value*/) {
+				counter += 1;
+				if (counter === 1) { return false }
+			});
+			expect(counter).toEqual(1);
+		});
+
+		it("does not stop iteration when the callback returns a non-false falsey value", function () {
+			var counter;
+
+			[undefined, null, 0, "", NaN].forEach
+			(function (falsey) {
+				counter = 0;
+				callItWith('k3', function (/*key, value*/) {
+					counter += 1;
+					if (counter === 1) { return falsey }
+				});
+				expect(counter).toEqual(2);
+			});
+		});
+
 	});
 
 
@@ -371,6 +440,29 @@ describe("method", function () {////////////////////////////////////////////////
 				edgesFound[key] = value;
 			});
 			expect(edgesFound).toEqual(originalEdges);
+		});
+
+		it("stops iteration if and when the callback returns false", function () {
+			var counter = 0;
+			callItWith(function (/*key, value*/) {
+				counter += 1;
+				if (counter === 3) { return false }
+			});
+			expect(counter).toEqual(3);
+		});
+
+		it("does not stop iteration when the callback returns a non-false falsey value", function () {
+			var counter;
+
+			[undefined, null, 0, "", NaN].forEach
+			(function (falsey) {
+				counter = 0;
+				callItWith(function (/*key, value*/) {
+					counter += 1;
+					if (counter === 1) { return falsey }
+				});
+				expect(counter).toEqual(4);
+			});
 		});
 
 	});
@@ -1176,6 +1268,45 @@ describe("method", function () {////////////////////////////////////////////////
 
 	// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
 
+	describeMethod('hasCycle', function () {
+
+		it("returns true if the graph contains a cycle (1)", function () {
+			graph.clear();
+
+			graph.createEdge('n1', 'n2');
+			graph.createEdge('n2', 'n3');
+			graph.createEdge('n3', 'n4');
+			graph.createEdge('n4', 'n5');
+			graph.createEdge('n3', 'n23');
+			graph.createEdge('n23', 'n2');
+
+			// n1 --> n2 --> n3 --> n4 --> n5
+			//        ^      |
+			//        |      ;
+			//        |     /
+			//       n23 <-"
+
+			expectItWhenCalledWith().toBe(true);
+		});
+
+		it("returns true if the graph contains a cycle (2)", function () {
+			graph.clear();
+
+			graph.createEdge('n1', 'n1');
+
+			expectItWhenCalledWith().toBe(true);
+		});
+
+		it("returns false if the graph contains no cycle (1)", function () {
+			expectItWhenCalledWith().toBe(false);
+		});
+
+		it("returns false if the graph contains no cycle (2)", function () {
+			graph.clear();
+			expectItWhenCalledWith().toBe(false);
+		});
+
+	});
 
 	describeMethod('hasPath', function () {
 
@@ -1303,15 +1434,15 @@ describe("method", function () {////////////////////////////////////////////////
 				callItWith(function () {});
 			} catch (err) {
 				expect(err.cycle).toEqualOneOf(
-					  ['n23', 'n2', 'n3'],
-					  ['n3', 'n23', 'n2'],
-					  ['n2', 'n3', 'n23']
+					['n23', 'n2', 'n3'],
+					['n3', 'n23', 'n2'],
+					['n2', 'n3', 'n23']
 				);
-				var cycleInMessage = err.message.substring(err.message.indexOf(':')+1).trim();
+				var cycleInMessage = err.message.substring(err.message.indexOf(':') + 1).trim();
 				expect(cycleInMessage).toEqualOneOf(
-					  'n23,n2,n3',
-					  'n3,n23,n2',
-					  'n2,n3,n23'
+					'n23,n2,n3',
+					'n3,n23,n2',
+					'n2,n3,n23'
 				);
 			}
 		});
@@ -1328,7 +1459,7 @@ describe("method", function () {////////////////////////////////////////////////
 				callItWith(function () {});
 			} catch (err) {
 				expect(err.cycle).toEqual(['n1']);
-				var cycleInMessage = err.message.substring(err.message.indexOf(':')+1).trim();
+				var cycleInMessage = err.message.substring(err.message.indexOf(':') + 1).trim();
 				expect(cycleInMessage).toEqual('n1');
 			}
 		});
@@ -1377,6 +1508,11 @@ describe("method", function () {////////////////////////////////////////////////
 			});
 
 		});
+
+	});
+
+
+	describeMethod('topologically', function () {
 
 
 	});

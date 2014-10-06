@@ -321,8 +321,9 @@
 
 
 		that.eachVertex = function (handler) {
-			Object.keys(_vertices).forEach(function (key) {
-				handler(key, _vertices[key]);
+			Object.keys(_vertices).every(function (key) {
+				var r = handler(key, _vertices[key]);
+				return (r !== false);
 			});
 		};
 
@@ -332,8 +333,9 @@
 				throw new JsGraph.VertexNotExistsError(from);
 			}
 
-			Object.keys(_edges[from]).forEach(function (to) {
-				handler(to, that.vertexValue(to), that.edgeValue(from, to));
+			Object.keys(_edges[from]).every(function (to) {
+				var r = handler(to, that.vertexValue(to), that.edgeValue(from, to));
+				return (r !== false);
 			});
 		};
 
@@ -343,16 +345,18 @@
 				throw new JsGraph.VertexNotExistsError(to);
 			}
 
-			Object.keys(_reverseEdges[to]).forEach(function (from) {
-				handler(from, that.vertexValue(from), that.edgeValue(from, to));
+			Object.keys(_reverseEdges[to]).every(function (from) {
+				var r = handler(from, that.vertexValue(from), that.edgeValue(from, to));
+				return (r !== false);
 			});
 		};
 
 
 		that.eachEdge = function (handler) {
-			Object.keys(_edges).forEach(function (from) {
-				Object.keys(_edges[from]).forEach(function (to) {
-					handler(from, to, _edges[from][to]);
+			Object.keys(_edges).every(function (from) {
+				return Object.keys(_edges[from]).every(function (to) {
+					var r = handler(from, to, _edges[from][to]);
+					return (r !== false);
 				});
 			});
 		};
@@ -365,6 +369,43 @@
 
 		that.clear = function () {
 			that.eachVertex(that.destroyVertex);
+		};
+
+		that.hasCycle = function () {
+			var visited = {};
+			var handled = {};
+
+			var cycleFound = false;
+
+			function visit(a) {
+				//// if a cycle is found, record it and return
+				//
+				if (visited[a]) {
+					cycleFound = true;
+					return;
+				}
+
+				//// if this vertex was already handled, no cycle can be found here
+				//
+				if (handled[a]) { return }
+				handled[a] = true;
+
+				//// recursively visit successors to check for cycles
+				//
+				visited[a] = true;
+				that.eachVertexFrom(a, function (b) {
+					visit(b);
+					if (cycleFound) { return false }
+				});
+				visited[a] = false;
+			}
+
+			that.eachVertex(function (a) {
+				visit(a);
+				if (cycleFound) { return false }
+			});
+
+			return cycleFound;
 		};
 
 
