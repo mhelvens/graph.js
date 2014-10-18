@@ -464,6 +464,28 @@
 			});
 		};
 
+		that.transitiveReduction = function () {
+			var result = new JsGraph();
+			that.eachVertex(function (key, val) {
+				result.addVertex(key, val);
+			});
+			that.eachEdge(function (from, to, val) {
+				result.addEdge(from, to, val);
+			});
+			result.eachVertex(function (x) {
+				result.eachVertex(function (y) {
+					if (result.hasEdge(x, y)) {
+						result.eachVertex(function (z) {
+							if (result.hasPath(y, z)) {
+								result.removeEdge(x, z);
+							}
+						});
+					}
+				});
+			});
+			return result;
+		};
+
 	}
 
 

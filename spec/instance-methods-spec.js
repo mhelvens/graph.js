@@ -498,6 +498,12 @@ describe("method", function () {////////////////////////////////////////////////
 		});
 	}
 
+	function it_throwsNothing() {
+		it("throws no exceptions when called", function () {
+			expectItWhenBoundWith().not.toThrow();
+		});
+	}
+
 	function it_throwsNothingIfVertexDoesNotExist() {
 		it("throws no exceptions if a vertex with that key does not exist", function () {
 			expectItWhenBoundWith('newKey').not.toThrow();
@@ -1268,6 +1274,7 @@ describe("method", function () {////////////////////////////////////////////////
 
 	// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
 
+
 	describeMethod('hasCycle', function () {
 
 		it("returns true if the graph contains a cycle (1)", function () {
@@ -1307,6 +1314,7 @@ describe("method", function () {////////////////////////////////////////////////
 		});
 
 	});
+
 
 	describeMethod('hasPath', function () {
 
@@ -1507,6 +1515,55 @@ describe("method", function () {////////////////////////////////////////////////
 				visited[key] = true;
 			});
 
+		});
+
+	});
+
+
+	// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
+
+
+	describeMethod('transitiveReduction', function () {
+
+		it_throwsNothing();
+
+		var newGraph;
+		beforeEach(function () {
+			graph.addEdge('k1', 'k3');
+			graph.addEdge('k2', 'k4');
+			graph.addEdge('k5', 'k4');
+			newGraph = callItWith();
+		});
+
+		it("returns a new graph with the same vertices as the original", function () {
+			newGraph.eachVertex(function (key, val) {
+				expect(graph.hasVertex(key)).toBeTruthy();
+				expect(val).toBe(graph.vertexValue(key));
+			});
+			graph.eachVertex(function (key, val) {
+				expect(newGraph.hasVertex(key)).toBeTruthy();
+				expect(val).toBe(newGraph.vertexValue(key));
+			});
+		});
+
+		it("returns a new graph with the same reachability as the original", function () {
+			graph.eachEdge(function (from, to) {
+				expect(newGraph.hasPath(from, to)).toBeTruthy();
+			});
+		});
+
+		it("returns a new graph with no transitive edges", function () {
+			newGraph.eachEdge(function (from, to) {
+				newGraph.removeEdge(from, to);
+				expect(newGraph.hasPath(from, to)).toBeFalsy();
+				newGraph.addNewEdge(from, to);
+			});
+		});
+
+		it("returns a new graph with edges that have the same values as in the original", function () {
+			newGraph.eachEdge(function (from, to, val) {
+				expect(graph.edgeValue(from, to)).toBe(val);
+			});
 		});
 
 	});
