@@ -75,11 +75,11 @@ describe("method", function () {////////////////////////////////////////////////
 		graph.addNewEdge('k2', 'k5');
 		graph.addNewEdge('k5', 'k3');
 
-		// k1     k2 --> k3 --> k4
-		//        |      ^
-		//        |      ;
-		//        V     /
-		//        k5 __/
+		// k1     k2 ──▶ k3 ──▶ k4
+		//        ╷      ▲
+		//        │      │
+		//        ▼      │
+		//        k5 ────╯
 
 		//// some preliminary work to more easily 'expect' things about the original graph:
 		//
@@ -1287,11 +1287,11 @@ describe("method", function () {////////////////////////////////////////////////
 			graph.createEdge('n3', 'n23');
 			graph.createEdge('n23', 'n2');
 
-			// n1 --> n2 --> n3 --> n4 --> n5
-			//        ^      |
-			//        |      ;
-			//        |     /
-			//       n23 <-"
+			// n1 ──▶ n2 ──▶ n3 ──▶ n4 ──▶ n5
+			//        ▲      ╷
+			//        │      │
+			//        ╵      │
+			//       n23 ◀───╯
 
 			expectItWhenCalledWith().toBe(true);
 		});
@@ -1325,11 +1325,11 @@ describe("method", function () {////////////////////////////////////////////////
 			expectItWhenBoundWith('newKey1', 'newKey2').not.toThrow();
 		});
 
-		// k1     k2 --> k3 --> k4
-		//        |      ^
-		//        |      ;
-		//        V     /
-		//        k5 __/
+		// k1     k2 ──▶ k3 ──▶ k4
+		//        ╷      ▲
+		//        │      │
+		//        ▼      │
+		//        k5 ────╯
 
 		it("returns a falsy value if the path doesn't exist (1)", function () {
 			expectItWhenCalledWith('k1', 'k2').toBeFalsy();
@@ -1386,11 +1386,11 @@ describe("method", function () {////////////////////////////////////////////////
 			graph.createEdge('n3', 'n23');
 			graph.createEdge('n23', 'n2');
 
-			// n1 --> n2 --> n3 --> n4 --> n5
-			//        ^      |
-			//        |      ;
-			//        |     /
-			//       n23 <-"
+			// n1 ──▶ n2 ──▶ n3 ──▶ n4 ──▶ n5
+			//        ▲      ╷
+			//        │      │
+			//        ╵      │
+			//       n23 ◀───╯
 
 			expectItWhenCalledWith('n1', 'n5').toBeTruthy();
 		});
@@ -1405,11 +1405,11 @@ describe("method", function () {////////////////////////////////////////////////
 			graph.createEdge('n3', 'n4');
 			graph.createEdge('n4', 'n5');
 
-			// n1 --> n2 --> n3 --> n4 --> n5
-			//        ^      |
-			//        |      ;
-			//        |     /
-			//       n23 <-"
+			// n1 ──▶ n2 ──▶ n3 ──▶ n4 ──▶ n5
+			//        ▲      ╷
+			//        │      │
+			//        ╵      │
+			//       n23 ◀───╯
 
 			expectItWhenCalledWith('n1', 'n5').toBeTruthy();
 		});
@@ -1429,11 +1429,11 @@ describe("method", function () {////////////////////////////////////////////////
 			graph.createEdge('n3', 'n23');
 			graph.createEdge('n23', 'n2');
 
-			// n1 --> n2 --> n3 --> n4 --> n5
-			//        ^      |
-			//        |      ;
-			//        |     /
-			//       n23 <-"
+			// n1 ──▶ n2 ──▶ n3 ──▶ n4 ──▶ n5
+			//        ▲      ╷
+			//        │      │
+			//        ╵      │
+			//       n23 ◀───╯
 
 			expectItWhenBoundWith(function () {}).toThrow();
 			expectItWhenBoundWith(function () {}).toThrowSpecific(JsGraph.CycleError, {});
@@ -1495,11 +1495,11 @@ describe("method", function () {////////////////////////////////////////////////
 			graph.createEdge('n3', 'n4');
 			graph.createEdge('n4', 'n5');
 
-			// n1 --> n2 --> n3 --> n4 --> n5
-			//        |      |
-			//        |      ;
-			//        V     /
-			//       n23 <-"
+			// n1 ──▶ n2 ──▶ n3 ──▶ n4 ──▶ n5
+			//        ▲      ╷
+			//        │      │
+			//        ╵      │
+			//       n23 ◀───╯
 
 			var visited = {};
 
