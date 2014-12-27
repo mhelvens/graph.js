@@ -1523,6 +1523,43 @@ describe("method", function () {////////////////////////////////////////////////
 	// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
 
 
+	describeMethod('clone', function () {
+
+		it_throwsNothing();
+
+		var newGraph;
+		beforeEach(function () {
+			graph.addEdge('k1', 'k3');
+			graph.addEdge('k2', 'k4');
+			graph.addEdge('k5', 'k4');
+			newGraph = callItWith();
+		});
+
+		it("returns a new graph with the same vertices as the original", function () {
+			newGraph.eachVertex(function (key, val) {
+				expect(graph.hasVertex(key)).toBeTruthy();
+				expect(val).toBe(graph.vertexValue(key));
+			});
+			graph.eachVertex(function (key, val) {
+				expect(newGraph.hasVertex(key)).toBeTruthy();
+				expect(val).toBe(newGraph.vertexValue(key));
+			});
+		});
+
+		it("returns a new graph with the same edges as the original", function () {
+			newGraph.eachEdge(function (from, to, val) {
+				expect(graph.hasEdge(from, to)).toBeTruthy();
+				expect(val).toBe(graph.edgeValue(from, to));
+			});
+			graph.eachEdge(function (from, to, val) {
+				expect(newGraph.hasEdge(from, to)).toBeTruthy();
+				expect(val).toBe(newGraph.edgeValue(from, to));
+			});
+		});
+
+	});
+
+
 	describeMethod('transitiveReduction', function () {
 
 		it_throwsNothing();

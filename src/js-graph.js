@@ -464,7 +464,7 @@
 			});
 		};
 
-		that.transitiveReduction = function () {
+		that.clone = function () {
 			var result = new JsGraph();
 			that.eachVertex(function (key, val) {
 				result.addVertex(key, val);
@@ -472,6 +472,11 @@
 			that.eachEdge(function (from, to, val) {
 				result.addEdge(from, to, val);
 			});
+			return result;
+		};
+
+		that.transitiveReduction = function () {
+			var result = that.clone();
 			result.eachVertex(function (x) {
 				result.eachVertex(function (y) {
 					if (result.hasEdge(x, y)) {
