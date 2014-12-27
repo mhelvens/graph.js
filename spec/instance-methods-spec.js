@@ -1547,8 +1547,10 @@ describe("method", function () {////////////////////////////////////////////////
 		});
 
 		it("returns a new graph with the same reachability as the original", function () {
-			graph.eachEdge(function (from, to) {
-				expect(newGraph.hasPath(from, to)).toBeTruthy();
+			graph.eachVertex(function (from) {
+				graph.eachVertex(function (to) {
+					expect(graph.hasPath(from, to)).toEqual(newGraph.hasPath(from, to));
+				});
 			});
 		});
 
