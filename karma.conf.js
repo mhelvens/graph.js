@@ -1,12 +1,6 @@
-'use strict';
-
 module.exports = function (config) {
 	config.set({
-		basePath: '',
-		frameworks: [ 'jasmine' ],
-		files: [ 'dist/js-graph.js', 'spec/matchers.js', 'spec/**/*-spec.js' ],
-		exclude: [],
-		preprocessors: { 'dist/js-graph.js': ['coverage'] },
+		frameworks: ['jasmine'],
 		reporters: ['progress', 'coverage'],
 		coverageReporter: {
 			reporters: [
@@ -18,6 +12,32 @@ module.exports = function (config) {
 		colors: true,
 		autoWatch: false,
 		browsers: ['PhantomJS'],
-		singleRun: true
+		singleRun: true,
+		files: [
+			'./node_modules/phantomjs-polyfill/bind-polyfill.js',
+			'./node_modules/babel/browser-polyfill.js',
+			'./test/tests.webpack.js'
+		],
+		preprocessors: {
+			'./test/tests.webpack.js': ['webpack', 'sourcemap']
+		},
+		webpack: {
+			devtool: 'inline-source-map',
+			module: {
+				preLoaders: [
+					{
+						test: /\.es6\.js$/,
+						exclude: /(test|node_modules|bower_components)\//,
+						loader: 'isparta-instrumenter'
+					}
+				],
+				loaders: [
+					{ "test": /\.es6\.js$/, "loader": "babel" }
+				]
+			}
+		},
+		webpackServer: {
+			noInfo: true
+		}
 	})
 };

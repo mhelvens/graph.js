@@ -1,47 +1,48 @@
-'use strict';
+import {any} from './helpers.es6.js';
+import JsGraph from '../src/js-graph.es6.js';
+
 
 var graph;
-
-beforeEach(function () {
+beforeEach(() => {
 	graph = new JsGraph();
 });
 
 
-describe("method", function () {////////////////////////////////////////////////////////////////////////////////
+describe("method", () => {//////////////////////////////////////////////////////////////////////////////////////////////
 
 
 	var methodUnderTest = "";
 
 	function describeMethod(method, fn) {
-		describe("'" + method + "'", function () {
-			beforeEach(function () {
+		describe(`'${method}'`, () => {
+			beforeEach(() => {
 				methodUnderTest = method;
 			});
-			it("is present", function () {
-				expect(typeof graph[methodUnderTest]).toBe('function');
+			it("is present", () => {
+				expect(graph[methodUnderTest]).toEqual(any(Function));
 			});
 			fn();
 		});
 	}
 
 	function callItWith() {
-		return graph[methodUnderTest].apply(undefined, arguments);
+		return graph[methodUnderTest].apply(graph, arguments);
 	}
 
 	function expectItWhenBoundWith() {
 		var args = arguments;
-		return expect(function () {
-			graph[methodUnderTest].apply(undefined, args);
+		return expect(() => {
+			graph[methodUnderTest].apply(graph, args);
 		});
 	}
 
 	function expectItWhenCalledWith() {
 		var args = Array.prototype.slice.call(arguments, 0);
-		return expect(graph[methodUnderTest].apply(undefined, args));
+		return expect(graph[methodUnderTest].apply(graph, args));
 	}
 
 
-	// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
+	// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
 
 
 	var originalVertices, originalEdges, originalVertexCount, originalEdgeCount;
@@ -49,20 +50,20 @@ describe("method", function () {////////////////////////////////////////////////
 
 	function expectTheGraphNotToHaveChanged() {
 		var vertices = {};
-		graph.eachVertex(function (key, value) {
+		graph.eachVertex((key, value) => {
 			vertices[key] = value;
 		});
 		expect(vertices).toEqual(originalVertices);
 
 		var edges = {};
-		graph.eachEdge(function (from, to, value) {
+		graph.eachEdge((from, to, value) => {
 			edges[from + ", " + to] = value;
 		});
 		expect(edges).toEqual(originalEdges);
 	}
 
 
-	beforeEach(function () {
+	beforeEach(() => {
 		//// the original graph:
 		//
 		graph.addNewVertex('k1', 'oldValue1');
@@ -105,69 +106,69 @@ describe("method", function () {////////////////////////////////////////////////
 	});
 
 
-	// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
+	// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
 
 
-	describeMethod('vertexCount', function () {
+	describeMethod('vertexCount', () => {
 
-		it("throws nothing", function () {
+		it("throws nothing", () => {
 			expectItWhenBoundWith().not.toThrow();
 		});
 
-		it("returns the number of vertices in the graph", function () {
+		it("returns the number of vertices in the graph", () => {
 			expectItWhenCalledWith().toBe(originalVertexCount);
 		});
 
 	});
 
 
-	describeMethod('edgeCount', function () {
+	describeMethod('edgeCount', () => {
 
-		it("throws nothing", function () {
+		it("throws nothing", () => {
 			expectItWhenBoundWith().not.toThrow();
 		});
 
-		it("returns the number of edges in the graph", function () {
+		it("returns the number of edges in the graph", () => {
 			expectItWhenCalledWith().toBe(originalEdgeCount);
 		});
 
 	});
 
 
-	describeMethod('hasVertex', function () {
+	describeMethod('hasVertex', () => {
 
-		it("throws nothing when passed a key argument", function () {
+		it("throws nothing when passed a key argument", () => {
 			expectItWhenBoundWith('k1').not.toThrow();
 			expectItWhenBoundWith('newKey').not.toThrow();
 		});
 
-		it("returns a truthy value for an existing vertex", function () {
+		it("returns a truthy value for an existing vertex", () => {
 			expectItWhenCalledWith('k1').toBeTruthy();
 			expectItWhenCalledWith('k2').toBeTruthy();
 		});
 
-		it("returns a falsy value for an absent vertex", function () {
+		it("returns a falsy value for an absent vertex", () => {
 			expectItWhenCalledWith('newKey').toBeFalsy();
 		});
 
 	});
 
 
-	describeMethod('hasEdge', function () {
+	describeMethod('hasEdge', () => {
 
-		it("throws nothing when passed two key arguments", function () {
+		it("throws nothing when passed two key arguments", () => {
 			expectItWhenBoundWith('k1', 'k2').not.toThrow();
 			expectItWhenBoundWith('k2', 'k3').not.toThrow();
 			expectItWhenBoundWith('newKey', 'k2').not.toThrow();
 			expectItWhenBoundWith('newKey1', 'newKey2').not.toThrow();
 		});
 
-		it("returns a truthy value for an existing edge", function () {
+		it("returns a truthy value for an existing edge", () => {
 			expectItWhenCalledWith('k2', 'k3').toBeTruthy();
 			expectItWhenCalledWith('k3', 'k4').toBeTruthy();
 		});
 
-		it("returns a falsy value for an absent edge", function () {
+		it("returns a falsy value for an absent edge", () => {
 			expectItWhenCalledWith('k1', 'k2').toBeFalsy();
 			expectItWhenCalledWith('k3', 'k2').toBeFalsy();
 			expectItWhenCalledWith('newKey', 'k2').toBeFalsy();
@@ -177,47 +178,47 @@ describe("method", function () {////////////////////////////////////////////////
 	});
 
 
-	describeMethod('vertexValue', function () {
+	describeMethod('vertexValue', () => {
 
-		it("throws nothing when passed a key argument", function () {
+		it("throws nothing when passed a key argument", () => {
 			expectItWhenBoundWith('k1').not.toThrow();
 			expectItWhenBoundWith('k2').not.toThrow();
 			expectItWhenBoundWith('newKey').not.toThrow();
 		});
 
-		it("returns the proper value belonging to a vertex", function () {
+		it("returns the proper value belonging to a vertex", () => {
 			expectItWhenCalledWith('k1').toBe('oldValue1');
 		});
 
-		it("returns the 'undefined' value for vertices with no value", function () {
+		it("returns the 'undefined' value for vertices with no value", () => {
 			expectItWhenCalledWith('k2').toBeUndefined();
 		});
 
-		it("returns the 'undefined' value for absent vertices", function () {
+		it("returns the 'undefined' value for absent vertices", () => {
 			expectItWhenCalledWith('newKey').toBeUndefined();
 		});
 
 	});
 
 
-	describeMethod('edgeValue', function () {
+	describeMethod('edgeValue', () => {
 
-		it("throws nothing when passed two key arguments", function () {
+		it("throws nothing when passed two key arguments", () => {
 			expectItWhenBoundWith('k1', 'k2').not.toThrow();
 			expectItWhenBoundWith('k2', 'k3').not.toThrow();
 			expectItWhenBoundWith('newKey', 'k2').not.toThrow();
 			expectItWhenBoundWith('newKey1', 'newKey2').not.toThrow();
 		});
 
-		it("returns the proper value belonging to an edge", function () {
+		it("returns the proper value belonging to an edge", () => {
 			expectItWhenCalledWith('k2', 'k3').toBe('oldValue23');
 		});
 
-		it("returns the 'undefined' value for edges with no value", function () {
+		it("returns the 'undefined' value for edges with no value", () => {
 			expectItWhenCalledWith('k3', 'k4').toBeUndefined();
 		});
 
-		it("returns the 'undefined' value for absent edges", function () {
+		it("returns the 'undefined' value for absent edges", () => {
 			expectItWhenCalledWith('k1', 'k2').toBeUndefined();
 			expectItWhenCalledWith('k3', 'k2').toBeUndefined();
 			expectItWhenCalledWith('newKey', 'k2').toBeUndefined();
@@ -227,12 +228,12 @@ describe("method", function () {////////////////////////////////////////////////
 	});
 
 
-	describeMethod('successors', function () {
+	describeMethod('successors', () => {
 
 		it_throwsErrorIfVertexDoesNotExist();
 		it_throwsNothingIfVertexExists();
 
-		it("returns an array of all successor keys", function () {
+		it("returns an array of all successor keys", () => {
 			expectItWhenCalledWith('k1').toEqual([]);
 			expectItWhenCalledWith('k2').toEqualOneOf(['k3', 'k5'], ['k5', 'k3']);
 			expectItWhenCalledWith('k3').toEqual(['k4']);
@@ -243,12 +244,12 @@ describe("method", function () {////////////////////////////////////////////////
 	});
 
 
-	describeMethod('predecessors', function () {
+	describeMethod('predecessors', () => {
 
 		it_throwsErrorIfVertexDoesNotExist();
 		it_throwsNothingIfVertexExists();
 
-		it("returns an array of all predecessor keys", function () {
+		it("returns an array of all predecessor keys", () => {
 			expectItWhenCalledWith('k1').toEqual([]);
 			expectItWhenCalledWith('k2').toEqual([]);
 			expectItWhenCalledWith('k3').toEqualOneOf(['k2', 'k5'], ['k5', 'k2']);
@@ -259,44 +260,43 @@ describe("method", function () {////////////////////////////////////////////////
 	});
 
 
-	describeMethod('eachVertex', function () {
+	describeMethod('eachVertex', () => {
 
-		it("throws nothing when passed a non-throwing function", function () {
-			expectItWhenBoundWith(function () {/*not throwing things*/}).not.toThrow();
+		it("throws nothing when passed a non-throwing function", () => {
+			expectItWhenBoundWith(() => {/*not throwing things*/}).not.toThrow();
 		});
 
-		it("does not change the graph if the specified handler doesn't", function () {
-			callItWith(function () {
+		it("does not change the graph if the specified handler doesn't", () => {
+			callItWith(() => {
 				// not changing the graph from here
 			});
 			expectTheGraphNotToHaveChanged();
 		});
 
-		it("calls the specified handler exactly once for each vertex in the graph", function () {
+		it("calls the specified handler exactly once for each vertex in the graph", () => {
 			var verticesFound = {};
-			callItWith(function (key, value) {
+			callItWith((key, value) => {
 				expect(verticesFound[key]).toBeUndefined();
 				verticesFound[key] = value;
 			});
 			expect(verticesFound).toEqual(originalVertices);
 		});
 
-		it("stops iteration if and when the callback returns false", function () {
+		it("stops iteration if and when the callback returns false", () => {
 			var counter = 0;
-			callItWith(function (/*key, value*/) {
+			callItWith((/*key, value*/) => {
 				counter += 1;
 				if (counter === 3) { return false }
 			});
 			expect(counter).toEqual(3);
 		});
 
-		it("does not stop iteration when the callback returns a non-false falsey value", function () {
+		it("does not stop iteration when the callback returns a non-false falsey value", () => {
 			var counter;
 
-			[undefined, null, 0, "", NaN].forEach
-			(function (falsey) {
+			[undefined, null, 0, "", NaN].forEach((falsey) => {
 				counter = 0;
-				callItWith(function (/*key, value*/) {
+				callItWith((/*key, value*/) => {
 					counter += 1;
 					if (counter === 1) { return falsey }
 				});
@@ -307,25 +307,25 @@ describe("method", function () {////////////////////////////////////////////////
 	});
 
 
-	describeMethod('eachVertexFrom', function () {
+	describeMethod('eachVertexFrom', () => {
 
-		it("throws an error if the given vertex does not exist", function () {
-			expectItWhenBoundWith('newKey', function () {}).toThrow();
-			expectItWhenBoundWith('newKey', function () {}).toThrowSpecific(JsGraph.VertexNotExistsError, {'newKey': undefined});
+		it("throws an error if the given vertex does not exist", () => {
+			expectItWhenBoundWith('newKey', () => {}).toThrow();
+			expectItWhenBoundWith('newKey', () => {}).toThrowSpecific(JsGraph.VertexNotExistsError, {'newKey': undefined});
 		});
 
-		it("throws nothing if the given vertex exists", function () {
-			expectItWhenBoundWith('k1', function () {}).not.toThrow();
+		it("throws nothing if the given vertex exists", () => {
+			expectItWhenBoundWith('k1', () => {}).not.toThrow();
 		});
 
-		it("does not change the graph if the specified handler doesn't", function () {
-			callItWith('k2', function () {
+		it("does not change the graph if the specified handler doesn't", () => {
+			callItWith('k2', () => {
 				// not changing the graph from here
 			});
 			expectTheGraphNotToHaveChanged();
 		});
 
-		it("calls the specified handler exactly once for each outgoing edge, providing the connected vertex key/value and edge value", function () {
+		it("calls the specified handler exactly once for each outgoing edge, providing the connected vertex key/value and edge value", () => {
 			var valuesFound = {};
 			callItWith('k2', function (key, value, edgeValue) {
 				expect(valuesFound[key]).toBeUndefined();
@@ -337,7 +337,7 @@ describe("method", function () {////////////////////////////////////////////////
 			});
 		});
 
-		it("stops iteration if and when the callback returns false", function () {
+		it("stops iteration if and when the callback returns false", () => {
 			var counter = 0;
 			callItWith('k2', function (/*key, value*/) {
 				counter += 1;
@@ -346,13 +346,12 @@ describe("method", function () {////////////////////////////////////////////////
 			expect(counter).toEqual(1);
 		});
 
-		it("does not stop iteration when the callback returns a non-false falsey value", function () {
+		it("does not stop iteration when the callback returns a non-false falsey value", () => {
 			var counter;
 
-			[undefined, null, 0, "", NaN].forEach
-			(function (falsey) {
+			[undefined, null, 0, "", NaN].forEach((falsey) => {
 				counter = 0;
-				callItWith('k2', function (/*key, value*/) {
+				callItWith('k2', (/*key, value*/) => {
 					counter += 1;
 					if (counter === 1) { return falsey }
 				});
@@ -363,25 +362,25 @@ describe("method", function () {////////////////////////////////////////////////
 	});
 
 
-	describeMethod('eachVertexTo', function () {
+	describeMethod('eachVertexTo', () => {
 
-		it("throws an error if the given vertex does not exist", function () {
-			expectItWhenBoundWith('newKey', function () {}).toThrow();
-			expectItWhenBoundWith('newKey', function () {}).toThrowSpecific(JsGraph.VertexNotExistsError, {'newKey': undefined});
+		it("throws an error if the given vertex does not exist", () => {
+			expectItWhenBoundWith('newKey', () => {}).toThrow();
+			expectItWhenBoundWith('newKey', () => {}).toThrowSpecific(JsGraph.VertexNotExistsError, {'newKey': undefined});
 		});
 
-		it("throws nothing if the given vertex exists", function () {
-			expectItWhenBoundWith('k1', function () {}).not.toThrow();
+		it("throws nothing if the given vertex exists", () => {
+			expectItWhenBoundWith('k1', () => {}).not.toThrow();
 		});
 
-		it("does not change the graph if the specified handler doesn't", function () {
-			callItWith('k3', function () {
+		it("does not change the graph if the specified handler doesn't", () => {
+			callItWith('k3', () => {
 				// not changing the graph from here
 			});
 			expectTheGraphNotToHaveChanged();
 		});
 
-		it("calls the specified handler exactly once for each incoming edge, providing the connected vertex key/value and edge value", function () {
+		it("calls the specified handler exactly once for each incoming edge, providing the connected vertex key/value and edge value", () => {
 			var valuesFound = {};
 			callItWith('k3', function (key, value, edgeValue) {
 				expect(valuesFound[key]).toBeUndefined();
@@ -393,7 +392,7 @@ describe("method", function () {////////////////////////////////////////////////
 			});
 		});
 
-		it("stops iteration if and when the callback returns false", function () {
+		it("stops iteration if and when the callback returns false", () => {
 			var counter = 0;
 			callItWith('k3', function (/*key, value*/) {
 				counter += 1;
@@ -402,13 +401,12 @@ describe("method", function () {////////////////////////////////////////////////
 			expect(counter).toEqual(1);
 		});
 
-		it("does not stop iteration when the callback returns a non-false falsey value", function () {
+		it("does not stop iteration when the callback returns a non-false falsey value", () => {
 			var counter;
 
-			[undefined, null, 0, "", NaN].forEach
-			(function (falsey) {
+			[undefined, null, 0, "", NaN].forEach((falsey) => {
 				counter = 0;
-				callItWith('k3', function (/*key, value*/) {
+				callItWith('k3', (/*key, value*/) => {
 					counter += 1;
 					if (counter === 1) { return falsey }
 				});
@@ -419,22 +417,22 @@ describe("method", function () {////////////////////////////////////////////////
 	});
 
 
-	describeMethod('eachEdge', function () {
+	describeMethod('eachEdge', () => {
 
-		it("throws nothing when passed a non-throwing function", function () {
-			expectItWhenBoundWith(function () {/*not throwing things*/}).not.toThrow();
+		it("throws nothing when passed a non-throwing function", () => {
+			expectItWhenBoundWith(() => {/*not throwing things*/}).not.toThrow();
 		});
 
-		it("does not change the graph if the specified handler doesn't", function () {
-			callItWith(function () {
+		it("does not change the graph if the specified handler doesn't", () => {
+			callItWith(() => {
 				// not changing the graph from here
 			});
 			expectTheGraphNotToHaveChanged();
 		});
 
-		it("calls the specified handler exactly once for each edge in the graph", function () {
+		it("calls the specified handler exactly once for each edge in the graph", () => {
 			var edgesFound = {};
-			callItWith(function (from, to, value) {
+			callItWith((from, to, value) => {
 				var key = from + ", " + to;
 				expect(edgesFound[key]).toBeUndefined();
 				edgesFound[key] = value;
@@ -442,22 +440,21 @@ describe("method", function () {////////////////////////////////////////////////
 			expect(edgesFound).toEqual(originalEdges);
 		});
 
-		it("stops iteration if and when the callback returns false", function () {
+		it("stops iteration if and when the callback returns false", () => {
 			var counter = 0;
-			callItWith(function (/*key, value*/) {
+			callItWith((/*key, value*/) => {
 				counter += 1;
 				if (counter === 3) { return false }
 			});
 			expect(counter).toEqual(3);
 		});
 
-		it("does not stop iteration when the callback returns a non-false falsey value", function () {
+		it("does not stop iteration when the callback returns a non-false falsey value", () => {
 			var counter;
 
-			[undefined, null, 0, "", NaN].forEach
-			(function (falsey) {
+			[undefined, null, 0, "", NaN].forEach((falsey) => {
 				counter = 0;
-				callItWith(function (/*key, value*/) {
+				callItWith((/*key, value*/) => {
 					counter += 1;
 					if (counter === 1) { return falsey }
 				});
@@ -468,11 +465,11 @@ describe("method", function () {////////////////////////////////////////////////
 	});
 
 
-	// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
+	// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
 
 
 	function it_throwsErrorIfVertexExists() {
-		it("throws an error if a vertex with the given key already exists", function () {
+		it("throws an error if a vertex with the given key already exists", () => {
 			expectItWhenBoundWith('k1').toThrow();
 			expectItWhenBoundWith('k2').toThrow();
 			expectItWhenBoundWith('k1').toThrowSpecific(JsGraph.VertexExistsError, { vertices: {'k1': 'oldValue1'} });
@@ -481,14 +478,14 @@ describe("method", function () {////////////////////////////////////////////////
 	}
 
 	function it_throwsErrorIfVertexDoesNotExist() {
-		it("throws an error if a vertex with the given key does not exist", function () {
+		it("throws an error if a vertex with the given key does not exist", () => {
 			expectItWhenBoundWith('newKey').toThrow();
 			expectItWhenBoundWith('newKey').toThrowSpecific(JsGraph.VertexNotExistsError, { vertices: {'newKey': undefined} });
 		});
 	}
 
 	function it_throwsErrorIfEdgesAreConnected() {
-		it("throws an error if there are edges connected to that vertex", function () {
+		it("throws an error if there are edges connected to that vertex", () => {
 			expectItWhenBoundWith('k2').toThrow();
 			expectItWhenBoundWith('k3').toThrow();
 			expectItWhenBoundWith('k4').toThrow();
@@ -499,19 +496,19 @@ describe("method", function () {////////////////////////////////////////////////
 	}
 
 	function it_throwsNothing() {
-		it("throws no exceptions when called", function () {
+		it("throws no exceptions when called", () => {
 			expectItWhenBoundWith().not.toThrow();
 		});
 	}
 
 	function it_throwsNothingIfVertexDoesNotExist() {
-		it("throws no exceptions if a vertex with that key does not exist", function () {
+		it("throws no exceptions if a vertex with that key does not exist", () => {
 			expectItWhenBoundWith('newKey').not.toThrow();
 		});
 	}
 
 	function it_throwsNothingIfVertexExists() {
-		it("throws no exceptions if a vertex with that key exists", function () {
+		it("throws no exceptions if a vertex with that key exists", () => {
 			expectItWhenBoundWith('k1').not.toThrow();
 			expectItWhenBoundWith('k2').not.toThrow();
 			expectItWhenBoundWith('k3').not.toThrow();
@@ -521,31 +518,31 @@ describe("method", function () {////////////////////////////////////////////////
 	}
 
 	function it_throwsNothingIfUnconnectedVertexExists() {
-		it("throws no exceptions if a vertex with that key exists, not connected to any edges", function () {
+		it("throws no exceptions if a vertex with that key exists, not connected to any edges", () => {
 			expectItWhenBoundWith('k1').not.toThrow();
 		});
 	}
 
 	function it_throwsNothingWhenPassedAKey() {
-		it("throws no exceptions when it is passed a single key argument", function () {
+		it("throws no exceptions when it is passed a single key argument", () => {
 			expectItWhenBoundWith('k1').not.toThrow();
 			expectItWhenBoundWith('newKey').not.toThrow();
 		});
 	}
 
 	function it_throwsNothingWhenPassedAKeyAndValue() {
-		it("throws no exceptions when it is passed a key and a value argument", function () {
+		it("throws no exceptions when it is passed a key and a value argument", () => {
 			expectItWhenBoundWith('k1', 'newValue').not.toThrow();
 			expectItWhenBoundWith('newKey', 'newValue').not.toThrow();
 		});
 	}
 
 
-	// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
+	// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
 
 
 	function it_leavesNewVertexWithNewValue() {
-		it("leaves a new vertex in the graph with a new value", function () {
+		it("leaves a new vertex in the graph with a new value", () => {
 			callItWith('newKey', 'newValue');
 			expect(graph.hasVertex('newKey')).toBeTruthy();
 			expect(graph.vertexValue('newKey')).toBe('newValue');
@@ -554,7 +551,7 @@ describe("method", function () {////////////////////////////////////////////////
 	}
 
 	function it_leavesNewVertexWithNewUndefinedValue() {
-		it("leaves a new vertex in the graph with a new 'undefined' value", function () {
+		it("leaves a new vertex in the graph with a new 'undefined' value", () => {
 			callItWith('newKey');
 			expect(graph.hasVertex('newKey')).toBeTruthy();
 			expect(graph.vertexValue('newKey')).toBeUndefined();
@@ -563,7 +560,7 @@ describe("method", function () {////////////////////////////////////////////////
 	}
 
 	function it_leavesExistingVertexWithNewValue() {
-		it("leaves an existing vertex in the graph with a new value", function () {
+		it("leaves an existing vertex in the graph with a new value", () => {
 			callItWith('k1', 'newValue');
 			expect(graph.hasVertex('k1')).toBeTruthy();
 			expect(graph.vertexValue('k1')).toBe('newValue');
@@ -572,7 +569,7 @@ describe("method", function () {////////////////////////////////////////////////
 	}
 
 	function it_leavesExistingVertexWithNewUndefinedValue() {
-		it("leaves an existing vertex in the graph with a new 'undefined' value", function () {
+		it("leaves an existing vertex in the graph with a new 'undefined' value", () => {
 			callItWith('k1');
 			expect(graph.hasVertex('k1')).toBeTruthy();
 			expect(graph.vertexValue('k1')).toBeUndefined();
@@ -581,7 +578,7 @@ describe("method", function () {////////////////////////////////////////////////
 	}
 
 	function it_leavesExistingVertexWithOldValue() {
-		it("leaves an existing vertex in the graph with its old value", function () {
+		it("leaves an existing vertex in the graph with its old value", () => {
 			callItWith('k1', 'newValue');
 			expect(graph.hasVertex('k1')).toBeTruthy();
 			expect(graph.vertexValue('k1')).toBe('oldValue1');
@@ -594,7 +591,7 @@ describe("method", function () {////////////////////////////////////////////////
 	}
 
 	function it_leavesExistingVertexWithOldUndefinedValue() {
-		it("leaves an existing vertex in the graph with its old 'undefined' value", function () {
+		it("leaves an existing vertex in the graph with its old 'undefined' value", () => {
 			callItWith('k2', 'newValue');
 			expect(graph.hasVertex('k2')).toBeTruthy();
 			expect(graph.vertexValue('k2')).toBeUndefined();
@@ -603,7 +600,7 @@ describe("method", function () {////////////////////////////////////////////////
 	}
 
 	function it_leavesExistingVertexAbsent() {
-		it("leaves an existing vertex absent from the graph", function () {
+		it("leaves an existing vertex absent from the graph", () => {
 			callItWith('k1');
 			expect(graph.hasVertex('k1')).toBeFalsy();
 			expect(graph.vertexCount()).toBe(originalVertexCount - 1);
@@ -611,7 +608,7 @@ describe("method", function () {////////////////////////////////////////////////
 	}
 
 	function it_leavesConnectedEdgesAbsent() {
-		it("leaves existing connected edges absent from the graph", function () {
+		it("leaves existing connected edges absent from the graph", () => {
 			callItWith('k3');
 			expect(graph.hasEdge('k2', 'k3')).toBeFalsy();
 			expect(graph.hasEdge('k3', 'k4')).toBeFalsy();
@@ -621,7 +618,7 @@ describe("method", function () {////////////////////////////////////////////////
 	}
 
 	function it_leavesAbsentVertexAbsent() {
-		it("leaves an absent vertex absent from the graph", function () {
+		it("leaves an absent vertex absent from the graph", () => {
 			callItWith('newKey');
 			expect(graph.hasVertex('newKey')).toBeFalsy();
 			expect(graph.vertexCount()).toBe(originalVertexCount);
@@ -629,24 +626,24 @@ describe("method", function () {////////////////////////////////////////////////
 	}
 
 
-	// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
+	// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
 
 
-	describeMethod('addNewVertex', function () {
+	describeMethod('addNewVertex', () => {
 		it_throwsErrorIfVertexExists();
 		it_throwsNothingIfVertexDoesNotExist();
 		it_leavesNewVertexWithNewValue();
 		it_leavesNewVertexWithNewUndefinedValue();
 	});
 
-	describeMethod('setVertex', function () {
+	describeMethod('setVertex', () => {
 		it_throwsErrorIfVertexDoesNotExist();
 		it_throwsNothingIfVertexExists();
 		it_leavesExistingVertexWithNewValue();
 		it_leavesExistingVertexWithNewUndefinedValue();
 	});
 
-	describeMethod('ensureVertex', function () {
+	describeMethod('ensureVertex', () => {
 		it_throwsNothingWhenPassedAKey();
 		it_throwsNothingWhenPassedAKeyAndValue();
 		it_leavesNewVertexWithNewValue();
@@ -655,7 +652,7 @@ describe("method", function () {////////////////////////////////////////////////
 		it_leavesExistingVertexWithOldUndefinedValue();
 	});
 
-	describeMethod('addVertex', function () {
+	describeMethod('addVertex', () => {
 		it_throwsNothingWhenPassedAKey();
 		it_throwsNothingWhenPassedAKeyAndValue();
 		it_leavesNewVertexWithNewValue();
@@ -664,28 +661,28 @@ describe("method", function () {////////////////////////////////////////////////
 		it_leavesExistingVertexWithNewUndefinedValue();
 	});
 
-	describeMethod('removeExistingVertex', function () {
+	describeMethod('removeExistingVertex', () => {
 		it_throwsErrorIfVertexDoesNotExist();
 		it_throwsErrorIfEdgesAreConnected();
 		it_throwsNothingIfUnconnectedVertexExists();
 		it_leavesExistingVertexAbsent();
 	});
 
-	describeMethod('destroyExistingVertex', function () {
+	describeMethod('destroyExistingVertex', () => {
 		it_throwsErrorIfVertexDoesNotExist();
 		it_throwsNothingIfVertexExists();
 		it_leavesExistingVertexAbsent();
 		it_leavesConnectedEdgesAbsent();
 	});
 
-	describeMethod('removeVertex', function () {
+	describeMethod('removeVertex', () => {
 		it_throwsErrorIfEdgesAreConnected();
 		it_throwsNothingIfUnconnectedVertexExists();
 		it_leavesExistingVertexAbsent();
 		it_leavesAbsentVertexAbsent();
 	});
 
-	describeMethod('destroyVertex', function () {
+	describeMethod('destroyVertex', () => {
 		it_throwsNothingWhenPassedAKey();
 		it_leavesExistingVertexAbsent();
 		it_leavesAbsentVertexAbsent();
@@ -693,11 +690,11 @@ describe("method", function () {////////////////////////////////////////////////
 	});
 
 
-	// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
+	// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
 
 
 	function it_throwsErrorIfEdgeExists() {
-		it("throws an error if an edge with the given keys already exists", function () {
+		it("throws an error if an edge with the given keys already exists", () => {
 			expectItWhenBoundWith('k2', 'k3').toThrow();
 			expectItWhenBoundWith('k3', 'k4').toThrow();
 			expectItWhenBoundWith('k2', 'k3').toThrowSpecific(JsGraph.EdgeExistsError, { edges: {'k2': {'k3': 'oldValue23'}} });
@@ -706,14 +703,14 @@ describe("method", function () {////////////////////////////////////////////////
 	}
 
 	function it_throwsErrorIfEdgeDoesNotExist() {
-		it("throws an error if an edge with the given keys does not exist", function () {
+		it("throws an error if an edge with the given keys does not exist", () => {
 			expectItWhenBoundWith('k1', 'k2').toThrow();
 			expectItWhenBoundWith('k1', 'k2').toThrowSpecific(JsGraph.EdgeNotExistsError, { edges: {'k1': {'k2': undefined}} });
 		});
 	}
 
 	function it_throwsErrorIfVerticesDoNotExist() {
-		it("throws an error if the required vertices do not exist", function () {
+		it("throws an error if the required vertices do not exist", () => {
 			expectItWhenBoundWith('newKey1', 'newKey2').toThrow();
 			expectItWhenBoundWith('k1', 'newKey3').toThrow();
 			expectItWhenBoundWith('newKey4', 'k2').toThrow();
@@ -724,27 +721,27 @@ describe("method", function () {////////////////////////////////////////////////
 	}
 
 	function it_throwsNothingIfEdgeDoesNotExist() {
-		it("throws nothing if the edge does not exist", function () {
+		it("throws nothing if the edge does not exist", () => {
 			expectItWhenBoundWith('k1', 'k2').not.toThrow();
 			expectItWhenBoundWith('newKey1', 'newKey2').not.toThrow();
 		});
 	}
 
 	function it_throwsNothingIfEdgeExists() {
-		it("throws nothing if the edge exists", function () {
+		it("throws nothing if the edge exists", () => {
 			expectItWhenBoundWith('k2', 'k3').not.toThrow();
 			expectItWhenBoundWith('k3', 'k4').not.toThrow();
 		});
 	}
 
 	function it_throwsNothingIfVerticesExistAndEdgeDoesNot() {
-		it("throws nothing if the required vertices exist but the edge does not", function () {
+		it("throws nothing if the required vertices exist but the edge does not", () => {
 			expectItWhenBoundWith('k1', 'k2').not.toThrow();
 		});
 	}
 
 	function it_throwsNothingIfVerticesExist() {
-		it("throws nothing if the required vertices exist", function () {
+		it("throws nothing if the required vertices exist", () => {
 			expectItWhenBoundWith('k1', 'k2').not.toThrow();
 			expectItWhenBoundWith('k2', 'k3').not.toThrow();
 			expectItWhenBoundWith('k3', 'k4').not.toThrow();
@@ -752,7 +749,7 @@ describe("method", function () {////////////////////////////////////////////////
 	}
 
 	function it_throwsNothingWhenPassedTwoKeys() {
-		it("throws no exceptions when it is passed two key arguments", function () {
+		it("throws no exceptions when it is passed two key arguments", () => {
 			expectItWhenBoundWith('k1', 'k2').not.toThrow();
 			expectItWhenBoundWith('k2', 'k3').not.toThrow();
 			expectItWhenBoundWith('k3', 'k4').not.toThrow();
@@ -761,7 +758,7 @@ describe("method", function () {////////////////////////////////////////////////
 	}
 
 	function it_throwsNothingWhenPassedTwoKeysAndValue() {
-		it("throws no exceptions when it is passed two keys and a value argument", function () {
+		it("throws no exceptions when it is passed two keys and a value argument", () => {
 			expectItWhenBoundWith('k1', 'k2', 'newValue').not.toThrow();
 			expectItWhenBoundWith('k2', 'k3', 'newValue').not.toThrow();
 			expectItWhenBoundWith('k3', 'k4', 'newValue').not.toThrow();
@@ -770,11 +767,11 @@ describe("method", function () {////////////////////////////////////////////////
 	}
 
 
-	// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
+	// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
 
 
 	function it_leavesNewEdgeWithNewValue() {
-		it("leaves a new edge in the graph with a new value", function () {
+		it("leaves a new edge in the graph with a new value", () => {
 			callItWith('k1', 'k2', 'newValue');
 			expect(graph.hasEdge('k1', 'k2')).toBeTruthy();
 			expect(graph.edgeValue('k1', 'k2')).toBe('newValue');
@@ -783,7 +780,7 @@ describe("method", function () {////////////////////////////////////////////////
 	}
 
 	function it_leavesNewEdgeWithNewUndefinedValue() {
-		it("leaves a new edge in the graph with a new 'undefined' value", function () {
+		it("leaves a new edge in the graph with a new 'undefined' value", () => {
 			callItWith('k1', 'k2');
 			expect(graph.hasEdge('k1', 'k2')).toBeTruthy();
 			expect(graph.edgeValue('k1', 'k2')).toBeUndefined();
@@ -792,7 +789,7 @@ describe("method", function () {////////////////////////////////////////////////
 	}
 
 	function it_leavesExistingEdgeWithNewValue() {
-		it("leaves an existing edge in the graph with a new value", function () {
+		it("leaves an existing edge in the graph with a new value", () => {
 			callItWith('k2', 'k3', 'newValue');
 			expect(graph.hasEdge('k2', 'k3')).toBeTruthy();
 			expect(graph.edgeValue('k2', 'k3')).toBe('newValue');
@@ -801,7 +798,7 @@ describe("method", function () {////////////////////////////////////////////////
 	}
 
 	function it_leavesExistingEdgeWithNewUndefinedValue() {
-		it("leaves an existing edge in the graph with a new 'undefined' value", function () {
+		it("leaves an existing edge in the graph with a new 'undefined' value", () => {
 			callItWith('k2', 'k3');
 			expect(graph.hasEdge('k2', 'k3')).toBeTruthy();
 			expect(graph.edgeValue('k2', 'k3')).toBeUndefined();
@@ -810,7 +807,7 @@ describe("method", function () {////////////////////////////////////////////////
 	}
 
 	function it_leavesExistingEdgeWithOldValue() {
-		it("leaves an existing edge in the graph with its old value", function () {
+		it("leaves an existing edge in the graph with its old value", () => {
 			callItWith('k2', 'k3', 'newValue');
 			expect(graph.hasEdge('k2', 'k3')).toBeTruthy();
 			expect(graph.edgeValue('k2', 'k3')).toBe('oldValue23');
@@ -823,7 +820,7 @@ describe("method", function () {////////////////////////////////////////////////
 	}
 
 	function it_leavesExistingEdgeWithOldUndefinedValue() {
-		it("leaves an existing edge in the graph with its old 'undefined' value", function () {
+		it("leaves an existing edge in the graph with its old 'undefined' value", () => {
 			callItWith('k3', 'k4', 'newValue');
 			expect(graph.hasEdge('k3', 'k4')).toBeTruthy();
 			expect(graph.edgeValue('k3', 'k4')).toBeUndefined();
@@ -832,7 +829,7 @@ describe("method", function () {////////////////////////////////////////////////
 	}
 
 	function it_leavesExistingEdgeAbsent() {
-		it("leaves an existing edge absent from the graph", function () {
+		it("leaves an existing edge absent from the graph", () => {
 			callItWith('k2', 'k3');
 			expect(graph.hasEdge('k2', 'k3')).toBeFalsy();
 			expect(graph.edgeCount()).toBe(originalEdgeCount - 1);
@@ -843,7 +840,7 @@ describe("method", function () {////////////////////////////////////////////////
 	}
 
 	function it_leavesAbsentEdgeAbsent() {
-		it("leaves an absent edge absent from the graph", function () {
+		it("leaves an absent edge absent from the graph", () => {
 			callItWith('k1', 'k2');
 			expect(graph.hasEdge('k1', 'k2')).toBeFalsy();
 			expect(graph.edgeCount()).toBe(originalEdgeCount);
@@ -851,7 +848,7 @@ describe("method", function () {////////////////////////////////////////////////
 	}
 
 	function it_leavesAbsentVerticesPresent() {
-		it("leaves absent vertices present in the graph", function () {
+		it("leaves absent vertices present in the graph", () => {
 			callItWith('newKey1', 'k1');
 			expect(graph.hasVertex('newKey1')).toBeTruthy();
 			expect(graph.vertexCount()).toBe(originalVertexCount + 1);
@@ -866,10 +863,10 @@ describe("method", function () {////////////////////////////////////////////////
 	}
 
 
-	// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
+	// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
 
 
-	describeMethod('addNewEdge', function () {
+	describeMethod('addNewEdge', () => {
 		it_throwsErrorIfEdgeExists();
 		it_throwsErrorIfVerticesDoNotExist();
 		it_throwsNothingIfVerticesExistAndEdgeDoesNot();
@@ -877,7 +874,7 @@ describe("method", function () {////////////////////////////////////////////////
 		it_leavesNewEdgeWithNewUndefinedValue();
 	});
 
-	describeMethod('createNewEdge', function () {
+	describeMethod('createNewEdge', () => {
 		it_throwsErrorIfEdgeExists();
 		it_throwsNothingIfEdgeDoesNotExist();
 		it_leavesNewEdgeWithNewValue();
@@ -885,14 +882,14 @@ describe("method", function () {////////////////////////////////////////////////
 		it_leavesAbsentVerticesPresent();
 	});
 
-	describeMethod('setEdge', function () {
+	describeMethod('setEdge', () => {
 		it_throwsErrorIfEdgeDoesNotExist();
 		it_throwsNothingIfEdgeExists();
 		it_leavesExistingEdgeWithNewValue();
 		it_leavesExistingEdgeWithNewUndefinedValue();
 	});
 
-	describeMethod('spanEdge', function () {
+	describeMethod('spanEdge', () => {
 		it_throwsErrorIfVerticesDoNotExist();
 		it_throwsNothingIfVerticesExist();
 		it_leavesNewEdgeWithNewValue();
@@ -901,7 +898,7 @@ describe("method", function () {////////////////////////////////////////////////
 		it_leavesExistingEdgeWithOldUndefinedValue();
 	});
 
-	describeMethod('addEdge', function () {
+	describeMethod('addEdge', () => {
 		it_throwsErrorIfVerticesDoNotExist();
 		it_throwsNothingIfVerticesExist();
 		it_leavesNewEdgeWithNewValue();
@@ -910,7 +907,7 @@ describe("method", function () {////////////////////////////////////////////////
 		it_leavesExistingEdgeWithNewUndefinedValue();
 	});
 
-	describeMethod('ensureEdge', function () {
+	describeMethod('ensureEdge', () => {
 		it_throwsNothingWhenPassedTwoKeys();
 		it_throwsNothingWhenPassedTwoKeysAndValue();
 		it_leavesNewEdgeWithNewValue();
@@ -920,7 +917,7 @@ describe("method", function () {////////////////////////////////////////////////
 		it_leavesAbsentVerticesPresent();
 	});
 
-	describeMethod('createEdge', function () {
+	describeMethod('createEdge', () => {
 		it_throwsNothingWhenPassedTwoKeys();
 		it_throwsNothingWhenPassedTwoKeysAndValue();
 		it_leavesNewEdgeWithNewValue();
@@ -930,33 +927,33 @@ describe("method", function () {////////////////////////////////////////////////
 		it_leavesAbsentVerticesPresent();
 	});
 
-	describeMethod('removeExistingEdge', function () {
+	describeMethod('removeExistingEdge', () => {
 		it_throwsErrorIfEdgeDoesNotExist();
 		it_leavesExistingEdgeAbsent();
 	});
 
-	describeMethod('removeEdge', function () {
+	describeMethod('removeEdge', () => {
 		it_throwsNothingWhenPassedTwoKeys();
 		it_leavesExistingEdgeAbsent();
 		it_leavesAbsentEdgeAbsent();
 	});
 
 
-	// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
+	// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
 
 
-	describeMethod('clearEdges', function () {
+	describeMethod('clearEdges', () => {
 
-		it("throws nothing", function () {
+		it("throws nothing", () => {
 			expectItWhenBoundWith().not.toThrow();
 		});
 
-		it("leaves the graph without edges", function () {
+		it("leaves the graph without edges", () => {
 			callItWith();
 			expect(graph.edgeCount()).toBe(0);
 		});
 
-		it("leaves existing vertices in the graph", function () {
+		it("leaves existing vertices in the graph", () => {
 			callItWith();
 			expect(graph.vertexCount()).toBe(originalVertexCount);
 		});
@@ -964,18 +961,18 @@ describe("method", function () {////////////////////////////////////////////////
 	});
 
 
-	describeMethod('clear', function () {
+	describeMethod('clear', () => {
 
-		it("throws nothing", function () {
+		it("throws nothing", () => {
 			expectItWhenBoundWith().not.toThrow();
 		});
 
-		it("leaves the graph without edges", function () {
+		it("leaves the graph without edges", () => {
 			callItWith();
 			expect(graph.edgeCount()).toBe(0);
 		});
 
-		it("leaves the graph without vertices", function () {
+		it("leaves the graph without vertices", () => {
 			callItWith();
 			expect(graph.vertexCount()).toBe(0);
 		});
@@ -983,25 +980,25 @@ describe("method", function () {////////////////////////////////////////////////
 	});
 
 
-	// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
+	// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
 
 
-	describeMethod('onAddVertex', function () {
+	describeMethod('onAddVertex', () => {
 
-		it("throws no exceptions when passed a function", function () {
-			expectItWhenBoundWith(function () { throw new Error("should not be thrown"); }).not.toThrow();
+		it("throws no exceptions when passed a function", () => {
+			expectItWhenBoundWith(() => { throw new Error("should not be thrown"); }).not.toThrow();
 		});
 
-		it("does not modify the graph", function () {
-			callItWith(function () {
+		it("does not modify the graph", () => {
+			callItWith(() => {
 				graph = null;
 			});
 			expectTheGraphNotToHaveChanged();
 		});
 
-		it("causes the handler to be called after a new vertex is added", function () {
+		it("causes the handler to be called after a new vertex is added", () => {
 			var addedVertices = {};
-			callItWith(function (key, value) {
+			callItWith((key, value) => {
 				expect(graph.hasVertex(key)).toBeTruthy();
 				addedVertices[key] = value;
 			});
@@ -1009,24 +1006,24 @@ describe("method", function () {////////////////////////////////////////////////
 			expect(addedVertices).toEqual({ 'newKey': 'newValue' });
 		});
 
-		it("does not cause the handler to be called when an existing vertex is modified", function () {
-			callItWith(function () {
+		it("does not cause the handler to be called when an existing vertex is modified", () => {
+			callItWith(() => {
 				expect().not.toBeReachable();
 			});
 			graph.setVertex('k1', 'newValue');
 			graph.setVertex('k2', 'newValue');
 		});
 
-		it("does not cause the handler to be called when an existing vertex is removed", function () {
-			callItWith(function () {
+		it("does not cause the handler to be called when an existing vertex is removed", () => {
+			callItWith(() => {
 				expect().not.toBeReachable();
 			});
 			graph.removeExistingVertex('k1');
 		});
 
-		it("causes the handler to be called after a previously removed vertex is added again", function () {
+		it("causes the handler to be called after a previously removed vertex is added again", () => {
 			var vertices = {};
-			callItWith(function (key, value) {
+			callItWith((key, value) => {
 				expect(graph.hasVertex(key)).toBeTruthy();
 				vertices[key] = value;
 			});
@@ -1036,9 +1033,9 @@ describe("method", function () {////////////////////////////////////////////////
 			expect(vertices).toEqual({ 'k1': 'oldValue1' });
 		});
 
-		it("does not cause the handler to be called after the handler is removed", function () {
+		it("does not cause the handler to be called after the handler is removed", () => {
 			var registeredAddedVertices = {};
-			var removeCallback = callItWith(function (key, value) {
+			var removeCallback = callItWith((key, value) => {
 				registeredAddedVertices[key] = value;
 			});
 			graph.addNewVertex('newKey', 'newValue');
@@ -1051,22 +1048,22 @@ describe("method", function () {////////////////////////////////////////////////
 	});
 
 
-	describeMethod('onAddEdge', function () {
+	describeMethod('onAddEdge', () => {
 
-		it("throws no exceptions when passed a function", function () {
-			expectItWhenBoundWith(function () { throw new Error("should not be thrown"); }).not.toThrow();
+		it("throws no exceptions when passed a function", () => {
+			expectItWhenBoundWith(() => { throw new Error("should not be thrown"); }).not.toThrow();
 		});
 
-		it("does not modify the graph", function () {
-			callItWith(function () {
+		it("does not modify the graph", () => {
+			callItWith(() => {
 				graph = null;
 			});
 			expectTheGraphNotToHaveChanged();
 		});
 
-		it("causes the handler to be called after a new edge is added", function () {
+		it("causes the handler to be called after a new edge is added", () => {
 			var addedEdges = {};
-			callItWith(function (from, to, value) {
+			callItWith((from, to, value) => {
 				expect(graph.hasEdge(from, to)).toBeTruthy();
 				addedEdges[from + ", " + to] = value;
 			});
@@ -1074,24 +1071,24 @@ describe("method", function () {////////////////////////////////////////////////
 			expect(addedEdges).toEqual({ 'k1, k2': 'newValue' });
 		});
 
-		it("does not cause the handler to be called when an existing edge is modified", function () {
-			callItWith(function () {
+		it("does not cause the handler to be called when an existing edge is modified", () => {
+			callItWith(() => {
 				expect().not.toBeReachable();
 			});
 			graph.setEdge('k2', 'k3', 'newValue');
 			graph.setEdge('k3', 'k4', 'newValue');
 		});
 
-		it("does not cause the handler to be called when an existing edge is removed", function () {
-			callItWith(function () {
+		it("does not cause the handler to be called when an existing edge is removed", () => {
+			callItWith(() => {
 				expect().not.toBeReachable();
 			});
 			graph.removeExistingEdge('k2', 'k3');
 		});
 
-		it("causes the handler to be called after a previously removed edge is added again", function () {
+		it("causes the handler to be called after a previously removed edge is added again", () => {
 			var edges = {};
-			callItWith(function (from, to, value) {
+			callItWith((from, to, value) => {
 				expect(graph.hasEdge(from, to)).toBeTruthy();
 				edges[from + ", " + to] = value;
 			});
@@ -1101,9 +1098,9 @@ describe("method", function () {////////////////////////////////////////////////
 			expect(edges).toEqual({ 'k2, k3': 'oldValue23' });
 		});
 
-		it("does not cause the handler to be called after the handler is removed", function () {
+		it("does not cause the handler to be called after the handler is removed", () => {
 			var registeredAddedEdges = {};
-			var removeCallback = callItWith(function (from, to, value) {
+			var removeCallback = callItWith((from, to, value) => {
 				registeredAddedEdges[from + ", " + to] = value;
 			});
 			graph.addNewEdge('k1', 'k2', 'newValue');
@@ -1116,22 +1113,22 @@ describe("method", function () {////////////////////////////////////////////////
 	});
 
 
-	describeMethod('onRemoveVertex', function () {
+	describeMethod('onRemoveVertex', () => {
 
-		it("throws no exceptions when passed a function", function () {
-			expectItWhenBoundWith(function () { throw new Error("should not be thrown"); }).not.toThrow();
+		it("throws no exceptions when passed a function", () => {
+			expectItWhenBoundWith(() => { throw new Error("should not be thrown"); }).not.toThrow();
 		});
 
-		it("does not modify the graph", function () {
-			callItWith(function () {
+		it("does not modify the graph", () => {
+			callItWith(() => {
 				graph = null;
 			});
 			expectTheGraphNotToHaveChanged();
 		});
 
-		it("causes the handler to be called after an existing vertex is removed", function () {
+		it("causes the handler to be called after an existing vertex is removed", () => {
 			var removedVertices = {};
-			callItWith(function (key, value) {
+			callItWith((key, value) => {
 				expect(graph.hasVertex(key)).toBeFalsy();
 				removedVertices[key] = value;
 			});
@@ -1139,31 +1136,31 @@ describe("method", function () {////////////////////////////////////////////////
 			expect(removedVertices).toEqual({ 'k1': 'oldValue1' });
 		});
 
-		it("does not cause the handler to be called when an existing vertex is modified", function () {
-			callItWith(function () {
+		it("does not cause the handler to be called when an existing vertex is modified", () => {
+			callItWith(() => {
 				expect().not.toBeReachable();
 			});
 			graph.setVertex('k1', 'newValue');
 			graph.setVertex('k2', 'newValue');
 		});
 
-		it("does not cause the handler to be called when an absent vertex is left absent", function () {
-			callItWith(function () {
+		it("does not cause the handler to be called when an absent vertex is left absent", () => {
+			callItWith(() => {
 				expect().not.toBeReachable();
 			});
 			graph.removeVertex('newKey');
 		});
 
-		it("does not cause the handler to be called when an absent vertex is added", function () {
-			callItWith(function () {
+		it("does not cause the handler to be called when an absent vertex is added", () => {
+			callItWith(() => {
 				expect().not.toBeReachable();
 			});
 			graph.addNewVertex('newKey');
 		});
 
-		it("does not cause the handler to be called after the handler is removed", function () {
+		it("does not cause the handler to be called after the handler is removed", () => {
 			var registeredRemovedVertices = {};
-			var removeCallback = callItWith(function (key, value) {
+			var removeCallback = callItWith((key, value) => {
 				registeredRemovedVertices[key] = value;
 			});
 			graph.addNewVertex('k99', 'newValue');
@@ -1177,22 +1174,22 @@ describe("method", function () {////////////////////////////////////////////////
 	});
 
 
-	describeMethod('onRemoveEdge', function () {
+	describeMethod('onRemoveEdge', () => {
 
-		it("throws no exceptions when passed a function", function () {
-			expectItWhenBoundWith(function () { throw new Error("should not be thrown"); }).not.toThrow();
+		it("throws no exceptions when passed a function", () => {
+			expectItWhenBoundWith(() => { throw new Error("should not be thrown"); }).not.toThrow();
 		});
 
-		it("does not modify the graph", function () {
-			callItWith(function () {
+		it("does not modify the graph", () => {
+			callItWith(() => {
 				graph = null;
 			});
 			expectTheGraphNotToHaveChanged();
 		});
 
-		it("causes the handler to be called after an existing edge is removed", function () {
+		it("causes the handler to be called after an existing edge is removed", () => {
 			var removedEdges = {};
-			callItWith(function (from, to, value) {
+			callItWith((from, to, value) => {
 				expect(graph.hasEdge(from, to)).toBeFalsy();
 				removedEdges[from + ", " + to] = value;
 			});
@@ -1200,31 +1197,31 @@ describe("method", function () {////////////////////////////////////////////////
 			expect(removedEdges).toEqual({ 'k2, k3': 'oldValue23' });
 		});
 
-		it("does not cause the handler to be called when an existing edge is modified", function () {
-			callItWith(function () {
+		it("does not cause the handler to be called when an existing edge is modified", () => {
+			callItWith(() => {
 				expect().not.toBeReachable();
 			});
 			graph.setEdge('k2', 'k3', 'newValue');
 			graph.setEdge('k3', 'k4', 'newValue');
 		});
 
-		it("does not cause the handler to be called when an absent edge is left absent", function () {
-			callItWith(function () {
+		it("does not cause the handler to be called when an absent edge is left absent", () => {
+			callItWith(() => {
 				expect().not.toBeReachable();
 			});
 			graph.removeEdge('k1', 'k2');
 		});
 
-		it("does not cause the handler to be called when an absent edge is added", function () {
-			callItWith(function () {
+		it("does not cause the handler to be called when an absent edge is added", () => {
+			callItWith(() => {
 				expect().not.toBeReachable();
 			});
 			graph.addNewEdge('k1', 'k2');
 		});
 
-		it("does not cause the handler to be called after the handler is removed", function () {
+		it("does not cause the handler to be called after the handler is removed", () => {
 			var registeredRemovedEdges = {};
-			var removeCallback = callItWith(function (from, to, value) {
+			var removeCallback = callItWith((from, to, value) => {
 				registeredRemovedEdges[from + ", " + to] = value;
 			});
 			graph.removeExistingEdge('k2', 'k3');
@@ -1237,11 +1234,11 @@ describe("method", function () {////////////////////////////////////////////////
 	});
 
 
-	describe("event subscription methods", function () {
+	describe("event subscription methods", () => {
 
-		it("register each handler only once", function () {
+		it("register each handler only once", () => {
 			var counter = 0;
-			var handler = function () {
+			var handler = () => {
 				++counter;
 			};
 			graph.onAddVertex(handler);
@@ -1250,15 +1247,15 @@ describe("method", function () {////////////////////////////////////////////////
 			expect(counter).toBe(1);
 		});
 
-		it("quietly ignore multiple removals of the same handler", function () {
+		it("quietly ignore multiple removals of the same handler", () => {
 			var counter = 0;
-			graph.onAddVertex(function () { // adding a handler before the main handler
+			graph.onAddVertex(() => { // adding a handler before the main handler
 				++counter;
 			});
-			var removeCallback = graph.onAddVertex(function () {
+			var removeCallback = graph.onAddVertex(() => {
 				counter += 10;
 			});
-			graph.onAddVertex(function () { // adding a handler after the main handler
+			graph.onAddVertex(() => { // adding a handler after the main handler
 				++counter;
 			});
 			graph.addNewVertex('newKey', 'newValue');
@@ -1272,12 +1269,12 @@ describe("method", function () {////////////////////////////////////////////////
 	});
 
 
-	// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
+	// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
 
 
-	describeMethod('hasCycle', function () {
+	describeMethod('hasCycle', () => {
 
-		it("returns true if the graph contains a cycle (1)", function () {
+		it("returns true if the graph contains a cycle (1)", () => {
 			graph.clear();
 
 			graph.createEdge('n1', 'n2');
@@ -1296,7 +1293,7 @@ describe("method", function () {////////////////////////////////////////////////
 			expectItWhenCalledWith().toBe(true);
 		});
 
-		it("returns true if the graph contains a cycle (2)", function () {
+		it("returns true if the graph contains a cycle (2)", () => {
 			graph.clear();
 
 			graph.createEdge('n1', 'n1');
@@ -1304,11 +1301,11 @@ describe("method", function () {////////////////////////////////////////////////
 			expectItWhenCalledWith().toBe(true);
 		});
 
-		it("returns false if the graph contains no cycle (1)", function () {
+		it("returns false if the graph contains no cycle (1)", () => {
 			expectItWhenCalledWith().toBe(false);
 		});
 
-		it("returns false if the graph contains no cycle (2)", function () {
+		it("returns false if the graph contains no cycle (2)", () => {
 			graph.clear();
 			expectItWhenCalledWith().toBe(false);
 		});
@@ -1316,9 +1313,9 @@ describe("method", function () {////////////////////////////////////////////////
 	});
 
 
-	describeMethod('hasPath', function () {
+	describeMethod('hasPath', () => {
 
-		it("throws nothing when passed two key arguments", function () {
+		it("throws nothing when passed two key arguments", () => {
 			expectItWhenBoundWith('k1', 'k2').not.toThrow();
 			expectItWhenBoundWith('k2', 'k3').not.toThrow();
 			expectItWhenBoundWith('newKey', 'k2').not.toThrow();
@@ -1331,52 +1328,52 @@ describe("method", function () {////////////////////////////////////////////////
 		//        ▼      │
 		//        k5 ────╯
 
-		it("returns a falsy value if the path doesn't exist (1)", function () {
+		it("returns a falsy value if the path doesn't exist (1)", () => {
 			expectItWhenCalledWith('k1', 'k2').toBeFalsy();
 			expectItWhenCalledWith('k1', 'k3').toBeFalsy();
 			expectItWhenCalledWith('k2', 'k1').toBeFalsy();
 		});
 
-		it("returns a falsy value if the path doesn't exist (2: self-loop)", function () {
+		it("returns a falsy value if the path doesn't exist (2: self-loop)", () => {
 			expectItWhenCalledWith('k2', 'k2').toBeFalsy();
 		});
 
-		it("returns a falsy value if the path doesn't exist (3: edge backwards)", function () {
+		it("returns a falsy value if the path doesn't exist (3: edge backwards)", () => {
 			expectItWhenCalledWith('k3', 'k2').toBeFalsy();
 			expectItWhenCalledWith('k4', 'k2').toBeFalsy();
 		});
 
-		it("returns a truthy value if the path exists (1: single edge)", function () {
+		it("returns a truthy value if the path exists (1: single edge)", () => {
 			expectItWhenCalledWith('k2', 'k3').toBeTruthy();
 			expectItWhenCalledWith('k3', 'k4').toBeTruthy();
 			expectItWhenCalledWith('k2', 'k5').toBeTruthy();
 			expectItWhenCalledWith('k5', 'k3').toBeTruthy();
 		});
 
-		it("returns a truthy value if the path exists (2: transitive)", function () {
+		it("returns a truthy value if the path exists (2: transitive)", () => {
 			expectItWhenCalledWith('k2', 'k4').toBeTruthy();
 			expectItWhenCalledWith('k5', 'k4').toBeTruthy();
 			graph.addEdge('k4', 'k1');
 			expectItWhenCalledWith('k2', 'k1').toBeTruthy();
 		});
 
-		it("returns a truthy value if the path exists (3: reflexive cycle)", function () {
+		it("returns a truthy value if the path exists (3: reflexive cycle)", () => {
 			graph.addEdge('k1', 'k1');
 			expectItWhenCalledWith('k1', 'k1').toBeTruthy();
 		});
 
-		it("returns a truthy value if the path exists (4: symmetric cycle)", function () {
+		it("returns a truthy value if the path exists (4: symmetric cycle)", () => {
 			graph.addEdge('k4', 'k3');
 			expectItWhenCalledWith('k3', 'k3').toBeTruthy();
 		});
 
-		it("returns a truthy value if the path exists (5: larger cycle)", function () {
+		it("returns a truthy value if the path exists (5: larger cycle)", () => {
 			graph.addEdge('k4', 'k1');
 			graph.addEdge('k1', 'k2');
 			expectItWhenCalledWith('k3', 'k3').toBeTruthy();
 		});
 
-		it("returns a truthy value if the path exists (6: including part of a cycle, part 1)", function () {
+		it("returns a truthy value if the path exists (6: including part of a cycle, part 1)", () => {
 			graph.clear();
 
 			graph.createEdge('n1', 'n2');
@@ -1395,7 +1392,7 @@ describe("method", function () {////////////////////////////////////////////////
 			expectItWhenCalledWith('n1', 'n5').toBeTruthy();
 		});
 
-		it("returns a truthy value if the path exists (7: including part of a cycle, part 2)", function () {
+		it("returns a truthy value if the path exists (7: including part of a cycle, part 2)", () => {
 			graph.clear();
 
 			graph.createEdge('n3', 'n23'); // same graph as above, but creating the loopy bit
@@ -1417,9 +1414,9 @@ describe("method", function () {////////////////////////////////////////////////
 	});
 
 
-	describeMethod('topologically', function () {
+	describeMethod('topologically', () => {
 
-		it("throws an error if the graph contains a cycle (1)", function () {
+		it("throws an error if the graph contains a cycle (1)", () => {
 			graph.clear();
 
 			graph.createEdge('n1', 'n2');
@@ -1435,11 +1432,11 @@ describe("method", function () {////////////////////////////////////////////////
 			//        ╵      │
 			//       n23 ◀───╯
 
-			expectItWhenBoundWith(function () {}).toThrow();
-			expectItWhenBoundWith(function () {}).toThrowSpecific(JsGraph.CycleError, {});
+			expectItWhenBoundWith(() => {}).toThrow();
+			expectItWhenBoundWith(() => {}).toThrowSpecific(JsGraph.CycleError, {});
 
 			try {
-				callItWith(function () {});
+				callItWith(() => {});
 			} catch (err) {
 				expect(err.cycle).toEqualOneOf(
 					['n23', 'n2', 'n3'],
@@ -1455,16 +1452,16 @@ describe("method", function () {////////////////////////////////////////////////
 			}
 		});
 
-		it("throws an error if the graph contains a cycle (2)", function () {
+		it("throws an error if the graph contains a cycle (2)", () => {
 			graph.clear();
 
 			graph.createEdge('n1', 'n1');
 
-			expectItWhenBoundWith(function () {}).toThrow();
-			expectItWhenBoundWith(function () {}).toThrowSpecific(JsGraph.CycleError, {});
+			expectItWhenBoundWith(() => {}).toThrow();
+			expectItWhenBoundWith(() => {}).toThrowSpecific(JsGraph.CycleError, {});
 
 			try {
-				callItWith(function () {});
+				callItWith(() => {});
 			} catch (err) {
 				expect(err.cycle).toEqual(['n1']);
 				var cycleInMessage = err.message.substring(err.message.indexOf(':') + 1).trim();
@@ -1472,20 +1469,20 @@ describe("method", function () {////////////////////////////////////////////////
 			}
 		});
 
-		it("throws nothing if the graph has no cycle and the passed function throws nothing", function () {
-			expectItWhenBoundWith(function () {/*not throwing stuff*/}).not.toThrow();
+		it("throws nothing if the graph has no cycle and the passed function throws nothing", () => {
+			expectItWhenBoundWith(() => {/*not throwing stuff*/}).not.toThrow();
 		});
 
-		it("calls the specified handler exactly once for each vertex in the graph", function () {
+		it("calls the specified handler exactly once for each vertex in the graph", () => {
 			var verticesFound = {};
-			callItWith(function (key, value) {
+			callItWith((key, value) => {
 				expect(verticesFound[key]).toBeUndefined();
 				verticesFound[key] = value;
 			});
 			expect(verticesFound).toEqual(originalVertices);
 		});
 
-		it("visits vertices only when their predecessors have already been visited", function () {
+		it("visits vertices only when their predecessors have already been visited", () => {
 			graph.clear();
 
 			graph.createEdge('n3', 'n23');
@@ -1503,7 +1500,7 @@ describe("method", function () {////////////////////////////////////////////////
 
 			var visited = {};
 
-			callItWith(function (key) {
+			callItWith((key) => {
 				if (key === 'n2') { expect(visited['n1']).toBeDefined(); }
 				if (key === 'n3') { expect(visited['n2']).toBeDefined(); }
 				if (key === 'n4') { expect(visited['n3']).toBeDefined(); }
@@ -1520,38 +1517,38 @@ describe("method", function () {////////////////////////////////////////////////
 	});
 
 
-	// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
+	// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
 
 
-	describeMethod('clone', function () {
+	describeMethod('clone', () => {
 
 		it_throwsNothing();
 
 		var newGraph;
-		beforeEach(function () {
+		beforeEach(() => {
 			graph.addEdge('k1', 'k3');
 			graph.addEdge('k2', 'k4');
 			graph.addEdge('k5', 'k4');
 			newGraph = callItWith();
 		});
 
-		it("returns a new graph with the same vertices as the original", function () {
-			newGraph.eachVertex(function (key, val) {
+		it("returns a new graph with the same vertices as the original", () => {
+			newGraph.eachVertex((key, val) => {
 				expect(graph.hasVertex(key)).toBeTruthy();
 				expect(val).toBe(graph.vertexValue(key));
 			});
-			graph.eachVertex(function (key, val) {
+			graph.eachVertex((key, val) => {
 				expect(newGraph.hasVertex(key)).toBeTruthy();
 				expect(val).toBe(newGraph.vertexValue(key));
 			});
 		});
 
-		it("returns a new graph with the same edges as the original", function () {
-			newGraph.eachEdge(function (from, to, val) {
+		it("returns a new graph with the same edges as the original", () => {
+			newGraph.eachEdge((from, to, val) => {
 				expect(graph.hasEdge(from, to)).toBeTruthy();
 				expect(val).toBe(graph.edgeValue(from, to));
 			});
-			graph.eachEdge(function (from, to, val) {
+			graph.eachEdge((from, to, val) => {
 				expect(newGraph.hasEdge(from, to)).toBeTruthy();
 				expect(val).toBe(newGraph.edgeValue(from, to));
 			});
@@ -1560,47 +1557,47 @@ describe("method", function () {////////////////////////////////////////////////
 	});
 
 
-	describeMethod('transitiveReduction', function () {
+	describeMethod('transitiveReduction', () => {
 
 		it_throwsNothing();
 
 		var newGraph;
-		beforeEach(function () {
+		beforeEach(() => {
 			graph.addEdge('k1', 'k3');
 			graph.addEdge('k2', 'k4');
 			graph.addEdge('k5', 'k4');
 			newGraph = callItWith();
 		});
 
-		it("returns a new graph with the same vertices as the original", function () {
-			newGraph.eachVertex(function (key, val) {
+		it("returns a new graph with the same vertices as the original", () => {
+			newGraph.eachVertex((key, val) => {
 				expect(graph.hasVertex(key)).toBeTruthy();
 				expect(val).toBe(graph.vertexValue(key));
 			});
-			graph.eachVertex(function (key, val) {
+			graph.eachVertex((key, val) => {
 				expect(newGraph.hasVertex(key)).toBeTruthy();
 				expect(val).toBe(newGraph.vertexValue(key));
 			});
 		});
 
-		it("returns a new graph with the same reachability as the original", function () {
-			graph.eachVertex(function (from) {
-				graph.eachVertex(function (to) {
+		it("returns a new graph with the same reachability as the original", () => {
+			graph.eachVertex((from) => {
+				graph.eachVertex((to) => {
 					expect(graph.hasPath(from, to)).toEqual(newGraph.hasPath(from, to));
 				});
 			});
 		});
 
-		it("returns a new graph with no transitive edges", function () {
-			newGraph.eachEdge(function (from, to) {
+		it("returns a new graph with no transitive edges", () => {
+			newGraph.eachEdge((from, to) => {
 				newGraph.removeEdge(from, to);
 				expect(newGraph.hasPath(from, to)).toBeFalsy();
 				newGraph.addNewEdge(from, to);
 			});
 		});
 
-		it("returns a new graph with edges that have the same values as in the original", function () {
-			newGraph.eachEdge(function (from, to, val) {
+		it("returns a new graph with edges that have the same values as in the original", () => {
+			newGraph.eachEdge((from, to, val) => {
 				expect(graph.edgeValue(from, to)).toBe(val);
 			});
 		});
@@ -1608,4 +1605,4 @@ describe("method", function () {////////////////////////////////////////////////
 	});
 
 
-});/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+});/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

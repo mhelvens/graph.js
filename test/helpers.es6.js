@@ -1,10 +1,14 @@
 'use strict';
 
-beforeEach(function () {
+/* export utility stuff */
+export var any = jasmine.any;
+
+/* add matchers */
+beforeEach(() => {
 	jasmine.addMatchers({
-		toBeReachable: function (/*util, customEqualityTesters*/) {
+		toBeReachable(/*util, customEqualityTesters*/) {
 			return {
-				compare: function () {
+				compare() {
 					var result = {};
 					result.message = "Expected this test not to be reachable.";
 					result.pass = true;
@@ -12,9 +16,9 @@ beforeEach(function () {
 				}
 			};
 		},
-		toThrowSpecific: function (util, customEqualityTesters) {
+		toThrowSpecific(util, customEqualityTesters) {
 			return {
-				compare: function (actual, expectedType, expectedContent) {
+				compare(actual, expectedType, expectedContent) {
 					var result = {};
 					result.message = "";
 
@@ -28,7 +32,7 @@ beforeEach(function () {
 					} catch (exception) {
 						result.pass = exception instanceof expectedType;
 						if (result.pass) {
-							Object.keys(expectedContent).map(function (prop) {
+							Object.keys(expectedContent).map((prop) => {
 								result.pass = result.pass && util.equals(expectedContent[prop], exception[prop], customEqualityTesters);
 							});
 							result.message = "However, the thrown " + expectedType.prototype.name + " had the following properties: " + JSON.stringify(exception, undefined, ' ');
@@ -44,19 +48,19 @@ beforeEach(function () {
 				}
 			};
 		},
-		toEqualOneOf: function (util, customEqualityTesters) {
+		toEqualOneOf(util, customEqualityTesters) {
 			return {
-				compare: function (actual, expected) {
+				compare(actual, expected) {
 					var candidates = Array.prototype.slice.call(arguments, 1);
 					var result = {};
 
-					result.pass = candidates.some(function (candidate) {
+					result.pass = candidates.some((candidate) => {
 						return util.equals(actual, candidate, customEqualityTesters);
 					});
 
 					if (!result.pass) {
 						result.message = "Expected " + JSON.stringify(actual) + " to equal one of: " +
-							  candidates.map(function (c) {return JSON.stringify(c);}).join(', ');
+							  candidates.map(JSON.stringify).join(', ');
 					}
 
 					return result;

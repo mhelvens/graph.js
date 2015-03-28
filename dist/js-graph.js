@@ -1,547 +1,648 @@
-'use strict';
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//
-// Using the Universal Module Definition `returnExports.js`
-// to support AMD, Node, as well as browser globals:
-// https://github.com/umdjs/umd/blob/master/returnExports.js
-//
-(function (root, name, factory) {
-	if (typeof define === 'function' && define.amd) {
-		define([], factory);
-	} else if (typeof exports === 'object') {
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
-	} else {
-		root[name] = factory();
-	}
-}(this, 'JsGraph', function () {////////////////////////////////////////////////////////////////////////////////////////
-
-
-//  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//  // JsGraph class ///////////////////////////////////////////////////////////////////////////////////////////////////
-//  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-	function JsGraph() {
-
-
-		var that = this;
-
-
-//      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//      // Private Variables ///////////////////////////////////////////////////////////////////////////////////////////
-//      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-		var _vertices = {};     // key -> value
-
-		var _edges = {};        // from -> to -> value
-
-		var _reverseEdges = {}; // to -> from -> null (_edges contains the values)
-
-		var _vertexCount = 0;
-
-		var _edgeCount = 0;
-
-
-//      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//      // Privileged Methods //////////////////////////////////////////////////////////////////////////////////////////
-//      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-		//////////////////////////////
-		////////// Vertices //////////
-		//////////////////////////////
-
-
-		var _addVertexCallbacks    = new Callbacks();
-		var _removeVertexCallbacks = new Callbacks();
-
-
-		//// listening for them ////
-		//
-		that.onAddVertex    = _addVertexCallbacks.add;
-		that.onRemoveVertex = _removeVertexCallbacks.add;
-
-
-		//// creating them ////
-		//
-		that.addNewVertex = function (key, value) {
-			if (that.hasVertex(key)) {
-				throw new JsGraph.VertexExistsError(key, _vertices[key]);
-			}
-
-			_vertices[key] = value;
-			_edges[key] = {};
-			_reverseEdges[key] = {};
-			_vertexCount += 1;
-			_addVertexCallbacks.fire(key, value);
-		};
-
-		that.setVertex = function (key, value) {
-			if (!that.hasVertex(key)) {
-				throw new JsGraph.VertexNotExistsError(key);
-			}
-
-			_vertices[key] = value;
-		};
-
-		that.ensureVertex = function (key, value) {
-			if (!that.hasVertex(key)) {
-				that.addNewVertex(key, value);
-			}
-		};
-
-		that.addVertex = function (key, value) {
-			if (that.hasVertex(key)) {
-				that.setVertex(key, value);
-			} else {
-				that.addNewVertex(key, value);
-			}
-		};
-
-
-		//// removing them ////
-		//
-		that.removeExistingVertex = function (key) {
-			if (!that.hasVertex(key)) {
-				throw new JsGraph.VertexNotExistsError(key);
-			}
-			if (Object.keys(_edges[key]).length) {
-				throw new JsGraph.HasConnectedEdgesError(key);
-			}
-			if (Object.keys(_reverseEdges[key]).length) {
-				throw new JsGraph.HasConnectedEdgesError(key);
-			}
-
-			var valueOfRemovedVertex = _vertices[key];
-			delete _vertices[key];
-			_vertexCount -= 1;
-			_removeVertexCallbacks.fire(key, valueOfRemovedVertex);
-		};
-
-		that.destroyExistingVertex = function (key) {
-			if (!that.hasVertex(key)) {
-				throw new JsGraph.VertexNotExistsError(key);
-			}
-
-			that.eachVertexFrom(key, function (to) {
-				that.removeEdge(key, to);
-			});
-			that.eachVertexTo(key, function (from) {
-				that.removeEdge(from, key);
-			});
-			that.removeExistingVertex(key);
-		};
-
-		that.removeVertex = function (key) {
-			if (that.hasVertex(key)) {
-				that.removeExistingVertex(key);
-			}
-		};
-
-		that.destroyVertex = function (key) {
-			if (that.hasVertex(key)) {
-				that.destroyExistingVertex(key);
-			}
-		};
-
-
-		///////////////////////////
-		////////// Edges //////////
-		///////////////////////////
-
-
-		var _addEdgeCallbacks    = new Callbacks();
-		var _removeEdgeCallbacks = new Callbacks();
-
-
-		//// listening for them ////
-		//
-		that.onAddEdge    = _addEdgeCallbacks.add;
-		that.onRemoveEdge = _removeEdgeCallbacks.add;
-
-
-		//// creating them ////
-		//
-		that.addNewEdge = function (from, to, value) {
-			if (that.hasEdge(from, to)) {
-				throw new JsGraph.EdgeExistsError(from, to, that.edgeValue(from, to));
-			}
-			if (!that.hasVertex(from)) {
-				if (that.hasVertex(to)) {
-					throw new JsGraph.VertexNotExistsError(from);
-				} else {
-					throw new JsGraph.VertexNotExistsError(from).v(to);
-				}
-			} else if (!that.hasVertex(to)) {
-				throw new JsGraph.VertexNotExistsError(to);
-			}
-
-			_edges[from][to] = value;
-			_reverseEdges[to][from] = null;
-			_edgeCount += 1;
-			_addEdgeCallbacks.fire(from, to, value);
-		};
-
-		that.createNewEdge = function (from, to, value) {
-			if (that.hasEdge(from, to)) {
-				throw new JsGraph.EdgeExistsError(from, to, that.edgeValue(from, to));
-			}
-
-			that.ensureVertex(from);
-			that.ensureVertex(to);
-			that.addNewEdge(from, to, value);
-		};
-
-		that.setEdge = function (from, to, value) {
-			if (!that.hasEdge(from, to)) {
-				throw new JsGraph.EdgeNotExistsError(from, to);
-			}
-
-			_edges[from][to] = value;
-		};
-
-		that.spanEdge = function (from, to, value) {
-			if (!that.hasVertex(from)) {
-				if (that.hasVertex(to)) {
-					throw new JsGraph.VertexNotExistsError(from);
-				} else {
-					throw new JsGraph.VertexNotExistsError(from).v(to);
-				}
-			} else if (!that.hasVertex(to)) {
-				throw new JsGraph.VertexNotExistsError(to);
-			}
-
-			if (!that.hasEdge(from, to)) {
-				that.addNewEdge(from, to, value);
-			}
-		};
-
-		that.addEdge = function (from, to, value) {
-			if (that.hasEdge(from, to)) {
-				that.setEdge(from, to, value);
-			} else {
-				that.addNewEdge(from, to, value);
-			}
-		};
-
-		that.ensureEdge = function (from, to, value) {
-			if (!that.hasEdge(from, to)) {
-				that.createNewEdge(from, to, value);
-			}
-		};
-
-		that.createEdge = function (from, to, value) {
-			if (that.hasEdge(from, to)) {
-				that.setEdge(from, to, value);
-			} else {
-				that.createNewEdge(from, to, value);
-			}
-		};
-
-
-		//// removing them ////
-		//
-		that.removeExistingEdge = function (from, to) {
-			if (!that.hasEdge(from, to)) {
-				throw new JsGraph.EdgeNotExistsError(from, to);
-			}
-
-			var valueOfRemovedEdge = _edges[from][to];
-			delete _edges[from][to];
-			delete _reverseEdges[to][from];
-			_edgeCount -= 1;
-			_removeEdgeCallbacks.fire(from, to, valueOfRemovedEdge);
-		};
-
-		that.removeEdge = function (from, to) {
-			if (that.hasEdge(from, to)) {
-				that.removeExistingEdge(from, to);
-			}
-		};
-
-
-		///////////////////////////////////////////////////////////////////////////////////////////
-
-
-		that.vertexCount = function () {
-			return _vertexCount;
-		};
-
-
-		that.hasVertex = function (key) {
-			return key in _vertices;
-		};
-
-
-		that.vertexValue = function (key) {
-			return _vertices[key];
-		};
-
-
-		///////////////////////////////////////////////////////////////////////////////////////////
-
-
-		that.edgeCount = function () {
-			return _edgeCount;
-		};
-
-
-		that.hasEdge = function (from, to) {
-			return that.hasVertex(from) &&
-			       that.hasVertex(to) &&
-			       from in _edges &&
-			       to in _edges[from];
-		};
-
-
-		that.edgeValue = function (from, to) {
-			return that.hasEdge(from, to) ? _edges[from][to] : undefined;
-		};
-
-
-		that.successors = function (from) {
-			if (!that.hasVertex(from)) {
-				throw new JsGraph.VertexNotExistsError(from);
-			}
-			return Object.keys(_edges[from]);
-		};
-
-
-		that.predecessors = function (to) {
-			if (!that.hasVertex(to)) {
-				throw new JsGraph.VertexNotExistsError(to);
-			}
-			return Object.keys(_reverseEdges[to]);
-		};
-
-
-		///////////////////////////////////////////////////////////////////////////////////////////
-
-
-		that.eachVertex = function (handler) {
-			Object.keys(_vertices).every(function (key) {
-				var r = handler(key, _vertices[key]);
-				return (r !== false);
-			});
-		};
-
-
-		that.eachVertexFrom = function (from, handler) {
-			if (!that.hasVertex(from)) {
-				throw new JsGraph.VertexNotExistsError(from);
-			}
-
-			Object.keys(_edges[from]).every(function (to) {
-				var r = handler(to, that.vertexValue(to), that.edgeValue(from, to));
-				return (r !== false);
-			});
-		};
-
-
-		that.eachVertexTo = function (to, handler) {
-			if (!that.hasVertex(to)) {
-				throw new JsGraph.VertexNotExistsError(to);
-			}
-
-			Object.keys(_reverseEdges[to]).every(function (from) {
-				var r = handler(from, that.vertexValue(from), that.edgeValue(from, to));
-				return (r !== false);
-			});
-		};
-
-
-		that.eachEdge = function (handler) {
-			Object.keys(_edges).every(function (from) {
-				return Object.keys(_edges[from]).every(function (to) {
-					var r = handler(from, to, _edges[from][to]);
-					return (r !== false);
-				});
-			});
-		};
-
-
-		that.clearEdges = function () {
-			that.eachEdge(that.removeEdge);
-		};
-
-
-		that.clear = function () {
-			that.eachVertex(that.destroyVertex);
-		};
-
-		that.hasCycle = function () {
-			var visited = {};
-			var handled = {};
-
-			var cycleFound = false;
-
-			function visit(a) {
-				//// if a cycle is found, record it and return
-				//
-				if (visited[a]) {
-					cycleFound = true;
-					return;
-				}
-
-				//// if this vertex was already handled, no cycle can be found here
-				//
-				if (handled[a]) { return }
-				handled[a] = true;
-
-				//// recursively visit successors to check for cycles
-				//
-				visited[a] = true;
-				that.eachVertexFrom(a, function (b) {
-					visit(b);
-					if (cycleFound) { return false }
-				});
-				visited[a] = false;
-			}
-
-			that.eachVertex(function (a) {
-				visit(a);
-				if (cycleFound) { return false }
-			});
-
-			return cycleFound;
-		};
-
-
-		that.hasPath = function (from, to) {
-			if (!that.hasVertex(from) || !that.hasVertex(to)) {
-				return false;
-			}
-
-			var visited = {};
-
-			//// Recursive auxiliary function: Is there a path from 'current' to 'to'?
-			//
-			function hasPathAux(current) {
-				if (that.hasEdge(current, to)) {
-					return true;
-				}
-				visited[current] = true;
-				var found = false;
-				that.eachVertexFrom(current, function (next) {
-					if (!found && !visited[next] && hasPathAux(next)) {
-						found = true;
-					}
-				});
-				delete visited[current];
-				return found;
-			}
-
-			return hasPathAux(from);
-		};
-
-		that.topologically = function (handler) {
-			var visited = [];
-			var handled = {};
-
-			function visit(a) {
-				visited.push(a);
-
-				var i = visited.indexOf(a);
-				if (i !== visited.length - 1) {
-					var cycle = visited.slice(i + 1).reverse();
-					throw new JsGraph.CycleError(cycle);
-				}
-
-				if (!handled[a]) {
-					that.eachVertexTo(a, visit);
-					handled[a] = { returned: handler(a, that.vertexValue(a)) };
-				}
-
-				visited.pop();
-			}
-
-			that.eachVertex(function (a) {
-				if (!handled[a]) {
-					visit(a);
-				}
-			});
-		};
-
-		that.clone = function () {
-			var result = new JsGraph();
-			that.eachVertex(function (key, val) {
-				result.addVertex(key, val);
-			});
-			that.eachEdge(function (from, to, val) {
-				result.addEdge(from, to, val);
-			});
-			return result;
-		};
-
-		that.transitiveReduction = function () {
-			var result = that.clone();
-			result.eachVertex(function (x) {
-				result.eachVertex(function (y) {
-					if (result.hasEdge(x, y)) {
-						result.eachVertex(function (z) {
-							if (result.hasPath(y, z)) {
-								result.removeEdge(x, z);
-							}
-						});
-					}
-				});
-			});
-			return result;
-		};
-
-	}
-
-
-//  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//  // Utility /////////////////////////////////////////////////////////////////////////////////////////////////////////
-//  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+	else if(typeof define === 'function' && define.amd)
+		define(factory);
+	else if(typeof exports === 'object')
+		exports["JsGraph"] = factory();
+	else
+		root["JsGraph"] = factory();
+})(this, function() {
+return /******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId])
+/******/ 			return installedModules[moduleId].exports;
+
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			exports: {},
+/******/ 			id: moduleId,
+/******/ 			loaded: false
+/******/ 		};
+
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+
+/******/ 		// Flag the module as loaded
+/******/ 		module.loaded = true;
+
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+
+
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(0);
+/******/ })
+/************************************************************************/
+/******/ ([
+/* 0 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var key in props) { var prop = props[key]; prop.configurable = true; if (prop.value) prop.writable = true; } Object.defineProperties(target, props); } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
+
+	//  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//  // Utility /////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	function set2dObj(A, one, two, val) {
-		if (typeof A[one] === 'undefined') {
+		if (typeof A[one] === "undefined") {
 			A[one] = {};
 		}
 		A[one][two] = val;
 	}
 
+	var Callbacks = (function () {
+		function Callbacks() {
+			_classCallCheck(this, Callbacks);
 
-//  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//  // Callbacks ///////////////////////////////////////////////////////////////////////////////////////////////////////
-//  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			this._callbacks = [];
+		}
 
+		_createClass(Callbacks, {
+			add: {
+				value: function add(fn) {
+					var _this = this;
 
-	function Callbacks() {
-
-		var callbacks = [];
-
-		this.add = function (fn) {
-			if (callbacks.indexOf(fn) === -1) {
-				callbacks.push(fn);
-			}
-			return function removeCallback() {
-				var index = callbacks.indexOf(fn);
-				if (index !== -1) {
-					callbacks.splice(index, 1);
+					if (this._callbacks.indexOf(fn) === -1) {
+						this._callbacks.push(fn);
+					}
+					return function () {
+						var index = _this._callbacks.indexOf(fn);
+						if (index !== -1) {
+							_this._callbacks.splice(index, 1);
+						}
+					};
 				}
-			};
-		};
+			},
+			fire: {
+				value: function fire() {
+					for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+						args[_key] = arguments[_key];
+					}
 
-		this.fire = function () {
-			var args = arguments;
-			callbacks.forEach(function (fn) {
-				fn.apply(null, args);
-			});
-		};
+					this._callbacks.forEach(function (fn) {
+						fn.apply(undefined, args);
+					});
+				}
+			}
+		});
 
-	}
+		return Callbacks;
+	})();
 
+	//  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//  // JsGraph class ///////////////////////////////////////////////////////////////////////////////////////////////////
+	//  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//  // Errors //////////////////////////////////////////////////////////////////////////////////////////////////////////
-//  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	var JsGraph = (function () {
+		function JsGraph() {
+			_classCallCheck(this, JsGraph);
 
+			this._vertices = {}; // key -> value
+			this._edges = {}; // from -> to -> value
+			this._reverseEdges = {}; // to -> from -> null (_edges contains the values)
+			this._vertexCount = 0;
+			this._edgeCount = 0;
+			this._addVertexCallbacks = new Callbacks();
+			this._removeVertexCallbacks = new Callbacks();
+			this._addEdgeCallbacks = new Callbacks();
+			this._removeEdgeCallbacks = new Callbacks();
+		}
+
+		_createClass(JsGraph, {
+			onAddVertex: {
+
+				//////////////////////////////
+				////////// Vertices //////////
+				//////////////////////////////
+
+				value: function onAddVertex(fn) {
+					return this._addVertexCallbacks.add(fn);
+				}
+			},
+			onRemoveVertex: {
+				value: function onRemoveVertex(fn) {
+					return this._removeVertexCallbacks.add(fn);
+				}
+			},
+			addNewVertex: {
+
+				//// creating them ////
+
+				value: function addNewVertex(key, value) {
+					if (this.hasVertex(key)) {
+						throw new JsGraph.VertexExistsError(key, this._vertices[key]);
+					}
+					this._vertices[key] = value;
+					this._edges[key] = {};
+					this._reverseEdges[key] = {};
+					this._vertexCount += 1;
+					this._addVertexCallbacks.fire(key, value);
+				}
+			},
+			setVertex: {
+				value: function setVertex(key, value) {
+					if (!this.hasVertex(key)) {
+						throw new JsGraph.VertexNotExistsError(key);
+					}
+					this._vertices[key] = value;
+				}
+			},
+			ensureVertex: {
+				value: function ensureVertex(key, value) {
+					if (!this.hasVertex(key)) {
+						this.addNewVertex(key, value);
+					}
+				}
+			},
+			addVertex: {
+				value: function addVertex(key, value) {
+					if (this.hasVertex(key)) {
+						this.setVertex(key, value);
+					} else {
+						this.addNewVertex(key, value);
+					}
+				}
+			},
+			removeExistingVertex: {
+
+				//// removing them ////
+
+				value: function removeExistingVertex(key) {
+					if (!this.hasVertex(key)) {
+						throw new JsGraph.VertexNotExistsError(key);
+					}
+					if (Object.keys(this._edges[key]).length) {
+						throw new JsGraph.HasConnectedEdgesError(key);
+					}
+					if (Object.keys(this._reverseEdges[key]).length) {
+						throw new JsGraph.HasConnectedEdgesError(key);
+					}
+					var valueOfRemovedVertex = this._vertices[key];
+					delete this._vertices[key];
+					this._vertexCount -= 1;
+					this._removeVertexCallbacks.fire(key, valueOfRemovedVertex);
+				}
+			},
+			destroyExistingVertex: {
+				value: function destroyExistingVertex(key) {
+					var _this = this;
+
+					if (!this.hasVertex(key)) {
+						throw new JsGraph.VertexNotExistsError(key);
+					}
+					this.eachVertexFrom(key, function (to) {
+						_this.removeEdge(key, to);
+					});
+					this.eachVertexTo(key, function (from) {
+						_this.removeEdge(from, key);
+					});
+					this.removeExistingVertex(key);
+				}
+			},
+			removeVertex: {
+				value: function removeVertex(key) {
+					if (this.hasVertex(key)) {
+						this.removeExistingVertex(key);
+					}
+				}
+			},
+			destroyVertex: {
+				value: function destroyVertex(key) {
+					if (this.hasVertex(key)) {
+						this.destroyExistingVertex(key);
+					}
+				}
+			},
+			vertexCount: {
+
+				//// querying them ////
+
+				value: function vertexCount() {
+					return this._vertexCount;
+				}
+			},
+			hasVertex: {
+				value: function hasVertex(key) {
+					return key in this._vertices;
+				}
+			},
+			vertexValue: {
+				value: function vertexValue(key) {
+					return this._vertices[key];
+				}
+			},
+			onAddEdge: {
+
+				///////////////////////////
+				////////// Edges //////////
+				///////////////////////////
+
+				value: function onAddEdge(fn) {
+					return this._addEdgeCallbacks.add(fn);
+				}
+			},
+			onRemoveEdge: {
+				value: function onRemoveEdge(fn) {
+					return this._removeEdgeCallbacks.add(fn);
+				}
+			},
+			addNewEdge: {
+				value: function addNewEdge(from, to, value) {
+					if (this.hasEdge(from, to)) {
+						throw new JsGraph.EdgeExistsError(from, to, this.edgeValue(from, to));
+					}
+					if (!this.hasVertex(from)) {
+						if (this.hasVertex(to)) {
+							throw new JsGraph.VertexNotExistsError(from);
+						} else {
+							throw new JsGraph.VertexNotExistsError(from).v(to);
+						}
+					} else if (!this.hasVertex(to)) {
+						throw new JsGraph.VertexNotExistsError(to);
+					}
+					this._edges[from][to] = value;
+					this._reverseEdges[to][from] = null;
+					this._edgeCount += 1;
+					this._addEdgeCallbacks.fire(from, to, value);
+				}
+			},
+			createNewEdge: {
+				value: function createNewEdge(from, to, value) {
+					if (this.hasEdge(from, to)) {
+						throw new JsGraph.EdgeExistsError(from, to, this.edgeValue(from, to));
+					}
+					this.ensureVertex(from);
+					this.ensureVertex(to);
+					this.addNewEdge(from, to, value);
+				}
+			},
+			setEdge: {
+				value: function setEdge(from, to, value) {
+					if (!this.hasEdge(from, to)) {
+						throw new JsGraph.EdgeNotExistsError(from, to);
+					}
+					this._edges[from][to] = value;
+				}
+			},
+			spanEdge: {
+				value: function spanEdge(from, to, value) {
+					if (!this.hasVertex(from)) {
+						if (this.hasVertex(to)) {
+							throw new JsGraph.VertexNotExistsError(from);
+						} else {
+							throw new JsGraph.VertexNotExistsError(from).v(to);
+						}
+					} else if (!this.hasVertex(to)) {
+						throw new JsGraph.VertexNotExistsError(to);
+					}
+					if (!this.hasEdge(from, to)) {
+						this.addNewEdge(from, to, value);
+					}
+				}
+			},
+			addEdge: {
+				value: function addEdge(from, to, value) {
+					if (this.hasEdge(from, to)) {
+						this.setEdge(from, to, value);
+					} else {
+						this.addNewEdge(from, to, value);
+					}
+				}
+			},
+			ensureEdge: {
+				value: function ensureEdge(from, to, value) {
+					if (!this.hasEdge(from, to)) {
+						this.createNewEdge(from, to, value);
+					}
+				}
+			},
+			createEdge: {
+				value: function createEdge(from, to, value) {
+					if (this.hasEdge(from, to)) {
+						this.setEdge(from, to, value);
+					} else {
+						this.createNewEdge(from, to, value);
+					}
+				}
+			},
+			removeExistingEdge: {
+
+				//// removing them ////
+
+				value: function removeExistingEdge(from, to) {
+					if (!this.hasEdge(from, to)) {
+						throw new JsGraph.EdgeNotExistsError(from, to);
+					}
+					var valueOfRemovedEdge = this._edges[from][to];
+					delete this._edges[from][to];
+					delete this._reverseEdges[to][from];
+					this._edgeCount -= 1;
+					this._removeEdgeCallbacks.fire(from, to, valueOfRemovedEdge);
+				}
+			},
+			removeEdge: {
+				value: function removeEdge(from, to) {
+					if (this.hasEdge(from, to)) {
+						this.removeExistingEdge(from, to);
+					}
+				}
+			},
+			edgeCount: {
+
+				//// querying them ////
+
+				value: function edgeCount() {
+					return this._edgeCount;
+				}
+			},
+			hasEdge: {
+				value: function hasEdge(from, to) {
+					return this.hasVertex(from) && this.hasVertex(to) && from in this._edges && to in this._edges[from];
+				}
+			},
+			edgeValue: {
+				value: function edgeValue(from, to) {
+					return this.hasEdge(from, to) ? this._edges[from][to] : undefined;
+				}
+			},
+			successors: {
+
+				//////////////////////////
+				////////// More //////////
+				//////////////////////////
+
+				value: function successors(from) {
+					if (!this.hasVertex(from)) {
+						throw new JsGraph.VertexNotExistsError(from);
+					}
+					return Object.keys(this._edges[from]);
+				}
+			},
+			predecessors: {
+				value: function predecessors(to) {
+					if (!this.hasVertex(to)) {
+						throw new JsGraph.VertexNotExistsError(to);
+					}
+					return Object.keys(this._reverseEdges[to]);
+				}
+			},
+			eachVertex: {
+
+				///////////////////////////////
+				////////// Iteration //////////
+				///////////////////////////////
+
+				value: function eachVertex(handler) {
+					var _this = this;
+
+					Object.keys(this._vertices).every(function (key) {
+						var r = handler(key, _this._vertices[key]);
+						return r !== false;
+					});
+				}
+			},
+			eachVertexFrom: {
+				value: function eachVertexFrom(from, handler) {
+					var _this = this;
+
+					if (!this.hasVertex(from)) {
+						throw new JsGraph.VertexNotExistsError(from);
+					}
+					Object.keys(this._edges[from]).every(function (to) {
+						var r = handler(to, _this.vertexValue(to), _this.edgeValue(from, to));
+						return r !== false;
+					});
+				}
+			},
+			eachVertexTo: {
+				value: function eachVertexTo(to, handler) {
+					var _this = this;
+
+					if (!this.hasVertex(to)) {
+						throw new JsGraph.VertexNotExistsError(to);
+					}
+					Object.keys(this._reverseEdges[to]).every(function (from) {
+						var r = handler(from, _this.vertexValue(from), _this.edgeValue(from, to));
+						return r !== false;
+					});
+				}
+			},
+			eachEdge: {
+				value: function eachEdge(handler) {
+					var _this = this;
+
+					Object.keys(this._edges).every(function (from) {
+						return Object.keys(_this._edges[from]).every(function (to) {
+							var r = handler(from, to, _this._edges[from][to]);
+							return r !== false;
+						});
+					});
+				}
+			},
+			topologically: {
+				value: function topologically(handler) {
+					var _this = this;
+
+					var visited = [];
+					var handled = {};
+
+					var visit = function (a) {
+						visited.push(a);
+						var i = visited.indexOf(a);
+						if (i !== visited.length - 1) {
+							var cycle = visited.slice(i + 1).reverse();
+							throw new JsGraph.CycleError(cycle);
+						}
+						if (!handled[a]) {
+							_this.eachVertexTo(a, visit);
+							handled[a] = { returned: handler(a, _this.vertexValue(a)) };
+						}
+						visited.pop();
+					};
+
+					this.eachVertex(function (a) {
+						if (!handled[a]) {
+							visit(a);
+						}
+					});
+				}
+			},
+			clearEdges: {
+
+				//vertices = {[Symbol.iterator]() {
+				//	return this._vertices[Symbol.iterator];
+				//}};
+				//
+				//edges = {[Symbol.iterator]: function*() {
+				//
+				//}};
+
+				//////////////////////////////
+				////////// Clearing //////////
+				//////////////////////////////
+
+				value: function clearEdges() {
+					var _this = this;
+
+					this.eachEdge(function (from, to) {
+						_this.removeEdge(from, to);
+					});
+				}
+			},
+			clear: {
+				value: function clear() {
+					var _this = this;
+
+					this.eachVertex(function (v) {
+						_this.destroyVertex(v);
+					});
+				}
+			},
+			hasCycle: {
+
+				//////////////////////////////////////
+				////////// Advanced Queries //////////
+				//////////////////////////////////////
+
+				value: function hasCycle() {
+					var _this = this;
+
+					var visited = {};
+					var handled = {};
+
+					var cycleFound = false;
+
+					var visit = function (a) {
+						//// if a cycle is found, record it and return
+						//
+						if (visited[a]) {
+							cycleFound = true;
+							return;
+						}
+
+						//// if this vertex was already handled, no cycle can be found here
+						//
+						if (handled[a]) {
+							return;
+						}
+						handled[a] = true;
+
+						//// recursively visit successors to check for cycles
+						//
+						visited[a] = true;
+						_this.eachVertexFrom(a, function (b) {
+							visit(b);
+							if (cycleFound) {
+								return false;
+							}
+						});
+						visited[a] = false;
+					};
+
+					this.eachVertex(function (a) {
+						visit(a);
+						if (cycleFound) {
+							return false;
+						}
+					});
+
+					return cycleFound;
+				}
+			},
+			hasPath: {
+				value: function hasPath(from, to) {
+					var _this = this;
+
+					if (!this.hasVertex(from) || !this.hasVertex(to)) {
+						return false;
+					}
+
+					var visited = {};
+
+					/* Recursive auxiliary function: Is there a path from 'current' to 'to'? */
+					var hasPathAux = function (current) {
+						if (_this.hasEdge(current, to)) {
+							return true;
+						}
+						visited[current] = true;
+						var found = false;
+						_this.eachVertexFrom(current, function (next) {
+							if (!found && !visited[next] && hasPathAux(next)) {
+								found = true;
+							}
+						});
+						delete visited[current];
+						return found;
+					};
+
+					return hasPathAux(from);
+				}
+			},
+			clone: {
+
+				/////////////////////////////
+				////////// Cloning //////////
+				/////////////////////////////
+
+				value: function clone() {
+					var result = new JsGraph();
+					this.eachVertex(function (key, val) {
+						result.addVertex(key, val);
+					});
+					this.eachEdge(function (from, to, val) {
+						result.addEdge(from, to, val);
+					});
+					return result;
+				}
+			},
+			transitiveReduction: {
+				value: function transitiveReduction() {
+					var result = this.clone();
+					result.eachVertex(function (x) {
+						result.eachVertex(function (y) {
+							if (result.hasEdge(x, y)) {
+								result.eachVertex(function (z) {
+									if (result.hasPath(y, z)) {
+										result.removeEdge(x, z);
+									}
+								});
+							}
+						});
+					});
+					return result;
+				}
+			}
+		});
+
+		return JsGraph;
+	})();
+
+	module.exports = JsGraph;
+
+	//  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//  // Errors //////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	function newError(name, constructor) {
 		//noinspection JSUnusedGlobalSymbols
@@ -551,127 +652,105 @@
 		return constructor;
 	}
 
-
 	JsGraph.VertexExistsError = newError("VertexExistsError", function (key, value) {
-		var that = this;
+		var _this = this;
 
-		function refreshMessage() {
-			that.message = "This graph has " +
-			               (that.vertices === 1 ? "a vertex" : "vertices") +
-			               " '" + Object.keys(that.vertices).join("', '") + "'";
-		}
-
-		that.v = function (key, value) {
-			that.vertices[key] = value;
-			refreshMessage();
-			return that;
+		var refreshMessage = function () {
+			_this.message = "This graph has " + (_this.vertices === 1 ? "a vertex" : "vertices") + " '" + Object.keys(_this.vertices).join("', '") + "'";
 		};
 
-		that.vertices = {};
-		that.v(key, value);
+		this.v = function (key, value) {
+			_this.vertices[key] = value;
+			refreshMessage();
+			return _this;
+		};
+
+		this.vertices = {};
+		this.v(key, value);
 
 		refreshMessage();
 	});
-
 
 	JsGraph.VertexNotExistsError = newError("VertexNotExistError", function (key) {
-		var that = this;
+		var _this = this;
 
-		function refreshMessage() {
-			that.message = "This graph does not have " +
-			               (that.vertices === 1 ? "a vertex" : "vertices") +
-			               " '" + Object.keys(that.vertices).join("', '") + "'";
-		}
-
-		that.v = function (key) {
-			that.vertices[key] = undefined;
-			refreshMessage();
-			return that;
+		var refreshMessage = function () {
+			_this.message = "This graph does not have " + (_this.vertices === 1 ? "a vertex" : "vertices") + " '" + Object.keys(_this.vertices).join("', '") + "'";
 		};
 
-		that.vertices = {};
-		that.v(key);
+		this.v = function (key) {
+			_this.vertices[key] = undefined;
+			refreshMessage();
+			return _this;
+		};
+
+		this.vertices = {};
+		this.v(key);
 
 		refreshMessage();
 	});
-
 
 	JsGraph.EdgeExistsError = newError("EdgeExistsError", function (from, to, value) {
-		var that = this;
+		var _this = this;
 
-		function refreshMessage() {
+		var refreshMessage = function () {
 			var edges = [];
-
-			Object.keys(that.edges).forEach(function (from) {
-				Object.keys(that.edges[from]).forEach(function (to) {
+			Object.keys(_this.edges).forEach(function (from) {
+				Object.keys(_this.edges[from]).forEach(function (to) {
 					edges.push("('" + from + "', '" + to + "')");
 				});
 			});
-
-			that.message = "This graph has " +
-			               (edges.length === 1 ? "an edge " : "edges ") +
-			               edges.join(", ");
-		}
-
-		that.e = function (from, to, value) {
-			set2dObj(that.edges, from, to, value);
-			refreshMessage();
-			return that;
+			_this.message = "This graph has " + (edges.length === 1 ? "an edge " : "edges ") + edges.join(", ");
 		};
 
-		that.edges = {};
-		that.e(from, to, value);
+		this.e = function (from, to, value) {
+			set2dObj(_this.edges, from, to, value);
+			refreshMessage();
+			return _this;
+		};
+
+		this.edges = {};
+		this.e(from, to, value);
 
 		refreshMessage();
 	});
-
 
 	JsGraph.EdgeNotExistsError = newError("EdgeNotExistError", function (from, to) {
-		var that = this;
+		var _this = this;
 
-		function refreshMessage() {
+		var refreshMessage = function () {
 			var edges = [];
-
-			Object.keys(that.edges).forEach(function (from) {
-				Object.keys(that.edges[from]).forEach(function (to) {
+			Object.keys(_this.edges).forEach(function (from) {
+				Object.keys(_this.edges[from]).forEach(function (to) {
 					edges.push("('" + from + "', '" + to + "')");
 				});
 			});
-
-			that.message = "This graph does not have " +
-			               (edges.length === 1 ? "an edge " : "edges ") +
-			               edges.join(", ");
-		}
-
-		that.e = function (from, to) {
-			set2dObj(that.edges, from, to, undefined);
-			refreshMessage();
-			return that;
+			_this.message = "This graph does not have " + (edges.length === 1 ? "an edge " : "edges ") + edges.join(", ");
 		};
 
-		that.edges = {};
-		that.e(from, to);
+		this.e = function (from, to) {
+			set2dObj(_this.edges, from, to, undefined);
+			refreshMessage();
+			return _this;
+		};
+
+		this.edges = {};
+		this.e(from, to);
 
 		refreshMessage();
 	});
-
 
 	JsGraph.HasConnectedEdgesError = newError("HasConnectedEdgesError", function (key) {
 		this.message = "The '" + key + "' vertex has connected edges";
 		this.key = key;
 	});
 
-
 	JsGraph.CycleError = newError("CycleError", function (cycle) {
 		this.message = "This graph contains a cycle: " + cycle;
 		this.cycle = cycle;
 	});
 
-
-//  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-	return JsGraph;
-
-
-}));////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/***/ }
+/******/ ])
+});
+;
