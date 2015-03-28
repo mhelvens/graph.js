@@ -485,124 +485,40 @@ return /******/ (function(modules) { // webpackBootstrap
 					});
 				}
 			},
-			vertices: {
-
-				/////////////////////////////////////////////
-				////////// ES6 Iterable interfaces //////////
-				/////////////////////////////////////////////
-
-				get: function () {
-					var _this = this;
-
-					return Object.defineProperties((function () {
-						var _Object$defineProperties = {
-							_graph: _this };
-						_Object$defineProperties[Symbol.iterator] = regeneratorRuntime.mark(function callee$3$0() {
-							var _this2 = this;
-
-							var keys, i;
-							return regeneratorRuntime.wrap(function callee$3$0$(context$4$0) {
-								while (1) switch (context$4$0.prev = context$4$0.next) {
-									case 0:
-										keys = Object.keys(_this2._graph._vertices);
-										i = 0;
-
-									case 2:
-										if (!(i < keys.length)) {
-											context$4$0.next = 8;
-											break;
-										}
-
-										context$4$0.next = 5;
-										return [keys[i], _this2._graph._vertices[keys[i]]];
-
-									case 5:
-										++i;
-										context$4$0.next = 2;
-										break;
-
-									case 8:
-									case "end":
-										return context$4$0.stop();
-								}
-							}, callee$3$0, this);
-						});
-						return _Object$defineProperties;
-					})(), {
-						length: {
-							get: function () {
-								return this._graph._vertexCount;
-							},
-							configurable: true,
-							enumerable: true
-						}
-					});
-				}
-			},
-			edges: {
-				get: function () {
-					var _this = this;
-
-					return Object.defineProperties((function () {
-						var _Object$defineProperties = {
-							_graph: _this };
-						_Object$defineProperties[Symbol.iterator] = regeneratorRuntime.mark(function callee$3$0() {
-							var _this2 = this;
-
-							var fromKeys, i, toKeys, j;
-							return regeneratorRuntime.wrap(function callee$3$0$(context$4$0) {
-								while (1) switch (context$4$0.prev = context$4$0.next) {
-									case 0:
-										fromKeys = Object.keys(_this2._graph._edges);
-										i = 0;
-
-									case 2:
-										if (!(i < fromKeys.length)) {
-											context$4$0.next = 14;
-											break;
-										}
-
-										toKeys = Object.keys(_this2._graph._edges[fromKeys[i]]);
-										j = 0;
-
-									case 5:
-										if (!(j < toKeys.length)) {
-											context$4$0.next = 11;
-											break;
-										}
-
-										context$4$0.next = 8;
-										return [fromKeys[i], toKeys[j], _this2._graph._edges[fromKeys[i]][toKeys[j]]];
-
-									case 8:
-										++j;
-										context$4$0.next = 5;
-										break;
-
-									case 11:
-										++i;
-										context$4$0.next = 2;
-										break;
-
-									case 14:
-									case "end":
-										return context$4$0.stop();
-								}
-							}, callee$3$0, this);
-						});
-						return _Object$defineProperties;
-					})(), {
-						length: {
-							get: function () {
-								return this._graph._edgeCount;
-							},
-							configurable: true,
-							enumerable: true
-						}
-					});
-				}
-			},
 			clearEdges: {
+
+				///////////////////////////////////////////////
+				//////////// ES6 Iterable interfaces //////////
+				///////////////////////////////////////////////
+				//
+				//get vertices() {
+				//	return {
+				//		_graph: this,
+				//		get length() { return this._graph._vertexCount },
+				//		[Symbol.iterator]: function*() {
+				//			var keys = Object.keys(this._graph._vertices);
+				//			for (let i = 0; i < keys.length; ++i) {
+				//				yield [keys[i], this._graph._vertices[keys[i]]];
+				//			}
+				//		}
+				//	};
+				//}
+				//
+				//get edges() {
+				//	return {
+				//		_graph: this,
+				//		get length() { return this._graph._edgeCount },
+				//		[Symbol.iterator]: function*() {
+				//			var fromKeys = Object.keys(this._graph._edges);
+				//			for (let i = 0; i < fromKeys.length; ++i) {
+				//				var toKeys = Object.keys(this._graph._edges[fromKeys[i]]);
+				//				for (let j = 0; j < toKeys.length; ++j) {
+				//					yield [fromKeys[i], toKeys[j], this._graph._edges[fromKeys[i]][toKeys[j]]];
+				//				}
+				//			}
+				//		}
+				//	};
+				//}
 
 				//////////////////////////////
 				////////// Clearing //////////

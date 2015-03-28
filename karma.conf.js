@@ -1,7 +1,7 @@
 module.exports = function (config) {
 	config.set({
 		frameworks: ['jasmine'],
-		reporters: ['progress', 'coverage'],
+		reporters: ['progress', 'coverage', 'coveralls'],
 		coverageReporter: {
 			reporters: [
 				{ type: 'text-summary' },
