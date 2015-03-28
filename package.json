@@ -46,6 +46,6 @@
     "karma-phantomjs-launcher": "~0.1",
     "karma-sourcemap-loader": "~0.3",
     "karma-webpack": "~1",
-    "phantomjs-polyfill": "0.0.1"
+    "phantomjs-polyfill": "*"
   }
 }
