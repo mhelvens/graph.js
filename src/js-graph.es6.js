@@ -341,38 +341,38 @@ export default class JsGraph {
 	};
 
 
-	/////////////////////////////////////////////
-	////////// ES6 Iterable interfaces //////////
-	/////////////////////////////////////////////
-
-	get vertices() {
-		return {
-			_graph: this,
-			get length() { return this._graph._vertexCount },
-			[Symbol.iterator]: function*() {
-				var keys = Object.keys(this._graph._vertices);
-				for (let i = 0; i < keys.length; ++i) {
-					yield [keys[i], this._graph._vertices[keys[i]]];
-				}
-			}
-		};
-	}
-
-	get edges() {
-		return {
-			_graph: this,
-			get length() { return this._graph._edgeCount },
-			[Symbol.iterator]: function*() {
-				var fromKeys = Object.keys(this._graph._edges);
-				for (let i = 0; i < fromKeys.length; ++i) {
-					var toKeys = Object.keys(this._graph._edges[fromKeys[i]]);
-					for (let j = 0; j < toKeys.length; ++j) {
-						yield [fromKeys[i], toKeys[j], this._graph._edges[fromKeys[i]][toKeys[j]]];
-					}
-				}
-			}
-		};
-	}
+	///////////////////////////////////////////////
+	//////////// ES6 Iterable interfaces //////////
+	///////////////////////////////////////////////
+	//
+	//get vertices() {
+	//	return {
+	//		_graph: this,
+	//		get length() { return this._graph._vertexCount },
+	//		[Symbol.iterator]: function*() {
+	//			var keys = Object.keys(this._graph._vertices);
+	//			for (let i = 0; i < keys.length; ++i) {
+	//				yield [keys[i], this._graph._vertices[keys[i]]];
+	//			}
+	//		}
+	//	};
+	//}
+	//
+	//get edges() {
+	//	return {
+	//		_graph: this,
+	//		get length() { return this._graph._edgeCount },
+	//		[Symbol.iterator]: function*() {
+	//			var fromKeys = Object.keys(this._graph._edges);
+	//			for (let i = 0; i < fromKeys.length; ++i) {
+	//				var toKeys = Object.keys(this._graph._edges[fromKeys[i]]);
+	//				for (let j = 0; j < toKeys.length; ++j) {
+	//					yield [fromKeys[i], toKeys[j], this._graph._edges[fromKeys[i]][toKeys[j]]];
+	//				}
+	//			}
+	//		}
+	//	};
+	//}
 
 
 	//////////////////////////////

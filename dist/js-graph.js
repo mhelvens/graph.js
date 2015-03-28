@@ -56,6 +56,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	"use strict";
 
+	var _defineProperty = function (obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); };
+
+	var _inherits = function (subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; };
+
 	var _createClass = (function () { function defineProperties(target, props) { for (var key in props) { var prop = props[key]; prop.configurable = true; if (prop.value) prop.writable = true; } Object.defineProperties(target, props); } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
 	var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
@@ -63,13 +67,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	//  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//  // Utility /////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	function set2dObj(A, one, two, val) {
-		if (typeof A[one] === "undefined") {
-			A[one] = {};
-		}
-		A[one][two] = val;
-	}
 
 	var Callbacks = (function () {
 		function Callbacks() {
@@ -488,15 +485,124 @@ return /******/ (function(modules) { // webpackBootstrap
 					});
 				}
 			},
-			clearEdges: {
+			vertices: {
 
-				//vertices = {[Symbol.iterator]() {
-				//	return this._vertices[Symbol.iterator];
-				//}};
-				//
-				//edges = {[Symbol.iterator]: function*() {
-				//
-				//}};
+				/////////////////////////////////////////////
+				////////// ES6 Iterable interfaces //////////
+				/////////////////////////////////////////////
+
+				get: function () {
+					var _this = this;
+
+					return Object.defineProperties((function () {
+						var _Object$defineProperties = {
+							_graph: _this };
+						_Object$defineProperties[Symbol.iterator] = regeneratorRuntime.mark(function callee$3$0() {
+							var _this2 = this;
+
+							var keys, i;
+							return regeneratorRuntime.wrap(function callee$3$0$(context$4$0) {
+								while (1) switch (context$4$0.prev = context$4$0.next) {
+									case 0:
+										keys = Object.keys(_this2._graph._vertices);
+										i = 0;
+
+									case 2:
+										if (!(i < keys.length)) {
+											context$4$0.next = 8;
+											break;
+										}
+
+										context$4$0.next = 5;
+										return [keys[i], _this2._graph._vertices[keys[i]]];
+
+									case 5:
+										++i;
+										context$4$0.next = 2;
+										break;
+
+									case 8:
+									case "end":
+										return context$4$0.stop();
+								}
+							}, callee$3$0, this);
+						});
+						return _Object$defineProperties;
+					})(), {
+						length: {
+							get: function () {
+								return this._graph._vertexCount;
+							},
+							configurable: true,
+							enumerable: true
+						}
+					});
+				}
+			},
+			edges: {
+				get: function () {
+					var _this = this;
+
+					return Object.defineProperties((function () {
+						var _Object$defineProperties = {
+							_graph: _this };
+						_Object$defineProperties[Symbol.iterator] = regeneratorRuntime.mark(function callee$3$0() {
+							var _this2 = this;
+
+							var fromKeys, i, toKeys, j;
+							return regeneratorRuntime.wrap(function callee$3$0$(context$4$0) {
+								while (1) switch (context$4$0.prev = context$4$0.next) {
+									case 0:
+										fromKeys = Object.keys(_this2._graph._edges);
+										i = 0;
+
+									case 2:
+										if (!(i < fromKeys.length)) {
+											context$4$0.next = 14;
+											break;
+										}
+
+										toKeys = Object.keys(_this2._graph._edges[fromKeys[i]]);
+										j = 0;
+
+									case 5:
+										if (!(j < toKeys.length)) {
+											context$4$0.next = 11;
+											break;
+										}
+
+										context$4$0.next = 8;
+										return [fromKeys[i], toKeys[j], _this2._graph._edges[fromKeys[i]][toKeys[j]]];
+
+									case 8:
+										++j;
+										context$4$0.next = 5;
+										break;
+
+									case 11:
+										++i;
+										context$4$0.next = 2;
+										break;
+
+									case 14:
+									case "end":
+										return context$4$0.stop();
+								}
+							}, callee$3$0, this);
+						});
+						return _Object$defineProperties;
+					})(), {
+						length: {
+							get: function () {
+								return this._graph._edgeCount;
+							},
+							configurable: true,
+							enumerable: true
+						}
+					});
+				}
+			},
+			clearEdges: {
 
 				//////////////////////////////
 				////////// Clearing //////////
@@ -534,22 +640,19 @@ return /******/ (function(modules) { // webpackBootstrap
 					var cycleFound = false;
 
 					var visit = function (a) {
-						//// if a cycle is found, record it and return
-						//
+						/* if a cycle is found, record it and return */
 						if (visited[a]) {
 							cycleFound = true;
 							return;
 						}
 
-						//// if this vertex was already handled, no cycle can be found here
-						//
+						/* if this vertex was already handled, no cycle can be found here */
 						if (handled[a]) {
 							return;
 						}
 						handled[a] = true;
 
-						//// recursively visit successors to check for cycles
-						//
+						/* recursively visit successors to check for cycles */
 						visited[a] = true;
 						_this.eachVertexFrom(a, function (b) {
 							visit(b);
@@ -644,111 +747,163 @@ return /******/ (function(modules) { // webpackBootstrap
 	//  // Errors //////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	function newError(name, constructor) {
-		//noinspection JSUnusedGlobalSymbols
-		constructor.prototype.__proto__ = Error.prototype;
-		constructor.prototype.constructor = constructor;
-		constructor.prototype.name = name;
-		return constructor;
-	}
+	JsGraph.VertexExistsError = (function (_Error) {
+		function VertexExistsError(key, value) {
+			_classCallCheck(this, VertexExistsError);
 
-	JsGraph.VertexExistsError = newError("VertexExistsError", function (key, value) {
-		var _this = this;
+			this.vertices = {};
+			this.v(key, value);
+		}
 
-		var refreshMessage = function () {
-			_this.message = "This graph has " + (_this.vertices === 1 ? "a vertex" : "vertices") + " '" + Object.keys(_this.vertices).join("', '") + "'";
-		};
+		_inherits(VertexExistsError, _Error);
 
-		this.v = function (key, value) {
-			_this.vertices[key] = value;
-			refreshMessage();
-			return _this;
-		};
+		_createClass(VertexExistsError, {
+			v: {
+				value: function v(key, value) {
+					this.vertices[key] = value;
+					this._refreshMessage();
+					return this;
+				}
+			},
+			_refreshMessage: {
+				value: function _refreshMessage() {
+					var aVertices = this.vertices === 1 ? "a vertex" : "vertices";
+					this.message = "This graph has " + aVertices + " '" + Object.keys(this.vertices).join("', '") + "'";
+				}
+			}
+		});
 
-		this.vertices = {};
-		this.v(key, value);
+		return VertexExistsError;
+	})(Error);
 
-		refreshMessage();
-	});
+	JsGraph.VertexNotExistsError = (function (_Error2) {
+		function VertexNotExistError(key) {
+			_classCallCheck(this, VertexNotExistError);
 
-	JsGraph.VertexNotExistsError = newError("VertexNotExistError", function (key) {
-		var _this = this;
+			this.vertices = {};
+			this.v(key);
+		}
 
-		var refreshMessage = function () {
-			_this.message = "This graph does not have " + (_this.vertices === 1 ? "a vertex" : "vertices") + " '" + Object.keys(_this.vertices).join("', '") + "'";
-		};
+		_inherits(VertexNotExistError, _Error2);
 
-		this.v = function (key) {
-			_this.vertices[key] = undefined;
-			refreshMessage();
-			return _this;
-		};
+		_createClass(VertexNotExistError, {
+			v: {
+				value: function v(key) {
+					this.vertices[key] = undefined;
+					this._refreshMessage();
+					return this;
+				}
+			},
+			_refreshMessage: {
+				value: function _refreshMessage() {
+					var aVertices = this.vertices === 1 ? "a vertex" : "vertices";
+					this.message = "This graph does not have " + aVertices + " '" + Object.keys(this.vertices).join("', '") + "'";
+				}
+			}
+		});
 
-		this.vertices = {};
-		this.v(key);
+		return VertexNotExistError;
+	})(Error);
 
-		refreshMessage();
-	});
+	JsGraph.EdgeExistsError = (function (_Error3) {
+		function EdgeExistsError(from, to, value) {
+			_classCallCheck(this, EdgeExistsError);
 
-	JsGraph.EdgeExistsError = newError("EdgeExistsError", function (from, to, value) {
-		var _this = this;
+			this.edges = {};
+			this.e(from, to, value);
+		}
 
-		var refreshMessage = function () {
-			var edges = [];
-			Object.keys(_this.edges).forEach(function (from) {
-				Object.keys(_this.edges[from]).forEach(function (to) {
-					edges.push("('" + from + "', '" + to + "')");
-				});
-			});
-			_this.message = "This graph has " + (edges.length === 1 ? "an edge " : "edges ") + edges.join(", ");
-		};
+		_inherits(EdgeExistsError, _Error3);
 
-		this.e = function (from, to, value) {
-			set2dObj(_this.edges, from, to, value);
-			refreshMessage();
-			return _this;
-		};
+		_createClass(EdgeExistsError, {
+			e: {
+				value: function e(from, to, value) {
+					this.edges[from] = _defineProperty({}, to, value);
+					this._refreshMessage();
+					return this;
+				}
+			},
+			_refreshMessage: {
+				value: function _refreshMessage() {
+					var _this = this;
 
-		this.edges = {};
-		this.e(from, to, value);
+					var edges = [];
+					Object.keys(this.edges).forEach(function (from) {
+						Object.keys(_this.edges[from]).forEach(function (to) {
+							edges.push("('" + from + "', '" + to + "')");
+						});
+					});
+					var anEdges = edges.length === 1 ? "an edge" : "edges";
+					this.message = "This graph has " + anEdges + " " + edges.join(", ");
+				}
+			}
+		});
 
-		refreshMessage();
-	});
+		return EdgeExistsError;
+	})(Error);
 
-	JsGraph.EdgeNotExistsError = newError("EdgeNotExistError", function (from, to) {
-		var _this = this;
+	JsGraph.EdgeNotExistsError = (function (_Error4) {
+		function EdgeNotExistError(from, to) {
+			_classCallCheck(this, EdgeNotExistError);
 
-		var refreshMessage = function () {
-			var edges = [];
-			Object.keys(_this.edges).forEach(function (from) {
-				Object.keys(_this.edges[from]).forEach(function (to) {
-					edges.push("('" + from + "', '" + to + "')");
-				});
-			});
-			_this.message = "This graph does not have " + (edges.length === 1 ? "an edge " : "edges ") + edges.join(", ");
-		};
+			this.edges = {};
+			this.e(from, to);
+		}
 
-		this.e = function (from, to) {
-			set2dObj(_this.edges, from, to, undefined);
-			refreshMessage();
-			return _this;
-		};
+		_inherits(EdgeNotExistError, _Error4);
 
-		this.edges = {};
-		this.e(from, to);
+		_createClass(EdgeNotExistError, {
+			e: {
+				value: function e(from, to) {
+					this.edges[from] = _defineProperty({}, to, undefined);
+					this._refreshMessage();
+					return this;
+				}
+			},
+			_refreshMessage: {
+				value: function _refreshMessage() {
+					var _this = this;
 
-		refreshMessage();
-	});
+					var edges = [];
+					Object.keys(this.edges).forEach(function (from) {
+						Object.keys(_this.edges[from]).forEach(function (to) {
+							edges.push("('" + from + "', '" + to + "')");
+						});
+					});
+					var anEdges = edges.length === 1 ? "an edge" : "edges";
+					this.message = "This graph does not have " + anEdges + " " + edges.join(", ");
+				}
+			}
+		});
 
-	JsGraph.HasConnectedEdgesError = newError("HasConnectedEdgesError", function (key) {
-		this.message = "The '" + key + "' vertex has connected edges";
-		this.key = key;
-	});
+		return EdgeNotExistError;
+	})(Error);
 
-	JsGraph.CycleError = newError("CycleError", function (cycle) {
-		this.message = "This graph contains a cycle: " + cycle;
-		this.cycle = cycle;
-	});
+	JsGraph.HasConnectedEdgesError = (function (_Error5) {
+		function HasConnectedEdgesError(key) {
+			_classCallCheck(this, HasConnectedEdgesError);
+
+			this.message = "The '" + key + "' vertex has connected edges";
+			this.key = key;
+		}
+
+		_inherits(HasConnectedEdgesError, _Error5);
+
+		return HasConnectedEdgesError;
+	})(Error);
+
+	JsGraph.CycleError = (function (_Error6) {
+		function CycleError(cycle) {
+			_classCallCheck(this, CycleError);
+
+			this.message = "This graph contains a cycle: " + cycle;
+			this.cycle = cycle;
+		}
+
+		_inherits(CycleError, _Error6);
+
+		return CycleError;
+	})(Error);
 
 /***/ }
 /******/ ])
