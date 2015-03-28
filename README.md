@@ -7,7 +7,7 @@ js-graph
 as well as traversing and analyzing them in various ways. It was originally created to
 track dependencies between options and modules.
 
-The library is fully functional and has near 100% test-coverage, but the API is not yet
+The library is fully functional and has 100% test-coverage, but the API is not yet
 properly documented. You could, of course, read the tests in the `spec` directory, but
 user-friendly API documentation is forthcoming.
 

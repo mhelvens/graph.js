@@ -1,0 +1,12 @@
+/.idea
+/node_modules
+/bower_components
+/coverage
+/test
+/src
+/.gitignore
+/.npmignore
+/.travis.yml
+/bower.json
+/karma.conf.js
+/webpack.config.js

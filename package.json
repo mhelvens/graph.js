@@ -4,7 +4,7 @@
   "title": "Javascript Graph Datastructure",
   "homepage": "https://github.com/mhelvens/js-graph",
   "description": "a javascript library for storing arbitrary data in mathematical (di)graphs, as well as traversing and analyzing them in various ways",
-  "main": "dist/js-graph.js",
+  "main": "dist/js-graph.es6.js",
   "author": {
     "name": "Michiel Helvensteijn",
     "url": "http://mhelvens.net",
@@ -50,11 +50,11 @@
     "karma-sourcemap-loader": "~0.3",
     "karma-webpack": "~1",
     "phantomjs-polyfill": "*",
+    "uglifyjs": "~2",
     "webpack": "~1"
   },
   "scripts": {
-    "prepublish": "npm run-script build",
-    "build": "webpack",
+    "build": "mkdir -p dist && cp src/js-graph.es6.js dist && webpack && uglifyjs dist/js-graph.js -mo dist/js-graph.min.js --in-source-map dist/js-graph.js.map --source-map dist/js-graph.min.js.map",
     "test": "karma start"
   }
 }

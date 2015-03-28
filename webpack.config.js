@@ -1,10 +1,12 @@
 module.exports = {
+	devtool: 'source-map',
 	entry: 'babel!./src/js-graph.es6.js',
 	output: {
 		path: './dist',
 		filename: 'js-graph.js',
 		library: 'JsGraph',
-		libraryTarget: 'umd'
+		libraryTarget: 'umd',
+		sourceMapFilename: 'js-graph.js.map'
 	},
 	module: {
 		loaders: [

@@ -11,41 +11,41 @@
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
-
+/******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
-
+/******/
 /******/ 		// Check if module is in cache
 /******/ 		if(installedModules[moduleId])
 /******/ 			return installedModules[moduleId].exports;
-
+/******/
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			exports: {},
 /******/ 			id: moduleId,
 /******/ 			loaded: false
 /******/ 		};
-
+/******/
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-
+/******/
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
-
+/******/
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-
-
+/******/
+/******/
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
-
+/******/
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
-
+/******/
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "";
-
+/******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(0);
 /******/ })
@@ -55,31 +55,31 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-
+	
 	var _defineProperty = function (obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); };
-
+	
 	var _inherits = function (subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; };
-
+	
 	var _createClass = (function () { function defineProperties(target, props) { for (var key in props) { var prop = props[key]; prop.configurable = true; if (prop.value) prop.writable = true; } Object.defineProperties(target, props); } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
+	
 	var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
-
+	
 	//  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//  // Utility /////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+	
 	var Callbacks = (function () {
 		function Callbacks() {
 			_classCallCheck(this, Callbacks);
-
+	
 			this._callbacks = [];
 		}
-
+	
 		_createClass(Callbacks, {
 			add: {
 				value: function add(fn) {
 					var _this = this;
-
+	
 					if (this._callbacks.indexOf(fn) === -1) {
 						this._callbacks.push(fn);
 					}
@@ -96,25 +96,25 @@ return /******/ (function(modules) { // webpackBootstrap
 					for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
 						args[_key] = arguments[_key];
 					}
-
+	
 					this._callbacks.forEach(function (fn) {
 						fn.apply(undefined, args);
 					});
 				}
 			}
 		});
-
+	
 		return Callbacks;
 	})();
-
+	
 	//  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//  // JsGraph class ///////////////////////////////////////////////////////////////////////////////////////////////////
 	//  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+	
 	var JsGraph = (function () {
 		function JsGraph() {
 			_classCallCheck(this, JsGraph);
-
+	
 			this._vertices = {}; // key -> value
 			this._edges = {}; // from -> to -> value
 			this._reverseEdges = {}; // to -> from -> null (_edges contains the values)
@@ -125,14 +125,14 @@ return /******/ (function(modules) { // webpackBootstrap
 			this._addEdgeCallbacks = new Callbacks();
 			this._removeEdgeCallbacks = new Callbacks();
 		}
-
+	
 		_createClass(JsGraph, {
 			onAddVertex: {
-
+	
 				//////////////////////////////
 				////////// Vertices //////////
 				//////////////////////////////
-
+	
 				value: function onAddVertex(fn) {
 					return this._addVertexCallbacks.add(fn);
 				}
@@ -143,9 +143,9 @@ return /******/ (function(modules) { // webpackBootstrap
 				}
 			},
 			addNewVertex: {
-
+	
 				//// creating them ////
-
+	
 				value: function addNewVertex(key, value) {
 					if (this.hasVertex(key)) {
 						throw new JsGraph.VertexExistsError(key, this._vertices[key]);
@@ -182,9 +182,9 @@ return /******/ (function(modules) { // webpackBootstrap
 				}
 			},
 			removeExistingVertex: {
-
+	
 				//// removing them ////
-
+	
 				value: function removeExistingVertex(key) {
 					if (!this.hasVertex(key)) {
 						throw new JsGraph.VertexNotExistsError(key);
@@ -204,7 +204,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			destroyExistingVertex: {
 				value: function destroyExistingVertex(key) {
 					var _this = this;
-
+	
 					if (!this.hasVertex(key)) {
 						throw new JsGraph.VertexNotExistsError(key);
 					}
@@ -232,9 +232,9 @@ return /******/ (function(modules) { // webpackBootstrap
 				}
 			},
 			vertexCount: {
-
+	
 				//// querying them ////
-
+	
 				value: function vertexCount() {
 					return this._vertexCount;
 				}
@@ -250,11 +250,11 @@ return /******/ (function(modules) { // webpackBootstrap
 				}
 			},
 			onAddEdge: {
-
+	
 				///////////////////////////
 				////////// Edges //////////
 				///////////////////////////
-
+	
 				value: function onAddEdge(fn) {
 					return this._addEdgeCallbacks.add(fn);
 				}
@@ -344,9 +344,9 @@ return /******/ (function(modules) { // webpackBootstrap
 				}
 			},
 			removeExistingEdge: {
-
+	
 				//// removing them ////
-
+	
 				value: function removeExistingEdge(from, to) {
 					if (!this.hasEdge(from, to)) {
 						throw new JsGraph.EdgeNotExistsError(from, to);
@@ -366,9 +366,9 @@ return /******/ (function(modules) { // webpackBootstrap
 				}
 			},
 			edgeCount: {
-
+	
 				//// querying them ////
-
+	
 				value: function edgeCount() {
 					return this._edgeCount;
 				}
@@ -384,11 +384,11 @@ return /******/ (function(modules) { // webpackBootstrap
 				}
 			},
 			successors: {
-
+	
 				//////////////////////////
 				////////// More //////////
 				//////////////////////////
-
+	
 				value: function successors(from) {
 					if (!this.hasVertex(from)) {
 						throw new JsGraph.VertexNotExistsError(from);
@@ -405,14 +405,14 @@ return /******/ (function(modules) { // webpackBootstrap
 				}
 			},
 			eachVertex: {
-
+	
 				///////////////////////////////
 				////////// Iteration //////////
 				///////////////////////////////
-
+	
 				value: function eachVertex(handler) {
 					var _this = this;
-
+	
 					Object.keys(this._vertices).every(function (key) {
 						var r = handler(key, _this._vertices[key]);
 						return r !== false;
@@ -422,7 +422,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			eachVertexFrom: {
 				value: function eachVertexFrom(from, handler) {
 					var _this = this;
-
+	
 					if (!this.hasVertex(from)) {
 						throw new JsGraph.VertexNotExistsError(from);
 					}
@@ -435,7 +435,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			eachVertexTo: {
 				value: function eachVertexTo(to, handler) {
 					var _this = this;
-
+	
 					if (!this.hasVertex(to)) {
 						throw new JsGraph.VertexNotExistsError(to);
 					}
@@ -448,7 +448,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			eachEdge: {
 				value: function eachEdge(handler) {
 					var _this = this;
-
+	
 					Object.keys(this._edges).every(function (from) {
 						return Object.keys(_this._edges[from]).every(function (to) {
 							var r = handler(from, to, _this._edges[from][to]);
@@ -460,10 +460,10 @@ return /******/ (function(modules) { // webpackBootstrap
 			topologically: {
 				value: function topologically(handler) {
 					var _this = this;
-
+	
 					var visited = [];
 					var handled = {};
-
+	
 					var visit = function (a) {
 						visited.push(a);
 						var i = visited.indexOf(a);
@@ -477,7 +477,7 @@ return /******/ (function(modules) { // webpackBootstrap
 						}
 						visited.pop();
 					};
-
+	
 					this.eachVertex(function (a) {
 						if (!handled[a]) {
 							visit(a);
@@ -486,7 +486,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				}
 			},
 			clearEdges: {
-
+	
 				///////////////////////////////////////////////
 				//////////// ES6 Iterable interfaces //////////
 				///////////////////////////////////////////////
@@ -519,14 +519,14 @@ return /******/ (function(modules) { // webpackBootstrap
 				//		}
 				//	};
 				//}
-
+	
 				//////////////////////////////
 				////////// Clearing //////////
 				//////////////////////////////
-
+	
 				value: function clearEdges() {
 					var _this = this;
-
+	
 					this.eachEdge(function (from, to) {
 						_this.removeEdge(from, to);
 					});
@@ -535,39 +535,39 @@ return /******/ (function(modules) { // webpackBootstrap
 			clear: {
 				value: function clear() {
 					var _this = this;
-
+	
 					this.eachVertex(function (v) {
 						_this.destroyVertex(v);
 					});
 				}
 			},
 			hasCycle: {
-
+	
 				//////////////////////////////////////
 				////////// Advanced Queries //////////
 				//////////////////////////////////////
-
+	
 				value: function hasCycle() {
 					var _this = this;
-
+	
 					var visited = {};
 					var handled = {};
-
+	
 					var cycleFound = false;
-
+	
 					var visit = function (a) {
 						/* if a cycle is found, record it and return */
 						if (visited[a]) {
 							cycleFound = true;
 							return;
 						}
-
+	
 						/* if this vertex was already handled, no cycle can be found here */
 						if (handled[a]) {
 							return;
 						}
 						handled[a] = true;
-
+	
 						/* recursively visit successors to check for cycles */
 						visited[a] = true;
 						_this.eachVertexFrom(a, function (b) {
@@ -578,27 +578,27 @@ return /******/ (function(modules) { // webpackBootstrap
 						});
 						visited[a] = false;
 					};
-
+	
 					this.eachVertex(function (a) {
 						visit(a);
 						if (cycleFound) {
 							return false;
 						}
 					});
-
+	
 					return cycleFound;
 				}
 			},
 			hasPath: {
 				value: function hasPath(from, to) {
 					var _this = this;
-
+	
 					if (!this.hasVertex(from) || !this.hasVertex(to)) {
 						return false;
 					}
-
+	
 					var visited = {};
-
+	
 					/* Recursive auxiliary function: Is there a path from 'current' to 'to'? */
 					var hasPathAux = function (current) {
 						if (_this.hasEdge(current, to)) {
@@ -614,16 +614,16 @@ return /******/ (function(modules) { // webpackBootstrap
 						delete visited[current];
 						return found;
 					};
-
+	
 					return hasPathAux(from);
 				}
 			},
 			clone: {
-
+	
 				/////////////////////////////
 				////////// Cloning //////////
 				/////////////////////////////
-
+	
 				value: function clone() {
 					var result = new JsGraph();
 					this.eachVertex(function (key, val) {
@@ -653,26 +653,26 @@ return /******/ (function(modules) { // webpackBootstrap
 				}
 			}
 		});
-
+	
 		return JsGraph;
 	})();
-
+	
 	module.exports = JsGraph;
-
+	
 	//  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//  // Errors //////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+	
 	JsGraph.VertexExistsError = (function (_Error) {
 		function VertexExistsError(key, value) {
 			_classCallCheck(this, VertexExistsError);
-
+	
 			this.vertices = {};
 			this.v(key, value);
 		}
-
+	
 		_inherits(VertexExistsError, _Error);
-
+	
 		_createClass(VertexExistsError, {
 			v: {
 				value: function v(key, value) {
@@ -688,20 +688,20 @@ return /******/ (function(modules) { // webpackBootstrap
 				}
 			}
 		});
-
+	
 		return VertexExistsError;
 	})(Error);
-
+	
 	JsGraph.VertexNotExistsError = (function (_Error2) {
 		function VertexNotExistError(key) {
 			_classCallCheck(this, VertexNotExistError);
-
+	
 			this.vertices = {};
 			this.v(key);
 		}
-
+	
 		_inherits(VertexNotExistError, _Error2);
-
+	
 		_createClass(VertexNotExistError, {
 			v: {
 				value: function v(key) {
@@ -717,20 +717,20 @@ return /******/ (function(modules) { // webpackBootstrap
 				}
 			}
 		});
-
+	
 		return VertexNotExistError;
 	})(Error);
-
+	
 	JsGraph.EdgeExistsError = (function (_Error3) {
 		function EdgeExistsError(from, to, value) {
 			_classCallCheck(this, EdgeExistsError);
-
+	
 			this.edges = {};
 			this.e(from, to, value);
 		}
-
+	
 		_inherits(EdgeExistsError, _Error3);
-
+	
 		_createClass(EdgeExistsError, {
 			e: {
 				value: function e(from, to, value) {
@@ -742,7 +742,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			_refreshMessage: {
 				value: function _refreshMessage() {
 					var _this = this;
-
+	
 					var edges = [];
 					Object.keys(this.edges).forEach(function (from) {
 						Object.keys(_this.edges[from]).forEach(function (to) {
@@ -754,20 +754,20 @@ return /******/ (function(modules) { // webpackBootstrap
 				}
 			}
 		});
-
+	
 		return EdgeExistsError;
 	})(Error);
-
+	
 	JsGraph.EdgeNotExistsError = (function (_Error4) {
 		function EdgeNotExistError(from, to) {
 			_classCallCheck(this, EdgeNotExistError);
-
+	
 			this.edges = {};
 			this.e(from, to);
 		}
-
+	
 		_inherits(EdgeNotExistError, _Error4);
-
+	
 		_createClass(EdgeNotExistError, {
 			e: {
 				value: function e(from, to) {
@@ -779,7 +779,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			_refreshMessage: {
 				value: function _refreshMessage() {
 					var _this = this;
-
+	
 					var edges = [];
 					Object.keys(this.edges).forEach(function (from) {
 						Object.keys(_this.edges[from]).forEach(function (to) {
@@ -791,33 +791,33 @@ return /******/ (function(modules) { // webpackBootstrap
 				}
 			}
 		});
-
+	
 		return EdgeNotExistError;
 	})(Error);
-
+	
 	JsGraph.HasConnectedEdgesError = (function (_Error5) {
 		function HasConnectedEdgesError(key) {
 			_classCallCheck(this, HasConnectedEdgesError);
-
+	
 			this.message = "The '" + key + "' vertex has connected edges";
 			this.key = key;
 		}
-
+	
 		_inherits(HasConnectedEdgesError, _Error5);
-
+	
 		return HasConnectedEdgesError;
 	})(Error);
-
+	
 	JsGraph.CycleError = (function (_Error6) {
 		function CycleError(cycle) {
 			_classCallCheck(this, CycleError);
-
+	
 			this.message = "This graph contains a cycle: " + cycle;
 			this.cycle = cycle;
 		}
-
+	
 		_inherits(CycleError, _Error6);
-
+	
 		return CycleError;
 	})(Error);
 
@@ -825,3 +825,4 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ ])
 });
 ;
+//# sourceMappingURL=js-graph.js.map
