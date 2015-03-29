@@ -1493,9 +1493,9 @@ describe("method", () => {//////////////////////////////////////////////////////
 			graph.createEdge('n4', 'n5');
 
 			// n1 ──▶ n2 ──▶ n3 ──▶ n4 ──▶ n5
-			//        ▲      ╷
+			//        ╷      ╷
 			//        │      │
-			//        ╵      │
+			//        ▼      │
 			//       n23 ◀───╯
 
 			var visited = {};
@@ -1603,6 +1603,212 @@ describe("method", () => {//////////////////////////////////////////////////////
 		});
 
 	});
+
+
+	// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
+
+
+	describe("default iterable interface", () => {
+
+		it("iterates over each vertex in the graph", () => {
+			var verticesFound = {};
+			for (let [key, value] of graph) {
+				expect(verticesFound[key]).toBeUndefined();
+				verticesFound[key] = value;
+			}
+			expect(verticesFound).toEqual(originalVertices);
+		});
+
+	});
+
+
+	describeMethod('vertices', () => {
+
+		it("iterates over each vertex in the graph", () => {
+			var verticesFound = {};
+			for (let [key, value] of callItWith()) {
+				expect(verticesFound[key]).toBeUndefined();
+				verticesFound[key] = value;
+			}
+			expect(verticesFound).toEqual(originalVertices);
+		});
+
+	});
+
+
+	describeMethod('edges', () => {
+
+		it("iterates over each edge in the graph", () => {
+			var edgesFound = {};
+			for (let [from, to, value] of callItWith()) {
+				var key = from + ", " + to;
+				expect(edgesFound[key]).toBeUndefined();
+				edgesFound[key] = value;
+			}
+			expect(edgesFound).toEqual(originalEdges);
+		});
+
+	});
+
+
+	describeMethod('verticesFrom', () => {
+
+		it("throws an error if the given vertex does not exist", () => {
+			expectItWhenBoundWith('newKey').toThrow();
+			expectItWhenBoundWith('newKey').toThrowSpecific(JsGraph.VertexNotExistsError, {'newKey': undefined});
+		});
+
+		it("throws nothing if the given vertex exists", () => {
+			expectItWhenBoundWith('k1').not.toThrow();
+		});
+
+		it("iterates over each outgoing edge, providing the connected vertex key/value and edge value", () => {
+			var valuesFound = {};
+			for (let [key, value, edgeValue] of callItWith('k2')) {
+				expect(valuesFound[key]).toBeUndefined();
+				valuesFound[key] = [value, edgeValue];
+			}
+			expect(valuesFound).toEqual({
+				'k3': [undefined, 'oldValue23'],
+				'k5': ['oldValue5', undefined]
+			});
+		});
+
+	});
+
+
+	describeMethod('verticesTo', () => {
+
+		it("throws an error if the given vertex does not exist", () => {
+			expectItWhenBoundWith('newKey').toThrow();
+			expectItWhenBoundWith('newKey').toThrowSpecific(JsGraph.VertexNotExistsError, {'newKey': undefined});
+		});
+
+		it("throws nothing if the given vertex exists", () => {
+			expectItWhenBoundWith('k1').not.toThrow();
+		});
+
+		it("iterates over each incoming edge, providing the connected vertex key/value and edge value", () => {
+			var valuesFound = {};
+			for (let [key, value, edgeValue] of callItWith('k3')) {
+				expect(valuesFound[key]).toBeUndefined();
+				valuesFound[key] = [value, edgeValue];
+			}
+			expect(valuesFound).toEqual({
+				'k2': [undefined, 'oldValue23'],
+				'k5': ['oldValue5', undefined]
+			});
+		});
+
+	});
+
+
+	describeMethod('vertices_topologically', () => {
+
+		it("throws an error if the graph contains a cycle (1)", () => {
+			graph.clear();
+
+			graph.createEdge('n1', 'n2');
+			graph.createEdge('n2', 'n3');
+			graph.createEdge('n3', 'n4');
+			graph.createEdge('n4', 'n5');
+			graph.createEdge('n3', 'n23');
+			graph.createEdge('n23', 'n2');
+
+			// n1 ──▶ n2 ──▶ n3 ──▶ n4 ──▶ n5
+			//        ▲      ╷
+			//        │      │
+			//        ╵      │
+			//       n23 ◀───╯
+
+			expect(() => [...callItWith()]).toThrow();
+			expect(() => [...callItWith()]).toThrowSpecific(JsGraph.CycleError, {});
+
+			try {
+				var x = [...callItWith()];
+			} catch (err) {
+				expect(err.cycle).toEqualOneOf(
+					['n23', 'n2', 'n3'],
+					['n3', 'n23', 'n2'],
+					['n2', 'n3', 'n23']
+				);
+				var cycleInMessage = err.message.substring(err.message.indexOf(':') + 1).trim();
+				expect(cycleInMessage).toEqualOneOf(
+					'n23,n2,n3',
+					'n3,n23,n2',
+					'n2,n3,n23'
+				);
+			}
+		});
+
+		it("throws an error if the graph contains a cycle (2)", () => {
+			graph.clear();
+
+			graph.createEdge('n1', 'n1');
+
+			expect(() => [...callItWith()]).toThrow();
+			expect(() => [...callItWith()]).toThrowSpecific(JsGraph.CycleError, {});
+
+			try {
+				var x = [...callItWith()];
+			} catch (err) {
+				expect(err.cycle).toEqual(['n1']);
+				var cycleInMessage = err.message.substring(err.message.indexOf(':') + 1).trim();
+				expect(cycleInMessage).toEqual('n1');
+			}
+		});
+
+		it("throws nothing if the graph has no cycle and the passed function throws nothing", () => {
+			expect(() => [...callItWith()]).not.toThrow();
+		});
+
+		it("iterates over each vertex in the graph exactly once", () => {
+			var verticesFound = {};
+			for (let [key, value] of callItWith()) {
+				expect(verticesFound[key]).toBeUndefined();
+				verticesFound[key] = value;
+			}
+			expect(verticesFound).toEqual(originalVertices);
+		});
+
+		it("visits vertices only when their predecessors have already been visited", () => {
+			graph.clear();
+
+			graph.createEdge('n3', 'n23');
+			graph.createEdge('n2', 'n23');
+			graph.createEdge('n1', 'n2');
+			graph.createEdge('n2', 'n3');
+			graph.createEdge('n3', 'n4');
+			graph.createEdge('n4', 'n5');
+
+			// n1 ──▶ n2 ──▶ n3 ──▶ n4 ──▶ n5
+			//        ╷      ╷
+			//        │      │
+			//        ▼      │
+			//       n23 ◀───╯
+
+			var visited = {};
+
+			for (let [key] of callItWith()) {
+				if (key === 'n2') { expect(visited['n1']).toBeDefined(); }
+				if (key === 'n3') { expect(visited['n2']).toBeDefined(); }
+				if (key === 'n4') { expect(visited['n3']).toBeDefined(); }
+				if (key === 'n5') { expect(visited['n4']).toBeDefined(); }
+				if (key === 'n23') {
+					expect(visited['n2']).toBeDefined();
+					expect(visited['n3']).toBeDefined();
+				}
+				visited[key] = true;
+			}
+		});
+
+	});
+
+
+
+
+
+
 
 
 });/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
