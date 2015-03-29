@@ -3,7 +3,7 @@
   "version": "1.0.0-alpha",
   "title": "Javascript Graph Datastructure",
   "homepage": "https://github.com/mhelvens/js-graph",
-  "description": "a javascript library for storing arbitrary data in mathematical (di)graphs, as well as traversing and analyzing them in various ways",
+  "description": "a javascript library for storing arbitrary data in mathematical (di)graphs, as well as traversing and analyzing them in various ways (ECMAScript 6 Ready)",
   "main": "dist/js-graph.es6.js",
   "author": {
     "name": "Michiel Helvensteijn",
