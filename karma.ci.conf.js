@@ -1,5 +1,5 @@
 module.exports = function (config) {
 	var conf = require('./karma.common.js');
-	conf.preprocessors['./src/*.es6.js'] = ['coverage']; // needed for coverage results in WebStorm
+	conf.reporters.push('coveralls'); // needed for coverage results online
 	config.set(conf)
 };

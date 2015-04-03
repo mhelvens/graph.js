@@ -55,6 +55,7 @@
   },
   "scripts": {
     "build": "mkdir -p dist && cp src/js-graph.es6.js dist && webpack && uglifyjs dist/js-graph.js -mo dist/js-graph.min.js --in-source-map dist/js-graph.js.map --source-map dist/js-graph.min.js.map",
-    "test": "karma start"
+    "test": "karma start",
+    "test-ci": "karma start ./karma.ci.conf.js"
   }
 }

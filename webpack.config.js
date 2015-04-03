@@ -1,6 +1,6 @@
 module.exports = {
 	devtool: 'source-map',
-	entry: 'babel!./src/js-graph.es6.js',
+	entry: './src/js-graph.es6.js',
 	output: {
 		path: './dist',
 		filename: 'js-graph.js',
@@ -10,7 +10,7 @@ module.exports = {
 	},
 	module: {
 		loaders: [
-			{ "test": "\\.es6\\.js$", "loader": "babel" }
+			{ test: /\.es6\.js$/, loader: 'babel' }
 		]
 	}
 };
