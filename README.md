@@ -9,7 +9,7 @@ track dependencies between options and modules. It is now rewritten in ECMAScrip
 ECMAScript 5 versions are shipped with it, automatically generated with [Babel](https://babeljs.io).
 
 The library is fully functional and has 100% test-coverage, but the API is not yet
-properly documented. You could, of course, read the tests in the `spec` directory, but
+properly documented. You could, of course, read the tests in the `test` directory, but
 user-friendly API documentation is forthcoming.
 
 Feedback of any kind (questions, issues, pull requests) is greatly appreciated.
