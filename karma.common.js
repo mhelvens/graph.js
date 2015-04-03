@@ -13,7 +13,7 @@ module.exports = {
 	singleRun: true,
 	files: [
 		'./node_modules/phantomjs-polyfill/bind-polyfill.js',
-		//'./node_modules/babel/browser-polyfill.js',
+		'./node_modules/babel/browser-polyfill.js',
 		'./test/test.js'
 	],
 	preprocessors: {
