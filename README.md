@@ -21,12 +21,12 @@ Files
 The `dist` directory offers different files for use in different circumstances.
 Use the following table to determine which file to use in your situation.
 
-| File                   | Description                                                                    | File-size |
-| ---------------------- | ------------------------------------------------------------------------------ | ---------:|
-| `js-graph.es6.js`      | For use in an ECMAScript 6 context, e.g., a modern browser or transpiler       |  14.8 kB  |
-| `js-graph.js`          | Requires you to first load `babel/polyfill.js` or `babel/polyfill-browser.js`  |  36.0 kB  |
-| `js-graph.min.js`      | Same as above, but minified                                                    |  16.2 kB  |
-| `js-graph.full.js`     | Already includes `babel/polyfill.js`; ready for use in any context             | 124.3 kB  |
-| `js-graph.full.min.js` | Same as above, but minified                                                    |  43.9 kB  |
+| File                   | Description                                                                   |
+| ---------------------- | ----------------------------------------------------------------------------- |
+| `js-graph.es6.js`      | For use in an ECMAScript 6 context, e.g., a modern browser or transpiler      |
+| `js-graph.js`          | Requires you to first load `babel/polyfill.js` or `babel/polyfill-browser.js` |
+| `js-graph.min.js`      | Same as above, but minified                                                   |
+| `js-graph.full.js`     | Already includes `babel/polyfill.js`; ready for use in any context            |
+| `js-graph.full.min.js` | Same as above, but minified                                                   |
 
 If you don't know which one you need, you probably want `js-graph.full.min.js`.
