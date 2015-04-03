@@ -5,4 +5,4 @@ install:
  - npm install
 script:
  - npm run-script build
- - npm test-ci
+ - npm run-script test-ci
