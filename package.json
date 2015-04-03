@@ -30,7 +30,9 @@
       "url": "https://github.com/mhelvens/js-graph/blob/master/LICENSE"
     }
   ],
-  "dependencies": {},
+  "dependencies": {
+    "babel": "~4"
+  },
   "devDependencies": {
     "babel": "~4",
     "babel-core": "~4",
@@ -54,7 +56,7 @@
     "webpack": "~1"
   },
   "scripts": {
-    "build": "mkdir -p dist && cp src/js-graph.es6.js dist && webpack && uglifyjs dist/js-graph.js -mo dist/js-graph.min.js --in-source-map dist/js-graph.js.map --source-map dist/js-graph.min.js.map",
+    "build": "mkdir -p dist && cp src/js-graph.es6.js dist && webpack && uglifyjs dist/js-graph.js -mo dist/js-graph.min.js --in-source-map dist/js-graph.js.map --source-map dist/js-graph.min.js.map && uglifyjs dist/js-graph.full.js -mo dist/js-graph.full.min.js --in-source-map dist/js-graph.full.js.map --source-map dist/js-graph.full.min.js.map",
     "test": "karma start",
     "test-ci": "karma start ./karma.ci.conf.js"
   }

@@ -1,12 +1,16 @@
+var webpack = require('webpack');
 module.exports = {
 	devtool: 'source-map',
-	entry: './src/js-graph.es6.js',
+	entry: {
+		'js-graph':      ['./src/js-graph.es6.js'],
+		'js-graph.full': [ 'babel/polyfill.js', './src/js-graph.es6.js' ]
+	},
 	output: {
 		path: './dist',
-		filename: 'js-graph.js',
+		filename: '[name].js',
 		library: 'JsGraph',
 		libraryTarget: 'umd',
-		sourceMapFilename: 'js-graph.js.map'
+		sourceMapFilename: '[file].map'
 	},
 	module: {
 		loaders: [
