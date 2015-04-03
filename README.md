@@ -23,10 +23,10 @@ Use the following table to determine which file to use in your situation.
 
 | File                   | Description                                                                   |
 | ---------------------- | ----------------------------------------------------------------------------- |
-| `js-graph.es6.js`      | For use in an ECMAScript 6 context, e.g., a modern browser or transpiler      |
-| `js-graph.js`          | Requires you to first load `babel/polyfill.js` or `babel/polyfill-browser.js` |
-| `js-graph.min.js`      | Same as above, but minified                                                   |
-| `js-graph.full.js`     | Already includes `babel/polyfill.js`; ready for use in any context            |
-| `js-graph.full.min.js` | Same as above, but minified                                                   |
+| `js‑graph.es6.js`      | For use in an ECMAScript 6 context, e.g., a modern browser or transpiler      |
+| `js‑graph.js`          | Requires you to first load `babel/polyfill.js` or `babel/polyfill-browser.js` |
+| `js‑graph.min.js`      | Same as above, but minified                                                   |
+| `js‑graph.full.js`     | Already includes `babel/polyfill.js`; ready for use in any context            |
+| `js‑graph.full.min.js` | Same as above, but minified                                                   |
 
 If you don't know which one you need, you probably want `js-graph.full.min.js`.
