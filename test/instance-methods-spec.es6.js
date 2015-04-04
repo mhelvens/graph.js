@@ -50,15 +50,15 @@ describe("method", () => {//////////////////////////////////////////////////////
 
 	function expectTheGraphNotToHaveChanged() {
 		var vertices = {};
-		graph.eachVertex((key, value) => {
+		for (let [key, value] of graph.vertices()) {
 			vertices[key] = value;
-		});
+		}
 		expect(vertices).toEqual(originalVertices);
 
 		var edges = {};
-		graph.eachEdge((from, to, value) => {
+		for (let [from, to, value] of graph.edges()) {
 			edges[from + ", " + to] = value;
-		});
+		}
 		expect(edges).toEqual(originalEdges);
 	}
 
@@ -224,38 +224,6 @@ describe("method", () => {//////////////////////////////////////////////////////
 			expectItWhenCalledWith('newKey', 'k2').toBeUndefined();
 			expectItWhenCalledWith('newKey1', 'newKey2').toBeUndefined();
 		});
-
-	});
-
-
-	describeMethod('successors', () => {
-
-		it_throwsErrorIfVertexDoesNotExist();
-		it_throwsNothingIfVertexExists();
-
-		it("returns an array of all successor keys", () => {
-			expectItWhenCalledWith('k1').toEqual([]);
-			expectItWhenCalledWith('k2').toEqualOneOf(['k3', 'k5'], ['k5', 'k3']);
-			expectItWhenCalledWith('k3').toEqual(['k4']);
-			expectItWhenCalledWith('k4').toEqual([]);
-			expectItWhenCalledWith('k5').toEqual(['k3']);
-		})
-
-	});
-
-
-	describeMethod('predecessors', () => {
-
-		it_throwsErrorIfVertexDoesNotExist();
-		it_throwsNothingIfVertexExists();
-
-		it("returns an array of all predecessor keys", () => {
-			expectItWhenCalledWith('k1').toEqual([]);
-			expectItWhenCalledWith('k2').toEqual([]);
-			expectItWhenCalledWith('k3').toEqualOneOf(['k2', 'k5'], ['k5', 'k2']);
-			expectItWhenCalledWith('k4').toEqual(['k3']);
-			expectItWhenCalledWith('k5').toEqual(['k2']);
-		})
 
 	});
 
@@ -1414,7 +1382,7 @@ describe("method", () => {//////////////////////////////////////////////////////
 	});
 
 
-	describeMethod('topologically', () => {
+	describeMethod('eachVertexTopologically', () => {
 
 		it("throws an error if the graph contains a cycle (1)", () => {
 			graph.clear();
@@ -1533,25 +1501,25 @@ describe("method", () => {//////////////////////////////////////////////////////
 		});
 
 		it("returns a new graph with the same vertices as the original", () => {
-			newGraph.eachVertex((key, val) => {
+			for (let [key, val] of newGraph.vertices()) {
 				expect(graph.hasVertex(key)).toBeTruthy();
 				expect(val).toBe(graph.vertexValue(key));
-			});
-			graph.eachVertex((key, val) => {
+			}
+			for (let [key, val] of graph.vertices()) {
 				expect(newGraph.hasVertex(key)).toBeTruthy();
 				expect(val).toBe(newGraph.vertexValue(key));
-			});
+			}
 		});
 
 		it("returns a new graph with the same edges as the original", () => {
-			newGraph.eachEdge((from, to, val) => {
+			for (let [from, to, val] of newGraph.edges()) {
 				expect(graph.hasEdge(from, to)).toBeTruthy();
 				expect(val).toBe(graph.edgeValue(from, to));
-			});
-			graph.eachEdge((from, to, val) => {
+			}
+			for (let [from, to, val] of graph.edges()) {
 				expect(newGraph.hasEdge(from, to)).toBeTruthy();
 				expect(val).toBe(newGraph.edgeValue(from, to));
-			});
+			}
 		});
 
 	});
@@ -1570,36 +1538,36 @@ describe("method", () => {//////////////////////////////////////////////////////
 		});
 
 		it("returns a new graph with the same vertices as the original", () => {
-			newGraph.eachVertex((key, val) => {
+			for (let [key, val] of newGraph.vertices()) {
 				expect(graph.hasVertex(key)).toBeTruthy();
 				expect(val).toBe(graph.vertexValue(key));
-			});
-			graph.eachVertex((key, val) => {
+			}
+			for (let [key, val] of graph.vertices()) {
 				expect(newGraph.hasVertex(key)).toBeTruthy();
 				expect(val).toBe(newGraph.vertexValue(key));
-			});
+			}
 		});
 
 		it("returns a new graph with the same reachability as the original", () => {
-			graph.eachVertex((from) => {
-				graph.eachVertex((to) => {
+			for (let [from] of graph.vertices()) {
+				for (let [to] of graph.vertices()) {
 					expect(graph.hasPath(from, to)).toEqual(newGraph.hasPath(from, to));
-				});
-			});
+				}
+			}
 		});
 
 		it("returns a new graph with no transitive edges", () => {
-			newGraph.eachEdge((from, to) => {
+			for (let [from, to] of newGraph.edges()) {
 				newGraph.removeEdge(from, to);
 				expect(newGraph.hasPath(from, to)).toBeFalsy();
 				newGraph.addNewEdge(from, to);
-			});
+			}
 		});
 
 		it("returns a new graph with edges that have the same values as in the original", () => {
-			newGraph.eachEdge((from, to, val) => {
+			for (let [from, to, val] of newGraph.edges()) {
 				expect(graph.edgeValue(from, to)).toBe(val);
-			});
+			}
 		});
 
 	});

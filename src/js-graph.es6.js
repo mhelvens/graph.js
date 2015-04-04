@@ -7,25 +7,22 @@
 class Callbacks {
 	
 	constructor() {
-		this._callbacks = [];
+		this._callbacks = new Set();
 	}
 	
 	add(fn) {
-		if (this._callbacks.indexOf(fn) === -1) {
-			this._callbacks.push(fn);
+		if (!this._callbacks.has(fn)) {
+			this._callbacks.add(fn);
 		}
 		return () => {
-			var index = this._callbacks.indexOf(fn);
-			if (index !== -1) {
-				this._callbacks.splice(index, 1);
-			}
+			this._callbacks.delete(fn);
 		};
 	}
 	
 	fire(...args) {
-		this._callbacks.forEach((fn) => {
+		for (let fn of this._callbacks) {
 			fn(...args);
-		});
+		}
 	}
 	
 }
@@ -38,9 +35,9 @@ class Callbacks {
 export default class JsGraph {
 
 	constructor() {
-		this._vertices     = {}; // key -> value
-		this._edges        = {}; // from -> to -> value
-		this._reverseEdges = {}; // to -> from -> null (_edges contains the values)
+		this._vertices     = new Map(); // key -> value
+		this._edges        = new Map(); // from -> to -> value
+		this._reverseEdges = new Map(); // to -> Set<from> (_edges contains the values)
 		this._vertexCount  = 0;
 		this._edgeCount    = 0;
 		this._addVertexCallbacks    = new Callbacks();
@@ -61,11 +58,11 @@ export default class JsGraph {
 
 	addNewVertex(key, value) {
 		if (this.hasVertex(key)) {
-			throw new JsGraph.VertexExistsError(key, this._vertices[key]);
+			throw new JsGraph.VertexExistsError(key, this._vertices.get(key));
 		}
-		this._vertices[key] = value;
-		this._edges[key] = {};
-		this._reverseEdges[key] = {};
+		this._vertices.set(key, value);
+		this._edges.set(key, new Map());
+		this._reverseEdges.set(key, new Set());
 		this._vertexCount += 1;
 		this._addVertexCallbacks.fire(key, value);
 	}
@@ -74,7 +71,7 @@ export default class JsGraph {
 		if (!this.hasVertex(key)) {
 			throw new JsGraph.VertexNotExistsError(key);
 		}
-		this._vertices[key] = value;
+		this._vertices.set(key, value);
 	}
 
 	ensureVertex(key, value) {
@@ -97,14 +94,14 @@ export default class JsGraph {
 		if (!this.hasVertex(key)) {
 			throw new JsGraph.VertexNotExistsError(key);
 		}
-		if (Object.keys(this._edges[key]).length) {
+		if (this._edges.get(key).size > 0) {
 			throw new JsGraph.HasConnectedEdgesError(key);
 		}
-		if (Object.keys(this._reverseEdges[key]).length) {
+		if (this._reverseEdges.get(key).size > 0) {
 			throw new JsGraph.HasConnectedEdgesError(key);
 		}
-		var valueOfRemovedVertex = this._vertices[key];
-		delete this._vertices[key];
+		var valueOfRemovedVertex = this._vertices.get(key);
+		this._vertices.delete(key);
 		this._vertexCount -= 1;
 		this._removeVertexCallbacks.fire(key, valueOfRemovedVertex);
 	}
@@ -136,9 +133,9 @@ export default class JsGraph {
 
 	//// querying them ////
 
-	vertexCount()    { return this._vertexCount     }
-	hasVertex(key)   { return key in this._vertices }
-	vertexValue(key) { return this._vertices[key]   }
+	vertexCount()    { return this._vertexCount       }
+	hasVertex(key)   { return this._vertices.has(key) }
+	vertexValue(key) { return this._vertices.get(key) }
 
 
 	///////////////////////////
@@ -161,8 +158,8 @@ export default class JsGraph {
 		} else if (!this.hasVertex(to)) {
 			throw new JsGraph.VertexNotExistsError(to);
 		}
-		this._edges[from][to] = value;
-		this._reverseEdges[to][from] = null;
+		this._edges.get(from).set(to, value);
+		this._reverseEdges.get(to).add(from);
 		this._edgeCount += 1;
 		this._addEdgeCallbacks.fire(from, to, value);
 	}
@@ -180,7 +177,7 @@ export default class JsGraph {
 		if (!this.hasEdge(from, to)) {
 			throw new JsGraph.EdgeNotExistsError(from, to);
 		}
-		this._edges[from][to] = value;
+		this._edges.get(from).set(to, value);
 	}
 
 	spanEdge(from, to, value) {
@@ -226,9 +223,9 @@ export default class JsGraph {
 		if (!this.hasEdge(from, to)) {
 			throw new JsGraph.EdgeNotExistsError(from, to);
 		}
-		var valueOfRemovedEdge = this._edges[from][to];
-		delete this._edges[from][to];
-		delete this._reverseEdges[to][from];
+		var valueOfRemovedEdge = this._edges.get(from).get(to);
+		this._edges.get(from).delete(to);
+		this._reverseEdges.get(to).delete(from);
 		this._edgeCount -= 1;
 		this._removeEdgeCallbacks.fire(from, to, valueOfRemovedEdge);
 	}
@@ -246,99 +243,13 @@ export default class JsGraph {
 	hasEdge(from, to) {
 		return this.hasVertex(from) &&
 			this.hasVertex(to) &&
-			from in this._edges &&
-			to in this._edges[from];
+			this._edges.has(from) &&
+			this._edges.get(from).has(to);
 	}
 
 	edgeValue(from, to) {
-		return this.hasEdge(from, to) ? this._edges[from][to] : undefined;
+		return this.hasEdge(from, to) ? this._edges.get(from).get(to) : undefined;
 	}
-
-
-	//////////////////////////
-	////////// More //////////
-	//////////////////////////
-
-
-	successors(from) {
-		if (!this.hasVertex(from)) {
-			throw new JsGraph.VertexNotExistsError(from);
-		}
-		return Object.keys(this._edges[from]);
-	}
-
-	predecessors(to) {
-		if (!this.hasVertex(to)) {
-			throw new JsGraph.VertexNotExistsError(to);
-		}
-		return Object.keys(this._reverseEdges[to]);
-	}
-
-
-	///////////////////////////////
-	////////// Iteration //////////
-	///////////////////////////////
-
-	eachVertex(handler) {
-		Object.keys(this._vertices).every((key) => {
-			var r = handler(key, this._vertices[key]);
-			return (r !== false);
-		});
-	}
-
-	eachVertexFrom(from, handler) {
-		if (!this.hasVertex(from)) {
-			throw new JsGraph.VertexNotExistsError(from);
-		}
-		Object.keys(this._edges[from]).every((to) => {
-			var r = handler(to, this.vertexValue(to), this.edgeValue(from, to));
-			return (r !== false);
-		});
-	}
-
-	eachVertexTo(to, handler) {
-		if (!this.hasVertex(to)) {
-			throw new JsGraph.VertexNotExistsError(to);
-		}
-		Object.keys(this._reverseEdges[to]).every((from) => {
-			var r = handler(from, this.vertexValue(from), this.edgeValue(from, to));
-			return (r !== false);
-		});
-	}
-
-	eachEdge(handler) {
-		Object.keys(this._edges).every((from) => {
-			return Object.keys(this._edges[from]).every((to) => {
-				var r = handler(from, to, this._edges[from][to]);
-				return (r !== false);
-			});
-		});
-	}
-
-	topologically(handler) {
-		var visited = [];
-		var handled = {};
-
-		var visit = (a) => {
-			visited.push(a);
-			var i = visited.indexOf(a);
-			if (i !== visited.length - 1) {
-				var cycle = visited.slice(i + 1).reverse();
-				throw new JsGraph.CycleError(cycle);
-			}
-			if (!handled[a]) {
-				this.eachVertexTo(a, visit);
-				handled[a] = { returned: handler(a, this.vertexValue(a)) };
-			}
-			visited.pop();
-		};
-
-		this.eachVertex((a) => {
-			if (!handled[a]) {
-				visit(a);
-			}
-		});
-	};
 
 
 	///////////////////////////////////////////////
@@ -348,18 +259,23 @@ export default class JsGraph {
 	[Symbol.iterator]() { return this.vertices() }
 
 	*vertices() {
-		for (let key of Object.keys(this._vertices)) {
-			if (this.hasVertex(key)) {
-				yield [key, this._vertices[key]];
+		var done = new Set();
+		for (let [key, value] of this._vertices) {
+			if (this.hasVertex(key) && !done.has(key)) {
+				done.add(key);
+				yield [key, value];
 			}
 		}
 	}
 
 	*edges() {
-		for (let from of Object.keys(this._edges)) {
-			for (let to of Object.keys(this._edges[from])) {
-				if (this.hasEdge(from, to)) {
-					yield [from, to, this._edges[from][to]];
+		var done = new Map();
+		for (let from of this._edges.keys()) {
+			if (!done.has(from)) { done.set(from, new Set()) }
+			for (let to of this._edges.get(from).keys()) {
+				if (this.hasEdge(from, to) && !done.get(from).has(to)) {
+					done.get(from).add(to);
+					yield [from, to, this._edges.get(from).get(to)];
 				}
 			}
 		}
@@ -370,9 +286,11 @@ export default class JsGraph {
 		return this._verticesFrom(from);
 	}
 	*_verticesFrom(from) {
-		for (let to of Object.keys(this._edges[from])) {
-			if (this.hasEdge(from, to)) {
-				yield [to, this._vertices[to], this._edges[from][to]];
+		var done = new Set();
+		for (let to of this._edges.get(from).keys()) {
+			if (this.hasEdge(from, to) && !done.has(to)) {
+				done.add(to);
+				yield [to, this._vertices.get(to), this._edges.get(from).get(to)];
 			}
 		}
 	}
@@ -382,16 +300,18 @@ export default class JsGraph {
 		return this._verticesTo(to);
 	}
 	*_verticesTo(to) {
-		for (let from of Object.keys(this._reverseEdges[to])) {
-			if (this.hasEdge(from, to)) {
-				yield [from, this._vertices[from], this._edges[from][to]];
+		var done = new Set();
+		for (let from of this._reverseEdges.get(to)) {
+			if (this.hasEdge(from, to) && !done.has(from)) {
+				done.add(from);
+				yield [from, this._vertices.get(from), this._edges.get(from).get(to)];
 			}
 		}
 	}
 
 	*vertices_topologically() {
-		var visited = [];
-		var handled = {};
+		var visited = []; // stack
+		var handled = new Set();
 
 		var _this = this;
 		function *visit(a) {
@@ -401,21 +321,56 @@ export default class JsGraph {
 				var cycle = visited.slice(i + 1).reverse();
 				throw new JsGraph.CycleError(cycle);
 			}
-			if (!handled[a]) {
+			if (!handled.has(a)) {
 				for (let [b] of _this.verticesTo(a)) {
 					yield* visit(b);
 				}
 				if (_this.hasVertex(a)) {
-					yield [a, _this._vertices[a]];
+					yield [a, _this._vertices.get(a)];
 				}
-				handled[a] = true;
+				handled.add(a);
 			}
 			visited.pop();
 		}
 		for (let [a] of this.vertices()) {
-			if (!handled[a]) {
+			if (!handled.has(a)) {
 				yield* visit(a);
 			}
+		}
+	}
+
+
+	/////////////////////////////////////////
+	////////// Old Style Iteration //////////
+	/////////////////////////////////////////
+
+	eachVertex(handler) {
+		for (let args of this.vertices()) {
+			if (handler(...args) === false) { break }
+		}
+	}
+
+	eachVertexFrom(from, handler) {
+		for (let args of this.verticesFrom(from)) {
+			if (handler(...args) === false) { break }
+		}
+	}
+
+	eachVertexTo(to, handler) {
+		for (let args of this.verticesTo(to)) {
+			if (handler(...args) === false) { break }
+		}
+	}
+
+	eachEdge(handler) {
+		for (let args of this.edges()) {
+			if (handler(...args) === false) { break }
+		}
+	}
+
+	eachVertexTopologically(handler) {
+		for (let args of this.vertices_topologically()) {
+			if (handler(...args) === false) { break }
 		}
 	}
 
@@ -504,28 +459,28 @@ export default class JsGraph {
 
 	clone() {
 		var result = new JsGraph();
-		this.eachVertex((key, val) => {
+		for (let [key, val] of this.vertices()) {
 			result.addVertex(key, val);
-		});
-		this.eachEdge((from, to, val) => {
+		}
+		for (let [from, to, val] of this.edges()) {
 			result.addEdge(from, to, val);
-		});
+		}
 		return result;
 	}
 
 	transitiveReduction() {
 		var result = this.clone();
-		result.eachVertex((x) => {
-			result.eachVertex((y) => {
+		for (let [x] of this.vertices()) {
+			for (let [y] of this.vertices()) {
 				if (result.hasEdge(x, y)) {
-					result.eachVertex((z) => {
+					for (let [z] of this.vertices()) {
 						if (result.hasPath(y, z)) {
 							result.removeEdge(x, z);
 						}
-					});
+					}
 				}
-			});
-		});
+			}
+		}
 		return result;
 	}
 
