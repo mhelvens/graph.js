@@ -1712,15 +1712,14 @@ describe("method", () => {//////////////////////////////////////////////////////
 
 		it_throwsNothing();
 
-		var newGraph;
 		beforeEach(() => {
 			graph.addEdge('k1', 'k3');
 			graph.addEdge('k2', 'k4');
 			graph.addEdge('k5', 'k4');
-			newGraph = callItWith();
 		});
 
 		it("returns a new graph with the same vertices as the original", () => {
+			var newGraph = callItWith();
 			for (let [key, val] of newGraph.vertices()) {
 				expect(graph.hasVertex(key)).toBeTruthy();
 				expect(val).toBe(graph.vertexValue(key));
@@ -1732,6 +1731,7 @@ describe("method", () => {//////////////////////////////////////////////////////
 		});
 
 		it("returns a new graph with the same edges as the original", () => {
+			var newGraph = callItWith();
 			for (let [from, to, val] of newGraph.edges()) {
 				expect(graph.hasEdge(from, to)).toBeTruthy();
 				expect(val).toBe(graph.edgeValue(from, to));
@@ -1739,6 +1739,30 @@ describe("method", () => {//////////////////////////////////////////////////////
 			for (let [from, to, val] of graph.edges()) {
 				expect(newGraph.hasEdge(from, to)).toBeTruthy();
 				expect(val).toBe(newGraph.edgeValue(from, to));
+			}
+		});
+
+		it("returns a new graph with the same vertices as the original, with values influenced by custom value transformer", () => {
+			var newGraph = callItWith(v => `value:${v}`);
+			for (let [key, val] of newGraph.vertices()) {
+				expect(graph.hasVertex(key)).toBeTruthy();
+				expect(val).toBe(`value:${graph.vertexValue(key)}`);
+			}
+			for (let [key, val] of graph.vertices()) {
+				expect(newGraph.hasVertex(key)).toBeTruthy();
+				expect(`value:${val}`).toBe(newGraph.vertexValue(key));
+			}
+		});
+
+		it("returns a new graph with the same edges as the original, with values influenced by custom value transformer", () => {
+			var newGraph = callItWith(v => `value:${v}`);
+			for (let [from, to, val] of newGraph.edges()) {
+				expect(graph.hasEdge(from, to)).toBeTruthy();
+				expect(val).toBe(`value:${graph.edgeValue(from, to)}`);
+			}
+			for (let [from, to, val] of graph.edges()) {
+				expect(newGraph.hasEdge(from, to)).toBeTruthy();
+				expect(`value:${val}`).toBe(newGraph.edgeValue(from, to));
 			}
 		});
 

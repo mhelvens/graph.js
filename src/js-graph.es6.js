@@ -512,13 +512,13 @@ export default class JsGraph {
 	////////// Cloning //////////
 	/////////////////////////////
 
-	clone() {
+	clone(transform=v=>v) {
 		var result = new JsGraph();
 		for (let [key, val] of this.vertices()) {
-			result.addVertex(key, val);
+			result.addVertex(key, transform(val));
 		}
 		for (let [from, to, val] of this.edges()) {
-			result.addEdge(from, to, val);
+			result.addEdge(from, to, transform(val));
 		}
 		return result;
 	}
