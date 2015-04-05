@@ -295,7 +295,7 @@ describe("method", () => {//////////////////////////////////////////////////////
 
 		it("calls the specified handler exactly once for each outgoing edge, providing the connected vertex key/value and edge value", () => {
 			var valuesFound = {};
-			callItWith('k2', function (key, value, edgeValue) {
+			callItWith('k2', (key, value, edgeValue) => {
 				expect(valuesFound[key]).toBeUndefined();
 				valuesFound[key] = [value, edgeValue];
 			});
@@ -307,7 +307,7 @@ describe("method", () => {//////////////////////////////////////////////////////
 
 		it("stops iteration if and when the callback returns false", () => {
 			var counter = 0;
-			callItWith('k2', function (/*key, value*/) {
+			callItWith('k2', (/*key, value*/) => {
 				counter += 1;
 				if (counter === 1) { return false }
 			});
@@ -350,7 +350,7 @@ describe("method", () => {//////////////////////////////////////////////////////
 
 		it("calls the specified handler exactly once for each incoming edge, providing the connected vertex key/value and edge value", () => {
 			var valuesFound = {};
-			callItWith('k3', function (key, value, edgeValue) {
+			callItWith('k3', (key, value, edgeValue) => {
 				expect(valuesFound[key]).toBeUndefined();
 				valuesFound[key] = [value, edgeValue];
 			});
@@ -362,7 +362,7 @@ describe("method", () => {//////////////////////////////////////////////////////
 
 		it("stops iteration if and when the callback returns false", () => {
 			var counter = 0;
-			callItWith('k3', function (/*key, value*/) {
+			callItWith('k3', (/*key, value*/) => {
 				counter += 1;
 				if (counter === 1) { return false }
 			});
@@ -405,7 +405,7 @@ describe("method", () => {//////////////////////////////////////////////////////
 
 		it("calls the specified handler exactly once for each vertex that is reachable from the given vertex, in no particular order", () => {
 			var valuesFound = {};
-			callItWith('k2', function (key, value) {
+			callItWith('k2', (key, value) => {
 				expect(valuesFound[key]).toBeUndefined();
 				valuesFound[key] = value;
 			});
@@ -418,7 +418,7 @@ describe("method", () => {//////////////////////////////////////////////////////
 
 		it("stops iteration if and when the callback returns false", () => {
 			var counter = 0;
-			callItWith('k2', function (/*key, value*/) {
+			callItWith('k2', (/*key, value*/) => {
 				counter += 1;
 				if (counter === 1) { return false }
 			});
@@ -461,7 +461,7 @@ describe("method", () => {//////////////////////////////////////////////////////
 
 		it("calls the specified handler exactly once for each vertex that has a path to reach the given vertex, in no particular order", () => {
 			var valuesFound = {};
-			callItWith('k4', function (key, value) {
+			callItWith('k4', (key, value) => {
 				expect(valuesFound[key]).toBeUndefined();
 				valuesFound[key] = value;
 			});
@@ -474,7 +474,7 @@ describe("method", () => {//////////////////////////////////////////////////////
 
 		it("stops iteration if and when the callback returns false", () => {
 			var counter = 0;
-			callItWith('k4', function (/*key, value*/) {
+			callItWith('k4', (/*key, value*/) => {
 				counter += 1;
 				if (counter === 1) { return false }
 			});
@@ -1521,6 +1521,13 @@ describe("method", () => {//////////////////////////////////////////////////////
 			expectItWhenCalledWith(other).toBeFalsy();
 		});
 
+		it("returns falsy when compared to a graph with different vertices", () => {
+			var other = graph.clone();
+			other.removeVertex('k1');
+			other.addNewVertex('k6');
+			expectItWhenCalledWith(other).toBeFalsy();
+		});
+
 		it("returns falsy when compared to a graph with fewer edges", () => {
 			var other = graph.clone();
 			graph.addNewEdge('k1', 'k2');
@@ -1530,6 +1537,13 @@ describe("method", () => {//////////////////////////////////////////////////////
 		it("returns falsy when compared to a graph with more edges", () => {
 			var other = graph.clone();
 			other.addNewEdge('k1', 'k2');
+			expectItWhenCalledWith(other).toBeFalsy();
+		});
+
+		it("returns falsy when compared to a graph with different edges", () => {
+			var other = graph.clone();
+			other.addNewEdge('k1', 'k2');
+			other.removeEdge('k2', 'k3');
 			expectItWhenCalledWith(other).toBeFalsy();
 		});
 
@@ -1664,6 +1678,28 @@ describe("method", () => {//////////////////////////////////////////////////////
 				visited[key] = true;
 			});
 
+		});
+
+		it("stops iteration if and when the callback returns false", () => {
+			var counter = 0;
+			callItWith((/*key, value*/) => {
+				counter += 1;
+				if (counter === 1) { return false }
+			});
+			expect(counter).toEqual(1);
+		});
+
+		it("does not stop iteration when the callback returns a non-false falsey value", () => {
+			var counter;
+
+			[undefined, null, 0, "", NaN].forEach((falsey) => {
+				counter = 0;
+				callItWith((/*key, value*/) => {
+					counter += 1;
+					if (counter === 1) { return falsey }
+				});
+				expect(counter).toEqual(5);
+			});
 		});
 
 	});
