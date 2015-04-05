@@ -388,9 +388,24 @@ export default class JsGraph {
 	}
 
 
-	//////////////////////////////////////
-	////////// Advanced Queries //////////
-	//////////////////////////////////////
+	////////////////////////////////////////
+	////////// (Advanced) Queries //////////
+	////////////////////////////////////////
+
+	equals(other, eq=(x,y,from,to)=>x===y) {
+		if (!(other instanceof JsGraph))                { return false }
+		if (this.vertexCount() !== other.vertexCount()) { return false }
+		if (this.edgeCount()   !== other.edgeCount()  ) { return false }
+		for (let [key, value] of this.vertices()) {
+			if (!other.hasVertex(key))                   { return false }
+			if (!eq(value, other.vertexValue(key), key)) { return false }
+		}
+		for (let [from, to, value] of this.edges()) {
+			if (!other.hasEdge(from, to))                        { return false }
+			if (!eq(value, other.edgeValue(from, to), from, to)) { return false }
+		}
+		return true;
+	}
 
 	hasCycle() {
 		var visited = {};

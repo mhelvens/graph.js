@@ -1382,6 +1382,78 @@ describe("method", () => {//////////////////////////////////////////////////////
 	});
 
 
+	describeMethod('equals', () => {
+
+		it("throws nothing", () => {
+			expectItWhenBoundWith()             .not.toThrow();
+			expectItWhenBoundWith('some string').not.toThrow();
+			expectItWhenBoundWith(42)           .not.toThrow();
+			expectItWhenBoundWith(graph)        .not.toThrow();
+		});
+
+		// k1     k2 ──▶ k3 ──▶ k4
+		//        ╷      ▲
+		//        │      │
+		//        ▼      │
+		//        k5 ────╯
+
+		it("returns falsy when compared to a graph with fewer vertices", () => {
+			var other = graph.clone();
+			graph.addNewVertex('k6');
+			expectItWhenCalledWith(other).toBeFalsy();
+		});
+
+		it("returns falsy when compared to a graph with more vertices", () => {
+			var other = graph.clone();
+			other.addNewVertex('k6');
+			expectItWhenCalledWith(other).toBeFalsy();
+		});
+
+		it("returns falsy when compared to a graph with fewer edges", () => {
+			var other = graph.clone();
+			graph.addNewEdge('k1', 'k2');
+			expectItWhenCalledWith(other).toBeFalsy();
+		});
+
+		it("returns falsy when compared to a graph with more edges", () => {
+			var other = graph.clone();
+			other.addNewEdge('k1', 'k2');
+			expectItWhenCalledWith(other).toBeFalsy();
+		});
+
+		it("returns falsy when compared to a graph with a different vertex value", () => {
+			var other = graph.clone();
+			other.setVertex('k1', 'new value');
+			expectItWhenCalledWith(other).toBeFalsy();
+		});
+
+		it("returns falsy when compared to a graph with a different edge value", () => {
+			var other = graph.clone();
+			other.setEdge('k2', 'k3', 'new value');
+			expectItWhenCalledWith(other).toBeFalsy();
+		});
+
+		it("returns truthy for graphs that are equal", () => {
+			var other = graph.clone();
+			expectItWhenCalledWith(other).toBeTruthy();
+		});
+
+		it("can be influenced by a custom comparison function", () => {
+			var sillyComparison = (v1, v2, from, to) => {
+				if (from === 'k2' && to === 'k3') { return true }
+				return v1 === v2;
+			};
+			var other = graph.clone();
+			other.setEdge('k2', 'k3', 'new value');
+			expectItWhenCalledWith(other, sillyComparison).toBeTruthy();
+			other.setEdge('k3', 'k4', 'new value');
+			expectItWhenCalledWith(other, sillyComparison).toBeFalsy();
+		});
+
+
+	});
+
+
 	describeMethod('eachVertexTopologically', () => {
 
 		it("throws an error if the graph contains a cycle (1)", () => {
