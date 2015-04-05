@@ -385,6 +385,118 @@ describe("method", () => {//////////////////////////////////////////////////////
 	});
 
 
+	describeMethod('eachVertexWithPathFrom', () => {
+
+		it("throws an error if the given vertex does not exist", () => {
+			expectItWhenBoundWith('newKey', () => {}).toThrow();
+			expectItWhenBoundWith('newKey', () => {}).toThrowSpecific(JsGraph.VertexNotExistsError, {'newKey': undefined});
+		});
+
+		it("throws nothing if the given vertex exists", () => {
+			expectItWhenBoundWith('k1', () => {}).not.toThrow();
+		});
+
+		it("does not change the graph if the specified handler doesn't", () => {
+			callItWith('k2', () => {
+				// not changing the graph from here
+			});
+			expectTheGraphNotToHaveChanged();
+		});
+
+		it("calls the specified handler exactly once for each vertex that is reachable from the given vertex, in no particular order", () => {
+			var valuesFound = {};
+			callItWith('k2', function (key, value) {
+				expect(valuesFound[key]).toBeUndefined();
+				valuesFound[key] = value;
+			});
+			expect(valuesFound).toEqual({
+				'k3': undefined,
+				'k5': 'oldValue5',
+				'k4': undefined
+			});
+		});
+
+		it("stops iteration if and when the callback returns false", () => {
+			var counter = 0;
+			callItWith('k2', function (/*key, value*/) {
+				counter += 1;
+				if (counter === 1) { return false }
+			});
+			expect(counter).toEqual(1);
+		});
+
+		it("does not stop iteration when the callback returns a non-false falsey value", () => {
+			var counter;
+
+			[undefined, null, 0, "", NaN].forEach((falsey) => {
+				counter = 0;
+				callItWith('k2', (/*key, value*/) => {
+					counter += 1;
+					if (counter === 1) { return falsey }
+				});
+				expect(counter).toEqual(3);
+			});
+		});
+
+	});
+
+
+	describeMethod('eachVertexWithPathTo', () => {
+
+		it("throws an error if the given vertex does not exist", () => {
+			expectItWhenBoundWith('newKey', () => {}).toThrow();
+			expectItWhenBoundWith('newKey', () => {}).toThrowSpecific(JsGraph.VertexNotExistsError, {'newKey': undefined});
+		});
+
+		it("throws nothing if the given vertex exists", () => {
+			expectItWhenBoundWith('k1', () => {}).not.toThrow();
+		});
+
+		it("does not change the graph if the specified handler doesn't", () => {
+			callItWith('k2', () => {
+				// not changing the graph from here
+			});
+			expectTheGraphNotToHaveChanged();
+		});
+
+		it("calls the specified handler exactly once for each vertex that has a path to reach the given vertex, in no particular order", () => {
+			var valuesFound = {};
+			callItWith('k4', function (key, value) {
+				expect(valuesFound[key]).toBeUndefined();
+				valuesFound[key] = value;
+			});
+			expect(valuesFound).toEqual({
+				'k2': undefined,
+				'k3': undefined,
+				'k5': 'oldValue5'
+			});
+		});
+
+		it("stops iteration if and when the callback returns false", () => {
+			var counter = 0;
+			callItWith('k4', function (/*key, value*/) {
+				counter += 1;
+				if (counter === 1) { return false }
+			});
+			expect(counter).toEqual(1);
+		});
+
+		it("does not stop iteration when the callback returns a non-false falsey value", () => {
+			var counter;
+
+			[undefined, null, 0, "", NaN].forEach((falsey) => {
+				counter = 0;
+				callItWith('k4', (/*key, value*/) => {
+					counter += 1;
+					if (counter === 1) { return falsey }
+				});
+				expect(counter).toEqual(3);
+			});
+		});
+
+	});
+
+
 	describeMethod('eachEdge', () => {
 
 		it("throws nothing when passed a non-throwing function", () => {
@@ -1737,6 +1849,60 @@ describe("method", () => {//////////////////////////////////////////////////////
 			expect(valuesFound).toEqual({
 				'k2': [undefined, 'oldValue23'],
 				'k5': ['oldValue5', undefined]
+			});
+		});
+
+	});
+
+
+	describeMethod('verticesWithPathFrom', () => {
+
+		it("throws an error if the given vertex does not exist", () => {
+			expectItWhenBoundWith('newKey').toThrow();
+			expectItWhenBoundWith('newKey').toThrowSpecific(JsGraph.VertexNotExistsError, {'newKey': undefined});
+		});
+
+		it("throws nothing if the given vertex exists", () => {
+			expectItWhenBoundWith('k1').not.toThrow();
+		});
+
+		it("iterates once over each vertex that is reachable from the given vertex, in no particular order", () => {
+			var valuesFound = {};
+			for (let [key, value] of callItWith('k2')) {
+				expect(valuesFound[key]).toBeUndefined();
+				valuesFound[key] = value;
+			}
+			expect(valuesFound).toEqual({
+				'k3': undefined,
+				'k5': 'oldValue5',
+				'k4': undefined
+			});
+		});
+
+	});
+
+
+	describeMethod('verticesWithPathTo', () => {
+
+		it("throws an error if the given vertex does not exist", () => {
+			expectItWhenBoundWith('newKey').toThrow();
+			expectItWhenBoundWith('newKey').toThrowSpecific(JsGraph.VertexNotExistsError, {'newKey': undefined});
+		});
+
+		it("throws nothing if the given vertex exists", () => {
+			expectItWhenBoundWith('k1').not.toThrow();
+		});
+
+		it("iterates once over each vertex that has a path to reach the given vertex, in no particular order", () => {
+			var valuesFound = {};
+			for (let [key, value] of callItWith('k4')) {
+				expect(valuesFound[key]).toBeUndefined();
+				valuesFound[key] = value;
+			}
+			expect(valuesFound).toEqual({
+				'k2': undefined,
+				'k3': undefined,
+				'k5': 'oldValue5'
 			});
 		});
 
