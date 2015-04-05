@@ -309,6 +309,34 @@ export default class JsGraph {
 		}
 	}
 
+	verticesWithPathFrom(from) {
+		if (!this.hasVertex(from)) { throw new JsGraph.VertexNotExistsError(from) }
+		return this._verticesWithPathFrom(from, new Set());
+	}
+	*_verticesWithPathFrom(from, done) {
+		for (let to of this._edges.get(from).keys()) {
+			if (this.hasEdge(from, to) && !done.has(to)) {
+				done.add(to);
+				yield [to, this._vertices.get(to)];
+				yield* this._verticesWithPathFrom(to, done);
+			}
+		}
+	}
+
+	verticesWithPathTo(to) {
+		if (!this.hasVertex(to)) { throw new JsGraph.VertexNotExistsError(to) }
+		return this._verticesWithPathTo(to, new Set());
+	}
+	*_verticesWithPathTo(to, done) {
+		for (let from of this._reverseEdges.get(to)) {
+			if (this.hasEdge(from, to) && !done.has(from)) {
+				done.add(from);
+				yield [from, this._vertices.get(from)];
+				yield* this._verticesWithPathTo(from, done);
+			}
+		}
+	}
+
 	*vertices_topologically() {
 		var visited = []; // stack
 		var handled = new Set();
@@ -350,6 +378,12 @@ export default class JsGraph {
 		}
 	}
 
+	eachEdge(handler) {
+		for (let args of this.edges()) {
+			if (handler(...args) === false) { break }
+		}
+	}
+
 	eachVertexFrom(from, handler) {
 		for (let args of this.verticesFrom(from)) {
 			if (handler(...args) === false) { break }
@@ -362,8 +396,14 @@ export default class JsGraph {
 		}
 	}
 
-	eachEdge(handler) {
-		for (let args of this.edges()) {
+	eachVertexWithPathFrom(from, handler) {
+		for (let args of this.verticesWithPathFrom(from)) {
+			if (handler(...args) === false) { break }
+		}
+	}
+
+	eachVertexWithPathTo(to, handler) {
+		for (let args of this.verticesWithPathTo(to)) {
 			if (handler(...args) === false) { break }
 		}
 	}
@@ -388,9 +428,24 @@ export default class JsGraph {
 	}
 
 
-	//////////////////////////////////////
-	////////// Advanced Queries //////////
-	//////////////////////////////////////
+	////////////////////////////////////////
+	////////// (Advanced) Queries //////////
+	////////////////////////////////////////
+
+	equals(other, eq=(x,y,from,to)=>x===y) {
+		if (!(other instanceof JsGraph))                { return false }
+		if (this.vertexCount() !== other.vertexCount()) { return false }
+		if (this.edgeCount()   !== other.edgeCount()  ) { return false }
+		for (let [key, value] of this.vertices()) {
+			if (!other.hasVertex(key))                   { return false }
+			if (!eq(value, other.vertexValue(key), key)) { return false }
+		}
+		for (let [from, to, value] of this.edges()) {
+			if (!other.hasEdge(from, to))                        { return false }
+			if (!eq(value, other.edgeValue(from, to), from, to)) { return false }
+		}
+		return true;
+	}
 
 	hasCycle() {
 		var visited = {};
@@ -457,13 +512,13 @@ export default class JsGraph {
 	////////// Cloning //////////
 	/////////////////////////////
 
-	clone() {
+	clone(transform=v=>v) {
 		var result = new JsGraph();
 		for (let [key, val] of this.vertices()) {
-			result.addVertex(key, val);
+			result.addVertex(key, transform(val));
 		}
 		for (let [from, to, val] of this.edges()) {
-			result.addEdge(from, to, val);
+			result.addEdge(from, to, transform(val));
 		}
 		return result;
 	}
