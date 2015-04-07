@@ -75,74 +75,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _toConsumableArray = function (arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i]; return arr2; } else { return Array.from(arr); } };
 	
+	var _createClass = (function () { function defineProperties(target, props) { for (var key in props) { var prop = props[key]; prop.configurable = true; if (prop.value) prop.writable = true; } Object.defineProperties(target, props); } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+	
 	var _inherits = function (subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; };
 	
 	var _createComputedClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var prop = props[i]; prop.configurable = true; if (prop.value) prop.writable = true; Object.defineProperty(target, prop.key, prop); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 	
-	var _createClass = (function () { function defineProperties(target, props) { for (var key in props) { var prop = props[key]; prop.configurable = true; if (prop.value) prop.writable = true; } Object.defineProperties(target, props); } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-	
 	var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
-	
-	//  ////////////////////////////////////////////////////////////////////////////////////////////////
-	//  // Utility /////////////////////////////////////////////////////////////////////////////////////
-	//  ////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	var Callbacks = (function () {
-		function Callbacks() {
-			_classCallCheck(this, Callbacks);
-	
-			this._callbacks = new Set();
-		}
-	
-		_createClass(Callbacks, {
-			add: {
-				value: function add(fn) {
-					var _this = this;
-	
-					if (!this._callbacks.has(fn)) {
-						this._callbacks.add(fn);
-					}
-					return function () {
-						_this._callbacks["delete"](fn);
-					};
-				}
-			},
-			fire: {
-				value: function fire() {
-					for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-						args[_key] = arguments[_key];
-					}
-	
-					var _iteratorNormalCompletion = true;
-					var _didIteratorError = false;
-					var _iteratorError = undefined;
-	
-					try {
-						for (var _iterator = this._callbacks[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-							var fn = _step.value;
-	
-							fn.apply(undefined, args);
-						}
-					} catch (err) {
-						_didIteratorError = true;
-						_iteratorError = err;
-					} finally {
-						try {
-							if (!_iteratorNormalCompletion && _iterator["return"]) {
-								_iterator["return"]();
-							}
-						} finally {
-							if (_didIteratorError) {
-								throw _iteratorError;
-							}
-						}
-					}
-				}
-			}
-		});
-	
-		return Callbacks;
-	})();
 	
 	//  ////////////////////////////////////////////////////////////////////////////////////////////////
 	//  // JsGraph class ///////////////////////////////////////////////////////////////////////////////
@@ -157,29 +96,14 @@ return /******/ (function(modules) { // webpackBootstrap
 			this._reverseEdges = new Map(); // to -> Set<from> (_edges contains the values)
 			this._vertexCount = 0;
 			this._edgeCount = 0;
-			this._addVertexCallbacks = new Callbacks();
-			this._removeVertexCallbacks = new Callbacks();
-			this._addEdgeCallbacks = new Callbacks();
-			this._removeEdgeCallbacks = new Callbacks();
 		}
 	
 		_createComputedClass(JsGraph, [{
-			key: "onAddVertex",
+			key: "addNewVertex",
 	
 			//////////////////////////////
 			////////// Vertices //////////
 			//////////////////////////////
-	
-			value: function onAddVertex(fn) {
-				return this._addVertexCallbacks.add(fn);
-			}
-		}, {
-			key: "onRemoveVertex",
-			value: function onRemoveVertex(fn) {
-				return this._removeVertexCallbacks.add(fn);
-			}
-		}, {
-			key: "addNewVertex",
 	
 			//// creating them ////
 	
@@ -191,7 +115,6 @@ return /******/ (function(modules) { // webpackBootstrap
 				this._edges.set(key, new Map());
 				this._reverseEdges.set(key, new Set());
 				this._vertexCount += 1;
-				this._addVertexCallbacks.fire(key, value);
 			}
 		}, {
 			key: "setVertex",
@@ -232,10 +155,8 @@ return /******/ (function(modules) { // webpackBootstrap
 				if (this._reverseEdges.get(key).size > 0) {
 					throw new JsGraph.HasConnectedEdgesError(key);
 				}
-				var valueOfRemovedVertex = this._vertices.get(key);
 				this._vertices["delete"](key);
 				this._vertexCount -= 1;
-				this._removeVertexCallbacks.fire(key, valueOfRemovedVertex);
 			}
 		}, {
 			key: "destroyExistingVertex",
@@ -332,22 +253,12 @@ return /******/ (function(modules) { // webpackBootstrap
 				return this._vertices.get(key);
 			}
 		}, {
-			key: "onAddEdge",
+			key: "addNewEdge",
 	
 			///////////////////////////
 			////////// Edges //////////
 			///////////////////////////
 	
-			value: function onAddEdge(fn) {
-				return this._addEdgeCallbacks.add(fn);
-			}
-		}, {
-			key: "onRemoveEdge",
-			value: function onRemoveEdge(fn) {
-				return this._removeEdgeCallbacks.add(fn);
-			}
-		}, {
-			key: "addNewEdge",
 			value: function addNewEdge(from, to, value) {
 				if (this.hasEdge(from, to)) {
 					throw new JsGraph.EdgeExistsError(from, to, this.edgeValue(from, to));
@@ -364,7 +275,6 @@ return /******/ (function(modules) { // webpackBootstrap
 				this._edges.get(from).set(to, value);
 				this._reverseEdges.get(to).add(from);
 				this._edgeCount += 1;
-				this._addEdgeCallbacks.fire(from, to, value);
 			}
 		}, {
 			key: "createNewEdge",
@@ -434,11 +344,9 @@ return /******/ (function(modules) { // webpackBootstrap
 				if (!this.hasEdge(from, to)) {
 					throw new JsGraph.EdgeNotExistsError(from, to);
 				}
-				var valueOfRemovedEdge = this._edges.get(from).get(to);
 				this._edges.get(from)["delete"](to);
 				this._reverseEdges.get(to)["delete"](from);
 				this._edgeCount -= 1;
-				this._removeEdgeCallbacks.fire(from, to, valueOfRemovedEdge);
 			}
 		}, {
 			key: "removeEdge",
