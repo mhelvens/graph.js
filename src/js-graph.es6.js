@@ -110,12 +110,12 @@ export default class JsGraph {
 		if (!this.hasVertex(key)) {
 			throw new JsGraph.VertexNotExistsError(key);
 		}
-		this.eachVertexFrom(key, (to) => {
+		for (let [to] of this.verticesFrom(key)) {
 			this.removeEdge(key, to);
-		});
-		this.eachVertexTo(key, (from) => {
+		}
+		for (let [from] of this.verticesTo(key)) {
 			this.removeEdge(from, key);
-		});
+		}
 		this.removeExistingVertex(key);
 	}
 
@@ -420,11 +420,11 @@ export default class JsGraph {
 	//////////////////////////////
 
 	clearEdges() {
-		this.eachEdge((from, to) => { this.removeEdge(from, to) });
+		for (let [from, to] of this.edges()) { this.removeEdge(from, to) }
 	}
 
 	clear() {
-		this.eachVertex((v) => { this.destroyVertex(v) });
+		for (let [v] of this.vertices()) { this.destroyVertex(v) }
 	}
 
 
@@ -448,37 +448,32 @@ export default class JsGraph {
 	}
 
 	hasCycle() {
-		var visited = {};
-		var handled = {};
+		let visited = new Set();
+		let handled = new Set();
 
-		var cycleFound = false;
-
-		var visit = (a) => {
+		const visit = (a) => {
 			/* if a cycle is found, record it and return */
-			if (visited[a]) {
-				cycleFound = true;
-				return;
+			if (visited.has(a)) {
+				return true;
 			}
 
 			/* if this vertex was already handled, no cycle can be found here */
-			if (handled[a]) { return }
-			handled[a] = true;
+			if (handled.has(a)) { return false }
+			handled.add(a);
 
 			/* recursively visit successors to check for cycles */
-			visited[a] = true;
-			this.eachVertexFrom(a, (b) => {
-				visit(b);
-				if (cycleFound) { return false }
-			});
-			visited[a] = false;
+			visited.add(a);
+			for (let [b] of this.verticesFrom(a)) {
+				if (visit(b)) { return true }
+			}
+			visited.delete(a);
 		};
 
-		this.eachVertex((a) => {
-			visit(a);
-			if (cycleFound) { return false }
-		});
+		for (let [a] of this.vertices()) {
+			if (visit(a)) { return true }
+		}
 
-		return cycleFound;
+		return false;
 	}
 
 	hasPath(from, to) {
@@ -486,22 +481,21 @@ export default class JsGraph {
 			return false;
 		}
 
-		var visited = {};
+		var visited = new Set();
 
 		/* Recursive auxiliary function: Is there a path from 'current' to 'to'? */
-		var hasPathAux = (current) => {
+		const hasPathAux = (current) => {
 			if (this.hasEdge(current, to)) {
 				return true;
 			}
-			visited[current] = true;
-			var found = false;
-			this.eachVertexFrom(current, (next) => {
-				if (!found && !visited[next] && hasPathAux(next)) {
-					found = true;
+			visited.add(current);
+			for (let [next] of this.verticesFrom(current)) {
+				if (!visited.has(next) && hasPathAux(next)) {
+					return true;
 				}
-			});
-			delete visited[current];
-			return found;
+			}
+			visited.delete(current);
+			return false;
 		};
 
 		return hasPathAux(from);
@@ -548,55 +542,55 @@ export default class JsGraph {
 
 JsGraph.VertexExistsError = class VertexExistsError extends Error {
 	constructor(key, value) {
-		this.vertices = {};
+		this.vertices = new Set();
 		this.v(key, value);
 	}
 	v(key, value) {
-		this.vertices[key] = value;
+		this.vertices.add({ key, value });
 		this._refreshMessage();
 		return this;
 	}
 	_refreshMessage() {
-		var aVertices = this.vertices === 1 ? "a vertex" : "vertices";
-		this.message = `This graph has ${aVertices} '${Object.keys(this.vertices).join("', '")}'`;
+		var aVertices = this.vertices.size === 1 ? "a vertex" : "vertices";
+		this.message = `This graph has ${aVertices} '${
+			[...this.vertices].map(({key}) => key).join("', '")
+		}'`;
 	}
-
 };
 
 JsGraph.VertexNotExistsError = class VertexNotExistError extends Error {
 	constructor(key) {
-		this.vertices = {};
+		this.vertices = new Set();
 		this.v(key);
 	}
 	v(key) {
-		this.vertices[key] = undefined;
+		this.vertices.add({ key });
 		this._refreshMessage();
 		return this;
 	}
 	_refreshMessage() {
-		var aVertices = this.vertices === 1 ? "a vertex" : "vertices";
-		this.message = `This graph does not have ${aVertices} '${Object.keys(this.vertices).join("', '")}'`;
+		var aVertices = this.vertices.size === 1 ? "a vertex" : "vertices";
+		this.message = `This graph does not have ${aVertices} '${
+			[...this.vertices].map(({key}) => key).join("', '")
+		}'`;
 	}
-
 };
 
 JsGraph.EdgeExistsError = class EdgeExistsError extends Error {
 	constructor(from, to, value) {
-		this.edges = {};
+		this.edges = new Set();
 		this.e(from, to, value);
 	}
 	e(from, to, value) {
-		this.edges[from] = { [to]: value };
+		this.edges.add({ from, to, value });
 		this._refreshMessage();
 		return this;
 	}
 	_refreshMessage() {
 		var edges = [];
-		Object.keys(this.edges).forEach((from) => {
-			Object.keys(this.edges[from]).forEach((to) => {
-				edges.push("('" + from + "', '" + to + "')");
-			});
-		});
+		for (let {from, to} of this.edges) {
+			edges.push("('" + from + "', '" + to + "')");
+		}
 		var anEdges = edges.length === 1 ? "an edge" : "edges";
 		this.message = `This graph has ${anEdges} ${edges.join(", ")}`;
 	}
@@ -604,21 +598,19 @@ JsGraph.EdgeExistsError = class EdgeExistsError extends Error {
 
 JsGraph.EdgeNotExistsError = class EdgeNotExistError extends Error {
 	constructor(from, to) {
-		this.edges = {};
+		this.edges = new Set();
 		this.e(from, to);
 	}
 	e(from, to) {
-		this.edges[from] = { [to]: undefined };
+		this.edges.add({ from, to });
 		this._refreshMessage();
 		return this;
 	}
 	_refreshMessage() {
 		var edges = [];
-		Object.keys(this.edges).forEach((from) => {
-			Object.keys(this.edges[from]).forEach((to) => {
-				edges.push("('" + from + "', '" + to + "')");
-			});
-		});
+		for (let {from, to} of this.edges) {
+			edges.push("('" + from + "', '" + to + "')");
+		}
 		var anEdges = edges.length === 1 ? "an edge" : "edges";
 		this.message = `This graph does not have ${anEdges} ${edges.join(", ")}`;
 	}

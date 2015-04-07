@@ -5,6 +5,35 @@ export var any = jasmine.any;
 
 /* add matchers */
 beforeEach(() => {
+
+	jasmine.addCustomEqualityTester(function setEquals(a, b) {
+		if (a instanceof Set && b instanceof Set) {
+			if (a.size !== b.size) { return false }
+			for (let aValue of a) {
+				let found = false;
+				for (let bValue of b) {
+					if (jasmine.matchersUtil.equals(aValue, bValue, this)) {
+						found = true;
+						break;
+					}
+				}
+				if (!found) { return false }
+			}
+			return true;
+		}
+	});
+
+	jasmine.addCustomEqualityTester(function mapEquals(a, b) {
+		if (a instanceof Map && b instanceof Map) {
+			if (a.size !== b.size) { return false }
+			for (let [key] of a) {
+				if (!b.has(key))                                                { return false }
+				if (!jasmine.matchersUtil.equals(a.get(key), b.get(key), this)) { return false }
+			}
+			return true;
+		}
+	});
+
 	jasmine.addMatchers({
 		toBeReachable(/*util, customEqualityTesters*/) {
 			return {
@@ -32,17 +61,17 @@ beforeEach(() => {
 					} catch (exception) {
 						result.pass = exception instanceof expectedType;
 						if (result.pass) {
-							Object.keys(expectedContent).map((prop) => {
+							for (let prop of Object.keys(expectedContent)) {
 								result.pass = result.pass && util.equals(expectedContent[prop], exception[prop], customEqualityTesters);
-							});
-							result.message = "However, the thrown " + expectedType.prototype.name + " had the following properties: " + JSON.stringify(exception, undefined, ' ');
+							}
+							result.message = `However, the thrown ${expectedType.prototype.name} had the following properties: ${JSON.stringify(exception, undefined, 4)}`;
 						} else {
-							result.message = "However, the thrown exception was not a subclass of " + expectedType.prototype.name + ".";
+							result.message = `However, the thrown exception was not a subclass of ${expectedType.prototype.name}.`;
 						}
 					}
 
-					result.message = "Expected the function to throw a new " + expectedType.prototype.name + " with the following properties: " +
-						  JSON.stringify(expectedContent, undefined, ' ') + ". " + result.message;
+					result.message = `Expected the function to throw a new ${expectedType.prototype.name} with the following properties: ` +
+						`${JSON.stringify(expectedContent, undefined, 4)}. ${result.message}`;
 
 					return result;
 				}

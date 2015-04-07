@@ -279,7 +279,7 @@ describe("method", () => {//////////////////////////////////////////////////////
 
 		it("throws an error if the given vertex does not exist", () => {
 			expectItWhenBoundWith('newKey', () => {}).toThrow();
-			expectItWhenBoundWith('newKey', () => {}).toThrowSpecific(JsGraph.VertexNotExistsError, {'newKey': undefined});
+			expectItWhenBoundWith('newKey', () => {}).toThrowSpecific(JsGraph.VertexNotExistsError, new Set(['newKey']));
 		});
 
 		it("throws nothing if the given vertex exists", () => {
@@ -334,7 +334,7 @@ describe("method", () => {//////////////////////////////////////////////////////
 
 		it("throws an error if the given vertex does not exist", () => {
 			expectItWhenBoundWith('newKey', () => {}).toThrow();
-			expectItWhenBoundWith('newKey', () => {}).toThrowSpecific(JsGraph.VertexNotExistsError, {'newKey': undefined});
+			expectItWhenBoundWith('newKey', () => {}).toThrowSpecific(JsGraph.VertexNotExistsError, new Set(['newKey']));
 		});
 
 		it("throws nothing if the given vertex exists", () => {
@@ -389,7 +389,7 @@ describe("method", () => {//////////////////////////////////////////////////////
 
 		it("throws an error if the given vertex does not exist", () => {
 			expectItWhenBoundWith('newKey', () => {}).toThrow();
-			expectItWhenBoundWith('newKey', () => {}).toThrowSpecific(JsGraph.VertexNotExistsError, {'newKey': undefined});
+			expectItWhenBoundWith('newKey', () => {}).toThrowSpecific(JsGraph.VertexNotExistsError, new Set(['newKey']));
 		});
 
 		it("throws nothing if the given vertex exists", () => {
@@ -445,7 +445,7 @@ describe("method", () => {//////////////////////////////////////////////////////
 
 		it("throws an error if the given vertex does not exist", () => {
 			expectItWhenBoundWith('newKey', () => {}).toThrow();
-			expectItWhenBoundWith('newKey', () => {}).toThrowSpecific(JsGraph.VertexNotExistsError, {'newKey': undefined});
+			expectItWhenBoundWith('newKey', () => {}).toThrowSpecific(JsGraph.VertexNotExistsError, new Set(['newKey']));
 		});
 
 		it("throws nothing if the given vertex exists", () => {
@@ -552,15 +552,15 @@ describe("method", () => {//////////////////////////////////////////////////////
 		it("throws an error if a vertex with the given key already exists", () => {
 			expectItWhenBoundWith('k1').toThrow();
 			expectItWhenBoundWith('k2').toThrow();
-			expectItWhenBoundWith('k1').toThrowSpecific(JsGraph.VertexExistsError, { vertices: {'k1': 'oldValue1'} });
-			expectItWhenBoundWith('k2').toThrowSpecific(JsGraph.VertexExistsError, { vertices: {'k2': undefined} });
+			expectItWhenBoundWith('k1').toThrowSpecific(JsGraph.VertexExistsError, { vertices: new Set([{ key: 'k1', value: 'oldValue1' }]) });
+			expectItWhenBoundWith('k2').toThrowSpecific(JsGraph.VertexExistsError, { vertices: new Set([{ key: 'k2', value:  undefined  }]) });
 		});
 	}
 
 	function it_throwsErrorIfVertexDoesNotExist() {
 		it("throws an error if a vertex with the given key does not exist", () => {
 			expectItWhenBoundWith('newKey').toThrow();
-			expectItWhenBoundWith('newKey').toThrowSpecific(JsGraph.VertexNotExistsError, { vertices: {'newKey': undefined} });
+			expectItWhenBoundWith('newKey').toThrowSpecific(JsGraph.VertexNotExistsError, { vertices: new Set([{ key: 'newKey' }]) });
 		});
 	}
 
@@ -777,15 +777,15 @@ describe("method", () => {//////////////////////////////////////////////////////
 		it("throws an error if an edge with the given keys already exists", () => {
 			expectItWhenBoundWith('k2', 'k3').toThrow();
 			expectItWhenBoundWith('k3', 'k4').toThrow();
-			expectItWhenBoundWith('k2', 'k3').toThrowSpecific(JsGraph.EdgeExistsError, { edges: {'k2': {'k3': 'oldValue23'}} });
-			expectItWhenBoundWith('k3', 'k4').toThrowSpecific(JsGraph.EdgeExistsError, { edges: {'k3': {'k4': undefined}} });
+			expectItWhenBoundWith('k2', 'k3').toThrowSpecific(JsGraph.EdgeExistsError, { edges: new Set([{ from: 'k2', to: 'k3', value: 'oldValue23' }]) });
+			expectItWhenBoundWith('k3', 'k4').toThrowSpecific(JsGraph.EdgeExistsError, { edges: new Set([{ from: 'k3', to: 'k4', value: undefined }]) });
 		});
 	}
 
 	function it_throwsErrorIfEdgeDoesNotExist() {
 		it("throws an error if an edge with the given keys does not exist", () => {
 			expectItWhenBoundWith('k1', 'k2').toThrow();
-			expectItWhenBoundWith('k1', 'k2').toThrowSpecific(JsGraph.EdgeNotExistsError, { edges: {'k1': {'k2': undefined}} });
+			expectItWhenBoundWith('k1', 'k2').toThrowSpecific(JsGraph.EdgeNotExistsError, { edges: new Set([{ from: 'k1', to: 'k2' }]) });
 		});
 	}
 
@@ -794,9 +794,9 @@ describe("method", () => {//////////////////////////////////////////////////////
 			expectItWhenBoundWith('newKey1', 'newKey2').toThrow();
 			expectItWhenBoundWith('k1', 'newKey3').toThrow();
 			expectItWhenBoundWith('newKey4', 'k2').toThrow();
-			expectItWhenBoundWith('newKey1', 'newKey2').toThrowSpecific(JsGraph.VertexNotExistsError, { vertices: {'newKey1': undefined, 'newKey2': undefined} });
-			expectItWhenBoundWith('k1', 'newKey3').toThrowSpecific(JsGraph.VertexNotExistsError, { vertices: {'newKey3': undefined} });
-			expectItWhenBoundWith('newKey4', 'k2').toThrowSpecific(JsGraph.VertexNotExistsError, { vertices: {'newKey4': undefined} });
+			expectItWhenBoundWith('newKey1', 'newKey2').toThrowSpecific(JsGraph.VertexNotExistsError, { vertices: new Set([{ key: 'newKey1' }, { key: 'newKey2' }]) });
+			expectItWhenBoundWith('k1', 'newKey3').toThrowSpecific(JsGraph.VertexNotExistsError, { vertices: new Set([{ key: 'newKey3' }]) });
+			expectItWhenBoundWith('newKey4', 'k2').toThrowSpecific(JsGraph.VertexNotExistsError, { vertices: new Set([{ key: 'newKey4' }]) });
 		});
 	}
 
@@ -1867,7 +1867,7 @@ describe("method", () => {//////////////////////////////////////////////////////
 
 		it("throws an error if the given vertex does not exist", () => {
 			expectItWhenBoundWith('newKey').toThrow();
-			expectItWhenBoundWith('newKey').toThrowSpecific(JsGraph.VertexNotExistsError, {'newKey': undefined});
+			expectItWhenBoundWith('newKey').toThrowSpecific(JsGraph.VertexNotExistsError, new Set(['newKey']));
 		});
 
 		it("throws nothing if the given vertex exists", () => {
@@ -1893,7 +1893,7 @@ describe("method", () => {//////////////////////////////////////////////////////
 
 		it("throws an error if the given vertex does not exist", () => {
 			expectItWhenBoundWith('newKey').toThrow();
-			expectItWhenBoundWith('newKey').toThrowSpecific(JsGraph.VertexNotExistsError, {'newKey': undefined});
+			expectItWhenBoundWith('newKey').toThrowSpecific(JsGraph.VertexNotExistsError, new Set(['newKey']));
 		});
 
 		it("throws nothing if the given vertex exists", () => {
@@ -1919,7 +1919,7 @@ describe("method", () => {//////////////////////////////////////////////////////
 
 		it("throws an error if the given vertex does not exist", () => {
 			expectItWhenBoundWith('newKey').toThrow();
-			expectItWhenBoundWith('newKey').toThrowSpecific(JsGraph.VertexNotExistsError, {'newKey': undefined});
+			expectItWhenBoundWith('newKey').toThrowSpecific(JsGraph.VertexNotExistsError, new Set(['newKey']));
 		});
 
 		it("throws nothing if the given vertex exists", () => {
@@ -1946,7 +1946,7 @@ describe("method", () => {//////////////////////////////////////////////////////
 
 		it("throws an error if the given vertex does not exist", () => {
 			expectItWhenBoundWith('newKey').toThrow();
-			expectItWhenBoundWith('newKey').toThrowSpecific(JsGraph.VertexNotExistsError, {'newKey': undefined});
+			expectItWhenBoundWith('newKey').toThrowSpecific(JsGraph.VertexNotExistsError, new Set(['newKey']));
 		});
 
 		it("throws nothing if the given vertex exists", () => {

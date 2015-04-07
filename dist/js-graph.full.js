@@ -75,8 +75,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _toConsumableArray = function (arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i]; return arr2; } else { return Array.from(arr); } };
 	
-	var _defineProperty = function (obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); };
-	
 	var _inherits = function (subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; };
 	
 	var _createComputedClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var prop = props[i]; prop.configurable = true; if (prop.value) prop.writable = true; Object.defineProperty(target, prop.key, prop); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
@@ -242,17 +240,63 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: "destroyExistingVertex",
 			value: function destroyExistingVertex(key) {
-				var _this = this;
-	
 				if (!this.hasVertex(key)) {
 					throw new JsGraph.VertexNotExistsError(key);
 				}
-				this.eachVertexFrom(key, function (to) {
-					_this.removeEdge(key, to);
-				});
-				this.eachVertexTo(key, function (from) {
-					_this.removeEdge(from, key);
-				});
+				var _iteratorNormalCompletion = true;
+				var _didIteratorError = false;
+				var _iteratorError = undefined;
+	
+				try {
+					for (var _iterator = this.verticesFrom(key)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+						var _step$value = _slicedToArray(_step.value, 1);
+	
+						var to = _step$value[0];
+	
+						this.removeEdge(key, to);
+					}
+				} catch (err) {
+					_didIteratorError = true;
+					_iteratorError = err;
+				} finally {
+					try {
+						if (!_iteratorNormalCompletion && _iterator["return"]) {
+							_iterator["return"]();
+						}
+					} finally {
+						if (_didIteratorError) {
+							throw _iteratorError;
+						}
+					}
+				}
+	
+				var _iteratorNormalCompletion2 = true;
+				var _didIteratorError2 = false;
+				var _iteratorError2 = undefined;
+	
+				try {
+					for (var _iterator2 = this.verticesTo(key)[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+						var _step2$value = _slicedToArray(_step2.value, 1);
+	
+						var from = _step2$value[0];
+	
+						this.removeEdge(from, key);
+					}
+				} catch (err) {
+					_didIteratorError2 = true;
+					_iteratorError2 = err;
+				} finally {
+					try {
+						if (!_iteratorNormalCompletion2 && _iterator2["return"]) {
+							_iterator2["return"]();
+						}
+					} finally {
+						if (_didIteratorError2) {
+							throw _iteratorError2;
+						}
+					}
+				}
+	
 				this.removeExistingVertex(key);
 			}
 		}, {
@@ -1402,20 +1446,61 @@ return /******/ (function(modules) { // webpackBootstrap
 			//////////////////////////////
 	
 			value: function clearEdges() {
-				var _this = this;
+				var _iteratorNormalCompletion = true;
+				var _didIteratorError = false;
+				var _iteratorError = undefined;
 	
-				this.eachEdge(function (from, to) {
-					_this.removeEdge(from, to);
-				});
+				try {
+					for (var _iterator = this.edges()[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+						var _step$value = _slicedToArray(_step.value, 2);
+	
+						var from = _step$value[0];
+						var to = _step$value[1];
+						this.removeEdge(from, to);
+					}
+				} catch (err) {
+					_didIteratorError = true;
+					_iteratorError = err;
+				} finally {
+					try {
+						if (!_iteratorNormalCompletion && _iterator["return"]) {
+							_iterator["return"]();
+						}
+					} finally {
+						if (_didIteratorError) {
+							throw _iteratorError;
+						}
+					}
+				}
 			}
 		}, {
 			key: "clear",
 			value: function clear() {
-				var _this = this;
+				var _iteratorNormalCompletion = true;
+				var _didIteratorError = false;
+				var _iteratorError = undefined;
 	
-				this.eachVertex(function (v) {
-					_this.destroyVertex(v);
-				});
+				try {
+					for (var _iterator = this.vertices()[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+						var _step$value = _slicedToArray(_step.value, 1);
+	
+						var v = _step$value[0];
+						this.destroyVertex(v);
+					}
+				} catch (err) {
+					_didIteratorError = true;
+					_iteratorError = err;
+				} finally {
+					try {
+						if (!_iteratorNormalCompletion && _iterator["return"]) {
+							_iterator["return"]();
+						}
+					} finally {
+						if (_didIteratorError) {
+							throw _iteratorError;
+						}
+					}
+				}
 			}
 		}, {
 			key: "equals",
@@ -1512,43 +1597,85 @@ return /******/ (function(modules) { // webpackBootstrap
 			value: function hasCycle() {
 				var _this = this;
 	
-				var visited = {};
-				var handled = {};
-	
-				var cycleFound = false;
+				var visited = new Set();
+				var handled = new Set();
 	
 				var visit = function (a) {
 					/* if a cycle is found, record it and return */
-					if (visited[a]) {
-						cycleFound = true;
-						return;
+					if (visited.has(a)) {
+						return true;
 					}
 	
 					/* if this vertex was already handled, no cycle can be found here */
-					if (handled[a]) {
-						return;
-					}
-					handled[a] = true;
-	
-					/* recursively visit successors to check for cycles */
-					visited[a] = true;
-					_this.eachVertexFrom(a, function (b) {
-						visit(b);
-						if (cycleFound) {
-							return false;
-						}
-					});
-					visited[a] = false;
-				};
-	
-				this.eachVertex(function (a) {
-					visit(a);
-					if (cycleFound) {
+					if (handled.has(a)) {
 						return false;
 					}
-				});
+					handled.add(a);
 	
-				return cycleFound;
+					/* recursively visit successors to check for cycles */
+					visited.add(a);
+					var _iteratorNormalCompletion = true;
+					var _didIteratorError = false;
+					var _iteratorError = undefined;
+	
+					try {
+						for (var _iterator = _this.verticesFrom(a)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+							var _step$value = _slicedToArray(_step.value, 1);
+	
+							var b = _step$value[0];
+	
+							if (visit(b)) {
+								return true;
+							}
+						}
+					} catch (err) {
+						_didIteratorError = true;
+						_iteratorError = err;
+					} finally {
+						try {
+							if (!_iteratorNormalCompletion && _iterator["return"]) {
+								_iterator["return"]();
+							}
+						} finally {
+							if (_didIteratorError) {
+								throw _iteratorError;
+							}
+						}
+					}
+	
+					visited["delete"](a);
+				};
+	
+				var _iteratorNormalCompletion = true;
+				var _didIteratorError = false;
+				var _iteratorError = undefined;
+	
+				try {
+					for (var _iterator = this.vertices()[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+						var _step$value = _slicedToArray(_step.value, 1);
+	
+						var a = _step$value[0];
+	
+						if (visit(a)) {
+							return true;
+						}
+					}
+				} catch (err) {
+					_didIteratorError = true;
+					_iteratorError = err;
+				} finally {
+					try {
+						if (!_iteratorNormalCompletion && _iterator["return"]) {
+							_iterator["return"]();
+						}
+					} finally {
+						if (_didIteratorError) {
+							throw _iteratorError;
+						}
+					}
+				}
+	
+				return false;
 			}
 		}, {
 			key: "hasPath",
@@ -1559,22 +1686,45 @@ return /******/ (function(modules) { // webpackBootstrap
 					return false;
 				}
 	
-				var visited = {};
+				var visited = new Set();
 	
 				/* Recursive auxiliary function: Is there a path from 'current' to 'to'? */
 				var hasPathAux = function (current) {
 					if (_this.hasEdge(current, to)) {
 						return true;
 					}
-					visited[current] = true;
-					var found = false;
-					_this.eachVertexFrom(current, function (next) {
-						if (!found && !visited[next] && hasPathAux(next)) {
-							found = true;
+					visited.add(current);
+					var _iteratorNormalCompletion = true;
+					var _didIteratorError = false;
+					var _iteratorError = undefined;
+	
+					try {
+						for (var _iterator = _this.verticesFrom(current)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+							var _step$value = _slicedToArray(_step.value, 1);
+	
+							var next = _step$value[0];
+	
+							if (!visited.has(next) && hasPathAux(next)) {
+								return true;
+							}
 						}
-					});
-					delete visited[current];
-					return found;
+					} catch (err) {
+						_didIteratorError = true;
+						_iteratorError = err;
+					} finally {
+						try {
+							if (!_iteratorNormalCompletion && _iterator["return"]) {
+								_iterator["return"]();
+							}
+						} finally {
+							if (_didIteratorError) {
+								throw _iteratorError;
+							}
+						}
+					}
+	
+					visited["delete"](current);
+					return false;
 				};
 	
 				return hasPathAux(from);
@@ -1752,7 +1902,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		function VertexExistsError(key, value) {
 			_classCallCheck(this, VertexExistsError);
 	
-			this.vertices = {};
+			this.vertices = new Set();
 			this.v(key, value);
 		}
 	
@@ -1761,15 +1911,18 @@ return /******/ (function(modules) { // webpackBootstrap
 		_createClass(VertexExistsError, {
 			v: {
 				value: function v(key, value) {
-					this.vertices[key] = value;
+					this.vertices.add({ key: key, value: value });
 					this._refreshMessage();
 					return this;
 				}
 			},
 			_refreshMessage: {
 				value: function _refreshMessage() {
-					var aVertices = this.vertices === 1 ? "a vertex" : "vertices";
-					this.message = "This graph has " + aVertices + " '" + Object.keys(this.vertices).join("', '") + "'";
+					var aVertices = this.vertices.size === 1 ? "a vertex" : "vertices";
+					this.message = "This graph has " + aVertices + " '" + [].concat(_toConsumableArray(this.vertices)).map(function (_ref) {
+						var key = _ref.key;
+						return key;
+					}).join("', '") + "'";
 				}
 			}
 		});
@@ -1781,7 +1934,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		function VertexNotExistError(key) {
 			_classCallCheck(this, VertexNotExistError);
 	
-			this.vertices = {};
+			this.vertices = new Set();
 			this.v(key);
 		}
 	
@@ -1790,15 +1943,18 @@ return /******/ (function(modules) { // webpackBootstrap
 		_createClass(VertexNotExistError, {
 			v: {
 				value: function v(key) {
-					this.vertices[key] = undefined;
+					this.vertices.add({ key: key });
 					this._refreshMessage();
 					return this;
 				}
 			},
 			_refreshMessage: {
 				value: function _refreshMessage() {
-					var aVertices = this.vertices === 1 ? "a vertex" : "vertices";
-					this.message = "This graph does not have " + aVertices + " '" + Object.keys(this.vertices).join("', '") + "'";
+					var aVertices = this.vertices.size === 1 ? "a vertex" : "vertices";
+					this.message = "This graph does not have " + aVertices + " '" + [].concat(_toConsumableArray(this.vertices)).map(function (_ref) {
+						var key = _ref.key;
+						return key;
+					}).join("', '") + "'";
 				}
 			}
 		});
@@ -1810,7 +1966,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		function EdgeExistsError(from, to, value) {
 			_classCallCheck(this, EdgeExistsError);
 	
-			this.edges = {};
+			this.edges = new Set();
 			this.e(from, to, value);
 		}
 	
@@ -1819,21 +1975,41 @@ return /******/ (function(modules) { // webpackBootstrap
 		_createClass(EdgeExistsError, {
 			e: {
 				value: function e(from, to, value) {
-					this.edges[from] = _defineProperty({}, to, value);
+					this.edges.add({ from: from, to: to, value: value });
 					this._refreshMessage();
 					return this;
 				}
 			},
 			_refreshMessage: {
 				value: function _refreshMessage() {
-					var _this = this;
-	
 					var edges = [];
-					Object.keys(this.edges).forEach(function (from) {
-						Object.keys(_this.edges[from]).forEach(function (to) {
+					var _iteratorNormalCompletion = true;
+					var _didIteratorError = false;
+					var _iteratorError = undefined;
+	
+					try {
+						for (var _iterator = this.edges[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+							var _step$value = _step.value;
+							var from = _step$value.from;
+							var to = _step$value.to;
+	
 							edges.push("('" + from + "', '" + to + "')");
-						});
-					});
+						}
+					} catch (err) {
+						_didIteratorError = true;
+						_iteratorError = err;
+					} finally {
+						try {
+							if (!_iteratorNormalCompletion && _iterator["return"]) {
+								_iterator["return"]();
+							}
+						} finally {
+							if (_didIteratorError) {
+								throw _iteratorError;
+							}
+						}
+					}
+	
 					var anEdges = edges.length === 1 ? "an edge" : "edges";
 					this.message = "This graph has " + anEdges + " " + edges.join(", ");
 				}
@@ -1847,7 +2023,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		function EdgeNotExistError(from, to) {
 			_classCallCheck(this, EdgeNotExistError);
 	
-			this.edges = {};
+			this.edges = new Set();
 			this.e(from, to);
 		}
 	
@@ -1856,21 +2032,41 @@ return /******/ (function(modules) { // webpackBootstrap
 		_createClass(EdgeNotExistError, {
 			e: {
 				value: function e(from, to) {
-					this.edges[from] = _defineProperty({}, to, undefined);
+					this.edges.add({ from: from, to: to });
 					this._refreshMessage();
 					return this;
 				}
 			},
 			_refreshMessage: {
 				value: function _refreshMessage() {
-					var _this = this;
-	
 					var edges = [];
-					Object.keys(this.edges).forEach(function (from) {
-						Object.keys(_this.edges[from]).forEach(function (to) {
+					var _iteratorNormalCompletion = true;
+					var _didIteratorError = false;
+					var _iteratorError = undefined;
+	
+					try {
+						for (var _iterator = this.edges[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+							var _step$value = _step.value;
+							var from = _step$value.from;
+							var to = _step$value.to;
+	
 							edges.push("('" + from + "', '" + to + "')");
-						});
-					});
+						}
+					} catch (err) {
+						_didIteratorError = true;
+						_iteratorError = err;
+					} finally {
+						try {
+							if (!_iteratorNormalCompletion && _iterator["return"]) {
+								_iterator["return"]();
+							}
+						} finally {
+							if (_didIteratorError) {
+								throw _iteratorError;
+							}
+						}
+					}
+	
 					var anEdges = edges.length === 1 ? "an edge" : "edges";
 					this.message = "This graph does not have " + anEdges + " " + edges.join(", ");
 				}
