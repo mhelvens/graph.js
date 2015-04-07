@@ -1,32 +1,5 @@
 'use strict';
 
-//  ////////////////////////////////////////////////////////////////////////////////////////////////
-//  // Utility /////////////////////////////////////////////////////////////////////////////////////
-//  ////////////////////////////////////////////////////////////////////////////////////////////////
-
-class Callbacks {
-	
-	constructor() {
-		this._callbacks = new Set();
-	}
-	
-	add(fn) {
-		if (!this._callbacks.has(fn)) {
-			this._callbacks.add(fn);
-		}
-		return () => {
-			this._callbacks.delete(fn);
-		};
-	}
-	
-	fire(...args) {
-		for (let fn of this._callbacks) {
-			fn(...args);
-		}
-	}
-	
-}
-
 
 //  ////////////////////////////////////////////////////////////////////////////////////////////////
 //  // JsGraph class ///////////////////////////////////////////////////////////////////////////////
@@ -40,19 +13,12 @@ export default class JsGraph {
 		this._reverseEdges = new Map(); // to -> Set<from> (_edges contains the values)
 		this._vertexCount  = 0;
 		this._edgeCount    = 0;
-		this._addVertexCallbacks    = new Callbacks();
-		this._removeVertexCallbacks = new Callbacks();
-		this._addEdgeCallbacks      = new Callbacks();
-		this._removeEdgeCallbacks   = new Callbacks();
 	}
 
 
 	//////////////////////////////
 	////////// Vertices //////////
 	//////////////////////////////
-
-	onAddVertex   (fn) { return this._addVertexCallbacks   .add(fn) }
-	onRemoveVertex(fn) { return this._removeVertexCallbacks.add(fn) }
 
 	//// creating them ////
 
@@ -64,7 +30,6 @@ export default class JsGraph {
 		this._edges.set(key, new Map());
 		this._reverseEdges.set(key, new Set());
 		this._vertexCount += 1;
-		this._addVertexCallbacks.fire(key, value);
 	}
 
 	setVertex(key, value) {
@@ -100,10 +65,8 @@ export default class JsGraph {
 		if (this._reverseEdges.get(key).size > 0) {
 			throw new JsGraph.HasConnectedEdgesError(key);
 		}
-		var valueOfRemovedVertex = this._vertices.get(key);
 		this._vertices.delete(key);
 		this._vertexCount -= 1;
-		this._removeVertexCallbacks.fire(key, valueOfRemovedVertex);
 	}
 
 	destroyExistingVertex(key) {
@@ -142,9 +105,6 @@ export default class JsGraph {
 	////////// Edges //////////
 	///////////////////////////
 
-	onAddEdge   (fn) { return this._addEdgeCallbacks   .add(fn) }
-	onRemoveEdge(fn) { return this._removeEdgeCallbacks.add(fn) }
-
 	addNewEdge(from, to, value) {
 		if (this.hasEdge(from, to)) {
 			throw new JsGraph.EdgeExistsError(from, to, this.edgeValue(from, to));
@@ -161,7 +121,6 @@ export default class JsGraph {
 		this._edges.get(from).set(to, value);
 		this._reverseEdges.get(to).add(from);
 		this._edgeCount += 1;
-		this._addEdgeCallbacks.fire(from, to, value);
 	}
 
 	createNewEdge(from, to, value) {
@@ -223,11 +182,9 @@ export default class JsGraph {
 		if (!this.hasEdge(from, to)) {
 			throw new JsGraph.EdgeNotExistsError(from, to);
 		}
-		var valueOfRemovedEdge = this._edges.get(from).get(to);
 		this._edges.get(from).delete(to);
 		this._reverseEdges.get(to).delete(from);
 		this._edgeCount -= 1;
-		this._removeEdgeCallbacks.fire(from, to, valueOfRemovedEdge);
 	}
 
 	removeEdge(from, to) {
