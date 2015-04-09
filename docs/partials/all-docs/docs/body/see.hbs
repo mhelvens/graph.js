@@ -1,7 +1,7 @@
 {{#if see~}}
     {{#if (equal see.length 1)~}}
         **See**: {{{inlineLinks see.[0]}}}
-        {{else~}}
+    {{else~}}
         **See**: {{#each see}}{{#if @index}}, {{/if}}{{{inlineLinks this}}}{{/each}}
     {{/if~}}
 {{/if~}}

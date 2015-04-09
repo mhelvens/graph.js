@@ -33,7 +33,7 @@ export default class JsGraph {
 	//// creating them ////
 
 	/**
-	 * Add a new vertex to this graph. If a vertex with this {@link key} already exists,
+	 * Add a new vertex to this graph. If a vertex with this key already exists,
 	 * a {@link JsGraph.VertexExistsError} is thrown.
 	 * @public
 	 * @method JsGraph#addNewVertex
@@ -54,7 +54,7 @@ export default class JsGraph {
 	}
 
 	/**
-	 * Set the value of an existing vertex in this graph. If a vertex with this {@link key} does not exist,
+	 * Set the value of an existing vertex in this graph. If a vertex with this key does not exist,
 	 * a {@link JsGraph.VertexNotExistsError} is thrown.
 	 * @public
 	 * @method JsGraph#setVertex
@@ -74,7 +74,7 @@ export default class JsGraph {
 
 	/**
 	 * Make sure a vertex with a specific key exists in this graph. If it already exists, nothing is done.
-	 * If it does not yet exist, a new vertex is added with the given {@link key} and {@link value}.
+	 * If it does not yet exist, a new vertex is added with the given key and value.
 	 * @public
 	 * @method JsGraph#ensureVertex
 	 * @see {@link JsGraph#addVertex|addVertex}
@@ -90,7 +90,7 @@ export default class JsGraph {
 	}
 
 	/**
-	 * Add a new vertex to this graph. If a vertex with this {@link key} already exists,
+	 * Add a new vertex to this graph. If a vertex with this key already exists,
 	 * the value of that vertex is overwritten.
 	 * @public
 	 * @method JsGraph#addVertex
@@ -552,6 +552,20 @@ export default class JsGraph {
 //  // Errors //////////////////////////////////////////////////////////////////////////////////////
 //  ////////////////////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * @public
+ * @class JsGraph.VertexExistsError
+ * @extends Error
+ * @see {@link JsGraph#addVertex|addNewVertex}
+ */
+/**
+ * the set of relevant vertices
+ * @public
+ * @constant vertices
+ * @memberof JsGraph.VertexExistsError
+ * @instance
+ * @type {Set.<{ key, value }>}
+ */
 JsGraph.VertexExistsError = class VertexExistsError extends Error {
 	constructor(key, value) {
 		this.vertices = new Set();
