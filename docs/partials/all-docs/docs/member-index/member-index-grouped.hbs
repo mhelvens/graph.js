@@ -1,2 +1,2 @@
-{{>index-indent this~}}* {{#unless (equal _title undefined)}}◦◦◦ ___{{_title}}___{{else}}{{>sig-link}}{{/unless}}
+{{>index-indent this~}}* {{#unless (equal _title undefined)}}○ ○ ○ ○ ___{{_title}}___{{else}}{{>sig-link}}{{/unless}}
 {{#groupBy (option "group-by")~}}{{>member-index-grouped level=(add ../level 1)~}}{{/groupBy~}}
