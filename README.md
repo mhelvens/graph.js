@@ -36,14 +36,24 @@ API Documentation
 
 
 * [JsGraph](#JsGraph)
-    * ○ ○ ○ ○ ___instance___
+    * ○ ○ ___instance___
     * [.addNewVertex(key, value)](#JsGraph#addNewVertex)
     * [.setVertex(key, value)](#JsGraph#setVertex)
     * [.ensureVertex(key, value)](#JsGraph#ensureVertex)
     * [.addVertex(key, value)](#JsGraph#addVertex)
-    * ○ ○ ○ ○ ___static___
+    * [.removeExistingVertex(key)](#JsGraph#removeExistingVertex)
+    * [.destroyExistingVertex(key)](#JsGraph#destroyExistingVertex)
+    * [.removeVertex(key)](#JsGraph#removeVertex)
+    * [.destroyVertex(key)](#JsGraph#destroyVertex)
+    * ○ ○ ___static___
     * [.VertexExistsError](#JsGraph.VertexExistsError) ⇐ <code>Error</code>
-        * [.vertices](#JsGraph.VertexExistsError#vertices) : <code>Set.&lt;{key, value}&gt;</code>
+        * [.vertices](#JsGraph.VertexExistsError#vertices) : <code>Set.&lt;{key: string, value: \*}&gt;</code>
+    * [.VertexNotExistsError](#JsGraph.VertexNotExistsError) ⇐ <code>Error</code>
+        * [.vertices](#JsGraph.VertexNotExistsError#vertices) : <code>Set.&lt;{key: string}&gt;</code>
+        * [.vertices](#JsGraph.VertexNotExistsError#vertices) : <code>Set.&lt;{key: string}&gt;</code>
+    * [.VertexNotExistsError](#JsGraph.VertexNotExistsError) ⇐ <code>Error</code>
+        * [.vertices](#JsGraph.VertexNotExistsError#vertices) : <code>Set.&lt;{key: string}&gt;</code>
+        * [.vertices](#JsGraph.VertexNotExistsError#vertices) : <code>Set.&lt;{key: string}&gt;</code>
 
 
 -----
@@ -73,7 +83,7 @@ a [VertexExistsError](#JsGraph.VertexExistsError) is thrown.
 <a name="JsGraph#setVertex"></a>
 #### *jsGraph*.setVertex(key, value)
 Set the value of an existing vertex in this graph. If a vertex with this key does not exist,
-a [JsGraph.VertexNotExistsError](JsGraph.VertexNotExistsError) is thrown.
+a [VertexNotExistsError](#JsGraph.VertexNotExistsError) is thrown.
 
 
 | Param | Type | Description |
@@ -115,17 +125,121 @@ the value of that vertex is overwritten.
 
 -----
 
+<a name="JsGraph#removeExistingVertex"></a>
+#### *jsGraph*.removeExistingVertex(key)
+Remove an existing vertex from this graph. If a vertex with this key does not exist,
+a [VertexNotExistsError](#JsGraph.VertexNotExistsError) is thrown. If there are still edges connected
+to this vertex, a [HasConnectedEdgesError](JsGraph.HasConnectedEdgesError) is thrown.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| key | <code>string</code> | the key of the vertex to remove |
+
+**See**: [destroyExistingVertex](#JsGraph#destroyExistingVertex), [removeVertex](#JsGraph#removeVertex), [destroyVertex](#JsGraph#destroyVertex)
+
+-----
+
+<a name="JsGraph#destroyExistingVertex"></a>
+#### *jsGraph*.destroyExistingVertex(key)
+Remove an existing vertex from this graph, as well as all edges connected to it. If a vertex with this key
+does not exist, a [VertexNotExistsError](#JsGraph.VertexNotExistsError) is thrown.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| key | <code>string</code> | the key of the vertex to remove |
+
+**See**: [removeExistingVertex](#JsGraph#removeExistingVertex), [removeVertex](#JsGraph#removeVertex), [destroyVertex](#JsGraph#destroyVertex)
+
+-----
+
+<a name="JsGraph#removeVertex"></a>
+#### *jsGraph*.removeVertex(key)
+Remove an existing vertex from this graph. If there are still edges connected
+to this vertex, a [HasConnectedEdgesError](JsGraph.HasConnectedEdgesError) is thrown.
+If a vertex with this key does not exist, nothing happens.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| key | <code>string</code> | the key of the vertex to remove |
+
+**See**: [destroyExistingVertex](#JsGraph#destroyExistingVertex), [removeExistingVertex](#JsGraph#removeExistingVertex), [destroyVertex](#JsGraph#destroyVertex)
+
+-----
+
+<a name="JsGraph#destroyVertex"></a>
+#### *jsGraph*.destroyVertex(key)
+Remove a vertex from this graph, as well as all edges connected to it. If a vertex with this key
+does not exist, nothing happens.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| key | <code>string</code> | the key of the vertex to remove |
+
+**See**: [removeExistingVertex](#JsGraph#removeExistingVertex), [removeVertex](#JsGraph#removeVertex), [destroyExistingVertex](#JsGraph#destroyExistingVertex)
+
+-----
+
 <a name="JsGraph.VertexExistsError"></a>
 #### *JsGraph*.VertexExistsError ⇐ <code>Error</code>
 This type of error is thrown when specific vertices are expected to exist, but don't.
 
 **Extends:** <code>Error</code>  
-**See**: [addNewVertex](#JsGraph#addVertex)
+**See**: [addNewVertex](#JsGraph#addNewVertex)
 
 -----
 
 <a name="JsGraph.VertexExistsError#vertices"></a>
-##### *vertexExistsError*.vertices : <code>Set.&lt;{key, value}&gt;</code>
+##### *vertexExistsError*.vertices : <code>Set.&lt;{key: string, value: \*}&gt;</code>
+the set of relevant vertices
+
+
+-----
+
+<a name="JsGraph.VertexNotExistsError"></a>
+#### *JsGraph*.VertexNotExistsError ⇐ <code>Error</code>
+This type of error is thrown when specific vertices are expected not to exist, but do.
+
+**Extends:** <code>Error</code>  
+**See**: [setVertex](#JsGraph#setVertex), [removeExistingVertex](#JsGraph#removeExistingVertex), [destroyExistingVertex](#JsGraph#destroyExistingVertex)
+
+-----
+
+<a name="JsGraph.VertexNotExistsError#vertices"></a>
+##### *vertexNotExistsError*.vertices : <code>Set.&lt;{key: string}&gt;</code>
+the set of relevant vertices
+
+
+-----
+
+<a name="JsGraph.VertexNotExistsError#vertices"></a>
+##### *vertexNotExistsError*.vertices : <code>Set.&lt;{key: string}&gt;</code>
+the set of relevant vertices
+
+
+-----
+
+<a name="JsGraph.VertexNotExistsError"></a>
+#### *JsGraph*.VertexNotExistsError ⇐ <code>Error</code>
+This type of error is thrown when specific vertices are expected not to exist, but do.
+
+**Extends:** <code>Error</code>  
+**See**: [setVertex](#JsGraph#setVertex), [removeExistingVertex](#JsGraph#removeExistingVertex), [destroyExistingVertex](#JsGraph#destroyExistingVertex)
+
+-----
+
+<a name="JsGraph.VertexNotExistsError#vertices"></a>
+##### *vertexNotExistsError*.vertices : <code>Set.&lt;{key: string}&gt;</code>
+the set of relevant vertices
+
+
+-----
+
+<a name="JsGraph.VertexNotExistsError#vertices"></a>
+##### *vertexNotExistsError*.vertices : <code>Set.&lt;{key: string}&gt;</code>
 the set of relevant vertices
 
 

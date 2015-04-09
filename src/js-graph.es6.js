@@ -24,11 +24,12 @@ export default class JsGraph {
 	////////// Vertices //////////
 	//////////////////////////////
 
-	//// creating them ////
+
+	////////// creating them //////////
 
 	/**
 	 * Add a new vertex to this graph. If a vertex with this key already exists,
-	 * a {@link JsGraph.VertexExistsError} is thrown.
+	 * a {@link JsGraph.VertexExistsError|VertexExistsError} is thrown.
 	 * @public
 	 * @method JsGraph#addNewVertex
 	 * @see {@link JsGraph#addVertex|addVertex}
@@ -49,7 +50,7 @@ export default class JsGraph {
 
 	/**
 	 * Set the value of an existing vertex in this graph. If a vertex with this key does not exist,
-	 * a {@link JsGraph.VertexNotExistsError} is thrown.
+	 * a {@link JsGraph.VertexNotExistsError|VertexNotExistsError} is thrown.
 	 * @public
 	 * @method JsGraph#setVertex
 	 * @see {@link JsGraph#addVertex|addVertex}
@@ -64,7 +65,6 @@ export default class JsGraph {
 		}
 		this._vertices.set(key, value);
 	}
-
 
 	/**
 	 * Make sure a vertex with a specific key exists in this graph. If it already exists, nothing is done.
@@ -102,8 +102,20 @@ export default class JsGraph {
 		}
 	}
 
-	//// removing them ////
 
+	////////// removing them //////////
+
+	/**
+	 * Remove an existing vertex from this graph. If a vertex with this key does not exist,
+	 * a {@link JsGraph.VertexNotExistsError|VertexNotExistsError} is thrown. If there are still edges connected
+	 * to this vertex, a {@link JsGraph.HasConnectedEdgesError|HasConnectedEdgesError} is thrown.
+	 * @public
+	 * @method JsGraph#removeExistingVertex
+	 * @see {@link JsGraph#destroyExistingVertex|destroyExistingVertex}
+	 * @see {@link JsGraph#removeVertex|removeVertex}
+	 * @see {@link JsGraph#destroyVertex|destroyVertex}
+	 * @param key {string} - the key of the vertex to remove
+	 */
 	removeExistingVertex(key) {
 		if (!this.hasVertex(key)) {
 			throw new JsGraph.VertexNotExistsError(key);
@@ -118,6 +130,16 @@ export default class JsGraph {
 		this._vertexCount -= 1;
 	}
 
+	/**
+	 * Remove an existing vertex from this graph, as well as all edges connected to it. If a vertex with this key
+	 * does not exist, a {@link JsGraph.VertexNotExistsError|VertexNotExistsError} is thrown.
+	 * @public
+	 * @method JsGraph#destroyExistingVertex
+	 * @see {@link JsGraph#removeExistingVertex|removeExistingVertex}
+	 * @see {@link JsGraph#removeVertex|removeVertex}
+	 * @see {@link JsGraph#destroyVertex|destroyVertex}
+	 * @param key {string} - the key of the vertex to remove
+	 */
 	destroyExistingVertex(key) {
 		if (!this.hasVertex(key)) {
 			throw new JsGraph.VertexNotExistsError(key);
@@ -131,19 +153,40 @@ export default class JsGraph {
 		this.removeExistingVertex(key);
 	}
 
+	/**
+	 * Remove an existing vertex from this graph. If there are still edges connected
+	 * to this vertex, a {@link JsGraph.HasConnectedEdgesError|HasConnectedEdgesError} is thrown.
+	 * If a vertex with this key does not exist, nothing happens.
+	 * @public
+	 * @method JsGraph#removeVertex
+	 * @see {@link JsGraph#destroyExistingVertex|destroyExistingVertex}
+	 * @see {@link JsGraph#removeExistingVertex|removeExistingVertex}
+	 * @see {@link JsGraph#destroyVertex|destroyVertex}
+	 * @param key {string} - the key of the vertex to remove
+	 */
 	removeVertex(key) {
 		if (this.hasVertex(key)) {
 			this.removeExistingVertex(key);
 		}
 	}
 
+	/**
+	 * Remove a vertex from this graph, as well as all edges connected to it. If a vertex with this key
+	 * does not exist, nothing happens.
+	 * @public
+	 * @method JsGraph#destroyVertex
+	 * @see {@link JsGraph#removeExistingVertex|removeExistingVertex}
+	 * @see {@link JsGraph#removeVertex|removeVertex}
+	 * @see {@link JsGraph#destroyExistingVertex|destroyExistingVertex}
+	 * @param key {string} - the key of the vertex to remove
+	 */
 	destroyVertex(key) {
 		if (this.hasVertex(key)) {
 			this.destroyExistingVertex(key);
 		}
 	}
 
-	//// querying them ////
+	////////// querying them //////////
 
 	vertexCount()    { return this._vertexCount       }
 	hasVertex(key)   { return this._vertices.has(key) }
@@ -225,7 +268,7 @@ export default class JsGraph {
 		}
 	}
 
-	//// removing them ////
+	////////// removing them //////////
 
 	removeExistingEdge(from, to) {
 		if (!this.hasEdge(from, to)) {
@@ -242,7 +285,7 @@ export default class JsGraph {
 		}
 	}
 
-	//// querying them ////
+	////////// querying them //////////
 
 	edgeCount() { return this._edgeCount }
 
@@ -551,16 +594,15 @@ export default class JsGraph {
  * @class JsGraph.VertexExistsError
  * @classdesc This type of error is thrown when specific vertices are expected to exist, but don't.
  * @extends Error
- * @see {@link JsGraph#addVertex|addNewVertex}
- */
-/**
- * the set of relevant vertices
- * @public
- * @constant vertices
- * @memberof JsGraph.VertexExistsError
- * @instance
- * @type {Set.<{ key, value }>}
- */
+ * @see {@link JsGraph#addNewVertex|addNewVertex}
+ */ /**
+	 * the set of relevant vertices
+	 * @public
+	 * @constant vertices
+	 * @memberof JsGraph.VertexExistsError
+	 * @instance
+	 * @type {Set.<{ key: string, value: * }>}
+	 */
 JsGraph.VertexExistsError = class VertexExistsError extends Error {
 	constructor(key, value) {
 		this.vertices = new Set();
@@ -579,6 +621,22 @@ JsGraph.VertexExistsError = class VertexExistsError extends Error {
 	}
 };
 
+/**
+ * @public
+ * @class JsGraph.VertexNotExistsError
+ * @classdesc This type of error is thrown when specific vertices are expected not to exist, but do.
+ * @extends Error
+ * @see {@link JsGraph#setVertex|setVertex}
+ * @see {@link JsGraph#removeExistingVertex|removeExistingVertex}
+ * @see {@link JsGraph#destroyExistingVertex|destroyExistingVertex}
+ */ /**
+	 * the set of relevant vertices
+	 * @public
+	 * @constant vertices
+	 * @memberof JsGraph.VertexNotExistsError
+	 * @instance
+	 * @type {Set.<{ key: string }>}
+	 */
 JsGraph.VertexNotExistsError = class VertexNotExistError extends Error {
 	constructor(key) {
 		this.vertices = new Set();
@@ -597,6 +655,22 @@ JsGraph.VertexNotExistsError = class VertexNotExistError extends Error {
 	}
 };
 
+/**
+ * @public
+ * @class JsGraph.VertexNotExistsError
+ * @classdesc This type of error is thrown when specific vertices are expected not to exist, but do.
+ * @extends Error
+ * @see {@link JsGraph#setVertex|setVertex}
+ * @see {@link JsGraph#removeExistingVertex|removeExistingVertex}
+ * @see {@link JsGraph#destroyExistingVertex|destroyExistingVertex}
+ */ /**
+ * the set of relevant vertices
+ * @public
+ * @constant vertices
+ * @memberof JsGraph.VertexNotExistsError
+ * @instance
+ * @type {Set.<{ key: string }>}
+ */
 JsGraph.EdgeExistsError = class EdgeExistsError extends Error {
 	constructor(from, to, value) {
 		this.edges = new Set();
