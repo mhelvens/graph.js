@@ -40,26 +40,26 @@ API Documentation
 
 <a name="JsGraph"></a>
 ### JsGraph
-
-* [JsGraph](#JsGraph)
-    * [new JsGraph()](#new_JsGraph_new)
-<br>
-    ___instance___
-    * [.addNewVertex(key, value)](#JsGraph#addNewVertex)
-    * [.setVertex(key, value)](#JsGraph#setVertex)
-    * [.ensureVertex(key, value)](#JsGraph#ensureVertex)
-    * [.addVertex(key, value)](#JsGraph#addVertex)
-<br>
-    ___static___
-    * [.VertexExistsError](#JsGraph.VertexExistsError) ⇐ <code>Error</code>
-        * [.vertices](#JsGraph.VertexExistsError#vertices) : <code>Set.&lt;{key, value}&gt;</code>
-
-
------
-
-<a name="new_JsGraph_new"></a>
-#### new JsGraph()
 The main class of this library, to be used for representing a mathematical (di)graph.
+
+<ul>
+    <li> <a href="#JsGraph">JsGraph</a>
+    <br><b><i>instance</i></b>
+    <ul>
+    <li> <a href="#JsGraph#addNewVertex">.addNewVertex(key, value)</a> </li>
+    <li> <a href="#JsGraph#setVertex">.setVertex(key, value)</a> </li>
+    <li> <a href="#JsGraph#ensureVertex">.ensureVertex(key, value)</a> </li>
+    <li> <a href="#JsGraph#addVertex">.addVertex(key, value)</a> </li>
+    </ul>
+    <br><b><i>static</i></b>
+    <ul>
+    <li> <a href="#JsGraph.VertexExistsError">.VertexExistsError</a> ⇐ <code>Error</code> </li>
+    <ul>
+    <li> <a href="#JsGraph.VertexExistsError#vertices">.vertices</a> : <code>Set.&lt;{key, value}&gt;</code> </li>
+    </ul>
+    </ul>
+    </li>
+</ul>
 
 
 -----
@@ -126,6 +126,8 @@ the value of that vertex is overwritten.
 
 <a name="JsGraph.VertexExistsError"></a>
 #### *JsGraph*.VertexExistsError ⇐ <code>Error</code>
+This type of error is thrown when specific vertices are expected to exist, but don't.
+
 **Extends:** <code>Error</code>  
 **See**: [addNewVertex](#JsGraph#addVertex)
 

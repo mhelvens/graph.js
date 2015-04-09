@@ -11,9 +11,9 @@
 //  ////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
- * The main class of this library, to be used for representing a mathematical (di)graph.
  * @public
  * @class JsGraph
+ * @classdesc The main class of this library, to be used for representing a mathematical (di)graph.
  */
 export default class JsGraph {
 
@@ -555,6 +555,7 @@ export default class JsGraph {
 /**
  * @public
  * @class JsGraph.VertexExistsError
+ * @classdesc This type of error is thrown when specific vertices are expected to exist, but don't.
  * @extends Error
  * @see {@link JsGraph#addVertex|addNewVertex}
  */
