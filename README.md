@@ -39,7 +39,7 @@ API Documentation
 -----------------
 
 <a name="JsGraph"></a>
-### **JsGraph
+### JsGraph
 
 * [JsGraph](#JsGraph)
     * [new JsGraph()](#new_JsGraph_new)
@@ -52,7 +52,7 @@ API Documentation
 -----
 
 <a name="new_JsGraph_new"></a>
-#### new **JsGraph()
+#### new JsGraph()
 The main class of this library, to be used for representing a mathematical (di)graph.
 
 
