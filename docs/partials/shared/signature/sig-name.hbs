@@ -3,7 +3,8 @@
     {{{@depOpen}~}}
     {{{@codeOpen}~}}
     {{#if @prefix}}{{@prefix}} {{/if~}}
-    <span color="gray">{{@parent~}}</span>{{@accessSymbol}}{{#if (isEvent)}}"{{{name}}}"{{else}}{{{name}}}{{/if~}}
+    {{!@parent~}}
+    {{@accessSymbol}}{{#if (isEvent)}}"{{{name}}}"{{else}}{{{name}}}{{/if~}}
     {{#if @methodSign}}{{#if (isEvent)}} {{@methodSign}}{{else}}{{@methodSign}}{{/if}}{{/if~}}
     {{{@codeClose}~}}
     {{#if @returnSymbol}} {{@returnSymbol}}{{/if~}}

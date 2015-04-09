@@ -39,27 +39,27 @@ API Documentation
 -----------------
 
 <a name="JsGraph"></a>
-### <span color="gray"></span>JsGraph
+### JsGraph
 
 * [JsGraph](#JsGraph)
-  * [new JsGraph()](#new_JsGraph_new)
-  * [.addNewVertex(key, value)](#JsGraph#addNewVertex)
-  * [.setVertex(key, value)](#JsGraph#setVertex)
-  * [.ensureVertex(key, value)](#JsGraph#ensureVertex)
-  * [.addVertex(key, value)](#JsGraph#addVertex)
+    * [new JsGraph()](#new_JsGraph_new)
+    * [.addNewVertex(key, value)](#JsGraph#addNewVertex)
+    * [.setVertex(key, value)](#JsGraph#setVertex)
+    * [.ensureVertex(key, value)](#JsGraph#ensureVertex)
+    * [.addVertex(key, value)](#JsGraph#addVertex)
 
 
--
+-----
 
 <a name="new_JsGraph_new"></a>
-#### new <span color="gray"></span>JsGraph()
+#### new JsGraph()
 The main class of this library, to be used for representing a mathematical (di)graph.
 
 
--
+-----
 
 <a name="JsGraph#addNewVertex"></a>
-#### <span color="gray">jsGraph</span>.addNewVertex(key, value)
+#### .addNewVertex(key, value)
 Add a new vertex to this graph. If a vertex with this [key](key) already exists,
 a [JsGraph.VertexExistsError](JsGraph.VertexExistsError) is thrown.
 
@@ -76,10 +76,10 @@ a [JsGraph.VertexExistsError](JsGraph.VertexExistsError) is thrown.
 | value | <code>\*</code> | the value stored in this new vertex |
 
 
--
+-----
 
 <a name="JsGraph#setVertex"></a>
-#### <span color="gray">jsGraph</span>.setVertex(key, value)
+#### .setVertex(key, value)
 Set the value of an existing vertex in this graph. If a vertex with this [key](key) does not exist,
 a [JsGraph.VertexNotExistsError](JsGraph.VertexNotExistsError) is thrown.
 
@@ -96,10 +96,10 @@ a [JsGraph.VertexNotExistsError](JsGraph.VertexNotExistsError) is thrown.
 | value | <code>\*</code> | the new value to be stored in this vertex |
 
 
--
+-----
 
 <a name="JsGraph#ensureVertex"></a>
-#### <span color="gray">jsGraph</span>.ensureVertex(key, value)
+#### .ensureVertex(key, value)
 Make sure a vertex with a specific key exists in this graph. If it already exists, nothing is done.
 If it does not yet exist, a new vertex is added with the given [key](key) and [value](value).
 
@@ -116,10 +116,10 @@ If it does not yet exist, a new vertex is added with the given [key](key) and [v
 | value | <code>\*</code> | the new value to be stored in this vertex |
 
 
--
+-----
 
 <a name="JsGraph#addVertex"></a>
-#### <span color="gray">jsGraph</span>.addVertex(key, value)
+#### .addVertex(key, value)
 Add a new vertex to this graph. If a vertex with this [key](key) already exists,
 the value of that vertex is overwritten.
 
@@ -136,5 +136,5 @@ the value of that vertex is overwritten.
 | value | <code>\*</code> | the value stored in this new vertex |
 
 
--
+-----
 
