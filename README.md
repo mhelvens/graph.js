@@ -36,7 +36,7 @@ API Documentation
 
 
 * [JsGraph](#JsGraph)
-    * ○ ○ ___instance___
+    * ⚙ ___instance___
     * [.addNewVertex(key, value)](#JsGraph#addNewVertex)
     * [.setVertex(key, value)](#JsGraph#setVertex)
     * [.ensureVertex(key, value)](#JsGraph#ensureVertex)
@@ -45,7 +45,7 @@ API Documentation
     * [.destroyExistingVertex(key)](#JsGraph#destroyExistingVertex)
     * [.removeVertex(key)](#JsGraph#removeVertex)
     * [.destroyVertex(key)](#JsGraph#destroyVertex)
-    * ○ ○ ___static___
+    * ⚙ ___static___
     * [.VertexExistsError](#JsGraph.VertexExistsError) ⇐ <code>Error</code>
         * [.vertices](#JsGraph.VertexExistsError#vertices) : <code>Set.&lt;{key: string, value: \*}&gt;</code>
     * [.VertexNotExistsError](#JsGraph.VertexNotExistsError) ⇐ <code>Error</code>
