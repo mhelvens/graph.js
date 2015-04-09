@@ -1,7 +1,9 @@
-{{index-indent indexDepth=(add level baseLevel)~}}
 {{#unless (equal _title undefined)~}}
+    <br>
+    {{index-indent indexDepth=(add level baseLevel)~}}
     ___{{_title}}___
 {{else~}}
+    {{~index-indent indexDepth=(add level baseLevel)~}}
     * {{>sig-link}}
 {{/unless}}
 {{#groupBy (option "group-by")~}}

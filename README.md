@@ -43,11 +43,13 @@ API Documentation
 
 * [JsGraph](#JsGraph)
     * [new JsGraph()](#new_JsGraph_new)
+    <br>
     ___instance___
     * [.addNewVertex(key, value)](#JsGraph#addNewVertex)
     * [.setVertex(key, value)](#JsGraph#setVertex)
     * [.ensureVertex(key, value)](#JsGraph#ensureVertex)
     * [.addVertex(key, value)](#JsGraph#addVertex)
+    <br>
     ___static___
     * [.VertexExistsError](#JsGraph.VertexExistsError) ⇐ <code>Error</code>
     * [.vertices](#JsGraph.VertexExistsError#vertices) : <code>Set.&lt;{key, value}&gt;</code>
