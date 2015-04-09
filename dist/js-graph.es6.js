@@ -1,3 +1,8 @@
+/**
+ * The main and only module of the js-graph library.
+ * @public
+ * @file
+ */
 'use strict';
 
 
@@ -5,6 +10,11 @@
 //  // JsGraph class ///////////////////////////////////////////////////////////////////////////////
 //  ////////////////////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * The main class of this library, to be used for representing a mathematical (di)graph.
+ * @public
+ * @class JsGraph
+ */
 export default class JsGraph {
 
 	constructor() {
@@ -22,6 +32,17 @@ export default class JsGraph {
 
 	//// creating them ////
 
+	/**
+	 * Add a new vertex to this graph. If a vertex with this {@link key} already exists,
+	 * a {@link JsGraph.VertexExistsError} is thrown.
+	 * @public
+	 * @method JsGraph#addNewVertex
+	 * @see {@link JsGraph#addVertex|addVertex}
+	 * @see {@link JsGraph#setVertex|setVertex}
+	 * @see {@link JsGraph#ensureVertex|ensureVertex}
+	 * @param key   {string} - the key with which to refer to this new vertex
+	 * @param value {*}      - the value stored in this new vertex
+	 */
 	addNewVertex(key, value) {
 		if (this.hasVertex(key)) {
 			throw new JsGraph.VertexExistsError(key, this._vertices.get(key));
@@ -32,6 +53,17 @@ export default class JsGraph {
 		this._vertexCount += 1;
 	}
 
+	/**
+	 * Set the value of an existing vertex in this graph. If a vertex with this {@link key} does not exist,
+	 * a {@link JsGraph.VertexNotExistsError} is thrown.
+	 * @public
+	 * @method JsGraph#setVertex
+	 * @see {@link JsGraph#addVertex|addVertex}
+	 * @see {@link JsGraph#addNewVertex|addNewVertex}
+	 * @see {@link JsGraph#ensureVertex|ensureVertex}
+	 * @param key   {string} - the key belonging to the vertex
+	 * @param value {*}      - the new value to be stored in this vertex
+	 */
 	setVertex(key, value) {
 		if (!this.hasVertex(key)) {
 			throw new JsGraph.VertexNotExistsError(key);
@@ -39,12 +71,35 @@ export default class JsGraph {
 		this._vertices.set(key, value);
 	}
 
+
+	/**
+	 * Make sure a vertex with a specific key exists in this graph. If it already exists, nothing is done.
+	 * If it does not yet exist, a new vertex is added with the given {@link key} and {@link value}.
+	 * @public
+	 * @method JsGraph#ensureVertex
+	 * @see {@link JsGraph#addVertex|addVertex}
+	 * @see {@link JsGraph#addNewVertex|addNewVertex}
+	 * @see {@link JsGraph#setVertex|setVertex}
+	 * @param key   {string} - the key for the vertex
+	 * @param value {*}      - the new value to be stored in this vertex
+	 */
 	ensureVertex(key, value) {
 		if (!this.hasVertex(key)) {
 			this.addNewVertex(key, value);
 		}
 	}
 
+	/**
+	 * Add a new vertex to this graph. If a vertex with this {@link key} already exists,
+	 * the value of that vertex is overwritten.
+	 * @public
+	 * @method JsGraph#addVertex
+	 * @see {@link JsGraph#addNewVertex|addNewVertex}
+	 * @see {@link JsGraph#setVertex|setVertex}
+	 * @see {@link JsGraph#ensureVertex|ensureVertex}
+	 * @param key   {string} - the key with which to refer to this new vertex
+	 * @param value {*}      - the value stored in this new vertex
+	 */
 	addVertex(key, value) {
 		if (this.hasVertex(key)) {
 			this.setVertex(key, value);
@@ -389,7 +444,7 @@ export default class JsGraph {
 	////////// (Advanced) Queries //////////
 	////////////////////////////////////////
 
-	equals(other, eq=(x,y,from,to)=>x===y) {
+	equals(other=undefined, eq=(x,y,from,to)=>x===y) {
 		if (!(other instanceof JsGraph))                { return false }
 		if (this.vertexCount() !== other.vertexCount()) { return false }
 		if (this.edgeCount()   !== other.edgeCount()  ) { return false }
@@ -510,7 +565,7 @@ JsGraph.VertexExistsError = class VertexExistsError extends Error {
 	_refreshMessage() {
 		var aVertices = this.vertices.size === 1 ? "a vertex" : "vertices";
 		this.message = `This graph has ${aVertices} '${
-			[...this.vertices].map(({key}) => key).join("', '")
+			[...this.vertices].map((v) => v.key).join("', '")
 		}'`;
 	}
 };
@@ -528,7 +583,7 @@ JsGraph.VertexNotExistsError = class VertexNotExistError extends Error {
 	_refreshMessage() {
 		var aVertices = this.vertices.size === 1 ? "a vertex" : "vertices";
 		this.message = `This graph does not have ${aVertices} '${
-			[...this.vertices].map(({key}) => key).join("', '")
+			[...this.vertices].map((v) => v.key).join("', '")
 		}'`;
 	}
 };

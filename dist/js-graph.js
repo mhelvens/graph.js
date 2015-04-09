@@ -62,6 +62,11 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
+	/**
+	 * The main and only module of the js-graph library.
+	 * @public
+	 * @file
+	 */
 	"use strict";
 	
 	var _slicedToArray = function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { var _arr = []; for (var _iterator = arr[Symbol.iterator](), _step; !(_step = _iterator.next()).done;) { _arr.push(_step.value); if (i && _arr.length === i) break; } return _arr; } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } };
@@ -79,6 +84,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	//  ////////////////////////////////////////////////////////////////////////////////////////////////
 	//  // JsGraph class ///////////////////////////////////////////////////////////////////////////////
 	//  ////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	/**
+	 * The main class of this library, to be used for representing a mathematical (di)graph.
+	 * @public
+	 * @class JsGraph
+	 */
 	
 	var JsGraph = (function () {
 		function JsGraph() {
@@ -100,6 +111,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 			//// creating them ////
 	
+			/**
+	   * Add a new vertex to this graph. If a vertex with this {@link key} already exists,
+	   * a {@link JsGraph.VertexExistsError} is thrown.
+	   * @public
+	   * @method JsGraph#addNewVertex
+	   * @see {@link JsGraph#addVertex|addVertex}
+	   * @see {@link JsGraph#setVertex|setVertex}
+	   * @see {@link JsGraph#ensureVertex|ensureVertex}
+	   * @param key   {string} - the key with which to refer to this new vertex
+	   * @param value {*}      - the value stored in this new vertex
+	   */
 			value: function addNewVertex(key, value) {
 				if (this.hasVertex(key)) {
 					throw new JsGraph.VertexExistsError(key, this._vertices.get(key));
@@ -111,6 +133,18 @@ return /******/ (function(modules) { // webpackBootstrap
 			}
 		}, {
 			key: "setVertex",
+	
+			/**
+	   * Set the value of an existing vertex in this graph. If a vertex with this {@link key} does not exist,
+	   * a {@link JsGraph.VertexNotExistsError} is thrown.
+	   * @public
+	   * @method JsGraph#setVertex
+	   * @see {@link JsGraph#addVertex|addVertex}
+	   * @see {@link JsGraph#addNewVertex|addNewVertex}
+	   * @see {@link JsGraph#ensureVertex|ensureVertex}
+	   * @param key   {string} - the key belonging to the vertex
+	   * @param value {*}      - the new value to be stored in this vertex
+	   */
 			value: function setVertex(key, value) {
 				if (!this.hasVertex(key)) {
 					throw new JsGraph.VertexNotExistsError(key);
@@ -119,6 +153,18 @@ return /******/ (function(modules) { // webpackBootstrap
 			}
 		}, {
 			key: "ensureVertex",
+	
+			/**
+	   * Make sure a vertex with a specific key exists in this graph. If it already exists, nothing is done.
+	   * If it does not yet exist, a new vertex is added with the given {@link key} and {@link value}.
+	   * @public
+	   * @method JsGraph#ensureVertex
+	   * @see {@link JsGraph#addVertex|addVertex}
+	   * @see {@link JsGraph#addNewVertex|addNewVertex}
+	   * @see {@link JsGraph#setVertex|setVertex}
+	   * @param key   {string} - the key for the vertex
+	   * @param value {*}      - the new value to be stored in this vertex
+	   */
 			value: function ensureVertex(key, value) {
 				if (!this.hasVertex(key)) {
 					this.addNewVertex(key, value);
@@ -126,6 +172,18 @@ return /******/ (function(modules) { // webpackBootstrap
 			}
 		}, {
 			key: "addVertex",
+	
+			/**
+	   * Add a new vertex to this graph. If a vertex with this {@link key} already exists,
+	   * the value of that vertex is overwritten.
+	   * @public
+	   * @method JsGraph#addVertex
+	   * @see {@link JsGraph#addNewVertex|addNewVertex}
+	   * @see {@link JsGraph#setVertex|setVertex}
+	   * @see {@link JsGraph#ensureVertex|ensureVertex}
+	   * @param key   {string} - the key with which to refer to this new vertex
+	   * @param value {*}      - the value stored in this new vertex
+	   */
 			value: function addVertex(key, value) {
 				if (this.hasVertex(key)) {
 					this.setVertex(key, value);
@@ -1410,7 +1468,8 @@ return /******/ (function(modules) { // webpackBootstrap
 			////////// (Advanced) Queries //////////
 			////////////////////////////////////////
 	
-			value: function equals(other) {
+			value: function equals() {
+				var other = arguments[0] === undefined ? undefined : arguments[0];
 				var eq = arguments[1] === undefined ? function (x, y, from, to) {
 					return x === y;
 				} : arguments[1];
@@ -1820,9 +1879,8 @@ return /******/ (function(modules) { // webpackBootstrap
 			_refreshMessage: {
 				value: function _refreshMessage() {
 					var aVertices = this.vertices.size === 1 ? "a vertex" : "vertices";
-					this.message = "This graph has " + aVertices + " '" + [].concat(_toConsumableArray(this.vertices)).map(function (_ref) {
-						var key = _ref.key;
-						return key;
+					this.message = "This graph has " + aVertices + " '" + [].concat(_toConsumableArray(this.vertices)).map(function (v) {
+						return v.key;
 					}).join("', '") + "'";
 				}
 			}
@@ -1852,9 +1910,8 @@ return /******/ (function(modules) { // webpackBootstrap
 			_refreshMessage: {
 				value: function _refreshMessage() {
 					var aVertices = this.vertices.size === 1 ? "a vertex" : "vertices";
-					this.message = "This graph does not have " + aVertices + " '" + [].concat(_toConsumableArray(this.vertices)).map(function (_ref) {
-						var key = _ref.key;
-						return key;
+					this.message = "This graph does not have " + aVertices + " '" + [].concat(_toConsumableArray(this.vertices)).map(function (v) {
+						return v.key;
 					}).join("', '") + "'";
 				}
 			}
