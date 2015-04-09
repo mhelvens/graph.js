@@ -42,6 +42,8 @@
     "isparta-instrumenter-loader": "~0.1",
     "istanbul": "~0.3",
     "jasmine-core": "~2",
+    "jsdoc": "^3.3.0-beta3",
+    "jsdoc-to-markdown": "~0.6",
     "karma": "~0.12",
     "karma-babel-preprocessor": "~4",
     "karma-cli": "~0.0",
@@ -59,6 +61,7 @@
     "prepublish": "npm run-script build",
     "build": "mkdir -p dist && cp src/js-graph.es6.js dist && webpack && uglifyjs dist/js-graph.js -mo dist/js-graph.min.js --in-source-map dist/js-graph.js.map --source-map dist/js-graph.min.js.map && uglifyjs dist/js-graph.full.js -mo dist/js-graph.full.min.js --in-source-map dist/js-graph.full.js.map --source-map dist/js-graph.full.min.js.map",
     "test": "karma start",
-    "test-ci": "karma start ./karma.ci.conf.js"
+    "test-ci": "karma start ./karma.ci.conf.js",
+    "docs": "jsdoc2md src/js-graph.es6.js -t docs/README.md.hbs > README.md"
   }
 }

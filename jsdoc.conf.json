@@ -1,0 +1,14 @@
+{
+  "source": {
+    "include": [ "./src" ]
+  },
+  "plugins": [ "plugins/commentsOnly" ],
+  "templates": {
+    "monospaceLinks": true
+  },
+  "opts": {
+    "encoding": "utf8",
+    "template": "./node_modules/jsdoc3-bootstrap",
+    "destination": "./docs/"
+  }
+}
