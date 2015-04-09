@@ -34,10 +34,6 @@ depend on it.
 API Documentation
 -----------------
 
-<a name="JsGraph"></a>
-### JsGraph
-The main class of this library, to be used for representing a mathematical (di)graph.
-
 
 * [JsGraph](#JsGraph)
     * ___instance___
@@ -48,6 +44,13 @@ The main class of this library, to be used for representing a mathematical (di)g
     * ___static___
     * [.VertexExistsError](#JsGraph.VertexExistsError) ⇐ <code>Error</code>
         * [.vertices](#JsGraph.VertexExistsError#vertices) : <code>Set.&lt;{key, value}&gt;</code>
+
+
+-----
+
+<a name="JsGraph"></a>
+### JsGraph
+The main class of this library, to be used for representing a mathematical (di)graph.
 
 
 -----
