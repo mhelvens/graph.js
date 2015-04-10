@@ -848,6 +848,7 @@ export default class JsGraph {
 //  ////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
+ * @class
  * @classdesc This type of error is thrown when specific vertices are expected to exist, but don't.
  * @extends Error
  */
@@ -878,6 +879,7 @@ JsGraph.VertexExistsError = class VertexExistsError extends Error {
 };
 
 /**
+ * @class
  * @classdesc This type of error is thrown when specific vertices are expected not to exist, but do.
  * @extends Error
  */
@@ -908,6 +910,7 @@ JsGraph.VertexNotExistsError = class VertexNotExistError extends Error {
 };
 
 /**
+ * @class
  * @classdesc This type of error is thrown when specific edges are expected not to exist, but do.
  * @extends Error
  */
@@ -940,6 +943,7 @@ JsGraph.EdgeExistsError = class EdgeExistsError extends Error {
 };
 
 /**
+ * @class
  * @classdesc This type of error is thrown when specific edges are expected to exist, but don't.
  * @extends Error
  */
@@ -972,6 +976,7 @@ JsGraph.EdgeNotExistsError = class EdgeNotExistsError extends Error {
 };
 
 /**
+ * @class
  * @classdesc This type of error is thrown when a vertex is expected not to have connected edges, but does.
  * @extends Error
  */
@@ -991,6 +996,7 @@ JsGraph.HasConnectedEdgesError = class HasConnectedEdgesError extends Error {
 };
 
 /**
+ * @class
  * @classdesc This type of error is thrown when a graph is expected not to have a directed cycle, but does.
  * @extends Error
  */

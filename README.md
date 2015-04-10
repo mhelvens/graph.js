@@ -763,6 +763,8 @@ Create a clone of this graph, but without any transitive edges.
 
 <a name="JsGraph.VertexExistsError"></a>
 #### *JsGraph*.VertexExistsError ⇐ <code>Error</code>
+This type of error is thrown when specific vertices are expected to exist, but don't.
+
 **Extends:** <code>Error</code>  
 
 -----
@@ -776,6 +778,8 @@ the set of relevant vertices
 
 <a name="JsGraph.VertexNotExistsError"></a>
 #### *JsGraph*.VertexNotExistsError ⇐ <code>Error</code>
+This type of error is thrown when specific vertices are expected not to exist, but do.
+
 **Extends:** <code>Error</code>  
 
 -----
@@ -789,6 +793,8 @@ the set of relevant vertices
 
 <a name="JsGraph.EdgeExistsError"></a>
 #### *JsGraph*.EdgeExistsError ⇐ <code>Error</code>
+This type of error is thrown when specific edges are expected not to exist, but do.
+
 **Extends:** <code>Error</code>  
 
 -----
@@ -802,6 +808,8 @@ the set of relevant edges
 
 <a name="JsGraph.EdgeNotExistsError"></a>
 #### *JsGraph*.EdgeNotExistsError ⇐ <code>Error</code>
+This type of error is thrown when specific edges are expected to exist, but don't.
+
 **Extends:** <code>Error</code>  
 
 -----
@@ -815,6 +823,8 @@ the set of relevant edges
 
 <a name="JsGraph.HasConnectedEdgesError"></a>
 #### *JsGraph*.HasConnectedEdgesError ⇐ <code>Error</code>
+This type of error is thrown when a vertex is expected not to have connected edges, but does.
+
 **Extends:** <code>Error</code>  
 
 -----
@@ -828,6 +838,8 @@ the key of the relevant vertex
 
 <a name="JsGraph.CycleError"></a>
 #### *JsGraph*.CycleError ⇐ <code>Error</code>
+This type of error is thrown when a graph is expected not to have a directed cycle, but does.
+
 **Extends:** <code>Error</code>  
 
 -----
