@@ -36,7 +36,7 @@ API Documentation
 
 
 * [JsGraph](#JsGraph)
-    * ⚙ ___instance___
+    * ___instance___
     * [.addNewVertex(key, value)](#JsGraph#addNewVertex)
     * [.setVertex(key, value)](#JsGraph#setVertex)
     * [.ensureVertex(key, value)](#JsGraph#ensureVertex)
@@ -75,7 +75,7 @@ API Documentation
     * [.hasPath(from, to)](#JsGraph#hasPath) ⇒ <code>boolean</code>
     * [.clone([transform])](#JsGraph#clone) ⇒ <code>[JsGraph](#JsGraph)</code>
     * [.transitiveReduction([transform])](#JsGraph#transitiveReduction) ⇒ <code>[JsGraph](#JsGraph)</code>
-    * ⚙ ___static___
+    * ___static___
     * [.VertexExistsError](#JsGraph.VertexExistsError) ⇐ <code>Error</code>
         * [.vertices](#JsGraph.VertexExistsError#vertices) : <code>Set.&lt;{key: string, value}&gt;</code>
     * [.VertexNotExistsError](#JsGraph.VertexNotExistsError) ⇐ <code>Error</code>
