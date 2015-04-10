@@ -103,15 +103,15 @@ The main class of this library, to be used for representing a mathematical (di)g
 #### *jsGraph*.addNewVertex(key, value)
 Add a new vertex to this graph.
 
-**Throws**:
-
-- <code>[VertexExistsError](#JsGraph.VertexExistsError)</code> if a vertex with this key already exists
-
 
 | Param | Type | Description |
 | --- | --- | --- |
 | key | <code>string</code> | the key with which to refer to this new vertex |
 | value | <code>\*</code> | the value to store in this new vertex |
+
+**Throws**:
+
+- <code>[VertexExistsError](#JsGraph.VertexExistsError)</code> if a vertex with this key already exists
 
 
 -----
@@ -120,15 +120,15 @@ Add a new vertex to this graph.
 #### *jsGraph*.setVertex(key, value)
 Set the value of an existing vertex in this graph.
 
-**Throws**:
-
-- <code>[VertexNotExistsError](#JsGraph.VertexNotExistsError)</code> if a vertex with this key does not exist
-
 
 | Param | Type | Description |
 | --- | --- | --- |
 | key | <code>string</code> | the key belonging to the vertex |
 | value | <code>\*</code> | the value to store in this vertex |
+
+**Throws**:
+
+- <code>[VertexNotExistsError](#JsGraph.VertexNotExistsError)</code> if a vertex with this key does not exist
 
 
 -----
@@ -165,15 +165,15 @@ the value of that vertex is overwritten.
 #### *jsGraph*.removeExistingVertex(key)
 Remove an existing vertex from this graph.
 
-**Throws**:
-
-- <code>[VertexNotExistsError](#JsGraph.VertexNotExistsError)</code> if a vertex with this key does not exist
-- <code>[HasConnectedEdgesError](#JsGraph.HasConnectedEdgesError)</code> if there are still edges connected to this vertex
-
 
 | Param | Type | Description |
 | --- | --- | --- |
 | key | <code>string</code> | the key of the vertex to remove |
+
+**Throws**:
+
+- <code>[VertexNotExistsError](#JsGraph.VertexNotExistsError)</code> if a vertex with this key does not exist
+- <code>[HasConnectedEdgesError](#JsGraph.HasConnectedEdgesError)</code> if there are still edges connected to this vertex
 
 
 -----
@@ -182,14 +182,14 @@ Remove an existing vertex from this graph.
 #### *jsGraph*.destroyExistingVertex(key)
 Remove an existing vertex from this graph, as well as all edges connected to it.
 
-**Throws**:
-
-- <code>[VertexNotExistsError](#JsGraph.VertexNotExistsError)</code> if a vertex with this key does not exist
-
 
 | Param | Type | Description |
 | --- | --- | --- |
 | key | <code>string</code> | the key of the vertex to remove |
+
+**Throws**:
+
+- <code>[VertexNotExistsError](#JsGraph.VertexNotExistsError)</code> if a vertex with this key does not exist
 
 
 -----
@@ -199,14 +199,14 @@ Remove an existing vertex from this graph, as well as all edges connected to it.
 Remove an existing vertex from this graph.
 If a vertex with this key does not exist, nothing happens.
 
-**Throws**:
-
-- <code>[HasConnectedEdgesError](#JsGraph.HasConnectedEdgesError)</code> if there are still edges connected to this vertex
-
 
 | Param | Type | Description |
 | --- | --- | --- |
 | key | <code>string</code> | the key of the vertex to remove |
+
+**Throws**:
+
+- <code>[HasConnectedEdgesError](#JsGraph.HasConnectedEdgesError)</code> if there are still edges connected to this vertex
 
 
 -----
@@ -266,17 +266,17 @@ Use [hasVertex](#JsGraph#hasVertex) to distinguish these cases.
 #### *jsGraph*.addNewEdge(from, to, value)
 Add a new edge to this graph.
 
-**Throws**:
-
-- <code>[EdgeExistsError](#JsGraph.EdgeExistsError)</code> if an edge between `from` and `to` already exists
-- <code>[VertexNotExistsError](#JsGraph.VertexNotExistsError)</code> if the `from` and/or `to` vertices do not yet exist in the graph
-
 
 | Param | Type | Description |
 | --- | --- | --- |
 | from | <code>string</code> | the key for the originating vertex |
 | to | <code>string</code> | the key for the terminating vertex |
 | value | <code>\*</code> | the value to store in this new edge |
+
+**Throws**:
+
+- <code>[EdgeExistsError](#JsGraph.EdgeExistsError)</code> if an edge between `from` and `to` already exists
+- <code>[VertexNotExistsError](#JsGraph.VertexNotExistsError)</code> if the `from` and/or `to` vertices do not yet exist in the graph
 
 
 -----
@@ -286,16 +286,16 @@ Add a new edge to this graph.
 Add a new edge to this graph. If the `from` and/or `to` vertices do not yet exist
 in the graph, they are implicitly added with an `undefined` value.
 
-**Throws**:
-
-- <code>[EdgeExistsError](#JsGraph.EdgeExistsError)</code> if an edge between `from` and `to` already exists
-
 
 | Param | Type | Description |
 | --- | --- | --- |
 | from | <code>string</code> | the key for the originating vertex |
 | to | <code>string</code> | the key for the terminating vertex |
 | value | <code>\*</code> | the value to store in this new edge |
+
+**Throws**:
+
+- <code>[EdgeExistsError](#JsGraph.EdgeExistsError)</code> if an edge between `from` and `to` already exists
 
 
 -----
@@ -304,16 +304,16 @@ in the graph, they are implicitly added with an `undefined` value.
 #### *jsGraph*.setEdge(from, to, value)
 Set the value of an existing edge in this graph.
 
-**Throws**:
-
-- <code>[EdgeNotExistsError](#JsGraph.EdgeNotExistsError)</code> if an edge between `from` and `to` does not yet exist
-
 
 | Param | Type | Description |
 | --- | --- | --- |
 | from | <code>string</code> | the key for the originating vertex |
 | to | <code>string</code> | the key for the terminating vertex |
 | value | <code>\*</code> | the value to store in this edge |
+
+**Throws**:
+
+- <code>[EdgeNotExistsError](#JsGraph.EdgeNotExistsError)</code> if an edge between `from` and `to` does not yet exist
 
 
 -----
@@ -324,16 +324,16 @@ Make sure an edge between the `from` and `to` vertices in this graph.
 If one already exists, nothing is done.
 If one does not yet exist, a new edge is added with the given value.
 
-**Throws**:
-
-- <code>[VertexNotExistsError](#JsGraph.VertexNotExistsError)</code> if the `from` and/or `to` vertices do not yet exist in the graph
-
 
 | Param | Type | Description |
 | --- | --- | --- |
 | from | <code>string</code> | the key for the originating vertex |
 | to | <code>string</code> | the key for the terminating vertex |
 | value | <code>\*</code> | the value to store if a new edge is added |
+
+**Throws**:
+
+- <code>[VertexNotExistsError](#JsGraph.VertexNotExistsError)</code> if the `from` and/or `to` vertices do not yet exist in the graph
 
 
 -----
@@ -343,16 +343,16 @@ If one does not yet exist, a new edge is added with the given value.
 Add a new edge to this graph. If an edge between `from` and `to` already exists,
 the value of that edge is overwritten.
 
-**Throws**:
-
-- <code>[VertexNotExistsError](#JsGraph.VertexNotExistsError)</code> if the `from` and/or `to` vertices do not yet exist in the graph
-
 
 | Param | Type | Description |
 | --- | --- | --- |
 | from | <code>string</code> | the key for the originating vertex |
 | to | <code>string</code> | the key for the terminating vertex |
 | value | <code>\*</code> | the value to store in this new edge |
+
+**Throws**:
+
+- <code>[VertexNotExistsError](#JsGraph.VertexNotExistsError)</code> if the `from` and/or `to` vertices do not yet exist in the graph
 
 
 -----
@@ -396,15 +396,15 @@ in the graph, they are implicitly added with an `undefined` value.
 #### *jsGraph*.removeExistingEdge(from, to)
 Remove an existing edge from this graph.
 
-**Throws**:
-
-- <code>[EdgeNotExistsError](#JsGraph.EdgeNotExistsError)</code> if an edge between the `from` and `to` vertices doesn't exist
-
 
 | Param | Type | Description |
 | --- | --- | --- |
 | from | <code>string</code> | the key for the originating vertex |
 | to | <code>string</code> | the key for the terminating vertex |
+
+**Throws**:
+
+- <code>[EdgeNotExistsError](#JsGraph.EdgeNotExistsError)</code> if an edge between the `from` and `to` vertices doesn't exist
 
 
 -----
@@ -531,14 +531,14 @@ for (let [from, to, value] of jsGraph.edges()) {
 #### *jsGraph*.verticesFrom(from) ⇒ <code>Iterator.&lt;string, \*, \*&gt;</code>
 Iterate over the outgoing edges of a given vertex in the graph, in no particular order.
 
-**Throws**:
-
-- <code>[VertexNotExistsError](#JsGraph.VertexNotExistsError)</code> if a vertex with the given `from` key does not exist
-
 
 | Param | Type | Description |
 | --- | --- | --- |
 | from | <code>string</code> | the key of the vertex to take the outgoing edges from |
+
+**Throws**:
+
+- <code>[VertexNotExistsError](#JsGraph.VertexNotExistsError)</code> if a vertex with the given `from` key does not exist
 
 **Returns**: <code>Iterator.&lt;string, \*, \*&gt;</code> - an object conforming to the [ES6 iterator protocol](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol)  
 **Example**  
@@ -564,14 +564,14 @@ for (let [to, vertexValue, edgeValue] of jsGraph.verticesFrom(from)) {
 #### *jsGraph*.verticesTo(to) ⇒ <code>Iterator.&lt;string, \*, \*&gt;</code>
 Iterate over the incoming edges of a given vertex in the graph, in no particular order.
 
-**Throws**:
-
-- <code>[VertexNotExistsError](#JsGraph.VertexNotExistsError)</code> if a vertex with the given `to` key does not exist
-
 
 | Param | Type | Description |
 | --- | --- | --- |
 | to | <code>string</code> | the key of the vertex to take the incoming edges from |
+
+**Throws**:
+
+- <code>[VertexNotExistsError](#JsGraph.VertexNotExistsError)</code> if a vertex with the given `to` key does not exist
 
 **Returns**: <code>Iterator.&lt;string, \*, \*&gt;</code> - an object conforming to the [ES6 iterator protocol](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol)  
 **Example**  
@@ -597,14 +597,14 @@ for (let [from, vertexValue, edgeValue] of jsGraph.verticesTo(to)) {
 #### *jsGraph*.verticesWithPathFrom(from) ⇒ <code>Iterator.&lt;string, \*&gt;</code>
 Iterate over all vertices reachable from a given vertex in the graph, in no particular order.
 
-**Throws**:
-
-- <code>[VertexNotExistsError](#JsGraph.VertexNotExistsError)</code> if a vertex with the given `from` key does not exist
-
 
 | Param | Type | Description |
 | --- | --- | --- |
 | from | <code>string</code> | the key of the vertex to take the reachable vertices from |
+
+**Throws**:
+
+- <code>[VertexNotExistsError](#JsGraph.VertexNotExistsError)</code> if a vertex with the given `from` key does not exist
 
 **Returns**: <code>Iterator.&lt;string, \*&gt;</code> - an object conforming to the [ES6 iterator protocol](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol)  
 **Example**  
@@ -629,14 +629,14 @@ for (let [key, value] of jsGraph.verticesWithPathFrom(from)) {
 #### *jsGraph*.verticesWithPathTo(to) ⇒ <code>Iterator.&lt;string, \*&gt;</code>
 Iterate over all vertices from which a given vertex in the graph can be reached, in no particular order.
 
-**Throws**:
-
-- <code>[VertexNotExistsError](#JsGraph.VertexNotExistsError)</code> if a vertex with the given `to` key does not exist
-
 
 | Param | Type | Description |
 | --- | --- | --- |
 | to | <code>string</code> | the key of the vertex to take the reachable vertices from |
+
+**Throws**:
+
+- <code>[VertexNotExistsError](#JsGraph.VertexNotExistsError)</code> if a vertex with the given `to` key does not exist
 
 **Returns**: <code>Iterator.&lt;string, \*&gt;</code> - an object conforming to the [ES6 iterator protocol](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol)  
 **Example**  
