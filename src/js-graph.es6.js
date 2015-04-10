@@ -793,7 +793,7 @@ export default class JsGraph {
 
 	/**
 	 * Create a clone of this graph.
-	 * @param [transform] {function(*, string, ?string): *}
+	 * @param [tr] {function(*, string, ?string): *}
 	 *     a custom transformation function for stored values; defaults to
 	 *     the identity function; The first argument is the value to clone.
 	 *     If it is a vertex value, the third argument is the vertex key.
@@ -802,20 +802,20 @@ export default class JsGraph {
 	 *     argument to distinguish the two cases.)
 	 * @returns {JsGraph} a clone of this graph
 	 */
-	clone(transform=v=>v) {
+	clone(tr=v=>v) {
 		var result = new JsGraph();
 		for (let [key, val] of this.vertices()) {
-			result.addVertex(key, transform(val, key));
+			result.addVertex(key, tr(val, key));
 		}
 		for (let [from, to, val] of this.edges()) {
-			result.addEdge(from, to, transform(val, from, to));
+			result.addEdge(from, to, tr(val, from, to));
 		}
 		return result;
 	}
 
 	/**
 	 * Create a clone of this graph, but without any transitive edges.
-	 * @param [transform] {function(*, string, ?string): *}
+	 * @param [tr] {function(*, string, ?string): *}
 	 *     a custom transformation function for stored values; defaults to
 	 *     the identity function; The first argument is the value to clone.
 	 *     If it is a vertex value, the third argument is the vertex key.
@@ -824,8 +824,8 @@ export default class JsGraph {
 	 *     argument to distinguish the two cases.)
 	 * @returns {JsGraph} a clone of this graph
 	 */
-	transitiveReduction(transform=v=>v) {
-		var result = this.clone(transform);
+	transitiveReduction(tr=v=>v) {
+		var result = this.clone(tr);
 		for (let [x] of this.vertices()) {
 			for (let [y] of this.vertices()) {
 				if (result.hasEdge(x, y)) {

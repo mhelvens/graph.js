@@ -73,8 +73,8 @@ API Documentation
     * [.equals(other, [eq])](#JsGraph#equals) ⇒ <code>boolean</code>
     * [.hasCycle()](#JsGraph#hasCycle) ⇒ <code>boolean</code>
     * [.hasPath(from, to)](#JsGraph#hasPath) ⇒ <code>boolean</code>
-    * [.clone([transform])](#JsGraph#clone) ⇒ <code>[JsGraph](#JsGraph)</code>
-    * [.transitiveReduction([transform])](#JsGraph#transitiveReduction) ⇒ <code>[JsGraph](#JsGraph)</code>
+    * [.clone([tr])](#JsGraph#clone) ⇒ <code>[JsGraph](#JsGraph)</code>
+    * [.transitiveReduction([tr])](#JsGraph#transitiveReduction) ⇒ <code>[JsGraph](#JsGraph)</code>
     * ___static___
     * [.VertexExistsError](#JsGraph.VertexExistsError) ⇐ <code>Error</code>
         * [.vertices](#JsGraph.VertexExistsError#vertices) : <code>Set.&lt;{key: string, value}&gt;</code>
@@ -736,26 +736,26 @@ Test whether there is a directed path between a given pair of keys.
 -----
 
 <a name="JsGraph#clone"></a>
-#### *jsGraph*.clone([transform]) ⇒ <code>[JsGraph](#JsGraph)</code>
+#### *jsGraph*.clone([tr]) ⇒ <code>[JsGraph](#JsGraph)</code>
 Create a clone of this graph.
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| [transform] | <code>function</code> | a custom transformation function for stored values; defaults to     the identity function; The first argument is the value to clone.     If it is a vertex value, the third argument is the vertex key.     If it is an edge value, the third and fourth argument are the     `from` and `to` keys respectively. (So you can test the fourth     argument to distinguish the two cases.) |
+| [tr] | <code>function</code> | a custom transformation function for stored values; defaults to     the identity function; The first argument is the value to clone.     If it is a vertex value, the third argument is the vertex key.     If it is an edge value, the third and fourth argument are the     `from` and `to` keys respectively. (So you can test the fourth     argument to distinguish the two cases.) |
 
 **Returns**: <code>[JsGraph](#JsGraph)</code> - a clone of this graph  
 
 -----
 
 <a name="JsGraph#transitiveReduction"></a>
-#### *jsGraph*.transitiveReduction([transform]) ⇒ <code>[JsGraph](#JsGraph)</code>
+#### *jsGraph*.transitiveReduction([tr]) ⇒ <code>[JsGraph](#JsGraph)</code>
 Create a clone of this graph, but without any transitive edges.
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| [transform] | <code>function</code> | a custom transformation function for stored values; defaults to     the identity function; The first argument is the value to clone.     If it is a vertex value, the third argument is the vertex key.     If it is an edge value, the third and fourth argument are the     `from` and `to` keys respectively. (So you can test the fourth     argument to distinguish the two cases.) |
+| [tr] | <code>function</code> | a custom transformation function for stored values; defaults to     the identity function; The first argument is the value to clone.     If it is a vertex value, the third argument is the vertex key.     If it is an edge value, the third and fourth argument are the     `from` and `to` keys respectively. (So you can test the fourth     argument to distinguish the two cases.) |
 
 **Returns**: <code>[JsGraph](#JsGraph)</code> - a clone of this graph  
 
