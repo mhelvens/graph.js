@@ -849,7 +849,7 @@ export default class JsGraph {
 
 /**
  * @class
- * @classdesc This type of error is thrown when specific vertices are expected to exist, but don't.
+ * @classdesc This type of error is thrown when specific vertices are expected not to exist, but do.
  * @extends Error
  */
 JsGraph.VertexExistsError = class VertexExistsError extends Error {
@@ -880,7 +880,7 @@ JsGraph.VertexExistsError = class VertexExistsError extends Error {
 
 /**
  * @class
- * @classdesc This type of error is thrown when specific vertices are expected not to exist, but do.
+ * @classdesc This type of error is thrown when specific vertices are expected to exist, but don't.
  * @extends Error
  */
 JsGraph.VertexNotExistsError = class VertexNotExistError extends Error {

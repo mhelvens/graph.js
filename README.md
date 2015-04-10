@@ -763,7 +763,7 @@ Create a clone of this graph, but without any transitive edges.
 
 <a name="JsGraph.VertexExistsError"></a>
 #### *JsGraph*.VertexExistsError ⇐ <code>Error</code>
-This type of error is thrown when specific vertices are expected to exist, but don't.
+This type of error is thrown when specific vertices are expected not to exist, but do.
 
 **Extends:** <code>Error</code>  
 
@@ -778,7 +778,7 @@ the set of relevant vertices
 
 <a name="JsGraph.VertexNotExistsError"></a>
 #### *JsGraph*.VertexNotExistsError ⇐ <code>Error</code>
-This type of error is thrown when specific vertices are expected not to exist, but do.
+This type of error is thrown when specific vertices are expected to exist, but don't.
 
 **Extends:** <code>Error</code>  
 
