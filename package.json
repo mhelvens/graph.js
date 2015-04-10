@@ -62,6 +62,6 @@
     "build": "mkdir -p dist && cp src/js-graph.es6.js dist && webpack && uglifyjs dist/js-graph.js -mo dist/js-graph.min.js --in-source-map dist/js-graph.js.map --source-map dist/js-graph.min.js.map && uglifyjs dist/js-graph.full.js -mo dist/js-graph.full.min.js --in-source-map dist/js-graph.full.js.map --source-map dist/js-graph.full.min.js.map",
     "test": "karma start",
     "test-ci": "karma start ./karma.ci.conf.js",
-    "docs": "jsdoc2md src/**/*.es6.js -t docs/README.md.hbs -d 3 --partial \"./docs/partials/**/*.hbs\" --separators > README.md"
+    "docs": "jsdoc2md src/**/*.es6.js -t docs/README.md.hbs -d 3 --partial \"./docs/partials/**/*.hbs\" --separators -l JavaScript > README.md"
   }
 }
