@@ -1,6 +1,6 @@
 {
   "name": "js-graph",
-  "version": "1.7.0-alpha",
+  "version": "1.7.1-alpha",
   "title": "Javascript Graph Datastructure",
   "homepage": "https://github.com/mhelvens/js-graph",
   "description": "a javascript library for storing arbitrary data in mathematical (di)graphs, as well as traversing and analyzing them in various ways (ECMAScript 6 Ready)",
@@ -43,7 +43,7 @@
     "istanbul": "~0.3",
     "jasmine-core": "~2",
     "jsdoc": "~3",
-    "jsdoc-to-markdown": "~0.6",
+    "jsdoc-to-markdown": "~1",
     "karma": "~0.12",
     "karma-babel-preprocessor": "~4",
     "karma-cli": "~0.0",
