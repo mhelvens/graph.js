@@ -12,14 +12,14 @@ describe("instance", function () {
 
 	it("initially has no vertices", function () {
 		expect(graph.vertexCount()).toBe(0);
-		graph.eachVertex(() => { expect().not.toBeReachable() });
+		for (let vertex of graph.vertices()) { expect().not.toBeReachable() }
 		expect().toBeReachable();
 	});
 
 
 	it("initially has no edges", function () {
 		expect(graph.edgeCount()).toBe(0);
-		graph.eachEdge(() => { expect().not.toBeReachable() });
+		for (let vertex of graph.edges()) { expect().not.toBeReachable() }
 		expect().toBeReachable();
 	});
 

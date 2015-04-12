@@ -620,53 +620,6 @@ export default class JsGraph {
 	}
 
 
-	/////////////////////////////////////////
-	////////// Old Style Iteration //////////
-	/////////////////////////////////////////
-
-	eachVertex(handler) {
-		for (let args of this.vertices()) {
-			if (handler(...args) === false) { break }
-		}
-	}
-
-	eachEdge(handler) {
-		for (let args of this.edges()) {
-			if (handler(...args) === false) { break }
-		}
-	}
-
-	eachVertexFrom(from, handler) {
-		for (let args of this.verticesFrom(from)) {
-			if (handler(...args) === false) { break }
-		}
-	}
-
-	eachVertexTo(to, handler) {
-		for (let args of this.verticesTo(to)) {
-			if (handler(...args) === false) { break }
-		}
-	}
-
-	eachVertexWithPathFrom(from, handler) {
-		for (let args of this.verticesWithPathFrom(from)) {
-			if (handler(...args) === false) { break }
-		}
-	}
-
-	eachVertexWithPathTo(to, handler) {
-		for (let args of this.verticesWithPathTo(to)) {
-			if (handler(...args) === false) { break }
-		}
-	}
-
-	eachVertexTopologically(handler) {
-		for (let args of this.vertices_topologically()) {
-			if (handler(...args) === false) { break }
-		}
-	}
-
-
 	//////////////////////////////
 	////////// Clearing //////////
 	//////////////////////////////

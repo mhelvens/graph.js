@@ -69,11 +69,6 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/**
-	 * The main and only module of the js-graph library.
-	 * @public
-	 * @file
-	 */
 	"use strict";
 	
 	var _slicedToArray = function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { var _arr = []; for (var _iterator = arr[Symbol.iterator](), _step; !(_step = _iterator.next()).done;) { _arr.push(_step.value); if (i && _arr.length === i) break; } return _arr; } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } };
@@ -93,18 +88,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	//  ////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * The main class of this library, to be used for representing a mathematical (di)graph.
 	 * @public
 	 * @class JsGraph
+	 * @classdesc The main class of this library, to be used for representing a mathematical (di)graph.
 	 */
 	
 	var JsGraph = (function () {
 		function JsGraph() {
 			_classCallCheck(this, JsGraph);
 	
-			this._vertices = new Map(); // key -> value
-			this._edges = new Map(); // from -> to -> value
-			this._reverseEdges = new Map(); // to -> Set<from> (_edges contains the values)
+			this._vertices = new Map(); // Map.< string, * >
+			this._edges = new Map(); // Map.< string, Map.<string, *> >
+			this._reverseEdges = new Map(); // Map.< string, Set.<*> >
 			this._vertexCount = 0;
 			this._edgeCount = 0;
 		}
@@ -116,18 +111,13 @@ return /******/ (function(modules) { // webpackBootstrap
 			////////// Vertices //////////
 			//////////////////////////////
 	
-			//// creating them ////
+			////////// creating them //////////
 	
 			/**
-	   * Add a new vertex to this graph. If a vertex with this {@link key} already exists,
-	   * a {@link JsGraph.VertexExistsError} is thrown.
-	   * @public
-	   * @method JsGraph#addNewVertex
-	   * @see {@link JsGraph#addVertex|addVertex}
-	   * @see {@link JsGraph#setVertex|setVertex}
-	   * @see {@link JsGraph#ensureVertex|ensureVertex}
-	   * @param key   {string} - the key with which to refer to this new vertex
-	   * @param value {*}      - the value stored in this new vertex
+	   * Add a new vertex to this graph.
+	   * @throws {JsGraph.VertexExistsError} if a vertex with this key already exists
+	   * @param key   {string} the key with which to refer to this new vertex
+	   * @param value {*}      the value to store in this new vertex
 	   */
 			value: function addNewVertex(key, value) {
 				if (this.hasVertex(key)) {
@@ -142,15 +132,10 @@ return /******/ (function(modules) { // webpackBootstrap
 			key: "setVertex",
 	
 			/**
-	   * Set the value of an existing vertex in this graph. If a vertex with this {@link key} does not exist,
-	   * a {@link JsGraph.VertexNotExistsError} is thrown.
-	   * @public
-	   * @method JsGraph#setVertex
-	   * @see {@link JsGraph#addVertex|addVertex}
-	   * @see {@link JsGraph#addNewVertex|addNewVertex}
-	   * @see {@link JsGraph#ensureVertex|ensureVertex}
-	   * @param key   {string} - the key belonging to the vertex
-	   * @param value {*}      - the new value to be stored in this vertex
+	   * Set the value of an existing vertex in this graph.
+	   * @throws {JsGraph.VertexNotExistsError} if a vertex with this key does not exist
+	   * @param key   {string} the key belonging to the vertex
+	   * @param value {*}      the value to store in this vertex
 	   */
 			value: function setVertex(key, value) {
 				if (!this.hasVertex(key)) {
@@ -163,14 +148,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 			/**
 	   * Make sure a vertex with a specific key exists in this graph. If it already exists, nothing is done.
-	   * If it does not yet exist, a new vertex is added with the given {@link key} and {@link value}.
-	   * @public
-	   * @method JsGraph#ensureVertex
-	   * @see {@link JsGraph#addVertex|addVertex}
-	   * @see {@link JsGraph#addNewVertex|addNewVertex}
-	   * @see {@link JsGraph#setVertex|setVertex}
-	   * @param key   {string} - the key for the vertex
-	   * @param value {*}      - the new value to be stored in this vertex
+	   * If it does not yet exist, a new vertex is added with the given value.
+	   * @param key   {string} the key for the vertex
+	   * @param value {*}      the value to store if a new vertex is added
 	   */
 			value: function ensureVertex(key, value) {
 				if (!this.hasVertex(key)) {
@@ -181,15 +161,10 @@ return /******/ (function(modules) { // webpackBootstrap
 			key: "addVertex",
 	
 			/**
-	   * Add a new vertex to this graph. If a vertex with this {@link key} already exists,
+	   * Add a new vertex to this graph. If a vertex with this key already exists,
 	   * the value of that vertex is overwritten.
-	   * @public
-	   * @method JsGraph#addVertex
-	   * @see {@link JsGraph#addNewVertex|addNewVertex}
-	   * @see {@link JsGraph#setVertex|setVertex}
-	   * @see {@link JsGraph#ensureVertex|ensureVertex}
-	   * @param key   {string} - the key with which to refer to this new vertex
-	   * @param value {*}      - the value stored in this new vertex
+	   * @param key   {string} the key with which to refer to this new vertex
+	   * @param value {*}      the value to store in this new vertex
 	   */
 			value: function addVertex(key, value) {
 				if (this.hasVertex(key)) {
@@ -201,16 +176,19 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: "removeExistingVertex",
 	
-			//// removing them ////
+			////////// removing them //////////
 	
+			/**
+	   * Remove an existing vertex from this graph.
+	   * @throws {JsGraph.VertexNotExistsError} if a vertex with this key does not exist
+	   * @throws {JsGraph.HasConnectedEdgesError} if there are still edges connected to this vertex
+	   * @param key {string} the key of the vertex to remove
+	   */
 			value: function removeExistingVertex(key) {
 				if (!this.hasVertex(key)) {
 					throw new JsGraph.VertexNotExistsError(key);
 				}
-				if (this._edges.get(key).size > 0) {
-					throw new JsGraph.HasConnectedEdgesError(key);
-				}
-				if (this._reverseEdges.get(key).size > 0) {
+				if (this._edges.get(key).size > 0 || this._reverseEdges.get(key).size > 0) {
 					throw new JsGraph.HasConnectedEdgesError(key);
 				}
 				this._vertices["delete"](key);
@@ -218,6 +196,12 @@ return /******/ (function(modules) { // webpackBootstrap
 			}
 		}, {
 			key: "destroyExistingVertex",
+	
+			/**
+	   * Remove an existing vertex from this graph, as well as all edges connected to it.
+	   * @throws {JsGraph.VertexNotExistsError} if a vertex with this key does not exist
+	   * @param key {string} the key of the vertex to remove
+	   */
 			value: function destroyExistingVertex(key) {
 				if (!this.hasVertex(key)) {
 					throw new JsGraph.VertexNotExistsError(key);
@@ -280,6 +264,13 @@ return /******/ (function(modules) { // webpackBootstrap
 			}
 		}, {
 			key: "removeVertex",
+	
+			/**
+	   * Remove an existing vertex from this graph.
+	   * If a vertex with this key does not exist, nothing happens.
+	   * @throws {JsGraph.HasConnectedEdgesError} if there are still edges connected to this vertex
+	   * @param key {string} the key of the vertex to remove
+	   */
 			value: function removeVertex(key) {
 				if (this.hasVertex(key)) {
 					this.removeExistingVertex(key);
@@ -287,6 +278,12 @@ return /******/ (function(modules) { // webpackBootstrap
 			}
 		}, {
 			key: "destroyVertex",
+	
+			/**
+	   * Remove a vertex from this graph, as well as all edges connected to it.
+	   * If a vertex with this key does not exist, nothing happens.
+	   * @param key {string} the key of the vertex to remove
+	   */
 			value: function destroyVertex(key) {
 				if (this.hasVertex(key)) {
 					this.destroyExistingVertex(key);
@@ -295,18 +292,39 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: "vertexCount",
 	
-			//// querying them ////
+			////////// querying them //////////
 	
+			/**
+	   * @returns {number} the number of vertices in the whole graph
+	   */
 			value: function vertexCount() {
 				return this._vertexCount;
 			}
 		}, {
 			key: "hasVertex",
+	
+			/**
+	   * Ask whether a vertex with a given key exists.
+	   * @param key {string} the key to query
+	   * @returns {boolean} whether there is a vertex with the given key
+	   */
 			value: function hasVertex(key) {
 				return this._vertices.has(key);
 			}
 		}, {
 			key: "vertexValue",
+	
+			/**
+	   * Get the value associated with the vertex of a given key.
+	   * @param key {string} the key to query
+	   * @returns {*} the value associated with the vertex of the given key.
+	   * Note that a return value of `undefined` can mean
+	   *
+	   * 1. that there is no such vertex, or
+	   * 2. that the stored value is actually `undefined`.
+	   *
+	   * Use {@link JsGraph#hasVertex} to distinguish these cases.
+	   */
 			value: function vertexValue(key) {
 				return this._vertices.get(key);
 			}
@@ -317,6 +335,16 @@ return /******/ (function(modules) { // webpackBootstrap
 			////////// Edges //////////
 			///////////////////////////
 	
+			////////// adding them //////////
+	
+			/**
+	   * Add a new edge to this graph.
+	   * @throws {JsGraph.EdgeExistsError} if an edge between `from` and `to` already exists
+	   * @throws {JsGraph.VertexNotExistsError} if the `from` and/or `to` vertices do not yet exist in the graph
+	   * @param from  {string} the key for the originating vertex
+	   * @param to    {string} the key for the terminating vertex
+	   * @param value {*}      the value to store in this new edge
+	   */
 			value: function addNewEdge(from, to, value) {
 				if (this.hasEdge(from, to)) {
 					throw new JsGraph.EdgeExistsError(from, to, this.edgeValue(from, to));
@@ -336,6 +364,15 @@ return /******/ (function(modules) { // webpackBootstrap
 			}
 		}, {
 			key: "createNewEdge",
+	
+			/**
+	   * Add a new edge to this graph. If the `from` and/or `to` vertices do not yet exist
+	   * in the graph, they are implicitly added with an `undefined` value.
+	   * @throws {JsGraph.EdgeExistsError} if an edge between `from` and `to` already exists
+	   * @param from  {string} the key for the originating vertex
+	   * @param to    {string} the key for the terminating vertex
+	   * @param value {*}      the value to store in this new edge
+	   */
 			value: function createNewEdge(from, to, value) {
 				if (this.hasEdge(from, to)) {
 					throw new JsGraph.EdgeExistsError(from, to, this.edgeValue(from, to));
@@ -346,6 +383,14 @@ return /******/ (function(modules) { // webpackBootstrap
 			}
 		}, {
 			key: "setEdge",
+	
+			/**
+	   * Set the value of an existing edge in this graph.
+	   * @throws {JsGraph.EdgeNotExistsError} if an edge between `from` and `to` does not yet exist
+	   * @param from  {string} the key for the originating vertex
+	   * @param to    {string} the key for the terminating vertex
+	   * @param value {*}      the value to store in this edge
+	   */
 			value: function setEdge(from, to, value) {
 				if (!this.hasEdge(from, to)) {
 					throw new JsGraph.EdgeNotExistsError(from, to);
@@ -354,6 +399,16 @@ return /******/ (function(modules) { // webpackBootstrap
 			}
 		}, {
 			key: "spanEdge",
+	
+			/**
+	   * Make sure an edge between the `from` and `to` vertices in this graph.
+	   * If one already exists, nothing is done.
+	   * If one does not yet exist, a new edge is added with the given value.
+	   * @throws {JsGraph.VertexNotExistsError} if the `from` and/or `to` vertices do not yet exist in the graph
+	   * @param from  {string} the key for the originating vertex
+	   * @param to    {string} the key for the terminating vertex
+	   * @param value {*}      the value to store if a new edge is added
+	   */
 			value: function spanEdge(from, to, value) {
 				if (!this.hasVertex(from)) {
 					if (this.hasVertex(to)) {
@@ -370,6 +425,15 @@ return /******/ (function(modules) { // webpackBootstrap
 			}
 		}, {
 			key: "addEdge",
+	
+			/**
+	   * Add a new edge to this graph. If an edge between `from` and `to` already exists,
+	   * the value of that edge is overwritten.
+	   * @throws {JsGraph.VertexNotExistsError} if the `from` and/or `to` vertices do not yet exist in the graph
+	   * @param from  {string} the key for the originating vertex
+	   * @param to    {string} the key for the terminating vertex
+	   * @param value {*}      the value to store in this new edge
+	   */
 			value: function addEdge(from, to, value) {
 				if (this.hasEdge(from, to)) {
 					this.setEdge(from, to, value);
@@ -379,6 +443,17 @@ return /******/ (function(modules) { // webpackBootstrap
 			}
 		}, {
 			key: "ensureEdge",
+	
+			/**
+	   * Make sure an edge between the `from` and `to` vertices exists in this graph.
+	   * If it already exists, nothing is done.
+	   * If it does not yet exist, a new edge is added with the given value.
+	   * If the `from` and/or `to` vertices do not yet exist
+	   * in the graph, they are implicitly added with an `undefined` value.
+	   * @param from  {string} the key for the originating vertex
+	   * @param to    {string} the key for the terminating vertex
+	   * @param value {*}      the value to store if a new edge is added
+	   */
 			value: function ensureEdge(from, to, value) {
 				if (!this.hasEdge(from, to)) {
 					this.createNewEdge(from, to, value);
@@ -386,6 +461,16 @@ return /******/ (function(modules) { // webpackBootstrap
 			}
 		}, {
 			key: "createEdge",
+	
+			/**
+	   * Add a new edge to this graph. If an edge between the `from` and `to`
+	   * vertices already exists, the value of that edge is overwritten.
+	   * If the `from` and/or `to` vertices do not yet exist
+	   * in the graph, they are implicitly added with an `undefined` value.
+	   * @param from  {string} the key for the originating vertex
+	   * @param to    {string} the key for the terminating vertex
+	   * @param value {*}      the value to store if a new edge is added
+	   */
 			value: function createEdge(from, to, value) {
 				if (this.hasEdge(from, to)) {
 					this.setEdge(from, to, value);
@@ -396,8 +481,14 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: "removeExistingEdge",
 	
-			//// removing them ////
+			////////// removing them //////////
 	
+			/**
+	   * Remove an existing edge from this graph.
+	   * @throws {JsGraph.EdgeNotExistsError} if an edge between the `from` and `to` vertices doesn't exist
+	   * @param from {string} the key for the originating vertex
+	   * @param to   {string} the key for the terminating vertex
+	   */
 			value: function removeExistingEdge(from, to) {
 				if (!this.hasEdge(from, to)) {
 					throw new JsGraph.EdgeNotExistsError(from, to);
@@ -408,6 +499,13 @@ return /******/ (function(modules) { // webpackBootstrap
 			}
 		}, {
 			key: "removeEdge",
+	
+			/**
+	   * Remove an edge from this graph.
+	   * If an edge between the `from` and `to` vertices doesn't exist, nothing happens.
+	   * @param from {string} the key for the originating vertex
+	   * @param to   {string} the key for the terminating vertex
+	   */
 			value: function removeEdge(from, to) {
 				if (this.hasEdge(from, to)) {
 					this.removeExistingEdge(from, to);
@@ -416,33 +514,67 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: "edgeCount",
 	
-			//// querying them ////
+			////////// querying them //////////
 	
+			/**
+	   * @returns {number} the number of edges in the whole graph
+	   */
 			value: function edgeCount() {
 				return this._edgeCount;
 			}
 		}, {
 			key: "hasEdge",
+	
+			/**
+	   * Ask whether an edge between given `from` and `to` vertices exist.
+	   * @param from {string} the key for the originating vertex
+	   * @param to   {string} the key for the terminating vertex
+	   * @returns {boolean} whether there is an edge between the given `from` and `to` vertices
+	   */
 			value: function hasEdge(from, to) {
 				return this.hasVertex(from) && this.hasVertex(to) && this._edges.has(from) && this._edges.get(from).has(to);
 			}
 		}, {
 			key: "edgeValue",
+	
+			/**
+	   * Get the value associated with the edge between given `from` and `to` vertices.
+	   * @param from {string} the key for the originating vertex
+	   * @param to   {string} the key for the terminating vertex
+	   * @returns {*} the value associated with the edge between the given `from` and `to` vertices
+	   * Note that a return value of `undefined` can mean
+	   *
+	   * 1. that there is no such edge, or
+	   * 2. that the stored value is actually `undefined`.
+	   *
+	   * Use {@link JsGraph#hasEdge} to distinguish these cases.
+	   */
 			value: function edgeValue(from, to) {
 				return this.hasEdge(from, to) ? this._edges.get(from).get(to) : undefined;
 			}
 		}, {
-			key: Symbol.iterator,
+			key: "vertices",
 	
 			///////////////////////////////////////////////
 			//////////// ES6 Iterable interfaces //////////
 			///////////////////////////////////////////////
 	
-			value: function () {
-				return this.vertices();
-			}
-		}, {
-			key: "vertices",
+			/**
+	   * Iterate over all vertices of the graph, in no particular order.
+	   * @returns { Iterator.<string, *> } an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}
+	   * @example
+	   * for (var it = jsGraph.vertices(), keyVal = it.next(); !it.done;) {
+	   *     var key   = keyVal[0],
+	   *         value = keyVal[1];
+	   *     // iterates over all vertices of the graph
+	   * }
+	   * @example
+	   * // in ECMAScript 6, you can use a for..of loop
+	   * for (let [key, value] of jsGraph.vertices()) {
+	   *     // iterates over all vertices of the graph
+	   * }
+	   * @see {@link JsGraph#@@iterator}
+	   */
 			value: regeneratorRuntime.mark(function vertices() {
 				var _this = this;
 	
@@ -523,7 +655,41 @@ return /******/ (function(modules) { // webpackBootstrap
 				}, vertices, this, [[4, 19, 23, 31], [24,, 26, 30]]);
 			})
 		}, {
+			key: Symbol.iterator,
+	
+			/**
+	   * A {@link JsGraph} object is itself {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterable_protocol|iterable},
+	   * and serves as a short notation in ECMAScript 6 to iterate over all vertices in the graph, in no particular order.
+	   * @method JsGraph#@@iterator
+	   * @returns { Iterator.<string, *> } an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}
+	   * @example
+	   * for (let [key, value] of jsGraph) {
+	   *     // iterates over all vertices of the graph
+	   * }
+	   * @see {@link JsGraph#vertices}
+	   */
+			value: function () {
+				return this.vertices();
+			}
+		}, {
 			key: "edges",
+	
+			/**
+	   * Iterate over all edges of the graph, in no particular order.
+	   * @returns { Iterator.<string, string, *> } an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}
+	   * @example
+	   * for (var it = jsGraph.edges(), fromToVal = it.next(); !it.done;) {
+	   *     var from  = fromToVal[0],
+	   *         to    = fromToVal[1],
+	   *         value = fromToVal[2];
+	   *     // iterates over all edges of the graph
+	   * }
+	   * @example
+	   * // in ECMAScript 6, you can use a for..of loop
+	   * for (let [from, to, value] of jsGraph.edges()) {
+	   *     // iterates over all vertices of the graph
+	   * }
+	   */
 			value: regeneratorRuntime.mark(function edges() {
 				var _this = this;
 	
@@ -659,6 +825,25 @@ return /******/ (function(modules) { // webpackBootstrap
 			})
 		}, {
 			key: "verticesFrom",
+	
+			/**
+	   * Iterate over the outgoing edges of a given vertex in the graph, in no particular order.
+	   * @throws {JsGraph.VertexNotExistsError} if a vertex with the given `from` key does not exist
+	   * @param from {string} the key of the vertex to take the outgoing edges from
+	   * @returns { Iterator.<string, *, *> } an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}
+	   * @example
+	   * for (var it = jsGraph.verticesFrom(from), toVertexEdge = it.next(); !it.done;) {
+	   *     var to          = toVertexEdge[0],
+	   *         vertexValue = toVertexEdge[1],
+	   *         edgeValue   = toVertexEdge[2];
+	   *     // iterates over all outgoing vertices of the `from` vertex
+	   * }
+	   * @example
+	   * // in ECMAScript 6, you can use a for..of loop
+	   * for (let [to, vertexValue, edgeValue] of jsGraph.verticesFrom(from)) {
+	   *     // iterates over all outgoing edges of the `from` vertex
+	   * }
+	   */
 			value: function verticesFrom(from) {
 				if (!this.hasVertex(from)) {
 					throw new JsGraph.VertexNotExistsError(from);
@@ -746,6 +931,25 @@ return /******/ (function(modules) { // webpackBootstrap
 			})
 		}, {
 			key: "verticesTo",
+	
+			/**
+	   * Iterate over the incoming edges of a given vertex in the graph, in no particular order.
+	   * @throws {JsGraph.VertexNotExistsError} if a vertex with the given `to` key does not exist
+	   * @param to {string} the key of the vertex to take the incoming edges from
+	   * @returns { Iterator.<string, *, *> } an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}
+	   * @example
+	   * for (var it = jsGraph.verticesTo(to), fromVertexEdge = it.next(); !it.done;) {
+	   *     var from        = fromVertexEdge[0],
+	   *         vertexValue = fromVertexEdge[1],
+	   *         edgeValue   = fromVertexEdge[2];
+	   *     // iterates over all outgoing vertices of the `from` vertex
+	   * }
+	   * @example
+	   * // in ECMAScript 6, you can use a for..of loop
+	   * for (let [from, vertexValue, edgeValue] of jsGraph.verticesTo(to)) {
+	   *     // iterates over all incoming edges of the `to` vertex
+	   * }
+	   */
 			value: function verticesTo(to) {
 				if (!this.hasVertex(to)) {
 					throw new JsGraph.VertexNotExistsError(to);
@@ -833,6 +1037,24 @@ return /******/ (function(modules) { // webpackBootstrap
 			})
 		}, {
 			key: "verticesWithPathFrom",
+	
+			/**
+	   * Iterate over all vertices reachable from a given vertex in the graph, in no particular order.
+	   * @throws {JsGraph.VertexNotExistsError} if a vertex with the given `from` key does not exist
+	   * @param from {string} the key of the vertex to take the reachable vertices from
+	   * @returns { Iterator.<string, *> } an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}
+	   * @example
+	   * for (var it = jsGraph.verticesWithPathFrom(from), keyValue = it.next(); !it.done;) {
+	   *     var key   = keyValue[0],
+	   *         value = keyValue[1];
+	   *     // iterates over all vertices reachable from `from`
+	   * }
+	   * @example
+	   * // in ECMAScript 6, you can use a for..of loop
+	   * for (let [key, value] of jsGraph.verticesWithPathFrom(from)) {
+	   *     // iterates over all vertices reachable from `from`
+	   * }
+	   */
 			value: function verticesWithPathFrom(from) {
 				if (!this.hasVertex(from)) {
 					throw new JsGraph.VertexNotExistsError(from);
@@ -922,6 +1144,24 @@ return /******/ (function(modules) { // webpackBootstrap
 			})
 		}, {
 			key: "verticesWithPathTo",
+	
+			/**
+	   * Iterate over all vertices from which a given vertex in the graph can be reached, in no particular order.
+	   * @throws {JsGraph.VertexNotExistsError} if a vertex with the given `to` key does not exist
+	   * @param to {string} the key of the vertex to take the reachable vertices from
+	   * @returns { Iterator.<string, *> } an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}
+	   * @example
+	   * for (var it = jsGraph.verticesWithPathTo(to), keyValue = it.next(); !it.done;) {
+	   *     var key   = keyValue[0],
+	   *         value = keyValue[1];
+	   *     // iterates over all vertices from which `to` can be reached
+	   * }
+	   * @example
+	   * // in ECMAScript 6, you can use a for..of loop
+	   * for (let [key, value] of jsGraph.verticesWithPathTo(to)) {
+	   *     // iterates over all vertices from which `to` can be reached
+	   * }
+	   */
 			value: function verticesWithPathTo(to) {
 				if (!this.hasVertex(to)) {
 					throw new JsGraph.VertexNotExistsError(to);
@@ -1011,6 +1251,22 @@ return /******/ (function(modules) { // webpackBootstrap
 			})
 		}, {
 			key: "vertices_topologically",
+	
+			/**
+	   * Iterate over all vertices of the graph in topological order.
+	   * @returns { Iterator.<string, *> } an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}
+	   * @example
+	   * for (var it = jsGraph.vertices_topologically(), keyVal = it.next(); !it.done;) {
+	   *     var key   = keyVal[0],
+	   *         value = keyVal[1];
+	   *     // iterates over all vertices of the graph in topological order
+	   * }
+	   * @example
+	   * // in ECMAScript 6, you can use a for..of loop
+	   * for (let [key, value] of jsGraph.vertices_topologically()) {
+	   *     // iterates over all vertices of the graph in topological order
+	   * }
+	   */
 			value: regeneratorRuntime.mark(function vertices_topologically() {
 				var _this2 = this;
 	
@@ -1190,227 +1446,15 @@ return /******/ (function(modules) { // webpackBootstrap
 				}, vertices_topologically, this, [[6, 18, 22, 30], [23,, 25, 29]]);
 			})
 		}, {
-			key: "eachVertex",
-	
-			/////////////////////////////////////////
-			////////// Old Style Iteration //////////
-			/////////////////////////////////////////
-	
-			value: function eachVertex(handler) {
-				var _iteratorNormalCompletion = true;
-				var _didIteratorError = false;
-				var _iteratorError = undefined;
-	
-				try {
-					for (var _iterator = this.vertices()[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-						var args = _step.value;
-	
-						if (handler.apply(undefined, _toConsumableArray(args)) === false) {
-							break;
-						}
-					}
-				} catch (err) {
-					_didIteratorError = true;
-					_iteratorError = err;
-				} finally {
-					try {
-						if (!_iteratorNormalCompletion && _iterator["return"]) {
-							_iterator["return"]();
-						}
-					} finally {
-						if (_didIteratorError) {
-							throw _iteratorError;
-						}
-					}
-				}
-			}
-		}, {
-			key: "eachEdge",
-			value: function eachEdge(handler) {
-				var _iteratorNormalCompletion = true;
-				var _didIteratorError = false;
-				var _iteratorError = undefined;
-	
-				try {
-					for (var _iterator = this.edges()[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-						var args = _step.value;
-	
-						if (handler.apply(undefined, _toConsumableArray(args)) === false) {
-							break;
-						}
-					}
-				} catch (err) {
-					_didIteratorError = true;
-					_iteratorError = err;
-				} finally {
-					try {
-						if (!_iteratorNormalCompletion && _iterator["return"]) {
-							_iterator["return"]();
-						}
-					} finally {
-						if (_didIteratorError) {
-							throw _iteratorError;
-						}
-					}
-				}
-			}
-		}, {
-			key: "eachVertexFrom",
-			value: function eachVertexFrom(from, handler) {
-				var _iteratorNormalCompletion = true;
-				var _didIteratorError = false;
-				var _iteratorError = undefined;
-	
-				try {
-					for (var _iterator = this.verticesFrom(from)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-						var args = _step.value;
-	
-						if (handler.apply(undefined, _toConsumableArray(args)) === false) {
-							break;
-						}
-					}
-				} catch (err) {
-					_didIteratorError = true;
-					_iteratorError = err;
-				} finally {
-					try {
-						if (!_iteratorNormalCompletion && _iterator["return"]) {
-							_iterator["return"]();
-						}
-					} finally {
-						if (_didIteratorError) {
-							throw _iteratorError;
-						}
-					}
-				}
-			}
-		}, {
-			key: "eachVertexTo",
-			value: function eachVertexTo(to, handler) {
-				var _iteratorNormalCompletion = true;
-				var _didIteratorError = false;
-				var _iteratorError = undefined;
-	
-				try {
-					for (var _iterator = this.verticesTo(to)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-						var args = _step.value;
-	
-						if (handler.apply(undefined, _toConsumableArray(args)) === false) {
-							break;
-						}
-					}
-				} catch (err) {
-					_didIteratorError = true;
-					_iteratorError = err;
-				} finally {
-					try {
-						if (!_iteratorNormalCompletion && _iterator["return"]) {
-							_iterator["return"]();
-						}
-					} finally {
-						if (_didIteratorError) {
-							throw _iteratorError;
-						}
-					}
-				}
-			}
-		}, {
-			key: "eachVertexWithPathFrom",
-			value: function eachVertexWithPathFrom(from, handler) {
-				var _iteratorNormalCompletion = true;
-				var _didIteratorError = false;
-				var _iteratorError = undefined;
-	
-				try {
-					for (var _iterator = this.verticesWithPathFrom(from)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-						var args = _step.value;
-	
-						if (handler.apply(undefined, _toConsumableArray(args)) === false) {
-							break;
-						}
-					}
-				} catch (err) {
-					_didIteratorError = true;
-					_iteratorError = err;
-				} finally {
-					try {
-						if (!_iteratorNormalCompletion && _iterator["return"]) {
-							_iterator["return"]();
-						}
-					} finally {
-						if (_didIteratorError) {
-							throw _iteratorError;
-						}
-					}
-				}
-			}
-		}, {
-			key: "eachVertexWithPathTo",
-			value: function eachVertexWithPathTo(to, handler) {
-				var _iteratorNormalCompletion = true;
-				var _didIteratorError = false;
-				var _iteratorError = undefined;
-	
-				try {
-					for (var _iterator = this.verticesWithPathTo(to)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-						var args = _step.value;
-	
-						if (handler.apply(undefined, _toConsumableArray(args)) === false) {
-							break;
-						}
-					}
-				} catch (err) {
-					_didIteratorError = true;
-					_iteratorError = err;
-				} finally {
-					try {
-						if (!_iteratorNormalCompletion && _iterator["return"]) {
-							_iterator["return"]();
-						}
-					} finally {
-						if (_didIteratorError) {
-							throw _iteratorError;
-						}
-					}
-				}
-			}
-		}, {
-			key: "eachVertexTopologically",
-			value: function eachVertexTopologically(handler) {
-				var _iteratorNormalCompletion = true;
-				var _didIteratorError = false;
-				var _iteratorError = undefined;
-	
-				try {
-					for (var _iterator = this.vertices_topologically()[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-						var args = _step.value;
-	
-						if (handler.apply(undefined, _toConsumableArray(args)) === false) {
-							break;
-						}
-					}
-				} catch (err) {
-					_didIteratorError = true;
-					_iteratorError = err;
-				} finally {
-					try {
-						if (!_iteratorNormalCompletion && _iterator["return"]) {
-							_iterator["return"]();
-						}
-					} finally {
-						if (_didIteratorError) {
-							throw _iteratorError;
-						}
-					}
-				}
-			}
-		}, {
 			key: "clearEdges",
 	
 			//////////////////////////////
 			////////// Clearing //////////
 			//////////////////////////////
 	
+			/**
+	   * Remove all edges from the graph, but leave the vertices intact.
+	   */
 			value: function clearEdges() {
 				var _iteratorNormalCompletion = true;
 				var _didIteratorError = false;
@@ -1441,6 +1485,10 @@ return /******/ (function(modules) { // webpackBootstrap
 			}
 		}, {
 			key: "clear",
+	
+			/**
+	   * Remove all edges and vertices from the graph, putting it back in its initial state.
+	   */
 			value: function clear() {
 				var _iteratorNormalCompletion = true;
 				var _didIteratorError = false;
@@ -1475,6 +1523,19 @@ return /******/ (function(modules) { // webpackBootstrap
 			////////// (Advanced) Queries //////////
 			////////////////////////////////////////
 	
+			/**
+	   * Ask whether this graph and another graph are equal.
+	   * Two graphs are equal if they have the same vertices and the same edges.
+	   * @param other {JsGraph} the other graph to compare this one to
+	   * @param [eq] {function(*, *, string, ?string): boolean}
+	   *     a custom equality function for stored values; defaults to `===`
+	   *     comparison; The first two arguments are the two values to compare.
+	   *     If they are vertex values, the third argument is the vertex key.
+	   *     If they are edge values, the third and fourth argument are the
+	   *     `from` and `to` keys respectively. (So you can test the fourth
+	   *     argument to distinguish the two cases.)
+	   * @returns {boolean} `true` if the two graphs are equal; `false` otherwise
+	   */
 			value: function equals() {
 				var other = arguments[0] === undefined ? undefined : arguments[0];
 				var eq = arguments[1] === undefined ? function (x, y, from, to) {
@@ -1561,6 +1622,13 @@ return /******/ (function(modules) { // webpackBootstrap
 			}
 		}, {
 			key: "hasCycle",
+	
+			/**
+	   * Test whether the graph contains a directed cycle.
+	   * @returns {boolean} `false`, if there is no cycle; a truthy value if there *is* a cycle
+	   *                    (not necessarily `true`; future versions of the library might return
+	   *                     a description of the cycle)
+	   */
 			value: function hasCycle() {
 				var _this = this;
 	
@@ -1646,6 +1714,15 @@ return /******/ (function(modules) { // webpackBootstrap
 			}
 		}, {
 			key: "hasPath",
+	
+			/**
+	   * Test whether there is a directed path between a given pair of keys.
+	   * @param from {string} the originating vertex
+	   * @param to   {string} the terminating vertex
+	   * @returns {boolean} `false`, if there is no such path; a truthy value if there *is* such a path
+	   *                    (not necessarily `true`; future versions of the library might return
+	   *                     a description of the path)
+	   */
 			value: function hasPath(from, to) {
 				var _this = this;
 	
@@ -1703,8 +1780,19 @@ return /******/ (function(modules) { // webpackBootstrap
 			////////// Cloning //////////
 			/////////////////////////////
 	
+			/**
+	   * Create a clone of this graph.
+	   * @param [tr] {function(*, string, ?string): *}
+	   *     a custom transformation function for stored values; defaults to
+	   *     the identity function; The first argument is the value to clone.
+	   *     If it is a vertex value, the third argument is the vertex key.
+	   *     If it is an edge value, the third and fourth argument are the
+	   *     `from` and `to` keys respectively. (So you can test the fourth
+	   *     argument to distinguish the two cases.)
+	   * @returns {JsGraph} a clone of this graph
+	   */
 			value: function clone() {
-				var transform = arguments[0] === undefined ? function (v) {
+				var tr = arguments[0] === undefined ? function (v) {
 					return v;
 				} : arguments[0];
 	
@@ -1720,7 +1808,7 @@ return /******/ (function(modules) { // webpackBootstrap
 						var key = _step$value[0];
 						var val = _step$value[1];
 	
-						result.addVertex(key, transform(val));
+						result.addVertex(key, tr(val, key));
 					}
 				} catch (err) {
 					_didIteratorError = true;
@@ -1749,7 +1837,7 @@ return /******/ (function(modules) { // webpackBootstrap
 						var to = _step2$value[1];
 						var val = _step2$value[2];
 	
-						result.addEdge(from, to, transform(val));
+						result.addEdge(from, to, tr(val, from, to));
 					}
 				} catch (err) {
 					_didIteratorError2 = true;
@@ -1770,8 +1858,24 @@ return /******/ (function(modules) { // webpackBootstrap
 			}
 		}, {
 			key: "transitiveReduction",
+	
+			/**
+	   * Create a clone of this graph, but without any transitive edges.
+	   * @param [tr] {function(*, string, ?string): *}
+	   *     a custom transformation function for stored values; defaults to
+	   *     the identity function; The first argument is the value to clone.
+	   *     If it is a vertex value, the third argument is the vertex key.
+	   *     If it is an edge value, the third and fourth argument are the
+	   *     `from` and `to` keys respectively. (So you can test the fourth
+	   *     argument to distinguish the two cases.)
+	   * @returns {JsGraph} a clone of this graph
+	   */
 			value: function transitiveReduction() {
-				var result = this.clone();
+				var tr = arguments[0] === undefined ? function (v) {
+					return v;
+				} : arguments[0];
+	
+				var result = this.clone(tr);
 				var _iteratorNormalCompletion = true;
 				var _didIteratorError = false;
 				var _iteratorError = undefined;
@@ -1865,10 +1969,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	//  // Errors //////////////////////////////////////////////////////////////////////////////////////
 	//  ////////////////////////////////////////////////////////////////////////////////////////////////
 	
+	/**
+	 * @class
+	 * @classdesc This type of error is thrown when specific vertices are expected not to exist, but do.
+	 * @extends Error
+	 */
 	JsGraph.VertexExistsError = (function (_Error) {
 		function VertexExistsError(key, value) {
 			_classCallCheck(this, VertexExistsError);
 	
+			/**
+	   * the set of relevant vertices
+	   * @public
+	   * @constant vertices
+	   * @memberof JsGraph.VertexExistsError
+	   * @instance
+	   * @type {Set.<{ key: string, value }>}
+	   */
 			this.vertices = new Set();
 			this.v(key, value);
 		}
@@ -1896,10 +2013,23 @@ return /******/ (function(modules) { // webpackBootstrap
 		return VertexExistsError;
 	})(Error);
 	
+	/**
+	 * @class
+	 * @classdesc This type of error is thrown when specific vertices are expected to exist, but don't.
+	 * @extends Error
+	 */
 	JsGraph.VertexNotExistsError = (function (_Error2) {
 		function VertexNotExistError(key) {
 			_classCallCheck(this, VertexNotExistError);
 	
+			/**
+	   * the set of relevant vertices
+	   * @public
+	   * @constant vertices
+	   * @memberof JsGraph.VertexNotExistsError
+	   * @instance
+	   * @type {Set.<{ key: string }>}
+	   */
 			this.vertices = new Set();
 			this.v(key);
 		}
@@ -1927,10 +2057,23 @@ return /******/ (function(modules) { // webpackBootstrap
 		return VertexNotExistError;
 	})(Error);
 	
+	/**
+	 * @class
+	 * @classdesc This type of error is thrown when specific edges are expected not to exist, but do.
+	 * @extends Error
+	 */
 	JsGraph.EdgeExistsError = (function (_Error3) {
 		function EdgeExistsError(from, to, value) {
 			_classCallCheck(this, EdgeExistsError);
 	
+			/**
+	   * the set of relevant edges
+	   * @public
+	   * @constant edges
+	   * @memberof JsGraph.EdgeExistsError
+	   * @instance
+	   * @type {Set.<{ from: string, to: string, value }>}
+	   */
 			this.edges = new Set();
 			this.e(from, to, value);
 		}
@@ -1984,17 +2127,30 @@ return /******/ (function(modules) { // webpackBootstrap
 		return EdgeExistsError;
 	})(Error);
 	
+	/**
+	 * @class
+	 * @classdesc This type of error is thrown when specific edges are expected to exist, but don't.
+	 * @extends Error
+	 */
 	JsGraph.EdgeNotExistsError = (function (_Error4) {
-		function EdgeNotExistError(from, to) {
-			_classCallCheck(this, EdgeNotExistError);
+		function EdgeNotExistsError(from, to) {
+			_classCallCheck(this, EdgeNotExistsError);
 	
+			/**
+	   * the set of relevant edges
+	   * @public
+	   * @constant edges
+	   * @memberof JsGraph.EdgeNotExistsError
+	   * @instance
+	   * @type {Set.<{ from: string, to: string }>}
+	   */
 			this.edges = new Set();
 			this.e(from, to);
 		}
 	
-		_inherits(EdgeNotExistError, _Error4);
+		_inherits(EdgeNotExistsError, _Error4);
 	
-		_createClass(EdgeNotExistError, {
+		_createClass(EdgeNotExistsError, {
 			e: {
 				value: function e(from, to) {
 					this.edges.add({ from: from, to: to });
@@ -2038,15 +2194,28 @@ return /******/ (function(modules) { // webpackBootstrap
 			}
 		});
 	
-		return EdgeNotExistError;
+		return EdgeNotExistsError;
 	})(Error);
 	
+	/**
+	 * @class
+	 * @classdesc This type of error is thrown when a vertex is expected not to have connected edges, but does.
+	 * @extends Error
+	 */
 	JsGraph.HasConnectedEdgesError = (function (_Error5) {
 		function HasConnectedEdgesError(key) {
 			_classCallCheck(this, HasConnectedEdgesError);
 	
-			this.message = "The '" + key + "' vertex has connected edges";
+			/**
+	   * the key of the relevant vertex
+	   * @public
+	   * @constant key
+	   * @memberof JsGraph.HasConnectedEdgesError
+	   * @instance
+	   * @type {string}
+	   */
 			this.key = key;
+			this.message = "The '" + key + "' vertex has connected edges";
 		}
 	
 		_inherits(HasConnectedEdgesError, _Error5);
@@ -2054,12 +2223,25 @@ return /******/ (function(modules) { // webpackBootstrap
 		return HasConnectedEdgesError;
 	})(Error);
 	
+	/**
+	 * @class
+	 * @classdesc This type of error is thrown when a graph is expected not to have a directed cycle, but does.
+	 * @extends Error
+	 */
 	JsGraph.CycleError = (function (_Error6) {
 		function CycleError(cycle) {
 			_classCallCheck(this, CycleError);
 	
-			this.message = "This graph contains a cycle: " + cycle;
+			/**
+	   * the vertices involved in the cycle
+	   * @public
+	   * @constant cycle
+	   * @memberof JsGraph.CycleError
+	   * @instance
+	   * @type {Array.<string>}
+	   */
 			this.cycle = cycle;
+			this.message = "This graph contains a cycle: " + cycle;
 		}
 	
 		_inherits(CycleError, _Error6);

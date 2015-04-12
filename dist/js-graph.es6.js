@@ -1,26 +1,20 @@
-/**
- * The main and only module of the js-graph library.
- * @public
- * @file
- */
 'use strict';
-
 
 //  ////////////////////////////////////////////////////////////////////////////////////////////////
 //  // JsGraph class ///////////////////////////////////////////////////////////////////////////////
 //  ////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
- * The main class of this library, to be used for representing a mathematical (di)graph.
  * @public
  * @class JsGraph
+ * @classdesc The main class of this library, to be used for representing a mathematical (di)graph.
  */
 export default class JsGraph {
 
 	constructor() {
-		this._vertices     = new Map(); // key -> value
-		this._edges        = new Map(); // from -> to -> value
-		this._reverseEdges = new Map(); // to -> Set<from> (_edges contains the values)
+		this._vertices     = new Map(); // Map.< string, * >
+		this._edges        = new Map(); // Map.< string, Map.<string, *> >
+		this._reverseEdges = new Map(); // Map.< string, Set.<*> >
 		this._vertexCount  = 0;
 		this._edgeCount    = 0;
 	}
@@ -30,18 +24,13 @@ export default class JsGraph {
 	////////// Vertices //////////
 	//////////////////////////////
 
-	//// creating them ////
+	////////// creating them //////////
 
 	/**
-	 * Add a new vertex to this graph. If a vertex with this {@link key} already exists,
-	 * a {@link JsGraph.VertexExistsError} is thrown.
-	 * @public
-	 * @method JsGraph#addNewVertex
-	 * @see {@link JsGraph#addVertex|addVertex}
-	 * @see {@link JsGraph#setVertex|setVertex}
-	 * @see {@link JsGraph#ensureVertex|ensureVertex}
-	 * @param key   {string} - the key with which to refer to this new vertex
-	 * @param value {*}      - the value stored in this new vertex
+	 * Add a new vertex to this graph.
+	 * @throws {JsGraph.VertexExistsError} if a vertex with this key already exists
+	 * @param key   {string} the key with which to refer to this new vertex
+	 * @param value {*}      the value to store in this new vertex
 	 */
 	addNewVertex(key, value) {
 		if (this.hasVertex(key)) {
@@ -54,15 +43,10 @@ export default class JsGraph {
 	}
 
 	/**
-	 * Set the value of an existing vertex in this graph. If a vertex with this {@link key} does not exist,
-	 * a {@link JsGraph.VertexNotExistsError} is thrown.
-	 * @public
-	 * @method JsGraph#setVertex
-	 * @see {@link JsGraph#addVertex|addVertex}
-	 * @see {@link JsGraph#addNewVertex|addNewVertex}
-	 * @see {@link JsGraph#ensureVertex|ensureVertex}
-	 * @param key   {string} - the key belonging to the vertex
-	 * @param value {*}      - the new value to be stored in this vertex
+	 * Set the value of an existing vertex in this graph.
+	 * @throws {JsGraph.VertexNotExistsError} if a vertex with this key does not exist
+	 * @param key   {string} the key belonging to the vertex
+	 * @param value {*}      the value to store in this vertex
 	 */
 	setVertex(key, value) {
 		if (!this.hasVertex(key)) {
@@ -71,17 +55,11 @@ export default class JsGraph {
 		this._vertices.set(key, value);
 	}
 
-
 	/**
 	 * Make sure a vertex with a specific key exists in this graph. If it already exists, nothing is done.
-	 * If it does not yet exist, a new vertex is added with the given {@link key} and {@link value}.
-	 * @public
-	 * @method JsGraph#ensureVertex
-	 * @see {@link JsGraph#addVertex|addVertex}
-	 * @see {@link JsGraph#addNewVertex|addNewVertex}
-	 * @see {@link JsGraph#setVertex|setVertex}
-	 * @param key   {string} - the key for the vertex
-	 * @param value {*}      - the new value to be stored in this vertex
+	 * If it does not yet exist, a new vertex is added with the given value.
+	 * @param key   {string} the key for the vertex
+	 * @param value {*}      the value to store if a new vertex is added
 	 */
 	ensureVertex(key, value) {
 		if (!this.hasVertex(key)) {
@@ -90,15 +68,10 @@ export default class JsGraph {
 	}
 
 	/**
-	 * Add a new vertex to this graph. If a vertex with this {@link key} already exists,
+	 * Add a new vertex to this graph. If a vertex with this key already exists,
 	 * the value of that vertex is overwritten.
-	 * @public
-	 * @method JsGraph#addVertex
-	 * @see {@link JsGraph#addNewVertex|addNewVertex}
-	 * @see {@link JsGraph#setVertex|setVertex}
-	 * @see {@link JsGraph#ensureVertex|ensureVertex}
-	 * @param key   {string} - the key with which to refer to this new vertex
-	 * @param value {*}      - the value stored in this new vertex
+	 * @param key   {string} the key with which to refer to this new vertex
+	 * @param value {*}      the value to store in this new vertex
 	 */
 	addVertex(key, value) {
 		if (this.hasVertex(key)) {
@@ -108,22 +81,31 @@ export default class JsGraph {
 		}
 	}
 
-	//// removing them ////
 
+	////////// removing them //////////
+
+	/**
+	 * Remove an existing vertex from this graph.
+	 * @throws {JsGraph.VertexNotExistsError} if a vertex with this key does not exist
+	 * @throws {JsGraph.HasConnectedEdgesError} if there are still edges connected to this vertex
+	 * @param key {string} the key of the vertex to remove
+	 */
 	removeExistingVertex(key) {
 		if (!this.hasVertex(key)) {
 			throw new JsGraph.VertexNotExistsError(key);
 		}
-		if (this._edges.get(key).size > 0) {
-			throw new JsGraph.HasConnectedEdgesError(key);
-		}
-		if (this._reverseEdges.get(key).size > 0) {
+		if (this._edges.get(key).size > 0 || this._reverseEdges.get(key).size > 0) {
 			throw new JsGraph.HasConnectedEdgesError(key);
 		}
 		this._vertices.delete(key);
 		this._vertexCount -= 1;
 	}
 
+	/**
+	 * Remove an existing vertex from this graph, as well as all edges connected to it.
+	 * @throws {JsGraph.VertexNotExistsError} if a vertex with this key does not exist
+	 * @param key {string} the key of the vertex to remove
+	 */
 	destroyExistingVertex(key) {
 		if (!this.hasVertex(key)) {
 			throw new JsGraph.VertexNotExistsError(key);
@@ -137,22 +119,55 @@ export default class JsGraph {
 		this.removeExistingVertex(key);
 	}
 
+	/**
+	 * Remove an existing vertex from this graph.
+	 * If a vertex with this key does not exist, nothing happens.
+	 * @throws {JsGraph.HasConnectedEdgesError} if there are still edges connected to this vertex
+	 * @param key {string} the key of the vertex to remove
+	 */
 	removeVertex(key) {
 		if (this.hasVertex(key)) {
 			this.removeExistingVertex(key);
 		}
 	}
 
+	/**
+	 * Remove a vertex from this graph, as well as all edges connected to it.
+	 * If a vertex with this key does not exist, nothing happens.
+	 * @param key {string} the key of the vertex to remove
+	 */
 	destroyVertex(key) {
 		if (this.hasVertex(key)) {
 			this.destroyExistingVertex(key);
 		}
 	}
 
-	//// querying them ////
 
-	vertexCount()    { return this._vertexCount       }
-	hasVertex(key)   { return this._vertices.has(key) }
+	////////// querying them //////////
+
+	/**
+	 * @returns {number} the number of vertices in the whole graph
+	 */
+	vertexCount() { return this._vertexCount }
+
+	/**
+	 * Ask whether a vertex with a given key exists.
+	 * @param key {string} the key to query
+	 * @returns {boolean} whether there is a vertex with the given key
+	 */
+	hasVertex(key) { return this._vertices.has(key) }
+
+	/**
+	 * Get the value associated with the vertex of a given key.
+	 * @param key {string} the key to query
+	 * @returns {*} the value associated with the vertex of the given key.
+	 * Note that a return value of `undefined` can mean
+	 *
+	 * 1. that there is no such vertex, or
+	 * 2. that the stored value is actually `undefined`.
+	 *
+	 * Use {@link JsGraph#hasVertex} to distinguish these cases.
+	 */
 	vertexValue(key) { return this._vertices.get(key) }
 
 
@@ -160,6 +175,16 @@ export default class JsGraph {
 	////////// Edges //////////
 	///////////////////////////
 
+	////////// adding them //////////
+
+	/**
+	 * Add a new edge to this graph.
+	 * @throws {JsGraph.EdgeExistsError} if an edge between `from` and `to` already exists
+	 * @throws {JsGraph.VertexNotExistsError} if the `from` and/or `to` vertices do not yet exist in the graph
+	 * @param from  {string} the key for the originating vertex
+	 * @param to    {string} the key for the terminating vertex
+	 * @param value {*}      the value to store in this new edge
+	 */
 	addNewEdge(from, to, value) {
 		if (this.hasEdge(from, to)) {
 			throw new JsGraph.EdgeExistsError(from, to, this.edgeValue(from, to));
@@ -178,6 +203,14 @@ export default class JsGraph {
 		this._edgeCount += 1;
 	}
 
+	/**
+	 * Add a new edge to this graph. If the `from` and/or `to` vertices do not yet exist
+	 * in the graph, they are implicitly added with an `undefined` value.
+	 * @throws {JsGraph.EdgeExistsError} if an edge between `from` and `to` already exists
+	 * @param from  {string} the key for the originating vertex
+	 * @param to    {string} the key for the terminating vertex
+	 * @param value {*}      the value to store in this new edge
+	 */
 	createNewEdge(from, to, value) {
 		if (this.hasEdge(from, to)) {
 			throw new JsGraph.EdgeExistsError(from, to, this.edgeValue(from, to));
@@ -187,6 +220,13 @@ export default class JsGraph {
 		this.addNewEdge(from, to, value);
 	}
 
+	/**
+	 * Set the value of an existing edge in this graph.
+	 * @throws {JsGraph.EdgeNotExistsError} if an edge between `from` and `to` does not yet exist
+	 * @param from  {string} the key for the originating vertex
+	 * @param to    {string} the key for the terminating vertex
+	 * @param value {*}      the value to store in this edge
+	 */
 	setEdge(from, to, value) {
 		if (!this.hasEdge(from, to)) {
 			throw new JsGraph.EdgeNotExistsError(from, to);
@@ -194,6 +234,15 @@ export default class JsGraph {
 		this._edges.get(from).set(to, value);
 	}
 
+	/**
+	 * Make sure an edge between the `from` and `to` vertices in this graph.
+	 * If one already exists, nothing is done.
+	 * If one does not yet exist, a new edge is added with the given value.
+	 * @throws {JsGraph.VertexNotExistsError} if the `from` and/or `to` vertices do not yet exist in the graph
+	 * @param from  {string} the key for the originating vertex
+	 * @param to    {string} the key for the terminating vertex
+	 * @param value {*}      the value to store if a new edge is added
+	 */
 	spanEdge(from, to, value) {
 		if (!this.hasVertex(from)) {
 			if (this.hasVertex(to)) {
@@ -209,6 +258,14 @@ export default class JsGraph {
 		}
 	}
 
+	/**
+	 * Add a new edge to this graph. If an edge between `from` and `to` already exists,
+	 * the value of that edge is overwritten.
+	 * @throws {JsGraph.VertexNotExistsError} if the `from` and/or `to` vertices do not yet exist in the graph
+	 * @param from  {string} the key for the originating vertex
+	 * @param to    {string} the key for the terminating vertex
+	 * @param value {*}      the value to store in this new edge
+	 */
 	addEdge(from, to, value) {
 		if (this.hasEdge(from, to)) {
 			this.setEdge(from, to, value);
@@ -217,12 +274,31 @@ export default class JsGraph {
 		}
 	}
 
+	/**
+	 * Make sure an edge between the `from` and `to` vertices exists in this graph.
+	 * If it already exists, nothing is done.
+	 * If it does not yet exist, a new edge is added with the given value.
+	 * If the `from` and/or `to` vertices do not yet exist
+	 * in the graph, they are implicitly added with an `undefined` value.
+	 * @param from  {string} the key for the originating vertex
+	 * @param to    {string} the key for the terminating vertex
+	 * @param value {*}      the value to store if a new edge is added
+	 */
 	ensureEdge(from, to, value) {
 		if (!this.hasEdge(from, to)) {
 			this.createNewEdge(from, to, value);
 		}
 	}
 
+	/**
+	 * Add a new edge to this graph. If an edge between the `from` and `to`
+	 * vertices already exists, the value of that edge is overwritten.
+	 * If the `from` and/or `to` vertices do not yet exist
+	 * in the graph, they are implicitly added with an `undefined` value.
+	 * @param from  {string} the key for the originating vertex
+	 * @param to    {string} the key for the terminating vertex
+	 * @param value {*}      the value to store if a new edge is added
+	 */
 	createEdge(from, to, value) {
 		if (this.hasEdge(from, to)) {
 			this.setEdge(from, to, value);
@@ -231,8 +307,15 @@ export default class JsGraph {
 		}
 	}
 
-	//// removing them ////
 
+	////////// removing them //////////
+
+	/**
+	 * Remove an existing edge from this graph.
+	 * @throws {JsGraph.EdgeNotExistsError} if an edge between the `from` and `to` vertices doesn't exist
+	 * @param from {string} the key for the originating vertex
+	 * @param to   {string} the key for the terminating vertex
+	 */
 	removeExistingEdge(from, to) {
 		if (!this.hasEdge(from, to)) {
 			throw new JsGraph.EdgeNotExistsError(from, to);
@@ -242,16 +325,32 @@ export default class JsGraph {
 		this._edgeCount -= 1;
 	}
 
+	/**
+	 * Remove an edge from this graph.
+	 * If an edge between the `from` and `to` vertices doesn't exist, nothing happens.
+	 * @param from {string} the key for the originating vertex
+	 * @param to   {string} the key for the terminating vertex
+	 */
 	removeEdge(from, to) {
 		if (this.hasEdge(from, to)) {
 			this.removeExistingEdge(from, to);
 		}
 	}
 
-	//// querying them ////
 
+	////////// querying them //////////
+
+	/**
+	 * @returns {number} the number of edges in the whole graph
+	 */
 	edgeCount() { return this._edgeCount }
 
+	/**
+	 * Ask whether an edge between given `from` and `to` vertices exist.
+	 * @param from {string} the key for the originating vertex
+	 * @param to   {string} the key for the terminating vertex
+	 * @returns {boolean} whether there is an edge between the given `from` and `to` vertices
+	 */
 	hasEdge(from, to) {
 		return this.hasVertex(from) &&
 			this.hasVertex(to) &&
@@ -259,6 +358,18 @@ export default class JsGraph {
 			this._edges.get(from).has(to);
 	}
 
+	/**
+	 * Get the value associated with the edge between given `from` and `to` vertices.
+	 * @param from {string} the key for the originating vertex
+	 * @param to   {string} the key for the terminating vertex
+	 * @returns {*} the value associated with the edge between the given `from` and `to` vertices
+	 * Note that a return value of `undefined` can mean
+	 *
+	 * 1. that there is no such edge, or
+	 * 2. that the stored value is actually `undefined`.
+	 *
+	 * Use {@link JsGraph#hasEdge} to distinguish these cases.
+	 */
 	edgeValue(from, to) {
 		return this.hasEdge(from, to) ? this._edges.get(from).get(to) : undefined;
 	}
@@ -268,8 +379,22 @@ export default class JsGraph {
 	//////////// ES6 Iterable interfaces //////////
 	///////////////////////////////////////////////
 
-	[Symbol.iterator]() { return this.vertices() }
-
+	/**
+	 * Iterate over all vertices of the graph, in no particular order.
+	 * @returns { Iterator.<string, *> } an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}
+	 * @example
+	 * for (var it = jsGraph.vertices(), keyVal = it.next(); !it.done;) {
+	 *     var key   = keyVal[0],
+	 *         value = keyVal[1];
+	 *     // iterates over all vertices of the graph
+	 * }
+	 * @example
+	 * // in ECMAScript 6, you can use a for..of loop
+	 * for (let [key, value] of jsGraph.vertices()) {
+	 *     // iterates over all vertices of the graph
+	 * }
+	 * @see {@link JsGraph#@@iterator}
+	 */
 	*vertices() {
 		var done = new Set();
 		for (let [key, value] of this._vertices) {
@@ -280,6 +405,35 @@ export default class JsGraph {
 		}
 	}
 
+	/**
+	 * A {@link JsGraph} object is itself {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterable_protocol|iterable},
+	 * and serves as a short notation in ECMAScript 6 to iterate over all vertices in the graph, in no particular order.
+	 * @method JsGraph#@@iterator
+	 * @returns { Iterator.<string, *> } an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}
+	 * @example
+	 * for (let [key, value] of jsGraph) {
+	 *     // iterates over all vertices of the graph
+	 * }
+	 * @see {@link JsGraph#vertices}
+	 */
+	[Symbol.iterator]() { return this.vertices() }
+
+	/**
+	 * Iterate over all edges of the graph, in no particular order.
+	 * @returns { Iterator.<string, string, *> } an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}
+	 * @example
+	 * for (var it = jsGraph.edges(), fromToVal = it.next(); !it.done;) {
+	 *     var from  = fromToVal[0],
+	 *         to    = fromToVal[1],
+	 *         value = fromToVal[2];
+	 *     // iterates over all edges of the graph
+	 * }
+	 * @example
+	 * // in ECMAScript 6, you can use a for..of loop
+	 * for (let [from, to, value] of jsGraph.edges()) {
+	 *     // iterates over all vertices of the graph
+	 * }
+	 */
 	*edges() {
 		var done = new Map();
 		for (let from of this._edges.keys()) {
@@ -293,6 +447,24 @@ export default class JsGraph {
 		}
 	}
 
+	/**
+	 * Iterate over the outgoing edges of a given vertex in the graph, in no particular order.
+	 * @throws {JsGraph.VertexNotExistsError} if a vertex with the given `from` key does not exist
+	 * @param from {string} the key of the vertex to take the outgoing edges from
+	 * @returns { Iterator.<string, *, *> } an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}
+	 * @example
+	 * for (var it = jsGraph.verticesFrom(from), toVertexEdge = it.next(); !it.done;) {
+	 *     var to          = toVertexEdge[0],
+	 *         vertexValue = toVertexEdge[1],
+	 *         edgeValue   = toVertexEdge[2];
+	 *     // iterates over all outgoing vertices of the `from` vertex
+	 * }
+	 * @example
+	 * // in ECMAScript 6, you can use a for..of loop
+	 * for (let [to, vertexValue, edgeValue] of jsGraph.verticesFrom(from)) {
+	 *     // iterates over all outgoing edges of the `from` vertex
+	 * }
+	 */
 	verticesFrom(from) {
 		if (!this.hasVertex(from)) { throw new JsGraph.VertexNotExistsError(from) }
 		return this._verticesFrom(from);
@@ -307,6 +479,25 @@ export default class JsGraph {
 		}
 	}
 
+
+	/**
+	 * Iterate over the incoming edges of a given vertex in the graph, in no particular order.
+	 * @throws {JsGraph.VertexNotExistsError} if a vertex with the given `to` key does not exist
+	 * @param to {string} the key of the vertex to take the incoming edges from
+	 * @returns { Iterator.<string, *, *> } an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}
+	 * @example
+	 * for (var it = jsGraph.verticesTo(to), fromVertexEdge = it.next(); !it.done;) {
+	 *     var from        = fromVertexEdge[0],
+	 *         vertexValue = fromVertexEdge[1],
+	 *         edgeValue   = fromVertexEdge[2];
+	 *     // iterates over all outgoing vertices of the `from` vertex
+	 * }
+	 * @example
+	 * // in ECMAScript 6, you can use a for..of loop
+	 * for (let [from, vertexValue, edgeValue] of jsGraph.verticesTo(to)) {
+	 *     // iterates over all incoming edges of the `to` vertex
+	 * }
+	 */
 	verticesTo(to) {
 		if (!this.hasVertex(to)) { throw new JsGraph.VertexNotExistsError(to) }
 		return this._verticesTo(to);
@@ -321,6 +512,23 @@ export default class JsGraph {
 		}
 	}
 
+	/**
+	 * Iterate over all vertices reachable from a given vertex in the graph, in no particular order.
+	 * @throws {JsGraph.VertexNotExistsError} if a vertex with the given `from` key does not exist
+	 * @param from {string} the key of the vertex to take the reachable vertices from
+	 * @returns { Iterator.<string, *> } an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}
+	 * @example
+	 * for (var it = jsGraph.verticesWithPathFrom(from), keyValue = it.next(); !it.done;) {
+	 *     var key   = keyValue[0],
+	 *         value = keyValue[1];
+	 *     // iterates over all vertices reachable from `from`
+	 * }
+	 * @example
+	 * // in ECMAScript 6, you can use a for..of loop
+	 * for (let [key, value] of jsGraph.verticesWithPathFrom(from)) {
+	 *     // iterates over all vertices reachable from `from`
+	 * }
+	 */
 	verticesWithPathFrom(from) {
 		if (!this.hasVertex(from)) { throw new JsGraph.VertexNotExistsError(from) }
 		return this._verticesWithPathFrom(from, new Set());
@@ -335,6 +543,23 @@ export default class JsGraph {
 		}
 	}
 
+	/**
+	 * Iterate over all vertices from which a given vertex in the graph can be reached, in no particular order.
+	 * @throws {JsGraph.VertexNotExistsError} if a vertex with the given `to` key does not exist
+	 * @param to {string} the key of the vertex to take the reachable vertices from
+	 * @returns { Iterator.<string, *> } an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}
+	 * @example
+	 * for (var it = jsGraph.verticesWithPathTo(to), keyValue = it.next(); !it.done;) {
+	 *     var key   = keyValue[0],
+	 *         value = keyValue[1];
+	 *     // iterates over all vertices from which `to` can be reached
+	 * }
+	 * @example
+	 * // in ECMAScript 6, you can use a for..of loop
+	 * for (let [key, value] of jsGraph.verticesWithPathTo(to)) {
+	 *     // iterates over all vertices from which `to` can be reached
+	 * }
+	 */
 	verticesWithPathTo(to) {
 		if (!this.hasVertex(to)) { throw new JsGraph.VertexNotExistsError(to) }
 		return this._verticesWithPathTo(to, new Set());
@@ -349,6 +574,21 @@ export default class JsGraph {
 		}
 	}
 
+	/**
+	 * Iterate over all vertices of the graph in topological order.
+	 * @returns { Iterator.<string, *> } an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}
+	 * @example
+	 * for (var it = jsGraph.vertices_topologically(), keyVal = it.next(); !it.done;) {
+	 *     var key   = keyVal[0],
+	 *         value = keyVal[1];
+	 *     // iterates over all vertices of the graph in topological order
+	 * }
+	 * @example
+	 * // in ECMAScript 6, you can use a for..of loop
+	 * for (let [key, value] of jsGraph.vertices_topologically()) {
+	 *     // iterates over all vertices of the graph in topological order
+	 * }
+	 */
 	*vertices_topologically() {
 		var visited = []; // stack
 		var handled = new Set();
@@ -380,61 +620,20 @@ export default class JsGraph {
 	}
 
 
-	/////////////////////////////////////////
-	////////// Old Style Iteration //////////
-	/////////////////////////////////////////
-
-	eachVertex(handler) {
-		for (let args of this.vertices()) {
-			if (handler(...args) === false) { break }
-		}
-	}
-
-	eachEdge(handler) {
-		for (let args of this.edges()) {
-			if (handler(...args) === false) { break }
-		}
-	}
-
-	eachVertexFrom(from, handler) {
-		for (let args of this.verticesFrom(from)) {
-			if (handler(...args) === false) { break }
-		}
-	}
-
-	eachVertexTo(to, handler) {
-		for (let args of this.verticesTo(to)) {
-			if (handler(...args) === false) { break }
-		}
-	}
-
-	eachVertexWithPathFrom(from, handler) {
-		for (let args of this.verticesWithPathFrom(from)) {
-			if (handler(...args) === false) { break }
-		}
-	}
-
-	eachVertexWithPathTo(to, handler) {
-		for (let args of this.verticesWithPathTo(to)) {
-			if (handler(...args) === false) { break }
-		}
-	}
-
-	eachVertexTopologically(handler) {
-		for (let args of this.vertices_topologically()) {
-			if (handler(...args) === false) { break }
-		}
-	}
-
-
 	//////////////////////////////
 	////////// Clearing //////////
 	//////////////////////////////
 
+	/**
+	 * Remove all edges from the graph, but leave the vertices intact.
+	 */
 	clearEdges() {
 		for (let [from, to] of this.edges()) { this.removeEdge(from, to) }
 	}
 
+	/**
+	 * Remove all edges and vertices from the graph, putting it back in its initial state.
+	 */
 	clear() {
 		for (let [v] of this.vertices()) { this.destroyVertex(v) }
 	}
@@ -444,6 +643,19 @@ export default class JsGraph {
 	////////// (Advanced) Queries //////////
 	////////////////////////////////////////
 
+	/**
+	 * Ask whether this graph and another graph are equal.
+	 * Two graphs are equal if they have the same vertices and the same edges.
+	 * @param other {JsGraph} the other graph to compare this one to
+	 * @param [eq] {function(*, *, string, ?string): boolean}
+	 *     a custom equality function for stored values; defaults to `===`
+	 *     comparison; The first two arguments are the two values to compare.
+	 *     If they are vertex values, the third argument is the vertex key.
+	 *     If they are edge values, the third and fourth argument are the
+	 *     `from` and `to` keys respectively. (So you can test the fourth
+	 *     argument to distinguish the two cases.)
+	 * @returns {boolean} `true` if the two graphs are equal; `false` otherwise
+	 */
 	equals(other=undefined, eq=(x,y,from,to)=>x===y) {
 		if (!(other instanceof JsGraph))                { return false }
 		if (this.vertexCount() !== other.vertexCount()) { return false }
@@ -459,6 +671,12 @@ export default class JsGraph {
 		return true;
 	}
 
+	/**
+	 * Test whether the graph contains a directed cycle.
+	 * @returns {boolean} `false`, if there is no cycle; a truthy value if there *is* a cycle
+	 *                    (not necessarily `true`; future versions of the library might return
+	 *                     a description of the cycle)
+	 */
 	hasCycle() {
 		let visited = new Set();
 		let handled = new Set();
@@ -488,6 +706,14 @@ export default class JsGraph {
 		return false;
 	}
 
+	/**
+	 * Test whether there is a directed path between a given pair of keys.
+	 * @param from {string} the originating vertex
+	 * @param to   {string} the terminating vertex
+	 * @returns {boolean} `false`, if there is no such path; a truthy value if there *is* such a path
+	 *                    (not necessarily `true`; future versions of the library might return
+	 *                     a description of the path)
+	 */
 	hasPath(from, to) {
 		if (!this.hasVertex(from) || !this.hasVertex(to)) {
 			return false;
@@ -518,19 +744,41 @@ export default class JsGraph {
 	////////// Cloning //////////
 	/////////////////////////////
 
-	clone(transform=v=>v) {
+	/**
+	 * Create a clone of this graph.
+	 * @param [tr] {function(*, string, ?string): *}
+	 *     a custom transformation function for stored values; defaults to
+	 *     the identity function; The first argument is the value to clone.
+	 *     If it is a vertex value, the third argument is the vertex key.
+	 *     If it is an edge value, the third and fourth argument are the
+	 *     `from` and `to` keys respectively. (So you can test the fourth
+	 *     argument to distinguish the two cases.)
+	 * @returns {JsGraph} a clone of this graph
+	 */
+	clone(tr=v=>v) {
 		var result = new JsGraph();
 		for (let [key, val] of this.vertices()) {
-			result.addVertex(key, transform(val));
+			result.addVertex(key, tr(val, key));
 		}
 		for (let [from, to, val] of this.edges()) {
-			result.addEdge(from, to, transform(val));
+			result.addEdge(from, to, tr(val, from, to));
 		}
 		return result;
 	}
 
-	transitiveReduction() {
-		var result = this.clone();
+	/**
+	 * Create a clone of this graph, but without any transitive edges.
+	 * @param [tr] {function(*, string, ?string): *}
+	 *     a custom transformation function for stored values; defaults to
+	 *     the identity function; The first argument is the value to clone.
+	 *     If it is a vertex value, the third argument is the vertex key.
+	 *     If it is an edge value, the third and fourth argument are the
+	 *     `from` and `to` keys respectively. (So you can test the fourth
+	 *     argument to distinguish the two cases.)
+	 * @returns {JsGraph} a clone of this graph
+	 */
+	transitiveReduction(tr=v=>v) {
+		var result = this.clone(tr);
 		for (let [x] of this.vertices()) {
 			for (let [y] of this.vertices()) {
 				if (result.hasEdge(x, y)) {
@@ -552,8 +800,21 @@ export default class JsGraph {
 //  // Errors //////////////////////////////////////////////////////////////////////////////////////
 //  ////////////////////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * @class
+ * @classdesc This type of error is thrown when specific vertices are expected not to exist, but do.
+ * @extends Error
+ */
 JsGraph.VertexExistsError = class VertexExistsError extends Error {
 	constructor(key, value) {
+		/**
+		 * the set of relevant vertices
+		 * @public
+		 * @constant vertices
+		 * @memberof JsGraph.VertexExistsError
+		 * @instance
+		 * @type {Set.<{ key: string, value }>}
+		 */
 		this.vertices = new Set();
 		this.v(key, value);
 	}
@@ -570,8 +831,21 @@ JsGraph.VertexExistsError = class VertexExistsError extends Error {
 	}
 };
 
+/**
+ * @class
+ * @classdesc This type of error is thrown when specific vertices are expected to exist, but don't.
+ * @extends Error
+ */
 JsGraph.VertexNotExistsError = class VertexNotExistError extends Error {
 	constructor(key) {
+		/**
+		 * the set of relevant vertices
+		 * @public
+		 * @constant vertices
+		 * @memberof JsGraph.VertexNotExistsError
+		 * @instance
+		 * @type {Set.<{ key: string }>}
+		 */
 		this.vertices = new Set();
 		this.v(key);
 	}
@@ -588,8 +862,21 @@ JsGraph.VertexNotExistsError = class VertexNotExistError extends Error {
 	}
 };
 
+/**
+ * @class
+ * @classdesc This type of error is thrown when specific edges are expected not to exist, but do.
+ * @extends Error
+ */
 JsGraph.EdgeExistsError = class EdgeExistsError extends Error {
 	constructor(from, to, value) {
+		/**
+		 * the set of relevant edges
+		 * @public
+		 * @constant edges
+		 * @memberof JsGraph.EdgeExistsError
+		 * @instance
+		 * @type {Set.<{ from: string, to: string, value }>}
+		 */
 		this.edges = new Set();
 		this.e(from, to, value);
 	}
@@ -608,8 +895,21 @@ JsGraph.EdgeExistsError = class EdgeExistsError extends Error {
 	}
 };
 
-JsGraph.EdgeNotExistsError = class EdgeNotExistError extends Error {
+/**
+ * @class
+ * @classdesc This type of error is thrown when specific edges are expected to exist, but don't.
+ * @extends Error
+ */
+JsGraph.EdgeNotExistsError = class EdgeNotExistsError extends Error {
 	constructor(from, to) {
+		/**
+		 * the set of relevant edges
+		 * @public
+		 * @constant edges
+		 * @memberof JsGraph.EdgeNotExistsError
+		 * @instance
+		 * @type {Set.<{ from: string, to: string }>}
+		 */
 		this.edges = new Set();
 		this.e(from, to);
 	}
@@ -628,16 +928,42 @@ JsGraph.EdgeNotExistsError = class EdgeNotExistError extends Error {
 	}
 };
 
+/**
+ * @class
+ * @classdesc This type of error is thrown when a vertex is expected not to have connected edges, but does.
+ * @extends Error
+ */
 JsGraph.HasConnectedEdgesError = class HasConnectedEdgesError extends Error {
 	constructor(key) {
-		this.message = `The '${key}' vertex has connected edges`;
+		/**
+		 * the key of the relevant vertex
+		 * @public
+		 * @constant key
+		 * @memberof JsGraph.HasConnectedEdgesError
+		 * @instance
+		 * @type {string}
+		 */
 		this.key = key;
+		this.message = `The '${key}' vertex has connected edges`;
 	}
 };
 
+/**
+ * @class
+ * @classdesc This type of error is thrown when a graph is expected not to have a directed cycle, but does.
+ * @extends Error
+ */
 JsGraph.CycleError = class CycleError extends Error {
 	constructor(cycle) {
-		this.message = `This graph contains a cycle: ${cycle}`;
+		/**
+		 * the vertices involved in the cycle
+		 * @public
+		 * @constant cycle
+		 * @memberof JsGraph.CycleError
+		 * @instance
+		 * @type {Array.<string>}
+		 */
 		this.cycle = cycle;
+		this.message = `This graph contains a cycle: ${cycle}`;
 	}
 };
