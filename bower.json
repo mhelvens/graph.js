@@ -8,7 +8,7 @@
       "email": "mhelvens@gmail.com"
     }
   ],
-  "main": "dist/js-graph.es6.js",
+  "main": "dist/graph.es6.js",
   "ignore": [
     ".idea",
     "node_modules",

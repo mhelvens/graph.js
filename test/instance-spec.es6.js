@@ -1,12 +1,12 @@
 import {any} from './helpers.es6.js';
-import JsGraph from '../src/js-graph.es6.js';
+import Graph from '../src/graph.es6.js';
 
 
 describe("instance", function () {
 
 	var graph;
 	beforeEach(function () {
-		graph = new JsGraph();
+		graph = new Graph();
 	});
 
 
