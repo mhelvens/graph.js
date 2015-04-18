@@ -807,6 +807,7 @@ export default class Graph {
  */
 Graph.VertexExistsError = class VertexExistsError extends Error {
 	constructor(key, value) {
+		super();
 		/**
 		 * the set of relevant vertices
 		 * @public
@@ -838,6 +839,7 @@ Graph.VertexExistsError = class VertexExistsError extends Error {
  */
 Graph.VertexNotExistsError = class VertexNotExistError extends Error {
 	constructor(key) {
+		super();
 		/**
 		 * the set of relevant vertices
 		 * @public
@@ -869,6 +871,7 @@ Graph.VertexNotExistsError = class VertexNotExistError extends Error {
  */
 Graph.EdgeExistsError = class EdgeExistsError extends Error {
 	constructor(from, to, value) {
+		super();
 		/**
 		 * the set of relevant edges
 		 * @public
@@ -902,6 +905,7 @@ Graph.EdgeExistsError = class EdgeExistsError extends Error {
  */
 Graph.EdgeNotExistsError = class EdgeNotExistsError extends Error {
 	constructor(from, to) {
+		super();
 		/**
 		 * the set of relevant edges
 		 * @public
@@ -935,6 +939,7 @@ Graph.EdgeNotExistsError = class EdgeNotExistsError extends Error {
  */
 Graph.HasConnectedEdgesError = class HasConnectedEdgesError extends Error {
 	constructor(key) {
+		super();
 		/**
 		 * the key of the relevant vertex
 		 * @public
@@ -955,6 +960,7 @@ Graph.HasConnectedEdgesError = class HasConnectedEdgesError extends Error {
  */
 Graph.CycleError = class CycleError extends Error {
 	constructor(cycle) {
+		super();
 		/**
 		 * the vertices involved in the cycle
 		 * @public
