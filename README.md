@@ -1,7 +1,7 @@
 graph.js
 ========
-[![Build Status](http://img.shields.io/travis/mhelvens/js-graph.svg)](https://travis-ci.org/mhelvens/js-graph)
-[![Coverage Status](http://img.shields.io/coveralls/mhelvens/js-graph.svg)](https://coveralls.io/r/mhelvens/js-graph?branch=master)
+[![Build Status](http://img.shields.io/travis/mhelvens/graph.js.svg)](https://travis-ci.org/mhelvens/graph.js?branch=master)
+[![Coverage Status](http://img.shields.io/coveralls/mhelvens/graph.js.svg)](https://coveralls.io/r/mhelvens/graph.js?branch=master)
 
 `graph.js` is a javascript library for storing arbitrary data in mathematical (di)graphs,
 as well as traversing and analyzing them in various ways. It was originally created to
