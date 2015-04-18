@@ -3,6 +3,8 @@ graph.js
 [![Build Status](http://img.shields.io/travis/mhelvens/graph.js.svg)](https://travis-ci.org/mhelvens/graph.js?branch=master)
 [![Coverage Status](http://img.shields.io/coveralls/mhelvens/graph.js.svg)](https://coveralls.io/r/mhelvens/graph.js?branch=master)
 
+*formerly known as js-graph (still called js-graph on Bower)*
+
 `graph.js` is a javascript library for storing arbitrary data in mathematical (di)graphs,
 as well as traversing and analyzing them in various ways. It was originally created to
 track dependencies between options and modules. It is written in ECMAScript 6, but
