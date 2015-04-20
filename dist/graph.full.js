@@ -119,8 +119,8 @@ return /******/ (function(modules) { // webpackBootstrap
 			/**
 	   * Add a new vertex to this graph.
 	   * @throws {Graph.VertexExistsError} if a vertex with this key already exists
-	   * @param key   {string} the key with which to refer to this new vertex
-	   * @param value {*}      the value to store in this new vertex
+	   * @param  key    {string} the key with which to refer to this new vertex
+	   * @param [value] {*}      the value to store in this new vertex
 	   */
 			value: function addNewVertex(key, value) {
 				if (this.hasVertex(key)) {
@@ -137,8 +137,8 @@ return /******/ (function(modules) { // webpackBootstrap
 			/**
 	   * Set the value of an existing vertex in this graph.
 	   * @throws {Graph.VertexNotExistsError} if a vertex with this key does not exist
-	   * @param key   {string} the key belonging to the vertex
-	   * @param value {*}      the value to store in this vertex
+	   * @param  key    {string} the key belonging to the vertex
+	   * @param [value] {*}      the value to store in this vertex
 	   */
 			value: function setVertex(key, value) {
 				if (!this.hasVertex(key)) {
@@ -152,8 +152,8 @@ return /******/ (function(modules) { // webpackBootstrap
 			/**
 	   * Make sure a vertex with a specific key exists in this graph. If it already exists, nothing is done.
 	   * If it does not yet exist, a new vertex is added with the given value.
-	   * @param key   {string} the key for the vertex
-	   * @param value {*}      the value to store if a new vertex is added
+	   * @param  key    {string} the key for the vertex
+	   * @param [value] {*}      the value to store if a new vertex is added
 	   */
 			value: function ensureVertex(key, value) {
 				if (!this.hasVertex(key)) {
@@ -166,8 +166,8 @@ return /******/ (function(modules) { // webpackBootstrap
 			/**
 	   * Add a new vertex to this graph. If a vertex with this key already exists,
 	   * the value of that vertex is overwritten.
-	   * @param key   {string} the key with which to refer to this new vertex
-	   * @param value {*}      the value to store in this new vertex
+	   * @param  key    {string} the key with which to refer to this new vertex
+	   * @param [value] {*}      the value to store in this new vertex
 	   */
 			value: function addVertex(key, value) {
 				if (this.hasVertex(key)) {
@@ -344,9 +344,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * Add a new edge to this graph.
 	   * @throws {Graph.EdgeExistsError} if an edge between `from` and `to` already exists
 	   * @throws {Graph.VertexNotExistsError} if the `from` and/or `to` vertices do not yet exist in the graph
-	   * @param from  {string} the key for the originating vertex
-	   * @param to    {string} the key for the terminating vertex
-	   * @param value {*}      the value to store in this new edge
+	   * @param  from   {string} the key for the originating vertex
+	   * @param  to     {string} the key for the terminating vertex
+	   * @param [value] {*}      the value to store in this new edge
 	   */
 			value: function addNewEdge(from, to, value) {
 				if (this.hasEdge(from, to)) {
@@ -372,9 +372,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * Add a new edge to this graph. If the `from` and/or `to` vertices do not yet exist
 	   * in the graph, they are implicitly added with an `undefined` value.
 	   * @throws {Graph.EdgeExistsError} if an edge between `from` and `to` already exists
-	   * @param from  {string} the key for the originating vertex
-	   * @param to    {string} the key for the terminating vertex
-	   * @param value {*}      the value to store in this new edge
+	   * @param  from   {string} the key for the originating vertex
+	   * @param  to     {string} the key for the terminating vertex
+	   * @param [value] {*}      the value to store in this new edge
 	   */
 			value: function createNewEdge(from, to, value) {
 				if (this.hasEdge(from, to)) {
@@ -390,9 +390,9 @@ return /******/ (function(modules) { // webpackBootstrap
 			/**
 	   * Set the value of an existing edge in this graph.
 	   * @throws {Graph.EdgeNotExistsError} if an edge between `from` and `to` does not yet exist
-	   * @param from  {string} the key for the originating vertex
-	   * @param to    {string} the key for the terminating vertex
-	   * @param value {*}      the value to store in this edge
+	   * @param  from   {string} the key for the originating vertex
+	   * @param  to     {string} the key for the terminating vertex
+	   * @param [value] {*}      the value to store in this edge
 	   */
 			value: function setEdge(from, to, value) {
 				if (!this.hasEdge(from, to)) {
@@ -408,9 +408,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * If one already exists, nothing is done.
 	   * If one does not yet exist, a new edge is added with the given value.
 	   * @throws {Graph.VertexNotExistsError} if the `from` and/or `to` vertices do not yet exist in the graph
-	   * @param from  {string} the key for the originating vertex
-	   * @param to    {string} the key for the terminating vertex
-	   * @param value {*}      the value to store if a new edge is added
+	   * @param  from   {string} the key for the originating vertex
+	   * @param  to     {string} the key for the terminating vertex
+	   * @param [value] {*}      the value to store if a new edge is added
 	   */
 			value: function spanEdge(from, to, value) {
 				if (!this.hasVertex(from)) {
@@ -433,9 +433,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * Add a new edge to this graph. If an edge between `from` and `to` already exists,
 	   * the value of that edge is overwritten.
 	   * @throws {Graph.VertexNotExistsError} if the `from` and/or `to` vertices do not yet exist in the graph
-	   * @param from  {string} the key for the originating vertex
-	   * @param to    {string} the key for the terminating vertex
-	   * @param value {*}      the value to store in this new edge
+	   * @param  from   {string} the key for the originating vertex
+	   * @param  to     {string} the key for the terminating vertex
+	   * @param [value] {*}      the value to store in this new edge
 	   */
 			value: function addEdge(from, to, value) {
 				if (this.hasEdge(from, to)) {
@@ -453,9 +453,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * If it does not yet exist, a new edge is added with the given value.
 	   * If the `from` and/or `to` vertices do not yet exist
 	   * in the graph, they are implicitly added with an `undefined` value.
-	   * @param from  {string} the key for the originating vertex
-	   * @param to    {string} the key for the terminating vertex
-	   * @param value {*}      the value to store if a new edge is added
+	   * @param  from   {string} the key for the originating vertex
+	   * @param  to     {string} the key for the terminating vertex
+	   * @param [value] {*}      the value to store if a new edge is added
 	   */
 			value: function ensureEdge(from, to, value) {
 				if (!this.hasEdge(from, to)) {
@@ -470,9 +470,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * vertices already exists, the value of that edge is overwritten.
 	   * If the `from` and/or `to` vertices do not yet exist
 	   * in the graph, they are implicitly added with an `undefined` value.
-	   * @param from  {string} the key for the originating vertex
-	   * @param to    {string} the key for the terminating vertex
-	   * @param value {*}      the value to store if a new edge is added
+	   * @param  from   {string} the key for the originating vertex
+	   * @param  to     {string} the key for the terminating vertex
+	   * @param [value] {*}      the value to store if a new edge is added
 	   */
 			value: function createEdge(from, to, value) {
 				if (this.hasEdge(from, to)) {
@@ -1611,18 +1611,17 @@ return /******/ (function(modules) { // webpackBootstrap
 				return true;
 			}
 		}, {
-			key: "hasCycle",
+			key: "cycle",
 	
 			/**
-	   * Test whether the graph contains a directed cycle.
-	   * @returns {boolean} `false`, if there is no cycle; a truthy value if there *is* a cycle
-	   *                    (not necessarily `true`; future versions of the library might return
-	   *                     a description of the cycle)
+	   * Find any directed cycle in this graph.
+	   * @returns {?array} an array with the keys of a cycle in order;
+	   *                   `null`, if there is no cycle
 	   */
-			value: function hasCycle() {
+			value: function cycle() {
 				var _this7 = this;
 	
-				var visited = new Set();
+				var visited = []; // stack
 				var handled = new Set();
 	
 				var visit = (function (_visit) {
@@ -1637,18 +1636,19 @@ return /******/ (function(modules) { // webpackBootstrap
 					return visit;
 				})(function (a) {
 					/* if a cycle is found, record it and return */
-					if (visited.has(a)) {
-						return true;
+					var i = visited.indexOf(a);
+					if (i >= 0) {
+						return visited.slice(i);
 					}
 	
 					/* if this vertex was already handled, no cycle can be found here */
 					if (handled.has(a)) {
-						return false;
+						return null;
 					}
 					handled.add(a);
 	
 					/* recursively visit successors to check for cycles */
-					visited.add(a);
+					visited.push(a);
 					var _iteratorNormalCompletion16 = true;
 					var _didIteratorError16 = false;
 					var _iteratorError16 = undefined;
@@ -1659,8 +1659,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 							var b = _step16$value[0];
 	
-							if (visit(b)) {
-								return true;
+							var result = visit(b);
+							if (result) {
+								return result;
 							}
 						}
 					} catch (err) {
@@ -1678,7 +1679,7 @@ return /******/ (function(modules) { // webpackBootstrap
 						}
 					}
 	
-					visited["delete"](a);
+					visited.pop();
 				});
 	
 				var _iteratorNormalCompletion17 = true;
@@ -1691,8 +1692,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 						var a = _step17$value[0];
 	
-						if (visit(a)) {
-							return true;
+						var result = visit(a);
+						if (result) {
+							return result;
 						}
 					}
 				} catch (err) {
@@ -1710,29 +1712,38 @@ return /******/ (function(modules) { // webpackBootstrap
 					}
 				}
 	
-				return false;
+				return null;
 			}
 		}, {
-			key: "hasPath",
+			key: "hasCycle",
 	
 			/**
-	   * Test whether there is a directed path between a given pair of keys.
+	   * Test whether this graph contains a directed cycle.
+	   * @returns {boolean} whether this graph contains a directed cycle
+	   */
+			value: function hasCycle() {
+				return !!this.cycle();
+			}
+		}, {
+			key: "path",
+	
+			/**
+	   * Find any path between a given pair of keys.
 	   * @param from {string} the originating vertex
 	   * @param to   {string} the terminating vertex
-	   * @returns {boolean} `false`, if there is no such path; a truthy value if there *is* such a path
-	   *                    (not necessarily `true`; future versions of the library might return
-	   *                     a description of the path)
+	   * @returns {?array} an array with the keys of the path found between the two vertices,
+	   *                   including those two vertices themselves; `null` if no such path exists
 	   */
-			value: function hasPath(from, to) {
+			value: function path(from, to) {
 				var _this8 = this;
 	
 				if (!this.hasVertex(from) || !this.hasVertex(to)) {
-					return false;
+					return null;
 				}
 	
-				var visited = new Set();
+				var visited = [];
 	
-				/* Recursive auxiliary function: Is there a path from 'current' to 'to'? */
+				/* recursive auxiliary function: find a path from 'current' to 'to' */
 				var hasPathAux = (function (_hasPathAux) {
 					function hasPathAux(_x2) {
 						return _hasPathAux.apply(this, arguments);
@@ -1744,10 +1755,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 					return hasPathAux;
 				})(function (current) {
+					visited.push(current);
 					if (_this8.hasEdge(current, to)) {
-						return true;
+						return [].concat(visited, [to]);
 					}
-					visited.add(current);
 					var _iteratorNormalCompletion18 = true;
 					var _didIteratorError18 = false;
 					var _iteratorError18 = undefined;
@@ -1758,8 +1769,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 							var next = _step18$value[0];
 	
-							if (!visited.has(next) && hasPathAux(next)) {
-								return true;
+							if (visited.indexOf(next) === -1) {
+								var result = hasPathAux(next);
+								if (result) {
+									return result;
+								}
 							}
 						}
 					} catch (err) {
@@ -1777,11 +1791,23 @@ return /******/ (function(modules) { // webpackBootstrap
 						}
 					}
 	
-					visited["delete"](current);
-					return false;
+					visited.pop();
+					return null;
 				});
 	
 				return hasPathAux(from);
+			}
+		}, {
+			key: "hasPath",
+	
+			/**
+	   * Test whether there is a directed path between a given pair of keys.
+	   * @param from {string} the originating vertex
+	   * @param to   {string} the terminating vertex
+	   * @returns {boolean} whether such a path exists
+	   */
+			value: function hasPath(from, to) {
+				return !!this.path(from, to);
 			}
 		}, {
 			key: "clone",

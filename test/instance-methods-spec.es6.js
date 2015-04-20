@@ -746,6 +746,51 @@ describe("method", () => {//////////////////////////////////////////////////////
 	// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
 
 
+	describeMethod('cycle', () => {
+
+		it("returns a descriptive array if the graph contains a cycle (1)", () => {
+			graph.clear();
+
+			graph.createEdge('n1', 'n2');
+			graph.createEdge('n2', 'n3');
+			graph.createEdge('n3', 'n4');
+			graph.createEdge('n4', 'n5');
+			graph.createEdge('n3', 'n23');
+			graph.createEdge('n23', 'n2');
+
+			// n1 ──▶ n2 ──▶ n3 ──▶ n4 ──▶ n5
+			//        ▲      ╷
+			//        │      │
+			//        ╵      │
+			//       n23 ◀───╯
+
+			expectItWhenCalledWith().toEqualOneOf(
+				['n23', 'n2', 'n3'],
+				['n3', 'n23', 'n2'],
+				['n2', 'n3', 'n23']
+			);
+		});
+
+		it("returns a descriptive array if the graph contains a cycle (2)", () => {
+			graph.clear();
+
+			graph.createEdge('n1', 'n1');
+
+			expectItWhenCalledWith().toEqual(['n1']);
+		});
+
+		it("returns null if the graph contains no cycle (1)", () => {
+			expectItWhenCalledWith().toBeNull();
+		});
+
+		it("returns null if the graph contains no cycle (2)", () => {
+			graph.clear();
+			expectItWhenCalledWith().toBeNull();
+		});
+
+	});
+
+
 	describeMethod('hasCycle', () => {
 
 		it("returns true if the graph contains a cycle (1)", () => {
@@ -787,7 +832,7 @@ describe("method", () => {//////////////////////////////////////////////////////
 	});
 
 
-	describeMethod('hasPath', () => {
+	describeMethod('path', () => {
 
 		it("throws nothing when passed two key arguments", () => {
 			expectItWhenBoundWith('k1', 'k2').not.toThrow();
@@ -802,52 +847,61 @@ describe("method", () => {//////////////////////////////////////////////////////
 		//        ▼      │
 		//        k5 ────╯
 
-		it("returns a falsy value if the path doesn't exist (1)", () => {
-			expectItWhenCalledWith('k1', 'k2').toBeFalsy();
-			expectItWhenCalledWith('k1', 'k3').toBeFalsy();
-			expectItWhenCalledWith('k2', 'k1').toBeFalsy();
+		it("returns null if the path doesn't exist (1)", () => {
+			expectItWhenCalledWith('k1', 'k2').toBeNull();
+			expectItWhenCalledWith('k1', 'k3').toBeNull();
+			expectItWhenCalledWith('k2', 'k1').toBeNull();
 		});
 
-		it("returns a falsy value if the path doesn't exist (2: self-loop)", () => {
-			expectItWhenCalledWith('k2', 'k2').toBeFalsy();
+		it("returns null if the path doesn't exist (2: self-loop)", () => {
+			expectItWhenCalledWith('k2', 'k2').toBeNull();
 		});
 
-		it("returns a falsy value if the path doesn't exist (3: edge backwards)", () => {
-			expectItWhenCalledWith('k3', 'k2').toBeFalsy();
-			expectItWhenCalledWith('k4', 'k2').toBeFalsy();
+		it("returns null if the path doesn't exist (3: edge backwards)", () => {
+			expectItWhenCalledWith('k3', 'k2').toBeNull();
+			expectItWhenCalledWith('k4', 'k2').toBeNull();
 		});
 
-		it("returns a truthy value if the path exists (1: single edge)", () => {
-			expectItWhenCalledWith('k2', 'k3').toBeTruthy();
-			expectItWhenCalledWith('k3', 'k4').toBeTruthy();
-			expectItWhenCalledWith('k2', 'k5').toBeTruthy();
-			expectItWhenCalledWith('k5', 'k3').toBeTruthy();
+		it("returns a descriptive array if the path exists (1: single edge)", () => {
+			expectItWhenCalledWith('k2', 'k3').toEqual(['k2', 'k3']);
+			expectItWhenCalledWith('k3', 'k4').toEqual(['k3', 'k4']);
+			expectItWhenCalledWith('k2', 'k5').toEqual(['k2', 'k5']);
+			expectItWhenCalledWith('k5', 'k3').toEqual(['k5', 'k3']);
 		});
 
-		it("returns a truthy value if the path exists (2: transitive)", () => {
-			expectItWhenCalledWith('k2', 'k4').toBeTruthy();
-			expectItWhenCalledWith('k5', 'k4').toBeTruthy();
+		it("returns a descriptive array if the path exists (2: transitive)", () => {
+			expectItWhenCalledWith('k2', 'k4').toEqualOneOf(
+				['k2', 'k3', 'k4'],
+				['k2', 'k5', 'k3', 'k4']
+			);
+			expectItWhenCalledWith('k5', 'k4').toEqual(['k5', 'k3', 'k4']);
 			graph.addEdge('k4', 'k1');
-			expectItWhenCalledWith('k2', 'k1').toBeTruthy();
+			expectItWhenCalledWith('k2', 'k1').toEqualOneOf(
+				['k2', 'k3', 'k4', 'k1'],
+				['k2', 'k5', 'k3', 'k4', 'k1']
+			);
 		});
 
-		it("returns a truthy value if the path exists (3: reflexive cycle)", () => {
+		it("returns a descriptive array if the path exists (3: reflexive cycle)", () => {
 			graph.addEdge('k1', 'k1');
-			expectItWhenCalledWith('k1', 'k1').toBeTruthy();
+			expectItWhenCalledWith('k1', 'k1').toEqual(['k1', 'k1']);
 		});
 
-		it("returns a truthy value if the path exists (4: symmetric cycle)", () => {
+		it("returns a descriptive array if the path exists (4: symmetric cycle)", () => {
 			graph.addEdge('k4', 'k3');
-			expectItWhenCalledWith('k3', 'k3').toBeTruthy();
+			expectItWhenCalledWith('k3', 'k3').toEqual(['k3', 'k4', 'k3']);
 		});
 
-		it("returns a truthy value if the path exists (5: larger cycle)", () => {
+		it("returns a descriptive array if the path exists (5: larger cycle)", () => {
 			graph.addEdge('k4', 'k1');
 			graph.addEdge('k1', 'k2');
-			expectItWhenCalledWith('k3', 'k3').toBeTruthy();
+			expectItWhenCalledWith('k3', 'k3').toEqualOneOf(
+				['k3', 'k4', 'k1', 'k2', 'k3'],
+				['k3', 'k4', 'k1', 'k2', 'k5', 'k3']
+			);
 		});
 
-		it("returns a truthy value if the path exists (6: including part of a cycle, part 1)", () => {
+		it("returns a descriptive array if the path exists (6: including part of a cycle, part 1)", () => {
 			graph.clear();
 
 			graph.createEdge('n1', 'n2');
@@ -863,10 +917,10 @@ describe("method", () => {//////////////////////////////////////////////////////
 			//        ╵      │
 			//       n23 ◀───╯
 
-			expectItWhenCalledWith('n1', 'n5').toBeTruthy();
+			expectItWhenCalledWith('n1', 'n5').toEqual(['n1', 'n2', 'n3', 'n4', 'n5']);
 		});
 
-		it("returns a truthy value if the path exists (7: including part of a cycle, part 2)", () => {
+		it("returns a descriptive array if the path exists (7: including part of a cycle, part 2)", () => {
 			graph.clear();
 
 			graph.createEdge('n3', 'n23'); // same graph as above, but creating the loopy bit
@@ -882,7 +936,108 @@ describe("method", () => {//////////////////////////////////////////////////////
 			//        ╵      │
 			//       n23 ◀───╯
 
-			expectItWhenCalledWith('n1', 'n5').toBeTruthy();
+			expectItWhenCalledWith('n1', 'n5').toEqual(['n1', 'n2', 'n3', 'n4', 'n5']);
+		});
+
+	});
+
+
+	describeMethod('hasPath', () => {
+
+		it("throws nothing when passed two key arguments", () => {
+			expectItWhenBoundWith('k1', 'k2').not.toThrow();
+			expectItWhenBoundWith('k2', 'k3').not.toThrow();
+			expectItWhenBoundWith('newKey', 'k2').not.toThrow();
+			expectItWhenBoundWith('newKey1', 'newKey2').not.toThrow();
+		});
+
+		// k1     k2 ──▶ k3 ──▶ k4
+		//        ╷      ▲
+		//        │      │
+		//        ▼      │
+		//        k5 ────╯
+
+		it("returns false if the path doesn't exist (1)", () => {
+			expectItWhenCalledWith('k1', 'k2').toBe(false);
+			expectItWhenCalledWith('k1', 'k3').toBe(false);
+			expectItWhenCalledWith('k2', 'k1').toBe(false);
+		});
+
+		it("returns false if the path doesn't exist (2: self-loop)", () => {
+			expectItWhenCalledWith('k2', 'k2').toBe(false);
+		});
+
+		it("returns false if the path doesn't exist (3: edge backwards)", () => {
+			expectItWhenCalledWith('k3', 'k2').toBe(false);
+			expectItWhenCalledWith('k4', 'k2').toBe(false);
+		});
+
+		it("returns true if the path exists (1: single edge)", () => {
+			expectItWhenCalledWith('k2', 'k3').toBe(true);
+			expectItWhenCalledWith('k3', 'k4').toBe(true);
+			expectItWhenCalledWith('k2', 'k5').toBe(true);
+			expectItWhenCalledWith('k5', 'k3').toBe(true);
+		});
+
+		it("returns true if the path exists (2: transitive)", () => {
+			expectItWhenCalledWith('k2', 'k4').toBe(true);
+			expectItWhenCalledWith('k5', 'k4').toBe(true);
+			graph.addEdge('k4', 'k1');
+			expectItWhenCalledWith('k2', 'k1').toBe(true);
+		});
+
+		it("returns true if the path exists (3: reflexive cycle)", () => {
+			graph.addEdge('k1', 'k1');
+			expectItWhenCalledWith('k1', 'k1').toBe(true);
+		});
+
+		it("returns true if the path exists (4: symmetric cycle)", () => {
+			graph.addEdge('k4', 'k3');
+			expectItWhenCalledWith('k3', 'k3').toBe(true);
+		});
+
+		it("returns true if the path exists (5: larger cycle)", () => {
+			graph.addEdge('k4', 'k1');
+			graph.addEdge('k1', 'k2');
+			expectItWhenCalledWith('k3', 'k3').toBe(true);
+		});
+
+		it("returns true if the path exists (6: including part of a cycle, part 1)", () => {
+			graph.clear();
+
+			graph.createEdge('n1', 'n2');
+			graph.createEdge('n2', 'n3');
+			graph.createEdge('n3', 'n4');
+			graph.createEdge('n4', 'n5');
+			graph.createEdge('n3', 'n23');
+			graph.createEdge('n23', 'n2');
+
+			// n1 ──▶ n2 ──▶ n3 ──▶ n4 ──▶ n5
+			//        ▲      ╷
+			//        │      │
+			//        ╵      │
+			//       n23 ◀───╯
+
+			expectItWhenCalledWith('n1', 'n5').toBe(true);
+		});
+
+		it("returns true if the path exists (7: including part of a cycle, part 2)", () => {
+			graph.clear();
+
+			graph.createEdge('n3', 'n23'); // same graph as above, but creating the loopy bit
+			graph.createEdge('n23', 'n2'); // first; insertion order matters for some engines
+			graph.createEdge('n1', 'n2');
+			graph.createEdge('n2', 'n3');
+			graph.createEdge('n3', 'n4');
+			graph.createEdge('n4', 'n5');
+
+			// n1 ──▶ n2 ──▶ n3 ──▶ n4 ──▶ n5
+			//        ▲      ╷
+			//        │      │
+			//        ╵      │
+			//       n23 ◀───╯
+
+			expectItWhenCalledWith('n1', 'n5').toBe(true);
 		});
 
 	});

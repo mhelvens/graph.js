@@ -29,8 +29,8 @@ export default class Graph {
 	/**
 	 * Add a new vertex to this graph.
 	 * @throws {Graph.VertexExistsError} if a vertex with this key already exists
-	 * @param key   {string} the key with which to refer to this new vertex
-	 * @param value {*}      the value to store in this new vertex
+	 * @param  key    {string} the key with which to refer to this new vertex
+	 * @param [value] {*}      the value to store in this new vertex
 	 */
 	addNewVertex(key, value) {
 		if (this.hasVertex(key)) {
@@ -45,8 +45,8 @@ export default class Graph {
 	/**
 	 * Set the value of an existing vertex in this graph.
 	 * @throws {Graph.VertexNotExistsError} if a vertex with this key does not exist
-	 * @param key   {string} the key belonging to the vertex
-	 * @param value {*}      the value to store in this vertex
+	 * @param  key    {string} the key belonging to the vertex
+	 * @param [value] {*}      the value to store in this vertex
 	 */
 	setVertex(key, value) {
 		if (!this.hasVertex(key)) {
@@ -58,8 +58,8 @@ export default class Graph {
 	/**
 	 * Make sure a vertex with a specific key exists in this graph. If it already exists, nothing is done.
 	 * If it does not yet exist, a new vertex is added with the given value.
-	 * @param key   {string} the key for the vertex
-	 * @param value {*}      the value to store if a new vertex is added
+	 * @param  key    {string} the key for the vertex
+	 * @param [value] {*}      the value to store if a new vertex is added
 	 */
 	ensureVertex(key, value) {
 		if (!this.hasVertex(key)) {
@@ -70,8 +70,8 @@ export default class Graph {
 	/**
 	 * Add a new vertex to this graph. If a vertex with this key already exists,
 	 * the value of that vertex is overwritten.
-	 * @param key   {string} the key with which to refer to this new vertex
-	 * @param value {*}      the value to store in this new vertex
+	 * @param  key    {string} the key with which to refer to this new vertex
+	 * @param [value] {*}      the value to store in this new vertex
 	 */
 	addVertex(key, value) {
 		if (this.hasVertex(key)) {
@@ -181,9 +181,9 @@ export default class Graph {
 	 * Add a new edge to this graph.
 	 * @throws {Graph.EdgeExistsError} if an edge between `from` and `to` already exists
 	 * @throws {Graph.VertexNotExistsError} if the `from` and/or `to` vertices do not yet exist in the graph
-	 * @param from  {string} the key for the originating vertex
-	 * @param to    {string} the key for the terminating vertex
-	 * @param value {*}      the value to store in this new edge
+	 * @param  from   {string} the key for the originating vertex
+	 * @param  to     {string} the key for the terminating vertex
+	 * @param [value] {*}      the value to store in this new edge
 	 */
 	addNewEdge(from, to, value) {
 		if (this.hasEdge(from, to)) {
@@ -207,9 +207,9 @@ export default class Graph {
 	 * Add a new edge to this graph. If the `from` and/or `to` vertices do not yet exist
 	 * in the graph, they are implicitly added with an `undefined` value.
 	 * @throws {Graph.EdgeExistsError} if an edge between `from` and `to` already exists
-	 * @param from  {string} the key for the originating vertex
-	 * @param to    {string} the key for the terminating vertex
-	 * @param value {*}      the value to store in this new edge
+	 * @param  from   {string} the key for the originating vertex
+	 * @param  to     {string} the key for the terminating vertex
+	 * @param [value] {*}      the value to store in this new edge
 	 */
 	createNewEdge(from, to, value) {
 		if (this.hasEdge(from, to)) {
@@ -223,9 +223,9 @@ export default class Graph {
 	/**
 	 * Set the value of an existing edge in this graph.
 	 * @throws {Graph.EdgeNotExistsError} if an edge between `from` and `to` does not yet exist
-	 * @param from  {string} the key for the originating vertex
-	 * @param to    {string} the key for the terminating vertex
-	 * @param value {*}      the value to store in this edge
+	 * @param  from   {string} the key for the originating vertex
+	 * @param  to     {string} the key for the terminating vertex
+	 * @param [value] {*}      the value to store in this edge
 	 */
 	setEdge(from, to, value) {
 		if (!this.hasEdge(from, to)) {
@@ -239,9 +239,9 @@ export default class Graph {
 	 * If one already exists, nothing is done.
 	 * If one does not yet exist, a new edge is added with the given value.
 	 * @throws {Graph.VertexNotExistsError} if the `from` and/or `to` vertices do not yet exist in the graph
-	 * @param from  {string} the key for the originating vertex
-	 * @param to    {string} the key for the terminating vertex
-	 * @param value {*}      the value to store if a new edge is added
+	 * @param  from   {string} the key for the originating vertex
+	 * @param  to     {string} the key for the terminating vertex
+	 * @param [value] {*}      the value to store if a new edge is added
 	 */
 	spanEdge(from, to, value) {
 		if (!this.hasVertex(from)) {
@@ -262,9 +262,9 @@ export default class Graph {
 	 * Add a new edge to this graph. If an edge between `from` and `to` already exists,
 	 * the value of that edge is overwritten.
 	 * @throws {Graph.VertexNotExistsError} if the `from` and/or `to` vertices do not yet exist in the graph
-	 * @param from  {string} the key for the originating vertex
-	 * @param to    {string} the key for the terminating vertex
-	 * @param value {*}      the value to store in this new edge
+	 * @param  from   {string} the key for the originating vertex
+	 * @param  to     {string} the key for the terminating vertex
+	 * @param [value] {*}      the value to store in this new edge
 	 */
 	addEdge(from, to, value) {
 		if (this.hasEdge(from, to)) {
@@ -280,9 +280,9 @@ export default class Graph {
 	 * If it does not yet exist, a new edge is added with the given value.
 	 * If the `from` and/or `to` vertices do not yet exist
 	 * in the graph, they are implicitly added with an `undefined` value.
-	 * @param from  {string} the key for the originating vertex
-	 * @param to    {string} the key for the terminating vertex
-	 * @param value {*}      the value to store if a new edge is added
+	 * @param  from   {string} the key for the originating vertex
+	 * @param  to     {string} the key for the terminating vertex
+	 * @param [value] {*}      the value to store if a new edge is added
 	 */
 	ensureEdge(from, to, value) {
 		if (!this.hasEdge(from, to)) {
@@ -295,9 +295,9 @@ export default class Graph {
 	 * vertices already exists, the value of that edge is overwritten.
 	 * If the `from` and/or `to` vertices do not yet exist
 	 * in the graph, they are implicitly added with an `undefined` value.
-	 * @param from  {string} the key for the originating vertex
-	 * @param to    {string} the key for the terminating vertex
-	 * @param value {*}      the value to store if a new edge is added
+	 * @param  from   {string} the key for the originating vertex
+	 * @param  to     {string} the key for the terminating vertex
+	 * @param [value] {*}      the value to store if a new edge is added
 	 */
 	createEdge(from, to, value) {
 		if (this.hasEdge(from, to)) {
@@ -396,7 +396,7 @@ export default class Graph {
 	 * @see {@link Graph#@@iterator}
 	 */
 	*vertices() {
-		var done = new Set();
+		let done = new Set();
 		for (let [key, value] of this._vertices) {
 			if (this.hasVertex(key) && !done.has(key)) {
 				done.add(key);
@@ -435,7 +435,7 @@ export default class Graph {
 	 * }
 	 */
 	*edges() {
-		var done = new Map();
+		let done = new Map();
 		for (let from of this._edges.keys()) {
 			if (!done.has(from)) { done.set(from, new Set()) }
 			for (let to of this._edges.get(from).keys()) {
@@ -470,7 +470,7 @@ export default class Graph {
 		return this._verticesFrom(from);
 	}
 	*_verticesFrom(from) {
-		var done = new Set();
+		let done = new Set();
 		for (let to of this._edges.get(from).keys()) {
 			if (this.hasEdge(from, to) && !done.has(to)) {
 				done.add(to);
@@ -503,7 +503,7 @@ export default class Graph {
 		return this._verticesTo(to);
 	}
 	*_verticesTo(to) {
-		var done = new Set();
+		let done = new Set();
 		for (let from of this._reverseEdges.get(to)) {
 			if (this.hasEdge(from, to) && !done.has(from)) {
 				done.add(from);
@@ -590,15 +590,15 @@ export default class Graph {
 	 * }
 	 */
 	*vertices_topologically() {
-		var visited = []; // stack
-		var handled = new Set();
+		let visited = []; // stack
+		let handled = new Set();
 
-		var _this = this;
+		let _this = this;
 		function *visit(a) {
 			visited.push(a);
-			var i = visited.indexOf(a);
+			let i = visited.indexOf(a);
 			if (i !== visited.length - 1) {
-				var cycle = visited.slice(i + 1).reverse();
+				let cycle = visited.slice(i + 1).reverse();
 				throw new Graph.CycleError(cycle);
 			}
 			if (!handled.has(a)) {
@@ -672,72 +672,86 @@ export default class Graph {
 	}
 
 	/**
-	 * Test whether the graph contains a directed cycle.
-	 * @returns {boolean} `false`, if there is no cycle; a truthy value if there *is* a cycle
-	 *                    (not necessarily `true`; future versions of the library might return
-	 *                     a description of the cycle)
+	 * Find any directed cycle in this graph.
+	 * @returns {?array} an array with the keys of a cycle in order;
+	 *                   `null`, if there is no cycle
 	 */
-	hasCycle() {
-		let visited = new Set();
+	cycle() {
+		let visited = []; // stack
 		let handled = new Set();
 
 		const visit = (a) => {
 			/* if a cycle is found, record it and return */
-			if (visited.has(a)) {
-				return true;
-			}
+			let i = visited.indexOf(a);
+			if (i >= 0) { return visited.slice(i) }
 
 			/* if this vertex was already handled, no cycle can be found here */
-			if (handled.has(a)) { return false }
+			if (handled.has(a)) { return null }
 			handled.add(a);
 
 			/* recursively visit successors to check for cycles */
-			visited.add(a);
+			visited.push(a);
 			for (let [b] of this.verticesFrom(a)) {
-				if (visit(b)) { return true }
+				let result = visit(b);
+				if (result) { return result }
 			}
-			visited.delete(a);
+			visited.pop();
 		};
 
 		for (let [a] of this.vertices()) {
-			if (visit(a)) { return true }
+			let result = visit(a);
+			if (result) { return result }
 		}
 
-		return false;
+		return null;
 	}
+
+	/**
+	 * Test whether this graph contains a directed cycle.
+	 * @returns {boolean} whether this graph contains a directed cycle
+	 */
+	hasCycle() { return !!this.cycle() }
+
+
+	/**
+	 * Find any path between a given pair of keys.
+	 * @param from {string} the originating vertex
+	 * @param to   {string} the terminating vertex
+	 * @returns {?array} an array with the keys of the path found between the two vertices,
+	 *                   including those two vertices themselves; `null` if no such path exists
+	 */
+	path(from, to) {
+		if (!this.hasVertex(from) || !this.hasVertex(to)) { return null }
+
+		let visited = [];
+
+		/* recursive auxiliary function: find a path from 'current' to 'to' */
+		const hasPathAux = (current) => {
+			visited.push(current);
+			if (this.hasEdge(current, to)) {
+				return [...visited, to];
+			}
+			for (let [next] of this.verticesFrom(current)) {
+				if (visited.indexOf(next) === -1) {
+					let result = hasPathAux(next);
+					if (result) { return result }
+				}
+			}
+			visited.pop();
+			return null;
+		};
+
+		return hasPathAux(from);
+	}
+
 
 	/**
 	 * Test whether there is a directed path between a given pair of keys.
 	 * @param from {string} the originating vertex
 	 * @param to   {string} the terminating vertex
-	 * @returns {boolean} `false`, if there is no such path; a truthy value if there *is* such a path
-	 *                    (not necessarily `true`; future versions of the library might return
-	 *                     a description of the path)
+	 * @returns {boolean} whether such a path exists
 	 */
-	hasPath(from, to) {
-		if (!this.hasVertex(from) || !this.hasVertex(to)) {
-			return false;
-		}
-
-		var visited = new Set();
-
-		/* Recursive auxiliary function: Is there a path from 'current' to 'to'? */
-		const hasPathAux = (current) => {
-			if (this.hasEdge(current, to)) {
-				return true;
-			}
-			visited.add(current);
-			for (let [next] of this.verticesFrom(current)) {
-				if (!visited.has(next) && hasPathAux(next)) {
-					return true;
-				}
-			}
-			visited.delete(current);
-			return false;
-		};
-
-		return hasPathAux(from);
-	}
+	hasPath(from, to) { return !!this.path(from, to) }
 
 
 	/////////////////////////////
@@ -756,7 +770,7 @@ export default class Graph {
 	 * @returns {Graph} a clone of this graph
 	 */
 	clone(tr=v=>v) {
-		var result = new Graph();
+		let result = new Graph();
 		for (let [key, val] of this.vertices()) {
 			result.addVertex(key, tr(val, key));
 		}
@@ -778,7 +792,7 @@ export default class Graph {
 	 * @returns {Graph} a clone of this graph
 	 */
 	transitiveReduction(tr=v=>v) {
-		var result = this.clone(tr);
+		let result = this.clone(tr);
 		for (let [x] of this.vertices()) {
 			for (let [y] of this.vertices()) {
 				if (result.hasEdge(x, y)) {
@@ -825,7 +839,7 @@ Graph.VertexExistsError = class VertexExistsError extends Error {
 		return this;
 	}
 	_refreshMessage() {
-		var aVertices = this.vertices.size === 1 ? "a vertex" : "vertices";
+		let aVertices = this.vertices.size === 1 ? "a vertex" : "vertices";
 		this.message = `This graph has ${aVertices} '${
 			[...this.vertices].map((v) => v.key).join("', '")
 		}'`;
@@ -857,7 +871,7 @@ Graph.VertexNotExistsError = class VertexNotExistError extends Error {
 		return this;
 	}
 	_refreshMessage() {
-		var aVertices = this.vertices.size === 1 ? "a vertex" : "vertices";
+		let aVertices = this.vertices.size === 1 ? "a vertex" : "vertices";
 		this.message = `This graph does not have ${aVertices} '${
 			[...this.vertices].map((v) => v.key).join("', '")
 		}'`;
@@ -889,11 +903,11 @@ Graph.EdgeExistsError = class EdgeExistsError extends Error {
 		return this;
 	}
 	_refreshMessage() {
-		var edges = [];
+		let edges = [];
 		for (let {from, to} of this.edges) {
 			edges.push("('" + from + "', '" + to + "')");
 		}
-		var anEdges = edges.length === 1 ? "an edge" : "edges";
+		let anEdges = edges.length === 1 ? "an edge" : "edges";
 		this.message = `This graph has ${anEdges} ${edges.join(", ")}`;
 	}
 };
@@ -923,11 +937,11 @@ Graph.EdgeNotExistsError = class EdgeNotExistsError extends Error {
 		return this;
 	}
 	_refreshMessage() {
-		var edges = [];
+		let edges = [];
 		for (let {from, to} of this.edges) {
 			edges.push("('" + from + "', '" + to + "')");
 		}
-		var anEdges = edges.length === 1 ? "an edge" : "edges";
+		let anEdges = edges.length === 1 ? "an edge" : "edges";
 		this.message = `This graph does not have ${anEdges} ${edges.join(", ")}`;
 	}
 };

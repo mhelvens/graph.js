@@ -41,10 +41,10 @@ API Documentation
 
 * [Graph](#Graph)
     * ___instance___
-    * [.addNewVertex(key, value)](#Graph#addNewVertex)
-    * [.setVertex(key, value)](#Graph#setVertex)
-    * [.ensureVertex(key, value)](#Graph#ensureVertex)
-    * [.addVertex(key, value)](#Graph#addVertex)
+    * [.addNewVertex(key, [value])](#Graph#addNewVertex)
+    * [.setVertex(key, [value])](#Graph#setVertex)
+    * [.ensureVertex(key, [value])](#Graph#ensureVertex)
+    * [.addVertex(key, [value])](#Graph#addVertex)
     * [.removeExistingVertex(key)](#Graph#removeExistingVertex)
     * [.destroyExistingVertex(key)](#Graph#destroyExistingVertex)
     * [.removeVertex(key)](#Graph#removeVertex)
@@ -52,13 +52,13 @@ API Documentation
     * [.vertexCount()](#Graph#vertexCount) ⇒ <code>number</code>
     * [.hasVertex(key)](#Graph#hasVertex) ⇒ <code>boolean</code>
     * [.vertexValue(key)](#Graph#vertexValue) ⇒ <code>\*</code>
-    * [.addNewEdge(from, to, value)](#Graph#addNewEdge)
-    * [.createNewEdge(from, to, value)](#Graph#createNewEdge)
-    * [.setEdge(from, to, value)](#Graph#setEdge)
-    * [.spanEdge(from, to, value)](#Graph#spanEdge)
-    * [.addEdge(from, to, value)](#Graph#addEdge)
-    * [.ensureEdge(from, to, value)](#Graph#ensureEdge)
-    * [.createEdge(from, to, value)](#Graph#createEdge)
+    * [.addNewEdge(from, to, [value])](#Graph#addNewEdge)
+    * [.createNewEdge(from, to, [value])](#Graph#createNewEdge)
+    * [.setEdge(from, to, [value])](#Graph#setEdge)
+    * [.spanEdge(from, to, [value])](#Graph#spanEdge)
+    * [.addEdge(from, to, [value])](#Graph#addEdge)
+    * [.ensureEdge(from, to, [value])](#Graph#ensureEdge)
+    * [.createEdge(from, to, [value])](#Graph#createEdge)
     * [.removeExistingEdge(from, to)](#Graph#removeExistingEdge)
     * [.removeEdge(from, to)](#Graph#removeEdge)
     * [.edgeCount()](#Graph#edgeCount) ⇒ <code>number</code>
@@ -75,7 +75,9 @@ API Documentation
     * [.clearEdges()](#Graph#clearEdges)
     * [.clear()](#Graph#clear)
     * [.equals(other, [eq])](#Graph#equals) ⇒ <code>boolean</code>
+    * [.cycle()](#Graph#cycle) ⇒ <code>array</code>
     * [.hasCycle()](#Graph#hasCycle) ⇒ <code>boolean</code>
+    * [.path(from, to)](#Graph#path) ⇒ <code>array</code>
     * [.hasPath(from, to)](#Graph#hasPath) ⇒ <code>boolean</code>
     * [.clone([tr])](#Graph#clone) ⇒ <code>[Graph](#Graph)</code>
     * [.transitiveReduction([tr])](#Graph#transitiveReduction) ⇒ <code>[Graph](#Graph)</code>
@@ -104,14 +106,14 @@ The main class of this library, to be used for representing a mathematical (di)g
 -----
 
 <a name="Graph#addNewVertex"></a>
-#### *graph*.addNewVertex(key, value)
+#### *graph*.addNewVertex(key, [value])
 Add a new vertex to this graph.
 
 
 | Param | Type | Description |
 | --- | --- | --- |
 | key | <code>string</code> | the key with which to refer to this new vertex |
-| value | <code>\*</code> | the value to store in this new vertex |
+| [value] | <code>\*</code> | the value to store in this new vertex |
 
 **Throws**:
 
@@ -121,14 +123,14 @@ Add a new vertex to this graph.
 -----
 
 <a name="Graph#setVertex"></a>
-#### *graph*.setVertex(key, value)
+#### *graph*.setVertex(key, [value])
 Set the value of an existing vertex in this graph.
 
 
 | Param | Type | Description |
 | --- | --- | --- |
 | key | <code>string</code> | the key belonging to the vertex |
-| value | <code>\*</code> | the value to store in this vertex |
+| [value] | <code>\*</code> | the value to store in this vertex |
 
 **Throws**:
 
@@ -138,7 +140,7 @@ Set the value of an existing vertex in this graph.
 -----
 
 <a name="Graph#ensureVertex"></a>
-#### *graph*.ensureVertex(key, value)
+#### *graph*.ensureVertex(key, [value])
 Make sure a vertex with a specific key exists in this graph. If it already exists, nothing is done.
 If it does not yet exist, a new vertex is added with the given value.
 
@@ -146,13 +148,13 @@ If it does not yet exist, a new vertex is added with the given value.
 | Param | Type | Description |
 | --- | --- | --- |
 | key | <code>string</code> | the key for the vertex |
-| value | <code>\*</code> | the value to store if a new vertex is added |
+| [value] | <code>\*</code> | the value to store if a new vertex is added |
 
 
 -----
 
 <a name="Graph#addVertex"></a>
-#### *graph*.addVertex(key, value)
+#### *graph*.addVertex(key, [value])
 Add a new vertex to this graph. If a vertex with this key already exists,
 the value of that vertex is overwritten.
 
@@ -160,7 +162,7 @@ the value of that vertex is overwritten.
 | Param | Type | Description |
 | --- | --- | --- |
 | key | <code>string</code> | the key with which to refer to this new vertex |
-| value | <code>\*</code> | the value to store in this new vertex |
+| [value] | <code>\*</code> | the value to store in this new vertex |
 
 
 -----
@@ -267,7 +269,7 @@ Use [hasVertex](#Graph#hasVertex) to distinguish these cases.
 -----
 
 <a name="Graph#addNewEdge"></a>
-#### *graph*.addNewEdge(from, to, value)
+#### *graph*.addNewEdge(from, to, [value])
 Add a new edge to this graph.
 
 
@@ -275,7 +277,7 @@ Add a new edge to this graph.
 | --- | --- | --- |
 | from | <code>string</code> | the key for the originating vertex |
 | to | <code>string</code> | the key for the terminating vertex |
-| value | <code>\*</code> | the value to store in this new edge |
+| [value] | <code>\*</code> | the value to store in this new edge |
 
 **Throws**:
 
@@ -286,7 +288,7 @@ Add a new edge to this graph.
 -----
 
 <a name="Graph#createNewEdge"></a>
-#### *graph*.createNewEdge(from, to, value)
+#### *graph*.createNewEdge(from, to, [value])
 Add a new edge to this graph. If the `from` and/or `to` vertices do not yet exist
 in the graph, they are implicitly added with an `undefined` value.
 
@@ -295,7 +297,7 @@ in the graph, they are implicitly added with an `undefined` value.
 | --- | --- | --- |
 | from | <code>string</code> | the key for the originating vertex |
 | to | <code>string</code> | the key for the terminating vertex |
-| value | <code>\*</code> | the value to store in this new edge |
+| [value] | <code>\*</code> | the value to store in this new edge |
 
 **Throws**:
 
@@ -305,7 +307,7 @@ in the graph, they are implicitly added with an `undefined` value.
 -----
 
 <a name="Graph#setEdge"></a>
-#### *graph*.setEdge(from, to, value)
+#### *graph*.setEdge(from, to, [value])
 Set the value of an existing edge in this graph.
 
 
@@ -313,7 +315,7 @@ Set the value of an existing edge in this graph.
 | --- | --- | --- |
 | from | <code>string</code> | the key for the originating vertex |
 | to | <code>string</code> | the key for the terminating vertex |
-| value | <code>\*</code> | the value to store in this edge |
+| [value] | <code>\*</code> | the value to store in this edge |
 
 **Throws**:
 
@@ -323,7 +325,7 @@ Set the value of an existing edge in this graph.
 -----
 
 <a name="Graph#spanEdge"></a>
-#### *graph*.spanEdge(from, to, value)
+#### *graph*.spanEdge(from, to, [value])
 Make sure an edge between the `from` and `to` vertices in this graph.
 If one already exists, nothing is done.
 If one does not yet exist, a new edge is added with the given value.
@@ -333,7 +335,7 @@ If one does not yet exist, a new edge is added with the given value.
 | --- | --- | --- |
 | from | <code>string</code> | the key for the originating vertex |
 | to | <code>string</code> | the key for the terminating vertex |
-| value | <code>\*</code> | the value to store if a new edge is added |
+| [value] | <code>\*</code> | the value to store if a new edge is added |
 
 **Throws**:
 
@@ -343,7 +345,7 @@ If one does not yet exist, a new edge is added with the given value.
 -----
 
 <a name="Graph#addEdge"></a>
-#### *graph*.addEdge(from, to, value)
+#### *graph*.addEdge(from, to, [value])
 Add a new edge to this graph. If an edge between `from` and `to` already exists,
 the value of that edge is overwritten.
 
@@ -352,7 +354,7 @@ the value of that edge is overwritten.
 | --- | --- | --- |
 | from | <code>string</code> | the key for the originating vertex |
 | to | <code>string</code> | the key for the terminating vertex |
-| value | <code>\*</code> | the value to store in this new edge |
+| [value] | <code>\*</code> | the value to store in this new edge |
 
 **Throws**:
 
@@ -362,7 +364,7 @@ the value of that edge is overwritten.
 -----
 
 <a name="Graph#ensureEdge"></a>
-#### *graph*.ensureEdge(from, to, value)
+#### *graph*.ensureEdge(from, to, [value])
 Make sure an edge between the `from` and `to` vertices exists in this graph.
 If it already exists, nothing is done.
 If it does not yet exist, a new edge is added with the given value.
@@ -374,13 +376,13 @@ in the graph, they are implicitly added with an `undefined` value.
 | --- | --- | --- |
 | from | <code>string</code> | the key for the originating vertex |
 | to | <code>string</code> | the key for the terminating vertex |
-| value | <code>\*</code> | the value to store if a new edge is added |
+| [value] | <code>\*</code> | the value to store if a new edge is added |
 
 
 -----
 
 <a name="Graph#createEdge"></a>
-#### *graph*.createEdge(from, to, value)
+#### *graph*.createEdge(from, to, [value])
 Add a new edge to this graph. If an edge between the `from` and `to`
 vertices already exists, the value of that edge is overwritten.
 If the `from` and/or `to` vertices do not yet exist
@@ -391,7 +393,7 @@ in the graph, they are implicitly added with an `undefined` value.
 | --- | --- | --- |
 | from | <code>string</code> | the key for the originating vertex |
 | to | <code>string</code> | the key for the terminating vertex |
-| value | <code>\*</code> | the value to store if a new edge is added |
+| [value] | <code>\*</code> | the value to store if a new edge is added |
 
 
 -----
@@ -713,13 +715,35 @@ Two graphs are equal if they have the same vertices and the same edges.
 
 -----
 
+<a name="Graph#cycle"></a>
+#### *graph*.cycle() ⇒ <code>array</code>
+Find any directed cycle in this graph.
+
+**Returns**: <code>array</code> - an array with the keys of a cycle in order;
+                  `null`, if there is no cycle  
+
+-----
+
 <a name="Graph#hasCycle"></a>
 #### *graph*.hasCycle() ⇒ <code>boolean</code>
-Test whether the graph contains a directed cycle.
+Test whether this graph contains a directed cycle.
 
-**Returns**: <code>boolean</code> - `false`, if there is no cycle; a truthy value if there *is* a cycle
-                   (not necessarily `true`; future versions of the library might return
-                    a description of the cycle)  
+**Returns**: <code>boolean</code> - whether this graph contains a directed cycle  
+
+-----
+
+<a name="Graph#path"></a>
+#### *graph*.path(from, to) ⇒ <code>array</code>
+Find any path between a given pair of keys.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| from | <code>string</code> | the originating vertex |
+| to | <code>string</code> | the terminating vertex |
+
+**Returns**: <code>array</code> - an array with the keys of the path found between the two vertices,
+                  including those two vertices themselves; `null` if no such path exists  
 
 -----
 
@@ -733,9 +757,7 @@ Test whether there is a directed path between a given pair of keys.
 | from | <code>string</code> | the originating vertex |
 | to | <code>string</code> | the terminating vertex |
 
-**Returns**: <code>boolean</code> - `false`, if there is no such path; a truthy value if there *is* such a path
-                   (not necessarily `true`; future versions of the library might return
-                    a description of the path)  
+**Returns**: <code>boolean</code> - whether such a path exists  
 
 -----
 
