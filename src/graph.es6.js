@@ -56,8 +56,8 @@ export default class Graph {
 	}
 
 	/**
-	 * Make sure a vertex with a specific key exists in this graph. If it already exists, nothing is done.
-	 * If it does not yet exist, a new vertex is added with the given value.
+	 * Make sure a vertex with a specific key exists in this graph. If it already exists,
+	 * do nothing. If it does not yet exist, add a new vertex with the given value.
 	 * @param  key    {string} the key for the vertex
 	 * @param [value] {*}      the value to store if a new vertex is added
 	 */

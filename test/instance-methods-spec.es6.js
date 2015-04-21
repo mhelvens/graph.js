@@ -1415,7 +1415,8 @@ describe("method", () => {//////////////////////////////////////////////////////
 			expect(() => [...callItWith()]).toThrowSpecific(Graph.CycleError, {});
 
 			try {
-				var x = [...callItWith()];
+				//noinspection JSUnusedLocalSymbols
+				let x = [...callItWith()];
 			} catch (err) {
 				expect(err.cycle).toEqualOneOf(
 					['n23', 'n2', 'n3'],
@@ -1440,7 +1441,8 @@ describe("method", () => {//////////////////////////////////////////////////////
 			expect(() => [...callItWith()]).toThrowSpecific(Graph.CycleError, {});
 
 			try {
-				var x = [...callItWith()];
+				//noinspection JSUnusedLocalSymbols
+				let x = [...callItWith()];
 			} catch (err) {
 				expect(err.cycle).toEqual(['n1']);
 				var cycleInMessage = err.message.substring(err.message.indexOf(':') + 1).trim();
@@ -1493,12 +1495,6 @@ describe("method", () => {//////////////////////////////////////////////////////
 		});
 
 	});
-
-
-
-
-
-
 
 
 });/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
