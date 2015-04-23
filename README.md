@@ -40,7 +40,7 @@ API Documentation
 
 
 * [Graph](#Graph)
-    * ___instance___
+    * <ins><b>instance</b></ins>
     * [.addNewVertex(key, [value])](#Graph#addNewVertex)
     * [.setVertex(key, [value])](#Graph#setVertex)
     * [.ensureVertex(key, [value])](#Graph#ensureVertex)
@@ -81,7 +81,7 @@ API Documentation
     * [.hasPath(from, to)](#Graph#hasPath) ⇒ <code>boolean</code>
     * [.clone([tr])](#Graph#clone) ⇒ <code>[Graph](#Graph)</code>
     * [.transitiveReduction([tr])](#Graph#transitiveReduction) ⇒ <code>[Graph](#Graph)</code>
-    * ___static___
+    * <ins><b>static</b></ins>
     * [.VertexExistsError](#Graph.VertexExistsError) ⇐ <code>Error</code>
         * [.vertices](#Graph.VertexExistsError#vertices) : <code>Set.&lt;{key: string, value}&gt;</code>
     * [.VertexNotExistsError](#Graph.VertexNotExistsError) ⇐ <code>Error</code>
@@ -141,8 +141,8 @@ Set the value of an existing vertex in this graph.
 
 <a name="Graph#ensureVertex"></a>
 #### *graph*.ensureVertex(key, [value])
-Make sure a vertex with a specific key exists in this graph. If it already exists, nothing is done.
-If it does not yet exist, a new vertex is added with the given value.
+Make sure a vertex with a specific key exists in this graph. If it already exists,
+do nothing. If it does not yet exist, add a new vertex with the given value.
 
 
 | Param | Type | Description |
