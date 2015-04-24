@@ -54,6 +54,7 @@
     "karma-webpack": "~1",
     "phantomjs-polyfill": "*",
     "uglifyjs": "~2",
+    "wallaby-webpack": "~0",
     "webpack": "~1"
   },
   "scripts": {
