@@ -14,8 +14,7 @@ module.exports = function () {
 	return {
 		files: [
 			'node_modules/babel-core/browser-polyfill.js',
-			{ pattern: 'src/graph.es6.js', load: false },
-			{ pattern: 'src/graph.es6.js', load: false },
+			{ pattern: 'src/**/*.es6.js', load: false },
 			{ pattern: 'test/helpers.es6.js', load: false }
 		],
 		tests: [
