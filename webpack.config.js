@@ -3,7 +3,7 @@ module.exports = {
 	devtool: 'source-map',
 	entry: {
 		'graph':      ['./src/graph.es6.js'],
-		'graph.full': [ 'babel/polyfill.js', './src/graph.es6.js' ]
+		'graph.full': [ 'babel-core/polyfill.js', './src/graph.es6.js' ]
 	},
 	output: {
 		path: './dist',
