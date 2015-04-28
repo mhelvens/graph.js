@@ -754,56 +754,82 @@ export default class Graph {
 	hasPath(from, to) { return !!this.path(from, to) }
 
 
-	/////////////////////////////
-	////////// Cloning //////////
-	/////////////////////////////
+	///////////////////////////////////////
+	////////// Cloning and stuff //////////
+	///////////////////////////////////////
+
+	/**
+	 * Merge another graph into this graph.
+	 * @param other {Graph} the other graph to merge into this one
+	 * @param [mV] {function(*, *, string): *}
+	 *     a custom merge function for values stored in vertices;
+	 *     defaults to whichever of the two values is not `undefined`,
+	 *     giving preference to that of the other graph; The first and
+	 *     second arguments are the vertex values of `this` graph and the
+	 *     `other` graph respectively. The third is the corresponding `key`.
+	 * @param [mE] {function(*, *, string, string): *}
+	 *     a custom merge function for values stored in edges;
+	 *     defaults to whichever of the two values is not `undefined`,
+	 *     giving preference to that of the other graph; The first and
+	 *     second arguments are the edge values of `this` graph and the
+	 *     `other` graph respectively. The third and fourth are the
+	 *     corresponding `from` and `to` keys.
+	 */
+	mergeIn(other, mV, mE) {
+		if (!mV) { mV = (v1,v2)=>(typeof v2 === 'undefined' ? v1 : v2) }
+		if (!mE) { mE = mV }
+		for (let [key] of other.vertices()) {
+			this.addVertex(key, mV(this.vertexValue(key), other.vertexValue(key)));
+		}
+		for (let [from, to] of other.edges()) {
+			this.addEdge(from, to, mE(this.edgeValue(from, to), other.edgeValue(from, to), from, to));
+		}
+	}
 
 	/**
 	 * Create a clone of this graph.
-	 * @param [tr] {function(*, string, ?string): *}
-	 *     a custom transformation function for stored values; defaults to
-	 *     the identity function; The first argument is the value to clone.
-	 *     If it is a vertex value, the third argument is the vertex key.
-	 *     If it is an edge value, the third and fourth argument are the
-	 *     `from` and `to` keys respectively. (So you can test the fourth
-	 *     argument to distinguish the two cases.)
+	 * @param [trV] {function(*, string): *}
+	 *     a custom transformation function for values stored in vertices;
+	 *     defaults to the identity function; The first argument is the
+	 *     value to clone. The second is the corresponding `key`.
+	 * @param [trE] {function(*, string, string): *}
+	 *     a custom transformation function for values stored in edges;
+	 *     defaults to the function given for `trV`; The first argument
+	 *     is the value to clone. The second and third are the `from`
+	 *     and `to` keys respectively.
 	 * @returns {Graph} a clone of this graph
 	 */
-	clone(tr=v=>v) {
+	clone(trV, trE) {
+		if (!trV) { trV = v=>v }
+		if (!trE) { trE = trV  }
 		let result = new Graph();
-		for (let [key, val] of this.vertices()) {
-			result.addVertex(key, tr(val, key));
-		}
-		for (let [from, to, val] of this.edges()) {
-			result.addEdge(from, to, tr(val, from, to));
-		}
+		result.mergeIn(this, (v1, v2) => trV(v2), (v1, v2) => trE(v2));
 		return result;
 	}
 
 	/**
 	 * Create a clone of this graph, but without any transitive edges.
-	 * @param [tr] {function(*, string, ?string): *}
-	 *     a custom transformation function for stored values; defaults to
-	 *     the identity function; The first argument is the value to clone.
-	 *     If it is a vertex value, the third argument is the vertex key.
-	 *     If it is an edge value, the third and fourth argument are the
-	 *     `from` and `to` keys respectively. (So you can test the fourth
-	 *     argument to distinguish the two cases.)
-	 * @returns {Graph} a clone of this graph
+	 * @param [trV] {function(*, string): *}
+	 *     a custom transformation function for values stored in vertices;
+	 *     defaults to the identity function; The first argument is the
+	 *     value to clone. The second is the corresponding `key`.
+	 * @param [trE] {function(*, string, string): *}
+	 *     a custom transformation function for values stored in edges;
+	 *     defaults to the function given for `trV`; The first argument
+	 *     is the value to clone. The second and third are the `from`
+	 *     and `to` keys respectively.
+	 * @returns {Graph} a clone of this graph with all transitive edges removed
 	 */
-	transitiveReduction(tr=v=>v) {
-		let result = this.clone(tr);
-		for (let [x] of this.vertices()) {
-			for (let [y] of this.vertices()) {
-				if (result.hasEdge(x, y)) {
-					for (let [z] of this.vertices()) {
-						if (result.hasPath(y, z)) {
+	transitiveReduction(trV, trE) {
+		if (!trV) { trV = v=>v }
+		if (!trE) { trE = trV  }
+		let result = this.clone(trV, trE);
+		for (let [x] of this.vertices())
+			for (let [y] of this.vertices())
+				if (result.hasEdge(x, y))
+					for (let [z] of this.vertices())
+						if (result.hasPath(y, z))
 							result.removeEdge(x, z);
-						}
-					}
-				}
-			}
-		}
 		return result;
 	}
 

@@ -300,6 +300,13 @@ describe("method", () => {//////////////////////////////////////////////////////
 		});
 	}
 
+	function it_throwsNothingWhenPassedAnotherGraph() {
+		it("throws no exceptions when it is passed another graph as an argument", () => {
+			var g = new Graph();
+			expectItWhenBoundWith(g).not.toThrow();
+		});
+	}
+
 
 	// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
 
@@ -1236,6 +1243,83 @@ describe("method", () => {//////////////////////////////////////////////////////
 			for (let [from, to, val] of newGraph.edges()) {
 				expect(graph.edgeValue(from, to)).toBe(val);
 			}
+		});
+
+	});
+
+
+	describeMethod('mergeIn', () => {
+
+		it_throwsNothingWhenPassedAnotherGraph();
+
+		// graph
+		// k1     k2 ──▶ k3 ──▶ k4
+		//        ╷      ▲
+		//        │      │
+		//        ▼      │
+		//        k5 ────╯
+
+		// other
+		// k1 ◀── k2     k3 ──▶ k4
+		//        ▲             ▲
+		//        │             │
+		//        ╵             │
+		//        k5 ───────────╯
+
+		var other;
+		beforeEach(() => {
+			other = new Graph();
+			other.addNewVertex('k1', 'newValue1');
+			other.addNewVertex('k2', 'newValue2');
+			other.addNewVertex('k3');
+			other.addNewVertex('k4');
+			other.addNewVertex('k5');
+			other.addNewEdge('k2', 'k1', 'newValue21');
+			other.addNewEdge('k3', 'k4');
+			other.addNewEdge('k5', 'k2');
+			other.addNewEdge('k5', 'k4');
+		});
+
+		it("properly merges in the other graph", () => {
+			graph.mergeIn(other);
+
+			var expectedResult = new Graph();
+
+			expectedResult.addNewVertex('k1', 'newValue1');
+			expectedResult.addNewVertex('k2', 'newValue2');
+			expectedResult.addNewVertex('k3');
+			expectedResult.addNewVertex('k4');
+			expectedResult.addNewVertex('k5', 'oldValue5');
+			expectedResult.addNewEdge('k2', 'k1', 'newValue21');
+			expectedResult.addNewEdge('k2', 'k3', 'oldValue23');
+			expectedResult.addNewEdge('k2', 'k5');
+			expectedResult.addNewEdge('k3', 'k4');
+			expectedResult.addNewEdge('k5', 'k2');
+			expectedResult.addNewEdge('k5', 'k3');
+			expectedResult.addNewEdge('k5', 'k4');
+
+			expect(graph.equals(expectedResult)).toBeTruthy();
+		});
+
+		it("properly merges in the other graph when using a custom merge function", () => {
+			graph.mergeIn(other, (v1, v2) => `${v1}:${v2}`);
+
+			var expectedResult = new Graph();
+
+			expectedResult.addNewVertex('k1', 'oldValue1:newValue1');
+			expectedResult.addNewVertex('k2', 'undefined:newValue2');
+			expectedResult.addNewVertex('k3', 'undefined:undefined');
+			expectedResult.addNewVertex('k4', 'undefined:undefined');
+			expectedResult.addNewVertex('k5', 'oldValue5:undefined');
+			expectedResult.addNewEdge('k2', 'k1', 'undefined:newValue21');
+			expectedResult.addNewEdge('k2', 'k3', 'oldValue23');
+			expectedResult.addNewEdge('k2', 'k5');
+			expectedResult.addNewEdge('k3', 'k4', 'undefined:undefined');
+			expectedResult.addNewEdge('k5', 'k2', 'undefined:undefined');
+			expectedResult.addNewEdge('k5', 'k3');
+			expectedResult.addNewEdge('k5', 'k4', 'undefined:undefined');
+
+			expect(graph.equals(expectedResult)).toBeTruthy();
 		});
 
 	});

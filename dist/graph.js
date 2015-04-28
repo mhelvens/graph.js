@@ -62,22 +62,22 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 	
-	var _slicedToArray = function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } };
+	var _slicedToArray = function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i['return']) _i['return'](); } finally { if (_d) throw _e; } } return _arr; } else { throw new TypeError('Invalid attempt to destructure non-iterable instance'); } };
 	
 	var _toConsumableArray = function (arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i]; return arr2; } else { return Array.from(arr); } };
 	
-	var _inherits = function (subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; };
+	var _inherits = function (subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; };
 	
-	var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
+	var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
 	
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 	
-	Object.defineProperty(exports, "__esModule", {
+	Object.defineProperty(exports, '__esModule', {
 		value: true
 	});
-	"use strict";
+	'use strict';
 	
 	//  ////////////////////////////////////////////////////////////////////////////////////////////////
 	//  // Graph class /////////////////////////////////////////////////////////////////////////////////
@@ -101,7 +101,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}
 	
 		_createClass(Graph, [{
-			key: "addNewVertex",
+			key: 'addNewVertex',
 	
 			//////////////////////////////
 			////////// Vertices //////////
@@ -125,7 +125,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				this._vertexCount += 1;
 			}
 		}, {
-			key: "setVertex",
+			key: 'setVertex',
 	
 			/**
 	   * Set the value of an existing vertex in this graph.
@@ -140,11 +140,11 @@ return /******/ (function(modules) { // webpackBootstrap
 				this._vertices.set(key, value);
 			}
 		}, {
-			key: "ensureVertex",
+			key: 'ensureVertex',
 	
 			/**
-	   * Make sure a vertex with a specific key exists in this graph. If it already exists, nothing is done.
-	   * If it does not yet exist, a new vertex is added with the given value.
+	   * Make sure a vertex with a specific key exists in this graph. If it already exists,
+	   * do nothing. If it does not yet exist, add a new vertex with the given value.
 	   * @param  key    {string} the key for the vertex
 	   * @param [value] {*}      the value to store if a new vertex is added
 	   */
@@ -154,7 +154,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				}
 			}
 		}, {
-			key: "addVertex",
+			key: 'addVertex',
 	
 			/**
 	   * Add a new vertex to this graph. If a vertex with this key already exists,
@@ -170,7 +170,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				}
 			}
 		}, {
-			key: "removeExistingVertex",
+			key: 'removeExistingVertex',
 	
 			////////// removing them //////////
 	
@@ -187,11 +187,11 @@ return /******/ (function(modules) { // webpackBootstrap
 				if (this._edges.get(key).size > 0 || this._reverseEdges.get(key).size > 0) {
 					throw new Graph.HasConnectedEdgesError(key);
 				}
-				this._vertices["delete"](key);
+				this._vertices['delete'](key);
 				this._vertexCount -= 1;
 			}
 		}, {
-			key: "destroyExistingVertex",
+			key: 'destroyExistingVertex',
 	
 			/**
 	   * Remove an existing vertex from this graph, as well as all edges connected to it.
@@ -219,8 +219,8 @@ return /******/ (function(modules) { // webpackBootstrap
 					_iteratorError = err;
 				} finally {
 					try {
-						if (!_iteratorNormalCompletion && _iterator["return"]) {
-							_iterator["return"]();
+						if (!_iteratorNormalCompletion && _iterator['return']) {
+							_iterator['return']();
 						}
 					} finally {
 						if (_didIteratorError) {
@@ -246,8 +246,8 @@ return /******/ (function(modules) { // webpackBootstrap
 					_iteratorError2 = err;
 				} finally {
 					try {
-						if (!_iteratorNormalCompletion2 && _iterator2["return"]) {
-							_iterator2["return"]();
+						if (!_iteratorNormalCompletion2 && _iterator2['return']) {
+							_iterator2['return']();
 						}
 					} finally {
 						if (_didIteratorError2) {
@@ -259,7 +259,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				this.removeExistingVertex(key);
 			}
 		}, {
-			key: "removeVertex",
+			key: 'removeVertex',
 	
 			/**
 	   * Remove an existing vertex from this graph.
@@ -273,7 +273,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				}
 			}
 		}, {
-			key: "destroyVertex",
+			key: 'destroyVertex',
 	
 			/**
 	   * Remove a vertex from this graph, as well as all edges connected to it.
@@ -286,7 +286,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				}
 			}
 		}, {
-			key: "vertexCount",
+			key: 'vertexCount',
 	
 			////////// querying them //////////
 	
@@ -297,7 +297,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				return this._vertexCount;
 			}
 		}, {
-			key: "hasVertex",
+			key: 'hasVertex',
 	
 			/**
 	   * Ask whether a vertex with a given key exists.
@@ -308,7 +308,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				return this._vertices.has(key);
 			}
 		}, {
-			key: "vertexValue",
+			key: 'vertexValue',
 	
 			/**
 	   * Get the value associated with the vertex of a given key.
@@ -325,7 +325,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				return this._vertices.get(key);
 			}
 		}, {
-			key: "addNewEdge",
+			key: 'addNewEdge',
 	
 			///////////////////////////
 			////////// Edges //////////
@@ -359,7 +359,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				this._edgeCount += 1;
 			}
 		}, {
-			key: "createNewEdge",
+			key: 'createNewEdge',
 	
 			/**
 	   * Add a new edge to this graph. If the `from` and/or `to` vertices do not yet exist
@@ -378,7 +378,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				this.addNewEdge(from, to, value);
 			}
 		}, {
-			key: "setEdge",
+			key: 'setEdge',
 	
 			/**
 	   * Set the value of an existing edge in this graph.
@@ -394,7 +394,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				this._edges.get(from).set(to, value);
 			}
 		}, {
-			key: "spanEdge",
+			key: 'spanEdge',
 	
 			/**
 	   * Make sure an edge between the `from` and `to` vertices in this graph.
@@ -420,7 +420,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				}
 			}
 		}, {
-			key: "addEdge",
+			key: 'addEdge',
 	
 			/**
 	   * Add a new edge to this graph. If an edge between `from` and `to` already exists,
@@ -438,7 +438,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				}
 			}
 		}, {
-			key: "ensureEdge",
+			key: 'ensureEdge',
 	
 			/**
 	   * Make sure an edge between the `from` and `to` vertices exists in this graph.
@@ -456,7 +456,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				}
 			}
 		}, {
-			key: "createEdge",
+			key: 'createEdge',
 	
 			/**
 	   * Add a new edge to this graph. If an edge between the `from` and `to`
@@ -475,7 +475,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				}
 			}
 		}, {
-			key: "removeExistingEdge",
+			key: 'removeExistingEdge',
 	
 			////////// removing them //////////
 	
@@ -489,12 +489,12 @@ return /******/ (function(modules) { // webpackBootstrap
 				if (!this.hasEdge(from, to)) {
 					throw new Graph.EdgeNotExistsError(from, to);
 				}
-				this._edges.get(from)["delete"](to);
-				this._reverseEdges.get(to)["delete"](from);
+				this._edges.get(from)['delete'](to);
+				this._reverseEdges.get(to)['delete'](from);
 				this._edgeCount -= 1;
 			}
 		}, {
-			key: "removeEdge",
+			key: 'removeEdge',
 	
 			/**
 	   * Remove an edge from this graph.
@@ -508,7 +508,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				}
 			}
 		}, {
-			key: "edgeCount",
+			key: 'edgeCount',
 	
 			////////// querying them //////////
 	
@@ -519,7 +519,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				return this._edgeCount;
 			}
 		}, {
-			key: "hasEdge",
+			key: 'hasEdge',
 	
 			/**
 	   * Ask whether an edge between given `from` and `to` vertices exist.
@@ -531,7 +531,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				return this.hasVertex(from) && this.hasVertex(to) && this._edges.has(from) && this._edges.get(from).has(to);
 			}
 		}, {
-			key: "edgeValue",
+			key: 'edgeValue',
 	
 			/**
 	   * Get the value associated with the edge between given `from` and `to` vertices.
@@ -549,7 +549,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				return this.hasEdge(from, to) ? this._edges.get(from).get(to) : undefined;
 			}
 		}, {
-			key: "vertices",
+			key: 'vertices',
 	
 			///////////////////////////////////////////////
 			//////////// ES6 Iterable interfaces //////////
@@ -614,7 +614,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 						case 19:
 							context$2$0.prev = 19;
-							context$2$0.t0 = context$2$0["catch"](4);
+							context$2$0.t0 = context$2$0['catch'](4);
 							_didIteratorError3 = true;
 							_iteratorError3 = context$2$0.t0;
 	
@@ -622,8 +622,8 @@ return /******/ (function(modules) { // webpackBootstrap
 							context$2$0.prev = 23;
 							context$2$0.prev = 24;
 	
-							if (!_iteratorNormalCompletion3 && _iterator3["return"]) {
-								_iterator3["return"]();
+							if (!_iteratorNormalCompletion3 && _iterator3['return']) {
+								_iterator3['return']();
 							}
 	
 						case 26:
@@ -643,7 +643,7 @@ return /******/ (function(modules) { // webpackBootstrap
 							return context$2$0.finish(23);
 	
 						case 31:
-						case "end":
+						case 'end':
 							return context$2$0.stop();
 					}
 				}, vertices, this, [[4, 19, 23, 31], [24,, 26, 30]]);
@@ -666,7 +666,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				return this.vertices();
 			}
 		}, {
-			key: "edges",
+			key: 'edges',
 	
 			/**
 	   * Iterate over all edges of the graph, in no particular order.
@@ -742,7 +742,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 						case 25:
 							context$2$0.prev = 25;
-							context$2$0.t1 = context$2$0["catch"](12);
+							context$2$0.t1 = context$2$0['catch'](12);
 							_didIteratorError5 = true;
 							_iteratorError5 = context$2$0.t1;
 	
@@ -750,8 +750,8 @@ return /******/ (function(modules) { // webpackBootstrap
 							context$2$0.prev = 29;
 							context$2$0.prev = 30;
 	
-							if (!_iteratorNormalCompletion5 && _iterator5["return"]) {
-								_iterator5["return"]();
+							if (!_iteratorNormalCompletion5 && _iterator5['return']) {
+								_iterator5['return']();
 							}
 	
 						case 32:
@@ -781,7 +781,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 						case 42:
 							context$2$0.prev = 42;
-							context$2$0.t2 = context$2$0["catch"](4);
+							context$2$0.t2 = context$2$0['catch'](4);
 							_didIteratorError4 = true;
 							_iteratorError4 = context$2$0.t2;
 	
@@ -789,8 +789,8 @@ return /******/ (function(modules) { // webpackBootstrap
 							context$2$0.prev = 46;
 							context$2$0.prev = 47;
 	
-							if (!_iteratorNormalCompletion4 && _iterator4["return"]) {
-								_iterator4["return"]();
+							if (!_iteratorNormalCompletion4 && _iterator4['return']) {
+								_iterator4['return']();
 							}
 	
 						case 49:
@@ -810,13 +810,13 @@ return /******/ (function(modules) { // webpackBootstrap
 							return context$2$0.finish(46);
 	
 						case 54:
-						case "end":
+						case 'end':
 							return context$2$0.stop();
 					}
 				}, edges, this, [[4, 42, 46, 54], [12, 25, 29, 37], [30,, 32, 36], [47,, 49, 53]]);
 			})
 		}, {
-			key: "verticesFrom",
+			key: 'verticesFrom',
 	
 			/**
 	   * Iterate over the outgoing edges of a given vertex in the graph, in no particular order.
@@ -843,7 +843,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				return this._verticesFrom(from);
 			}
 		}, {
-			key: "_verticesFrom",
+			key: '_verticesFrom',
 			value: regeneratorRuntime.mark(function _verticesFrom(from) {
 				var done, _iteratorNormalCompletion6, _didIteratorError6, _iteratorError6, _iterator6, _step6, to;
 	
@@ -885,7 +885,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 						case 17:
 							context$2$0.prev = 17;
-							context$2$0.t3 = context$2$0["catch"](4);
+							context$2$0.t3 = context$2$0['catch'](4);
 							_didIteratorError6 = true;
 							_iteratorError6 = context$2$0.t3;
 	
@@ -893,8 +893,8 @@ return /******/ (function(modules) { // webpackBootstrap
 							context$2$0.prev = 21;
 							context$2$0.prev = 22;
 	
-							if (!_iteratorNormalCompletion6 && _iterator6["return"]) {
-								_iterator6["return"]();
+							if (!_iteratorNormalCompletion6 && _iterator6['return']) {
+								_iterator6['return']();
 							}
 	
 						case 24:
@@ -914,13 +914,13 @@ return /******/ (function(modules) { // webpackBootstrap
 							return context$2$0.finish(21);
 	
 						case 29:
-						case "end":
+						case 'end':
 							return context$2$0.stop();
 					}
 				}, _verticesFrom, this, [[4, 17, 21, 29], [22,, 24, 28]]);
 			})
 		}, {
-			key: "verticesTo",
+			key: 'verticesTo',
 	
 			/**
 	   * Iterate over the incoming edges of a given vertex in the graph, in no particular order.
@@ -947,7 +947,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				return this._verticesTo(to);
 			}
 		}, {
-			key: "_verticesTo",
+			key: '_verticesTo',
 			value: regeneratorRuntime.mark(function _verticesTo(to) {
 				var done, _iteratorNormalCompletion7, _didIteratorError7, _iteratorError7, _iterator7, _step7, from;
 	
@@ -989,7 +989,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 						case 17:
 							context$2$0.prev = 17;
-							context$2$0.t4 = context$2$0["catch"](4);
+							context$2$0.t4 = context$2$0['catch'](4);
 							_didIteratorError7 = true;
 							_iteratorError7 = context$2$0.t4;
 	
@@ -997,8 +997,8 @@ return /******/ (function(modules) { // webpackBootstrap
 							context$2$0.prev = 21;
 							context$2$0.prev = 22;
 	
-							if (!_iteratorNormalCompletion7 && _iterator7["return"]) {
-								_iterator7["return"]();
+							if (!_iteratorNormalCompletion7 && _iterator7['return']) {
+								_iterator7['return']();
 							}
 	
 						case 24:
@@ -1018,13 +1018,13 @@ return /******/ (function(modules) { // webpackBootstrap
 							return context$2$0.finish(21);
 	
 						case 29:
-						case "end":
+						case 'end':
 							return context$2$0.stop();
 					}
 				}, _verticesTo, this, [[4, 17, 21, 29], [22,, 24, 28]]);
 			})
 		}, {
-			key: "verticesWithPathFrom",
+			key: 'verticesWithPathFrom',
 	
 			/**
 	   * Iterate over all vertices reachable from a given vertex in the graph, in no particular order.
@@ -1050,7 +1050,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				return this._verticesWithPathFrom(from, new Set());
 			}
 		}, {
-			key: "_verticesWithPathFrom",
+			key: '_verticesWithPathFrom',
 			value: regeneratorRuntime.mark(function _verticesWithPathFrom(from, done) {
 				var _iteratorNormalCompletion8, _didIteratorError8, _iteratorError8, _iterator8, _step8, to;
 	
@@ -1081,7 +1081,7 @@ return /******/ (function(modules) { // webpackBootstrap
 							return [to, this._vertices.get(to)];
 	
 						case 11:
-							return context$2$0.delegateYield(this._verticesWithPathFrom(to, done), "t5", 12);
+							return context$2$0.delegateYield(this._verticesWithPathFrom(to, done), 't5', 12);
 	
 						case 12:
 							_iteratorNormalCompletion8 = true;
@@ -1094,7 +1094,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 						case 17:
 							context$2$0.prev = 17;
-							context$2$0.t6 = context$2$0["catch"](3);
+							context$2$0.t6 = context$2$0['catch'](3);
 							_didIteratorError8 = true;
 							_iteratorError8 = context$2$0.t6;
 	
@@ -1102,8 +1102,8 @@ return /******/ (function(modules) { // webpackBootstrap
 							context$2$0.prev = 21;
 							context$2$0.prev = 22;
 	
-							if (!_iteratorNormalCompletion8 && _iterator8["return"]) {
-								_iterator8["return"]();
+							if (!_iteratorNormalCompletion8 && _iterator8['return']) {
+								_iterator8['return']();
 							}
 	
 						case 24:
@@ -1123,13 +1123,13 @@ return /******/ (function(modules) { // webpackBootstrap
 							return context$2$0.finish(21);
 	
 						case 29:
-						case "end":
+						case 'end':
 							return context$2$0.stop();
 					}
 				}, _verticesWithPathFrom, this, [[3, 17, 21, 29], [22,, 24, 28]]);
 			})
 		}, {
-			key: "verticesWithPathTo",
+			key: 'verticesWithPathTo',
 	
 			/**
 	   * Iterate over all vertices from which a given vertex in the graph can be reached, in no particular order.
@@ -1155,7 +1155,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				return this._verticesWithPathTo(to, new Set());
 			}
 		}, {
-			key: "_verticesWithPathTo",
+			key: '_verticesWithPathTo',
 			value: regeneratorRuntime.mark(function _verticesWithPathTo(to, done) {
 				var _iteratorNormalCompletion9, _didIteratorError9, _iteratorError9, _iterator9, _step9, from;
 	
@@ -1186,7 +1186,7 @@ return /******/ (function(modules) { // webpackBootstrap
 							return [from, this._vertices.get(from)];
 	
 						case 11:
-							return context$2$0.delegateYield(this._verticesWithPathTo(from, done), "t7", 12);
+							return context$2$0.delegateYield(this._verticesWithPathTo(from, done), 't7', 12);
 	
 						case 12:
 							_iteratorNormalCompletion9 = true;
@@ -1199,7 +1199,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 						case 17:
 							context$2$0.prev = 17;
-							context$2$0.t8 = context$2$0["catch"](3);
+							context$2$0.t8 = context$2$0['catch'](3);
 							_didIteratorError9 = true;
 							_iteratorError9 = context$2$0.t8;
 	
@@ -1207,8 +1207,8 @@ return /******/ (function(modules) { // webpackBootstrap
 							context$2$0.prev = 21;
 							context$2$0.prev = 22;
 	
-							if (!_iteratorNormalCompletion9 && _iterator9["return"]) {
-								_iterator9["return"]();
+							if (!_iteratorNormalCompletion9 && _iterator9['return']) {
+								_iterator9['return']();
 							}
 	
 						case 24:
@@ -1228,13 +1228,13 @@ return /******/ (function(modules) { // webpackBootstrap
 							return context$2$0.finish(21);
 	
 						case 29:
-						case "end":
+						case 'end':
 							return context$2$0.stop();
 					}
 				}, _verticesWithPathTo, this, [[3, 17, 21, 29], [22,, 24, 28]]);
 			})
 		}, {
-			key: "vertices_topologically",
+			key: 'vertices_topologically',
 	
 			/**
 	   * Iterate over all vertices of the graph in topological order.
@@ -1294,7 +1294,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 											_step10$value = _slicedToArray(_step10.value, 1);
 											b = _step10$value[0];
-											return context$3$0.delegateYield(visit(b), "t9", 15);
+											return context$3$0.delegateYield(visit(b), 't9', 15);
 	
 										case 15:
 											_iteratorNormalCompletion10 = true;
@@ -1307,7 +1307,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 										case 20:
 											context$3$0.prev = 20;
-											context$3$0.t10 = context$3$0["catch"](9);
+											context$3$0.t10 = context$3$0['catch'](9);
 											_didIteratorError10 = true;
 											_iteratorError10 = context$3$0.t10;
 	
@@ -1315,8 +1315,8 @@ return /******/ (function(modules) { // webpackBootstrap
 											context$3$0.prev = 24;
 											context$3$0.prev = 25;
 	
-											if (!_iteratorNormalCompletion10 && _iterator10["return"]) {
-												_iterator10["return"]();
+											if (!_iteratorNormalCompletion10 && _iterator10['return']) {
+												_iterator10['return']();
 											}
 	
 										case 27:
@@ -1351,7 +1351,7 @@ return /******/ (function(modules) { // webpackBootstrap
 											visited.pop();
 	
 										case 37:
-										case "end":
+										case 'end':
 											return context$3$0.stop();
 									}
 								}, marked2$0[0], this, [[9, 20, 24, 32], [25,, 27, 31]]);
@@ -1381,7 +1381,7 @@ return /******/ (function(modules) { // webpackBootstrap
 								break;
 							}
 	
-							return context$2$0.delegateYield(visit(a), "t11", 15);
+							return context$2$0.delegateYield(visit(a), 't11', 15);
 	
 						case 15:
 							_iteratorNormalCompletion11 = true;
@@ -1394,7 +1394,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 						case 20:
 							context$2$0.prev = 20;
-							context$2$0.t12 = context$2$0["catch"](8);
+							context$2$0.t12 = context$2$0['catch'](8);
 							_didIteratorError11 = true;
 							_iteratorError11 = context$2$0.t12;
 	
@@ -1402,8 +1402,8 @@ return /******/ (function(modules) { // webpackBootstrap
 							context$2$0.prev = 24;
 							context$2$0.prev = 25;
 	
-							if (!_iteratorNormalCompletion11 && _iterator11["return"]) {
-								_iterator11["return"]();
+							if (!_iteratorNormalCompletion11 && _iterator11['return']) {
+								_iterator11['return']();
 							}
 	
 						case 27:
@@ -1423,13 +1423,13 @@ return /******/ (function(modules) { // webpackBootstrap
 							return context$2$0.finish(24);
 	
 						case 32:
-						case "end":
+						case 'end':
 							return context$2$0.stop();
 					}
 				}, vertices_topologically, this, [[8, 20, 24, 32], [25,, 27, 31]]);
 			})
 		}, {
-			key: "clearEdges",
+			key: 'clearEdges',
 	
 			//////////////////////////////
 			////////// Clearing //////////
@@ -1456,8 +1456,8 @@ return /******/ (function(modules) { // webpackBootstrap
 					_iteratorError12 = err;
 				} finally {
 					try {
-						if (!_iteratorNormalCompletion12 && _iterator12["return"]) {
-							_iterator12["return"]();
+						if (!_iteratorNormalCompletion12 && _iterator12['return']) {
+							_iterator12['return']();
 						}
 					} finally {
 						if (_didIteratorError12) {
@@ -1467,7 +1467,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				}
 			}
 		}, {
-			key: "clear",
+			key: 'clear',
 	
 			/**
 	   * Remove all edges and vertices from the graph, putting it back in its initial state.
@@ -1489,8 +1489,8 @@ return /******/ (function(modules) { // webpackBootstrap
 					_iteratorError13 = err;
 				} finally {
 					try {
-						if (!_iteratorNormalCompletion13 && _iterator13["return"]) {
-							_iterator13["return"]();
+						if (!_iteratorNormalCompletion13 && _iterator13['return']) {
+							_iterator13['return']();
 						}
 					} finally {
 						if (_didIteratorError13) {
@@ -1500,7 +1500,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				}
 			}
 		}, {
-			key: "equals",
+			key: 'equals',
 	
 			////////////////////////////////////////
 			////////// (Advanced) Queries //////////
@@ -1557,8 +1557,8 @@ return /******/ (function(modules) { // webpackBootstrap
 					_iteratorError14 = err;
 				} finally {
 					try {
-						if (!_iteratorNormalCompletion14 && _iterator14["return"]) {
-							_iterator14["return"]();
+						if (!_iteratorNormalCompletion14 && _iterator14['return']) {
+							_iterator14['return']();
 						}
 					} finally {
 						if (_didIteratorError14) {
@@ -1591,8 +1591,8 @@ return /******/ (function(modules) { // webpackBootstrap
 					_iteratorError15 = err;
 				} finally {
 					try {
-						if (!_iteratorNormalCompletion15 && _iterator15["return"]) {
-							_iterator15["return"]();
+						if (!_iteratorNormalCompletion15 && _iterator15['return']) {
+							_iterator15['return']();
 						}
 					} finally {
 						if (_didIteratorError15) {
@@ -1604,7 +1604,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				return true;
 			}
 		}, {
-			key: "cycle",
+			key: 'cycle',
 	
 			/**
 	   * Find any directed cycle in this graph.
@@ -1662,8 +1662,8 @@ return /******/ (function(modules) { // webpackBootstrap
 						_iteratorError16 = err;
 					} finally {
 						try {
-							if (!_iteratorNormalCompletion16 && _iterator16["return"]) {
-								_iterator16["return"]();
+							if (!_iteratorNormalCompletion16 && _iterator16['return']) {
+								_iterator16['return']();
 							}
 						} finally {
 							if (_didIteratorError16) {
@@ -1695,8 +1695,8 @@ return /******/ (function(modules) { // webpackBootstrap
 					_iteratorError17 = err;
 				} finally {
 					try {
-						if (!_iteratorNormalCompletion17 && _iterator17["return"]) {
-							_iterator17["return"]();
+						if (!_iteratorNormalCompletion17 && _iterator17['return']) {
+							_iterator17['return']();
 						}
 					} finally {
 						if (_didIteratorError17) {
@@ -1708,7 +1708,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				return null;
 			}
 		}, {
-			key: "hasCycle",
+			key: 'hasCycle',
 	
 			/**
 	   * Test whether this graph contains a directed cycle.
@@ -1718,7 +1718,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				return !!this.cycle();
 			}
 		}, {
-			key: "path",
+			key: 'path',
 	
 			/**
 	   * Find any path between a given pair of keys.
@@ -1774,8 +1774,8 @@ return /******/ (function(modules) { // webpackBootstrap
 						_iteratorError18 = err;
 					} finally {
 						try {
-							if (!_iteratorNormalCompletion18 && _iterator18["return"]) {
-								_iterator18["return"]();
+							if (!_iteratorNormalCompletion18 && _iterator18['return']) {
+								_iterator18['return']();
 							}
 						} finally {
 							if (_didIteratorError18) {
@@ -1791,7 +1791,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				return hasPathAux(from);
 			}
 		}, {
-			key: "hasPath",
+			key: 'hasPath',
 	
 			/**
 	   * Test whether there is a directed path between a given pair of keys.
@@ -1803,49 +1803,57 @@ return /******/ (function(modules) { // webpackBootstrap
 				return !!this.path(from, to);
 			}
 		}, {
-			key: "clone",
+			key: 'mergeIn',
 	
-			/////////////////////////////
-			////////// Cloning //////////
-			/////////////////////////////
+			///////////////////////////////////////
+			////////// Cloning and stuff //////////
+			///////////////////////////////////////
 	
 			/**
-	   * Create a clone of this graph.
-	   * @param [tr] {function(*, string, ?string): *}
-	   *     a custom transformation function for stored values; defaults to
-	   *     the identity function; The first argument is the value to clone.
-	   *     If it is a vertex value, the third argument is the vertex key.
-	   *     If it is an edge value, the third and fourth argument are the
-	   *     `from` and `to` keys respectively. (So you can test the fourth
-	   *     argument to distinguish the two cases.)
-	   * @returns {Graph} a clone of this graph
+	   * Merge another graph into this graph.
+	   * @param other {Graph} the other graph to merge into this one
+	   * @param [mV] {function(*, *, string): *}
+	   *     a custom merge function for values stored in vertices;
+	   *     defaults to whichever of the two values is not `undefined`,
+	   *     giving preference to that of the other graph; The first and
+	   *     second arguments are the vertex values of `this` graph and the
+	   *     `other` graph respectively. The third is the corresponding `key`.
+	   * @param [mE] {function(*, *, string, string): *}
+	   *     a custom merge function for values stored in edges;
+	   *     defaults to whichever of the two values is not `undefined`,
+	   *     giving preference to that of the other graph; The first and
+	   *     second arguments are the edge values of `this` graph and the
+	   *     `other` graph respectively. The third and fourth are the
+	   *     corresponding `from` and `to` keys.
 	   */
-			value: function clone() {
-				var tr = arguments[0] === undefined ? function (v) {
-					return v;
-				} : arguments[0];
-	
-				var result = new Graph();
+			value: function mergeIn(other, mV, mE) {
+				if (!mV) {
+					mV = function (v1, v2) {
+						return typeof v2 === 'undefined' ? v1 : v2;
+					};
+				}
+				if (!mE) {
+					mE = mV;
+				}
 				var _iteratorNormalCompletion19 = true;
 				var _didIteratorError19 = false;
 				var _iteratorError19 = undefined;
 	
 				try {
-					for (var _iterator19 = this.vertices()[Symbol.iterator](), _step19; !(_iteratorNormalCompletion19 = (_step19 = _iterator19.next()).done); _iteratorNormalCompletion19 = true) {
-						var _step19$value = _slicedToArray(_step19.value, 2);
+					for (var _iterator19 = other.vertices()[Symbol.iterator](), _step19; !(_iteratorNormalCompletion19 = (_step19 = _iterator19.next()).done); _iteratorNormalCompletion19 = true) {
+						var _step19$value = _slicedToArray(_step19.value, 1);
 	
 						var key = _step19$value[0];
-						var val = _step19$value[1];
 	
-						result.addVertex(key, tr(val, key));
+						this.addVertex(key, mV(this.vertexValue(key), other.vertexValue(key)));
 					}
 				} catch (err) {
 					_didIteratorError19 = true;
 					_iteratorError19 = err;
 				} finally {
 					try {
-						if (!_iteratorNormalCompletion19 && _iterator19["return"]) {
-							_iterator19["return"]();
+						if (!_iteratorNormalCompletion19 && _iterator19['return']) {
+							_iterator19['return']();
 						}
 					} finally {
 						if (_didIteratorError19) {
@@ -1859,22 +1867,21 @@ return /******/ (function(modules) { // webpackBootstrap
 				var _iteratorError20 = undefined;
 	
 				try {
-					for (var _iterator20 = this.edges()[Symbol.iterator](), _step20; !(_iteratorNormalCompletion20 = (_step20 = _iterator20.next()).done); _iteratorNormalCompletion20 = true) {
-						var _step20$value = _slicedToArray(_step20.value, 3);
+					for (var _iterator20 = other.edges()[Symbol.iterator](), _step20; !(_iteratorNormalCompletion20 = (_step20 = _iterator20.next()).done); _iteratorNormalCompletion20 = true) {
+						var _step20$value = _slicedToArray(_step20.value, 2);
 	
 						var from = _step20$value[0];
 						var to = _step20$value[1];
-						var val = _step20$value[2];
 	
-						result.addEdge(from, to, tr(val, from, to));
+						this.addEdge(from, to, mE(this.edgeValue(from, to), other.edgeValue(from, to), from, to));
 					}
 				} catch (err) {
 					_didIteratorError20 = true;
 					_iteratorError20 = err;
 				} finally {
 					try {
-						if (!_iteratorNormalCompletion20 && _iterator20["return"]) {
-							_iterator20["return"]();
+						if (!_iteratorNormalCompletion20 && _iterator20['return']) {
+							_iterator20['return']();
 						}
 					} finally {
 						if (_didIteratorError20) {
@@ -1882,29 +1889,66 @@ return /******/ (function(modules) { // webpackBootstrap
 						}
 					}
 				}
+			}
+		}, {
+			key: 'clone',
 	
+			/**
+	   * Create a clone of this graph.
+	   * @param [trV] {function(*, string): *}
+	   *     a custom transformation function for values stored in vertices;
+	   *     defaults to the identity function; The first argument is the
+	   *     value to clone. The second is the corresponding `key`.
+	   * @param [trE] {function(*, string, string): *}
+	   *     a custom transformation function for values stored in edges;
+	   *     defaults to the function given for `trV`; The first argument
+	   *     is the value to clone. The second and third are the `from`
+	   *     and `to` keys respectively.
+	   * @returns {Graph} a clone of this graph
+	   */
+			value: function clone(trV, trE) {
+				if (!trV) {
+					trV = function (v) {
+						return v;
+					};
+				}
+				if (!trE) {
+					trE = trV;
+				}
+				var result = new Graph();
+				result.mergeIn(this, function (v1, v2) {
+					return trV(v2);
+				}, function (v1, v2) {
+					return trE(v2);
+				});
 				return result;
 			}
 		}, {
-			key: "transitiveReduction",
+			key: 'transitiveReduction',
 	
 			/**
 	   * Create a clone of this graph, but without any transitive edges.
-	   * @param [tr] {function(*, string, ?string): *}
-	   *     a custom transformation function for stored values; defaults to
-	   *     the identity function; The first argument is the value to clone.
-	   *     If it is a vertex value, the third argument is the vertex key.
-	   *     If it is an edge value, the third and fourth argument are the
-	   *     `from` and `to` keys respectively. (So you can test the fourth
-	   *     argument to distinguish the two cases.)
-	   * @returns {Graph} a clone of this graph
+	   * @param [trV] {function(*, string): *}
+	   *     a custom transformation function for values stored in vertices;
+	   *     defaults to the identity function; The first argument is the
+	   *     value to clone. The second is the corresponding `key`.
+	   * @param [trE] {function(*, string, string): *}
+	   *     a custom transformation function for values stored in edges;
+	   *     defaults to the function given for `trV`; The first argument
+	   *     is the value to clone. The second and third are the `from`
+	   *     and `to` keys respectively.
+	   * @returns {Graph} a clone of this graph with all transitive edges removed
 	   */
-			value: function transitiveReduction() {
-				var tr = arguments[0] === undefined ? function (v) {
-					return v;
-				} : arguments[0];
-	
-				var result = this.clone(tr);
+			value: function transitiveReduction(trV, trE) {
+				if (!trV) {
+					trV = function (v) {
+						return v;
+					};
+				}
+				if (!trE) {
+					trE = trV;
+				}
+				var result = this.clone(trV, trE);
 				var _iteratorNormalCompletion21 = true;
 				var _didIteratorError21 = false;
 				var _iteratorError21 = undefined;
@@ -1935,17 +1979,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 											var z = _step23$value[0];
 	
-											if (result.hasPath(y, z)) {
-												result.removeEdge(x, z);
-											}
+											if (result.hasPath(y, z)) result.removeEdge(x, z);
 										}
 									} catch (err) {
 										_didIteratorError23 = true;
 										_iteratorError23 = err;
 									} finally {
 										try {
-											if (!_iteratorNormalCompletion23 && _iterator23["return"]) {
-												_iterator23["return"]();
+											if (!_iteratorNormalCompletion23 && _iterator23['return']) {
+												_iterator23['return']();
 											}
 										} finally {
 											if (_didIteratorError23) {
@@ -1960,8 +2002,8 @@ return /******/ (function(modules) { // webpackBootstrap
 							_iteratorError22 = err;
 						} finally {
 							try {
-								if (!_iteratorNormalCompletion22 && _iterator22["return"]) {
-									_iterator22["return"]();
+								if (!_iteratorNormalCompletion22 && _iterator22['return']) {
+									_iterator22['return']();
 								}
 							} finally {
 								if (_didIteratorError22) {
@@ -1975,8 +2017,8 @@ return /******/ (function(modules) { // webpackBootstrap
 					_iteratorError21 = err;
 				} finally {
 					try {
-						if (!_iteratorNormalCompletion21 && _iterator21["return"]) {
-							_iterator21["return"]();
+						if (!_iteratorNormalCompletion21 && _iterator21['return']) {
+							_iterator21['return']();
 						}
 					} finally {
 						if (_didIteratorError21) {
@@ -1992,7 +2034,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		return Graph;
 	})();
 	
-	exports["default"] = Graph;
+	exports['default'] = Graph;
 	
 	//  ////////////////////////////////////////////////////////////////////////////////////////////////
 	//  // Errors //////////////////////////////////////////////////////////////////////////////////////
@@ -2027,19 +2069,19 @@ return /******/ (function(modules) { // webpackBootstrap
 		_inherits(VertexExistsError, _Error);
 	
 		_createClass(VertexExistsError, [{
-			key: "v",
+			key: 'v',
 			value: function v(key, value) {
 				this.vertices.add({ key: key, value: value });
 				this._refreshMessage();
 				return this;
 			}
 		}, {
-			key: "_refreshMessage",
+			key: '_refreshMessage',
 			value: function _refreshMessage() {
-				var aVertices = this.vertices.size === 1 ? "a vertex" : "vertices";
-				this.message = "This graph has " + aVertices + " '" + [].concat(_toConsumableArray(this.vertices)).map(function (v) {
+				var aVertices = this.vertices.size === 1 ? 'a vertex' : 'vertices';
+				this.message = 'This graph has ' + aVertices + ' \'' + [].concat(_toConsumableArray(this.vertices)).map(function (v) {
 					return v.key;
-				}).join("', '") + "'";
+				}).join('\', \'') + '\'';
 			}
 		}]);
 	
@@ -2075,19 +2117,19 @@ return /******/ (function(modules) { // webpackBootstrap
 		_inherits(VertexNotExistError, _Error2);
 	
 		_createClass(VertexNotExistError, [{
-			key: "v",
+			key: 'v',
 			value: function v(key) {
 				this.vertices.add({ key: key });
 				this._refreshMessage();
 				return this;
 			}
 		}, {
-			key: "_refreshMessage",
+			key: '_refreshMessage',
 			value: function _refreshMessage() {
-				var aVertices = this.vertices.size === 1 ? "a vertex" : "vertices";
-				this.message = "This graph does not have " + aVertices + " '" + [].concat(_toConsumableArray(this.vertices)).map(function (v) {
+				var aVertices = this.vertices.size === 1 ? 'a vertex' : 'vertices';
+				this.message = 'This graph does not have ' + aVertices + ' \'' + [].concat(_toConsumableArray(this.vertices)).map(function (v) {
 					return v.key;
-				}).join("', '") + "'";
+				}).join('\', \'') + '\'';
 			}
 		}]);
 	
@@ -2123,14 +2165,14 @@ return /******/ (function(modules) { // webpackBootstrap
 		_inherits(EdgeExistsError, _Error3);
 	
 		_createClass(EdgeExistsError, [{
-			key: "e",
+			key: 'e',
 			value: function e(from, to, value) {
 				this.edges.add({ from: from, to: to, value: value });
 				this._refreshMessage();
 				return this;
 			}
 		}, {
-			key: "_refreshMessage",
+			key: '_refreshMessage',
 			value: function _refreshMessage() {
 				var edges = [];
 				var _iteratorNormalCompletion24 = true;
@@ -2143,15 +2185,15 @@ return /******/ (function(modules) { // webpackBootstrap
 						var from = _step24$value.from;
 						var to = _step24$value.to;
 	
-						edges.push("('" + from + "', '" + to + "')");
+						edges.push('(\'' + from + '\', \'' + to + '\')');
 					}
 				} catch (err) {
 					_didIteratorError24 = true;
 					_iteratorError24 = err;
 				} finally {
 					try {
-						if (!_iteratorNormalCompletion24 && _iterator24["return"]) {
-							_iterator24["return"]();
+						if (!_iteratorNormalCompletion24 && _iterator24['return']) {
+							_iterator24['return']();
 						}
 					} finally {
 						if (_didIteratorError24) {
@@ -2160,8 +2202,8 @@ return /******/ (function(modules) { // webpackBootstrap
 					}
 				}
 	
-				var anEdges = edges.length === 1 ? "an edge" : "edges";
-				this.message = "This graph has " + anEdges + " " + edges.join(", ");
+				var anEdges = edges.length === 1 ? 'an edge' : 'edges';
+				this.message = 'This graph has ' + anEdges + ' ' + edges.join(', ');
 			}
 		}]);
 	
@@ -2197,14 +2239,14 @@ return /******/ (function(modules) { // webpackBootstrap
 		_inherits(EdgeNotExistsError, _Error4);
 	
 		_createClass(EdgeNotExistsError, [{
-			key: "e",
+			key: 'e',
 			value: function e(from, to) {
 				this.edges.add({ from: from, to: to });
 				this._refreshMessage();
 				return this;
 			}
 		}, {
-			key: "_refreshMessage",
+			key: '_refreshMessage',
 			value: function _refreshMessage() {
 				var edges = [];
 				var _iteratorNormalCompletion25 = true;
@@ -2217,15 +2259,15 @@ return /******/ (function(modules) { // webpackBootstrap
 						var from = _step25$value.from;
 						var to = _step25$value.to;
 	
-						edges.push("('" + from + "', '" + to + "')");
+						edges.push('(\'' + from + '\', \'' + to + '\')');
 					}
 				} catch (err) {
 					_didIteratorError25 = true;
 					_iteratorError25 = err;
 				} finally {
 					try {
-						if (!_iteratorNormalCompletion25 && _iterator25["return"]) {
-							_iterator25["return"]();
+						if (!_iteratorNormalCompletion25 && _iterator25['return']) {
+							_iterator25['return']();
 						}
 					} finally {
 						if (_didIteratorError25) {
@@ -2234,8 +2276,8 @@ return /******/ (function(modules) { // webpackBootstrap
 					}
 				}
 	
-				var anEdges = edges.length === 1 ? "an edge" : "edges";
-				this.message = "This graph does not have " + anEdges + " " + edges.join(", ");
+				var anEdges = edges.length === 1 ? 'an edge' : 'edges';
+				this.message = 'This graph does not have ' + anEdges + ' ' + edges.join(', ');
 			}
 		}]);
 	
@@ -2264,7 +2306,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @type {string}
 	   */
 			_this5.key = key;
-			_this5.message = "The '" + key + "' vertex has connected edges";
+			_this5.message = 'The \'' + key + '\' vertex has connected edges';
 			return _this5;
 		}
 	
@@ -2295,7 +2337,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @type {Array.<string>}
 	   */
 			_this6.cycle = cycle;
-			_this6.message = "This graph contains a cycle: " + cycle;
+			_this6.message = 'This graph contains a cycle: ' + cycle;
 			return _this6;
 		}
 	
@@ -2303,7 +2345,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 		return CycleError;
 	})(Error);
-	module.exports = exports["default"];
+	module.exports = exports['default'];
 	// stack
 
 /***/ }

@@ -79,8 +79,9 @@ API Documentation
     * [.hasCycle()](#Graph#hasCycle) ⇒ <code>boolean</code>
     * [.path(from, to)](#Graph#path) ⇒ <code>array</code>
     * [.hasPath(from, to)](#Graph#hasPath) ⇒ <code>boolean</code>
-    * [.clone([tr])](#Graph#clone) ⇒ <code>[Graph](#Graph)</code>
-    * [.transitiveReduction([tr])](#Graph#transitiveReduction) ⇒ <code>[Graph](#Graph)</code>
+    * [.mergeIn(other, [mV], [mE])](#Graph#mergeIn)
+    * [.clone([trV], [trE])](#Graph#clone) ⇒ <code>[Graph](#Graph)</code>
+    * [.transitiveReduction([trV], [trE])](#Graph#transitiveReduction) ⇒ <code>[Graph](#Graph)</code>
     * <ins><b>static</b></ins>
     * [.VertexExistsError](#Graph.VertexExistsError) ⇐ <code>Error</code>
         * [.vertices](#Graph.VertexExistsError#vertices) : <code>Set.&lt;{key: string, value}&gt;</code>
@@ -761,29 +762,45 @@ Test whether there is a directed path between a given pair of keys.
 
 -----
 
+<a name="Graph#mergeIn"></a>
+#### *graph*.mergeIn(other, [mV], [mE])
+Merge another graph into this graph.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| other | <code>[Graph](#Graph)</code> | the other graph to merge into this one |
+| [mV] | <code>function</code> | a custom merge function for values stored in vertices;     defaults to whichever of the two values is not `undefined`,     giving preference to that of the other graph; The first and     second arguments are the vertex values of `this` graph and the     `other` graph respectively. The third is the corresponding `key`. |
+| [mE] | <code>function</code> | a custom merge function for values stored in edges;     defaults to whichever of the two values is not `undefined`,     giving preference to that of the other graph; The first and     second arguments are the edge values of `this` graph and the     `other` graph respectively. The third and fourth are the     corresponding `from` and `to` keys. |
+
+
+-----
+
 <a name="Graph#clone"></a>
-#### *graph*.clone([tr]) ⇒ <code>[Graph](#Graph)</code>
+#### *graph*.clone([trV], [trE]) ⇒ <code>[Graph](#Graph)</code>
 Create a clone of this graph.
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| [tr] | <code>function</code> | a custom transformation function for stored values; defaults to     the identity function; The first argument is the value to clone.     If it is a vertex value, the third argument is the vertex key.     If it is an edge value, the third and fourth argument are the     `from` and `to` keys respectively. (So you can test the fourth     argument to distinguish the two cases.) |
+| [trV] | <code>function</code> | a custom transformation function for values stored in vertices;     defaults to the identity function; The first argument is the     value to clone. The second is the corresponding `key`. |
+| [trE] | <code>function</code> | a custom transformation function for values stored in edges;     defaults to the function given for `trV`; The first argument     is the value to clone. The second and third are the `from`     and `to` keys respectively. |
 
 **Returns**: <code>[Graph](#Graph)</code> - a clone of this graph  
 
 -----
 
 <a name="Graph#transitiveReduction"></a>
-#### *graph*.transitiveReduction([tr]) ⇒ <code>[Graph](#Graph)</code>
+#### *graph*.transitiveReduction([trV], [trE]) ⇒ <code>[Graph](#Graph)</code>
 Create a clone of this graph, but without any transitive edges.
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| [tr] | <code>function</code> | a custom transformation function for stored values; defaults to     the identity function; The first argument is the value to clone.     If it is a vertex value, the third argument is the vertex key.     If it is an edge value, the third and fourth argument are the     `from` and `to` keys respectively. (So you can test the fourth     argument to distinguish the two cases.) |
+| [trV] | <code>function</code> | a custom transformation function for values stored in vertices;     defaults to the identity function; The first argument is the     value to clone. The second is the corresponding `key`. |
+| [trE] | <code>function</code> | a custom transformation function for values stored in edges;     defaults to the function given for `trV`; The first argument     is the value to clone. The second and third are the `from`     and `to` keys respectively. |
 
-**Returns**: <code>[Graph](#Graph)</code> - a clone of this graph  
+**Returns**: <code>[Graph](#Graph)</code> - a clone of this graph with all transitive edges removed  
 
 -----
 
