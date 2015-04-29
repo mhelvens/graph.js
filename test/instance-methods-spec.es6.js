@@ -1136,6 +1136,51 @@ describe("method", () => {//////////////////////////////////////////////////////
 	});
 
 
+	describeMethod('outDegree', () => {
+
+		it_throwsErrorIfVertexDoesNotExist();
+
+		it("returns the number of edges going out of a given vertex", () => {
+			expect(callItWith('k1')).toBe(0);
+			expect(callItWith('k2')).toBe(2);
+			expect(callItWith('k3')).toBe(1);
+			expect(callItWith('k4')).toBe(0);
+			expect(callItWith('k5')).toBe(1);
+		});
+
+	});
+
+
+	describeMethod('inDegree', () => {
+
+		it_throwsErrorIfVertexDoesNotExist();
+
+		it("returns the number of edges coming into a given vertex", () => {
+			expect(callItWith('k1')).toBe(0);
+			expect(callItWith('k2')).toBe(0);
+			expect(callItWith('k3')).toBe(2);
+			expect(callItWith('k4')).toBe(1);
+			expect(callItWith('k5')).toBe(1);
+		});
+
+	});
+
+
+	describeMethod('degree', () => {
+
+		it_throwsErrorIfVertexDoesNotExist();
+
+		it("returns the number of edges connected to a given vertex", () => {
+			expect(callItWith('k1')).toBe(0);
+			expect(callItWith('k2')).toBe(2);
+			expect(callItWith('k3')).toBe(3);
+			expect(callItWith('k4')).toBe(1);
+			expect(callItWith('k5')).toBe(2);
+		});
+
+	});
+
+
 	// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
 
 

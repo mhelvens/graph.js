@@ -79,6 +79,9 @@ API Documentation
     * [.hasCycle()](#Graph#hasCycle) ⇒ <code>boolean</code>
     * [.path(from, to)](#Graph#path) ⇒ <code>array</code>
     * [.hasPath(from, to)](#Graph#hasPath) ⇒ <code>boolean</code>
+    * [.outDegree(key)](#Graph#outDegree) ⇒ <code>number</code>
+    * [.inDegree(key)](#Graph#inDegree) ⇒ <code>number</code>
+    * [.degree(key)](#Graph#degree) ⇒ <code>number</code>
     * [.mergeIn(other, [mV], [mE])](#Graph#mergeIn)
     * [.clone([trV], [trE])](#Graph#clone) ⇒ <code>[Graph](#Graph)</code>
     * [.transitiveReduction([trV], [trE])](#Graph#transitiveReduction) ⇒ <code>[Graph](#Graph)</code>
@@ -759,6 +762,57 @@ Test whether there is a directed path between a given pair of keys.
 | to | <code>string</code> | the terminating vertex |
 
 **Returns**: <code>boolean</code> - whether such a path exists  
+
+-----
+
+<a name="Graph#outDegree"></a>
+#### *graph*.outDegree(key) ⇒ <code>number</code>
+Get the number of edges going out of a given vertex.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| key | <code>string</code> | the key of the vertex to query |
+
+**Throws**:
+
+- <code>[VertexNotExistsError](#Graph.VertexNotExistsError)</code> if a vertex with this key does not exist
+
+**Returns**: <code>number</code> - the number of edges going out of the `key` vertex  
+
+-----
+
+<a name="Graph#inDegree"></a>
+#### *graph*.inDegree(key) ⇒ <code>number</code>
+Get the number of edges coming into a given vertex.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| key | <code>string</code> | the key of the vertex to query |
+
+**Throws**:
+
+- <code>[VertexNotExistsError](#Graph.VertexNotExistsError)</code> if a vertex with this key does not exist
+
+**Returns**: <code>number</code> - the number of edges coming into the `key` vertex  
+
+-----
+
+<a name="Graph#degree"></a>
+#### *graph*.degree(key) ⇒ <code>number</code>
+Get the number of edges connected to a given vertex.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| key | <code>string</code> | the key of the vertex to query |
+
+**Throws**:
+
+- <code>[VertexNotExistsError](#Graph.VertexNotExistsError)</code> if a vertex with this key does not exist
+
+**Returns**: <code>number</code> - the number of edges connected to the `key` vertex  
 
 -----
 

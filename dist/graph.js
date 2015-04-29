@@ -1803,6 +1803,48 @@ return /******/ (function(modules) { // webpackBootstrap
 				return !!this.path(from, to);
 			}
 		}, {
+			key: 'outDegree',
+	
+			/**
+	   * Get the number of edges going out of a given vertex.
+	   * @throws {Graph.VertexNotExistsError} if a vertex with this key does not exist
+	   * @param key {string} the key of the vertex to query
+	   * @returns {number} the number of edges going out of the `key` vertex
+	   */
+			value: function outDegree(key) {
+				if (!this.hasVertex(key)) {
+					throw new Graph.VertexNotExistsError(key);
+				}
+				return this._edges.get(key).size;
+			}
+		}, {
+			key: 'inDegree',
+	
+			/**
+	   * Get the number of edges coming into a given vertex.
+	   * @throws {Graph.VertexNotExistsError} if a vertex with this key does not exist
+	   * @param key {string} the key of the vertex to query
+	   * @returns {number} the number of edges coming into the `key` vertex
+	   */
+			value: function inDegree(key) {
+				if (!this.hasVertex(key)) {
+					throw new Graph.VertexNotExistsError(key);
+				}
+				return this._reverseEdges.get(key).size;
+			}
+		}, {
+			key: 'degree',
+	
+			/**
+	   * Get the number of edges connected to a given vertex.
+	   * @throws {Graph.VertexNotExistsError} if a vertex with this key does not exist
+	   * @param key {string} the key of the vertex to query
+	   * @returns {number} the number of edges connected to the `key` vertex
+	   */
+			value: function degree(key) {
+				return this.outDegree(key) + this.inDegree(key);
+			}
+		}, {
 			key: 'mergeIn',
 	
 			///////////////////////////////////////
