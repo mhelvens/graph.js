@@ -32,7 +32,7 @@ module.exports = {
 				}
 			],
 			loaders: [
-				{ test: /\.es6\.js$/, loader: 'babel' }
+				{ test: /\.es6\.js$/, loader: 'babel?compact=true' }
 			]
 		}
 	},

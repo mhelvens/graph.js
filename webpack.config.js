@@ -14,7 +14,7 @@ module.exports = {
 	},
 	module: {
 		loaders: [
-			{ test: /\.es6\.js$/, loader: 'babel' }
+			{ test: /\.es6\.js$/, loader: 'babel?compact=false' }
 		]
 	}
 };
