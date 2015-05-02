@@ -933,7 +933,6 @@ export default class Graph {
 		return result;
 	}
 
-
 }
 
 
@@ -1032,7 +1031,7 @@ Graph.EdgeExistsError = class EdgeExistsError extends Error {
 	_refreshMessage() {
 		let edges = [];
 		for (let {from, to} of this.edges) {
-			edges.push("('" + from + "', '" + to + "')");
+			edges.push(`('${from}', '${to}')`);
 		}
 		let anEdges = edges.length === 1 ? "an edge" : "edges";
 		this.message = `This graph has ${anEdges} ${edges.join(", ")}`;
@@ -1066,7 +1065,7 @@ Graph.EdgeNotExistsError = class EdgeNotExistsError extends Error {
 	_refreshMessage() {
 		let edges = [];
 		for (let {from, to} of this.edges) {
-			edges.push("('" + from + "', '" + to + "')");
+			edges.push(`('${from}', '${to}')`);
 		}
 		let anEdges = edges.length === 1 ? "an edge" : "edges";
 		this.message = `This graph does not have ${anEdges} ${edges.join(", ")}`;
