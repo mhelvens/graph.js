@@ -15,6 +15,8 @@ export default class Graph {
 		this._vertices     = new Map(); // Map.< string, * >
 		this._edges        = new Map(); // Map.< string, Map.<string, *> >
 		this._reverseEdges = new Map(); // Map.< string, Set.<*> >
+		this._sources      = new Set(); // Set.< string >
+		this._sinks        = new Set(); // Set.< string >
 		this._vertexCount  = 0;
 		this._edgeCount    = 0;
 	}
@@ -40,6 +42,8 @@ export default class Graph {
 		this._edges.set(key, new Map());
 		this._reverseEdges.set(key, new Set());
 		this._vertexCount += 1;
+		this._sources.add(key);
+		this._sinks.add(key);
 	}
 
 	/**
@@ -99,6 +103,8 @@ export default class Graph {
 		}
 		this._vertices.delete(key);
 		this._vertexCount -= 1;
+		this._sources.delete(key);
+		this._sinks.delete(key);
 	}
 
 	/**
@@ -201,6 +207,8 @@ export default class Graph {
 		this._edges.get(from).set(to, value);
 		this._reverseEdges.get(to).add(from);
 		this._edgeCount += 1;
+		this._sources.delete(to);
+		this._sinks.delete(from);
 	}
 
 	/**
@@ -323,6 +331,8 @@ export default class Graph {
 		this._edges.get(from).delete(to);
 		this._reverseEdges.get(to).delete(from);
 		this._edgeCount -= 1;
+		if (this. inDegree(to)   === 0) { this._sources.add(to) }
+		if (this.outDegree(from) === 0) { this._sinks.add(from) }
 	}
 
 	/**
@@ -574,6 +584,59 @@ export default class Graph {
 		}
 	}
 
+
+	/**
+	 * Iterate over all vertices that have no incoming edges, in no particular order.
+	 * @returns { Iterator.<string, *> } an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}
+	 * @example
+	 * for (var it = graph.sources(), keyValue = it.next(); !it.done;) {
+	 *     var key   = keyValue[0],
+	 *         value = keyValue[1];
+	 *     // iterates over all vertices with no incoming edges
+	 * }
+	 * @example
+	 * // in ECMAScript 6, you can use a for..of loop
+	 * for (let [key, value] of graph.sources()) {
+	 *     // iterates over all vertices with no incoming edges
+	 * }
+	 */
+	*sources() {
+		let done = new Set();
+		for (let key of this._sources) {
+			if (this.hasVertex(key) && !done.has(key)) {
+				done.add(key);
+				yield [key, this.vertexValue(key)];
+			}
+		}
+	}
+
+
+	/**
+	 * Iterate over all vertices that have no outgoing edges, in no particular order.
+	 * @returns { Iterator.<string, *> } an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}
+	 * @example
+	 * for (var it = graph.sinks(), keyValue = it.next(); !it.done;) {
+	 *     var key   = keyValue[0],
+	 *         value = keyValue[1];
+	 *     // iterates over all vertices with no outgoing edges
+	 * }
+	 * @example
+	 * // in ECMAScript 6, you can use a for..of loop
+	 * for (let [key, value] of graph.sinks()) {
+	 *     // iterates over all vertices with no outgoing edges
+	 * }
+	 */
+	*sinks() {
+		let done = new Set();
+		for (let key of this._sinks) {
+			if (this.hasVertex(key) && !done.has(key)) {
+				done.add(key);
+				yield [key, this.vertexValue(key)];
+			}
+		}
+	}
+
+
 	/**
 	 * Iterate over all vertices of the graph in topological order.
 	 * @returns { Iterator.<string, *> } an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}
@@ -644,29 +707,33 @@ export default class Graph {
 	////////////////////////////////////////
 
 	/**
-	 * Ask whether this graph and another graph are equal.
+	 * Ask whether `this` graph and a given `other` graph are equal.
 	 * Two graphs are equal if they have the same vertices and the same edges.
-	 * @param other {Graph} the other graph to compare this one to
-	 * @param [eq] {function(*, *, string, ?string): boolean}
-	 *     a custom equality function for stored values; defaults to `===`
-	 *     comparison; The first two arguments are the two values to compare.
-	 *     If they are vertex values, the third argument is the vertex key.
-	 *     If they are edge values, the third and fourth argument are the
-	 *     `from` and `to` keys respectively. (So you can test the fourth
-	 *     argument to distinguish the two cases.)
+	 * @param other {Graph} the other graph to compare to `this` one
+	 * @param [eqV] {function(*, *, string): boolean}
+	 *     a custom equality function for values stored in vertices;
+	 *     defaults to `===` comparison; The first two arguments are the
+	 *     values to compare. The third is the corresponding `key`.
+	 * @param [eqE] {function(*, *, string, string): boolean}
+	 *     a custom equality function for values stored in edges;
+	 *     defaults to the function given for `trV`; The first two arguments
+	 *     are the values to compare. The third and fourth are the `from`
+	 *     and `to` keys respectively.
 	 * @returns {boolean} `true` if the two graphs are equal; `false` otherwise
 	 */
-	equals(other=undefined, eq=(x,y,from,to)=>x===y) {
-		if (!(other instanceof Graph))                { return false }
+	equals(other, eqV, eqE) {
+		if (!eqV) { eqV = (x,y) => (x===y) }
+		if (!eqE) { eqE = eqV              }
+		if (!(other instanceof Graph))                  { return false }
 		if (this.vertexCount() !== other.vertexCount()) { return false }
 		if (this.edgeCount()   !== other.edgeCount()  ) { return false }
 		for (let [key, value] of this.vertices()) {
-			if (!other.hasVertex(key))                   { return false }
-			if (!eq(value, other.vertexValue(key), key)) { return false }
+			if (!other.hasVertex(key))                    { return false }
+			if (!eqV(value, other.vertexValue(key), key)) { return false }
 		}
 		for (let [from, to, value] of this.edges()) {
-			if (!other.hasEdge(from, to))                        { return false }
-			if (!eq(value, other.edgeValue(from, to), from, to)) { return false }
+			if (!other.hasEdge(from, to))                         { return false }
+			if (!eqE(value, other.edgeValue(from, to), from, to)) { return false }
 		}
 		return true;
 	}
@@ -865,6 +932,7 @@ export default class Graph {
 							result.removeEdge(x, z);
 		return result;
 	}
+
 
 }
 

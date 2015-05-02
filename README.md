@@ -71,10 +71,12 @@ API Documentation
     * [.verticesTo(to)](#Graph#verticesTo) ⇒ <code>Iterator.&lt;string, \*, \*&gt;</code>
     * [.verticesWithPathFrom(from)](#Graph#verticesWithPathFrom) ⇒ <code>Iterator.&lt;string, \*&gt;</code>
     * [.verticesWithPathTo(to)](#Graph#verticesWithPathTo) ⇒ <code>Iterator.&lt;string, \*&gt;</code>
+    * [.sources()](#Graph#sources) ⇒ <code>Iterator.&lt;string, \*&gt;</code>
+    * [.sinks()](#Graph#sinks) ⇒ <code>Iterator.&lt;string, \*&gt;</code>
     * [.vertices_topologically()](#Graph#vertices_topologically) ⇒ <code>Iterator.&lt;string, \*&gt;</code>
     * [.clearEdges()](#Graph#clearEdges)
     * [.clear()](#Graph#clear)
-    * [.equals(other, [eq])](#Graph#equals) ⇒ <code>boolean</code>
+    * [.equals(other, [eqV], [eqE])](#Graph#equals) ⇒ <code>boolean</code>
     * [.cycle()](#Graph#cycle) ⇒ <code>array</code>
     * [.hasCycle()](#Graph#hasCycle) ⇒ <code>boolean</code>
     * [.path(from, to)](#Graph#path) ⇒ <code>array</code>
@@ -667,6 +669,52 @@ for (let [key, value] of graph.verticesWithPathTo(to)) {
 
 -----
 
+<a name="Graph#sources"></a>
+#### *graph*.sources() ⇒ <code>Iterator.&lt;string, \*&gt;</code>
+Iterate over all vertices that have no incoming edges, in no particular order.
+
+**Returns**: <code>Iterator.&lt;string, \*&gt;</code> - an object conforming to the [ES6 iterator protocol](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol)  
+**Example**  
+```JavaScript
+for (var it = graph.sources(), keyValue = it.next(); !it.done;) {
+    var key   = keyValue[0],
+        value = keyValue[1];
+    // iterates over all vertices with no incoming edges
+}
+```
+**Example**  
+```JavaScript
+// in ECMAScript 6, you can use a for..of loop
+for (let [key, value] of graph.sources()) {
+    // iterates over all vertices with no incoming edges
+}
+```
+
+-----
+
+<a name="Graph#sinks"></a>
+#### *graph*.sinks() ⇒ <code>Iterator.&lt;string, \*&gt;</code>
+Iterate over all vertices that have no outgoing edges, in no particular order.
+
+**Returns**: <code>Iterator.&lt;string, \*&gt;</code> - an object conforming to the [ES6 iterator protocol](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol)  
+**Example**  
+```JavaScript
+for (var it = graph.sinks(), keyValue = it.next(); !it.done;) {
+    var key   = keyValue[0],
+        value = keyValue[1];
+    // iterates over all vertices with no outgoing edges
+}
+```
+**Example**  
+```JavaScript
+// in ECMAScript 6, you can use a for..of loop
+for (let [key, value] of graph.sinks()) {
+    // iterates over all vertices with no outgoing edges
+}
+```
+
+-----
+
 <a name="Graph#vertices_topologically"></a>
 #### *graph*.vertices_topologically() ⇒ <code>Iterator.&lt;string, \*&gt;</code>
 Iterate over all vertices of the graph in topological order.
@@ -705,15 +753,16 @@ Remove all edges and vertices from the graph, putting it back in its initial sta
 -----
 
 <a name="Graph#equals"></a>
-#### *graph*.equals(other, [eq]) ⇒ <code>boolean</code>
-Ask whether this graph and another graph are equal.
+#### *graph*.equals(other, [eqV], [eqE]) ⇒ <code>boolean</code>
+Ask whether `this` graph and a given `other` graph are equal.
 Two graphs are equal if they have the same vertices and the same edges.
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| other | <code>[Graph](#Graph)</code> | the other graph to compare this one to |
-| [eq] | <code>function</code> | a custom equality function for stored values; defaults to `===`     comparison; The first two arguments are the two values to compare.     If they are vertex values, the third argument is the vertex key.     If they are edge values, the third and fourth argument are the     `from` and `to` keys respectively. (So you can test the fourth     argument to distinguish the two cases.) |
+| other | <code>[Graph](#Graph)</code> | the other graph to compare to `this` one |
+| [eqV] | <code>function</code> | a custom equality function for values stored in vertices;     defaults to `===` comparison; The first two arguments are the     values to compare. The third is the corresponding `key`. |
+| [eqE] | <code>function</code> | a custom equality function for values stored in edges;     defaults to the function given for `trV`; The first two arguments     are the values to compare. The third and fourth are the `from`     and `to` keys respectively. |
 
 **Returns**: <code>boolean</code> - `true` if the two graphs are equal; `false` otherwise  
 
