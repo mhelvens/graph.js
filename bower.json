@@ -1,14 +1,22 @@
 {
   "name": "graph.js",
-  "version": "1.12.0",
+  "version": "1.12.1",
   "description": "a javascript library for storing arbitrary data in mathematical (di)graphs, as well as traversing and analyzing them in various ways (ECMAScript 6 Ready)",
-  "authors": [
-    {
-      "name": "Michiel Helvensteijn",
-      "email": "mhelvens@gmail.com"
-    }
+  "authors": [ "Michiel Helvensteijn <mhelvens@gmail.com> (http://mhelvens.net)" ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mhelvens/graph.js.git"
+  },
+  "keywords": [
+    "datastructure",
+    "graph",
+    "directed graph",
+    "traversal",
+    "dependencies"
   ],
   "main": "dist/graph.es6.js",
+  "moduleType": "es6",
+  "license": "MIT",
   "ignore": [
     ".idea",
     "node_modules",
