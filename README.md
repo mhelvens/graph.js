@@ -88,6 +88,7 @@ API Documentation
     * [.mergeIn(other, [mV], [mE])](#Graph#mergeIn)
     * [.clone([trV], [trE])](#Graph#clone) ⇒ <code>[Graph](#Graph)</code>
     * [.transitiveReduction([trV], [trE])](#Graph#transitiveReduction) ⇒ <code>[Graph](#Graph)</code>
+    * [.contractPaths([isNexus])](#Graph#contractPaths)
     * <ins><b>static</b></ins>
     * [.VertexExistsError](#Graph.VertexExistsError) ⇐ <code>Error</code>
         * [.vertices](#Graph.VertexExistsError#vertices) : <code>Set.&lt;{key: string, value}&gt;</code>
@@ -101,6 +102,8 @@ API Documentation
         * [.key](#Graph.HasConnectedEdgesError#key) : <code>string</code>
     * [.CycleError](#Graph.CycleError) ⇐ <code>Error</code>
         * [.cycle](#Graph.CycleError#cycle) : <code>Array.&lt;string&gt;</code>
+    * [.BranchlessCycleError](#Graph.BranchlessCycleError) ⇐ <code>Error</code>
+        * [.cycle](#Graph.BranchlessCycleError#cycle) : <code>Array.&lt;string&gt;</code>
 
 
 -----
@@ -928,6 +931,29 @@ Create a clone of this graph, but without any transitive edges.
 
 -----
 
+<a name="Graph#contractPaths"></a>
+#### *graph*.contractPaths([isNexus])
+This method replaces stretches of non-branching directed pathway into single edges.
+More specifically, it identifies all 'nexus' vertices in the graph and preserves them.
+It then removes all other vertices and all edges from the graph, then inserts edges
+between nexuses that summarize the connectivity that was there before.
+
+A nexus is any vertex that is *not* characterized by '1 edge in, 1 edge out'.
+A custom `isNexus` function may be provided to manually select additional vertices
+that should be preserved as nexus.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| [isNexus] | <code>function</code> | a predicate for identifying additional vertices that should be treated as nexus;                  It receives a `key` and `value` associated to a vertex and should return                  true if and only if that vertex should be a nexus. |
+
+**Throws**:
+
+- <code>[BranchlessCycleError](#Graph.BranchlessCycleError)</code> if the graph contains a cycle with no branches or nexuses
+
+
+-----
+
 <a name="Graph.VertexExistsError"></a>
 #### *Graph*.VertexExistsError ⇐ <code>Error</code>
 This type of error is thrown when specific vertices are expected not to exist, but do.
@@ -1014,6 +1040,21 @@ This type of error is thrown when a graph is expected not to have a directed cyc
 <a name="Graph.CycleError#cycle"></a>
 ##### *cycleError*.cycle : <code>Array.&lt;string&gt;</code>
 the vertices involved in the cycle
+
+
+-----
+
+<a name="Graph.BranchlessCycleError"></a>
+#### *Graph*.BranchlessCycleError ⇐ <code>Error</code>
+This type of error is thrown when a graph is expected not to have a branch-less directed cycle, but does.
+
+**Extends:** <code>Error</code>  
+
+-----
+
+<a name="Graph.BranchlessCycleError#cycle"></a>
+##### *branchlessCycleError*.cycle : <code>Array.&lt;string&gt;</code>
+the vertices involved in the branch-less cycle
 
 
 -----

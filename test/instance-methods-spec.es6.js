@@ -1338,43 +1338,287 @@ describeMethod('transitiveReduction', () => {
 });
 
 
-//describeMethod('contractPaths', () => {
-//
-//	it_throwsNothing();
-//
-//	it("contracts branch-less paths to a single edge", () => {
-//
-//		graph = new Graph(
-//			[['n1', 'n2'], "n1,n2"],
-//			[['n2', 'n3'], "n2,n3"],
-//			[['n3', 'n4'], "n3,n4"],
-//			[['n4', 'n5'], "n4,n5"],
-//			[['n4', 'n6'], "n4,n6"],
-//			[['n6', 'n7'], "n6,n7"]
-//		);
-//
-//		callItWith();
-//
-//		expect(graph).toEqual(new Graph(
-//			[['n1', 'n4'], new Graph(
-//				[['n1', 'n2'], "n1,n2"],
-//				[['n2', 'n3'], "n2,n3"],
-//				[['n3', 'n4'], "n3,n4"]
-//			)],
-//			[['n4', 'n5'], new Graph(
-//				[['n4', 'n5'], "n4,n5"]
-//			)],
-//			[['n4', 'n7'], new Graph(
-//				[['n4', 'n6'], "n4,n6"],
-//				[['n6', 'n7'], "n6,n7"]
-//			)]
-//		));
-//
-//	});
-//
-//	// TODO: custom vertex filter
-//
-//});
+describeMethod('contractPaths', () => {
+
+	it("contracts branch-less paths to a single edge (no branching)", () => {
+		graph = new Graph(
+			[['n1', 'n2'], "n1,n2"],
+			[['n2', 'n3'], "n2,n3"],
+			[['n3', 'n4'], "n3,n4"],
+			[['n4', 'n5'], "n4,n5"],
+			[['n5', 'n6'], "n5,n6"],
+			[['n6', 'n7'], "n6,n7"]
+		);
+		callItWith();
+		expect(graph).toEqual(new Graph(
+			[['n1', 'n7'], new Graph(
+				[['n1', 'n2'], "n1,n2"],
+				[['n2', 'n3'], "n2,n3"],
+				[['n3', 'n4'], "n3,n4"],
+				[['n4', 'n5'], "n4,n5"],
+				[['n5', 'n6'], "n5,n6"],
+				[['n6', 'n7'], "n6,n7"]
+			)]
+		));
+	});
+
+	it("contracts branch-less paths to a single edge (branching forward)", () => {
+		graph = new Graph(
+			[['n1', 'n2'], "n1,n2"],
+			[['n2', 'n3'], "n2,n3"],
+			[['n3', 'n4'], "n3,n4"],
+			[['n4', 'n5'], "n4,n5"],
+			[['n4', 'n6'], "n4,n6"],
+			[['n6', 'n7'], "n6,n7"]
+		);
+		callItWith();
+		expect(graph).toEqual(new Graph(
+			[['n1', 'n4'], new Graph(
+				[['n1', 'n2'], "n1,n2"],
+				[['n2', 'n3'], "n2,n3"],
+				[['n3', 'n4'], "n3,n4"]
+			)],
+			[['n4', 'n5'], new Graph(
+				[['n4', 'n5'], "n4,n5"]
+			)],
+			[['n4', 'n7'], new Graph(
+				[['n4', 'n6'], "n4,n6"],
+				[['n6', 'n7'], "n6,n7"]
+			)]
+		));
+	});
+
+	it("contracts branch-less paths to a single edge (custom nexuses)", () => {
+		graph = new Graph(
+			[['n1', 'n2'], "n1,n2"],
+			[['n2', 'n3'], "n2,n3"],
+			[['n3', 'n4'], "n3,n4"],
+			[['n4', 'n5'], "n4,n5"],
+			[['n5', 'n6'], "n5,n6"],
+			[['n6', 'n7'], "n6,n7"]
+		);
+		callItWith((key) => (key === 'n3' || key === 'n5'));
+		expect(graph).toEqual(new Graph(
+			[['n1', 'n3'], new Graph(
+				[['n1', 'n2'], "n1,n2"],
+				[['n2', 'n3'], "n2,n3"]
+			)],
+			[['n3', 'n5'], new Graph(
+				[['n3', 'n4'], "n3,n4"],
+				[['n4', 'n5'], "n4,n5"]
+			)],
+			[['n5', 'n7'], new Graph(
+				[['n5', 'n6'], "n5,n6"],
+				[['n6', 'n7'], "n6,n7"]
+			)]
+		));
+	});
+
+	it("contracts branch-less paths to a single edge (all custom nexuses)", () => {
+		graph = new Graph(
+			[['n1', 'n2'], "n1,n2"],
+			[['n2', 'n3'], "n2,n3"],
+			[['n3', 'n4'], "n3,n4"],
+			[['n4', 'n5'], "n4,n5"],
+			[['n5', 'n6'], "n5,n6"],
+			[['n6', 'n7'], "n6,n7"]
+		);
+		callItWith(() => true);
+		expect(graph).toEqual(new Graph(
+			[['n1', 'n2'], new Graph(
+				[['n1', 'n2'], "n1,n2"]
+			)],
+			[['n2', 'n3'], new Graph(
+				[['n2', 'n3'], "n2,n3"]
+			)],
+			[['n3', 'n4'], new Graph(
+				[['n3', 'n4'], "n3,n4"]
+			)],
+			[['n4', 'n5'], new Graph(
+				[['n4', 'n5'], "n4,n5"]
+			)],
+			[['n5', 'n6'], new Graph(
+				[['n5', 'n6'], "n5,n6"]
+			)],
+			[['n6', 'n7'], new Graph(
+				[['n6', 'n7'], "n6,n7"]
+			)]
+		));
+	});
+
+	it("contracts branch-less paths to a single edge (branching backward)", () => {
+		graph = new Graph(
+			[['n2', 'n1'], "n1,n2"],
+			[['n3', 'n2'], "n2,n3"],
+			[['n4', 'n3'], "n3,n4"],
+			[['n5', 'n4'], "n4,n5"],
+			[['n6', 'n4'], "n4,n6"],
+			[['n7', 'n6'], "n6,n7"]
+		);
+		callItWith();
+		expect(graph).toEqual(new Graph(
+			[['n4', 'n1'], new Graph(
+				[['n2', 'n1'], "n1,n2"],
+				[['n3', 'n2'], "n2,n3"],
+				[['n4', 'n3'], "n3,n4"]
+			)],
+			[['n5', 'n4'], new Graph(
+				[['n5', 'n4'], "n4,n5"]
+			)],
+			[['n7', 'n4'], new Graph(
+				[['n6', 'n4'], "n4,n6"],
+				[['n7', 'n6'], "n6,n7"]
+			)]
+		));
+	});
+
+	it("contracts branch-less paths to a single edge (branch and join)", () => {
+		graph = new Graph(
+			[['n1', 'n2'], "n1,n2"],
+			[['n2', 'n3'], "n2,n3"],
+			[['n3', 'n4'], "n3,n4"],
+			[['n4', 'n5'], "n4,n5"],
+			[['n5', 'n7'], "n5,n7"],
+			[['n4', 'n6'], "n4,n6"],
+			[['n6', 'n7'], "n6,n7"],
+			[['n7', 'n8'], "n7,n8"]
+		);
+		callItWith();
+		expect(graph).toEqual(new Graph(
+			[['n1', 'n4'], new Graph(
+				[['n1', 'n2'], "n1,n2"],
+				[['n2', 'n3'], "n2,n3"],
+				[['n3', 'n4'], "n3,n4"]
+			)],
+			[['n4', 'n7'], new Graph(
+				[['n4', 'n5'], "n4,n5"],
+				[['n5', 'n7'], "n5,n7"],
+				[['n4', 'n6'], "n4,n6"],
+				[['n6', 'n7'], "n6,n7"]
+			)],
+			[['n7', 'n8'], new Graph(
+				[['n7', 'n8'], "n7,n8"]
+			)]
+		));
+	});
+
+	it("contracts branch-less paths to a single edge (cycle with outgoing branch)", () => {
+		graph = new Graph(
+			[['n1', 'n2'], "n1,n2"],
+			[['n2', 'n3'], "n2,n3"],
+			[['n3', 'n4'], "n3,n4"],
+			[['n4', 'n1'], "n4,n1"],
+			[['n1', 'n5'], "n1,n5"],
+			[['n5', 'n6'], "n5,n6"]
+		);
+		callItWith();
+		expect(graph).toEqual(new Graph(
+			[['n1', 'n1'], new Graph(
+				[['n1', 'n2'], "n1,n2"],
+				[['n2', 'n3'], "n2,n3"],
+				[['n3', 'n4'], "n3,n4"],
+				[['n4', 'n1'], "n4,n1"]
+			)],
+			[['n1', 'n6'], new Graph(
+				[['n1', 'n5'], "n1,n5"],
+				[['n5', 'n6'], "n5,n6"]
+			)]
+		));
+	});
+
+	it("contracts branch-less paths to a single edge (cycle with incoming branch)", () => {
+		graph = new Graph(
+			[['n1', 'n2'], "n1,n2"],
+			[['n2', 'n3'], "n2,n3"],
+			[['n3', 'n4'], "n3,n4"],
+			[['n4', 'n1'], "n4,n1"],
+			[['n5', 'n1'], "n5,n1"],
+			[['n6', 'n5'], "n6,n5"]
+		);
+		callItWith();
+		expect(graph).toEqual(new Graph(
+			[['n1', 'n1'], new Graph(
+				[['n1', 'n2'], "n1,n2"],
+				[['n2', 'n3'], "n2,n3"],
+				[['n3', 'n4'], "n3,n4"],
+				[['n4', 'n1'], "n4,n1"]
+			)],
+			[['n6', 'n1'], new Graph(
+				[['n5', 'n1'], "n5,n1"],
+				[['n6', 'n5'], "n6,n5"]
+			)]
+		));
+	});
+
+	it("contracts branch-less paths to a single edge (cycle with two branches)", () => {
+		graph = new Graph(
+			[['n1', 'n2'], "n1,n2"],
+			[['n2', 'n3'], "n2,n3"],
+			[['n3', 'n4'], "n3,n4"],
+			[['n4', 'n1'], "n4,n1"],
+			[['n5', 'n1'], "n5,n1"],
+			[['n3', 'n6'], "n3,n6"]
+		);
+		callItWith();
+		expect(graph).toEqual(new Graph(
+			[['n1', 'n3'], new Graph(
+				[['n1', 'n2'], "n1,n2"],
+				[['n2', 'n3'], "n2,n3"]
+			)],
+			[['n3', 'n1'], new Graph(
+				[['n3', 'n4'], "n3,n4"],
+				[['n4', 'n1'], "n4,n1"]
+			)],
+			[['n5', 'n1'], new Graph(
+				[['n5', 'n1'], "n5,n1"]
+			)],
+			[['n3', 'n6'], new Graph(
+				[['n3', 'n6'], "n3,n6"]
+			)]
+		));
+	});
+
+	it("contracts branch-less paths to a single edge (cycle with custom nexus)", () => {
+		graph = new Graph(
+			[['n1', 'n2'], "n1,n2"],
+			[['n2', 'n3'], "n2,n3"],
+			[['n3', 'n4'], "n3,n4"],
+			[['n4', 'n1'], "n4,n1"]
+		);
+		callItWith((key) => (key === 'n2'));
+		expect(graph).toEqual(new Graph(
+			[['n2', 'n2'], new Graph(
+				[['n1', 'n2'], "n1,n2"],
+				[['n2', 'n3'], "n2,n3"],
+				[['n3', 'n4'], "n3,n4"],
+				[['n4', 'n1'], "n4,n1"]
+			)]
+		));
+	});
+
+	it("throws an error if the graph contains a cycle with no branches", () => {
+		graph = new Graph(
+			[['n1', 'n2'], "n1,n2"], // n1,n2,n3,n4 = offending cycle
+			[['n2', 'n3'], "n2,n3"],
+			[['n3', 'n4'], "n3,n4"],
+			[['n4', 'n1'], "n4,n1"],
+			[['n5', 'n6'], "n5,n6"], // n5,n6,n7 = unrelated non-cycle
+			[['n6', 'n7'], "n6,n7"]
+		);
+		try {
+			callItWith();
+			expect().not.toBeReachable();
+		} catch (err) {
+			expect(err.cycle).toEqualOneOf(
+				['n1', 'n2', 'n3', 'n4'],
+				['n4', 'n1', 'n2', 'n3'],
+				['n3', 'n4', 'n1', 'n2'],
+				['n2', 'n3', 'n4', 'n1']
+			);
+		}
+	});
+
+});
 
 
 // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
@@ -1620,7 +1864,7 @@ describeMethod('vertices_topologically', () => {
 		//        n23 ◀───╯
 
 		expect(() => [...callItWith()]).toThrow();
-		expect(() => [...callItWith()]).toThrowSpecific(Graph.CycleError, {});
+		expect(() => [...callItWith()]).toThrowSpecific(Graph.CycleError, {}); // TODO: specify cycle property
 
 		try {
 			//noinspection JSUnusedLocalSymbols
@@ -1646,7 +1890,7 @@ describeMethod('vertices_topologically', () => {
 		graph.createEdge('n1', 'n1');
 
 		expect(() => [...callItWith()]).toThrow();
-		expect(() => [...callItWith()]).toThrowSpecific(Graph.CycleError, {});
+		expect(() => [...callItWith()]).toThrowSpecific(Graph.CycleError, {}); // TODO: specify cycle property
 
 		try {
 			//noinspection JSUnusedLocalSymbols

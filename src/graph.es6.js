@@ -966,57 +966,103 @@ export default class Graph {
 		return result;
 	}
 
+	/**
+	 * This method replaces stretches of non-branching directed pathway into single edges.
+	 * More specifically, it identifies all 'nexus' vertices in the graph and preserves them.
+	 * It then removes all other vertices and all edges from the graph, then inserts edges
+	 * between nexuses that summarize the connectivity that was there before.
+	 *
+	 * A nexus is any vertex that is *not* characterized by '1 edge in, 1 edge out'.
+	 * A custom `isNexus` function may be provided to manually select additional vertices
+	 * that should be preserved as nexus.
+	 * @param [isNexus] {function(string, *): boolean}
+	 *                  a predicate for identifying additional vertices that should be treated as nexus;
+	 *                  It receives a `key` and `value` associated to a vertex and should return
+	 *                  true if and only if that vertex should be a nexus.
+	 * @throws {Graph.BranchlessCycleError} if the graph contains a cycle with no branches or nexuses
+	 */
+	contractPaths(isNexus = ()=>false) {
 
-	// TODO: fully implement contractPaths
-	///**
-	// *
-	// */ // TODO: documentation
-	//contractPaths() {
-	//	/* bookkeeping */
-	//	let verticesToRemove = new Set();
-	//	let contractionsToAdd = new Map();
-	//
-	//	/* register the path starting with the given edge */
-	//	const startPath = (from, to) => {
-	//		let path = new Graph();
-	//		path.addNewVertex(from, this.vertexValue(from));
-	//		path.addNewVertex(to, this.vertexValue(to));
-	//		path.addNewEdge(from, to, this.edgeValue(from, to));
-	//
-	//		let current = from;
-	//		while (this.outDegree(to) === 1 && this.inDegree(to) === 1) {
-	//			verticesToRemove.add(to);
-	//			current = to;
-	//			for (let [newTo] of this.verticesFrom(current)) { to = newTo }
-	//			path.addNewVertex(to, this.vertexValue(to));
-	//			path.addNewEdge(current, to, this.edgeValue(current, to));
-	//		}
-	//
-	//		if (!contractionsToAdd.get(from)) { contractionsToAdd.set(from, new Map()) }
-	//		contractionsToAdd.get(from).set(to, path);
-	//
-	//		visitStartPoint(to);
-	//	};
-	//
-	//	/* register all paths starting at the given vertex */
-	//	const visitStartPoint = (from) => {
-	//		for (let [to] of this.verticesFrom(from)) {
-	//			startPath(from, to);
-	//		}
-	//	};
-	//
-	//	/* register all paths starting at source-points */
-	//	for (let [key] of this.sources()) { visitStartPoint(key) }
-	//
-	//	/* remove all necessary vertices and edges */
-	//	for (let key of verticesToRemove) { this.destroyExistingVertex(key) }
-	//	this.clearEdges(); // TODO: do something so that cycles work
-	//
-	//	/* add the replacement edges */
-	//	for (let [from, toVal] of contractionsToAdd)
-	//		for (let [to, rememberedPath] of toVal)
-	//			this.addNewEdge(from, to, rememberedPath);
-	//}
+		/* what makes a a vertex a nexus (start/end-point) */
+		let nexuses = new Set(
+			[...this.vertices()]
+				.filter(([key, val]) => this.outDegree(key) !== 1 || this.inDegree(key) !== 1 || isNexus(key, val))
+				.map(([key]) => key)
+		);
+
+		/* error if there is a branch-less cycle */
+		{
+			let unhandledVertices = new Set([...this.vertices()].map(([key])=>key));
+			const checkForBlCycle = (key) => {
+				if (!unhandledVertices.has(key)) { return }
+				unhandledVertices.delete(key);
+				for (let [next] of this.verticesFrom(key)) { checkForBlCycle(next) }
+				for (let [next] of this.verticesTo  (key)) { checkForBlCycle(next) }
+			};
+			for (let key of nexuses) { checkForBlCycle(key) }
+			if (unhandledVertices.size > 0) {
+				let startingKey = unhandledVertices.values().next().value,
+				    cycle       = [],
+				    current     = startingKey;
+				do {
+					cycle.push(current);
+					current = this.verticesFrom(current).next().value[0];
+				} while (current !== startingKey);
+				throw new Graph.BranchlessCycleError(cycle);
+			}
+		}
+
+		/* bookkeeping */
+		let contractionsToAdd = new Map();
+
+		/* register the path starting with the given edge */
+		const startPath = (start, next, backwards = false) => {
+			/* functions to help branch on `backwards` */
+			const fromTo       = (strt = start, nxt = next) => backwards ? [nxt, strt] : [strt, nxt];
+			const verticesNext = (v) => backwards ? this.verticesTo(v) : this.verticesFrom(v);
+
+			/* bookkeeping */
+			let verticesToRemove = new Set();
+			let edgesToRemove    = new Set();
+			let path = new Graph();
+
+			/* process the start of the path */
+			path.addVertex(start, this.vertexValue(start));
+			path.addVertex(next,  this.vertexValue(next) );
+			path.addNewEdge(...fromTo(), this.edgeValue(...fromTo()));
+			edgesToRemove.add(fromTo());
+
+			/* process as [current, next] moves across the path */
+			let current;
+			while (!nexuses.has(next)) {
+				[current, next] = [next, verticesNext(next).next().value[0]];
+				path.addVertex(next, this.vertexValue(next));
+				path.addNewEdge(...fromTo(current, next), this.edgeValue(...fromTo(current, next)));
+				verticesToRemove.add(current);
+				edgesToRemove.add(fromTo(current, next));
+			}
+
+			/* register new path contraction */
+			if (!contractionsToAdd.get(fromTo()[0]))                  { contractionsToAdd.set(fromTo()[0], new Map())                    }
+			if (!contractionsToAdd.get(fromTo()[0]).get(fromTo()[1])) { contractionsToAdd.get(fromTo()[0]).set(fromTo()[1], new Graph()) }
+			contractionsToAdd.get(fromTo()[0]).get(fromTo()[1]).mergeIn(path);
+
+			/* remove old edges and vertices */
+			for (let key of edgesToRemove)    { this.removeExistingEdge(...key) }
+			for (let key of verticesToRemove) { this.destroyExistingVertex(key) }
+		};
+
+		/* process paths starting at all nexus points */
+		for (let first of nexuses) {
+			for (let [next] of this.verticesFrom(first)) { startPath(first, next, false) }
+			for (let [next] of this.verticesTo  (first)) { startPath(first, next, true)  }
+		}
+
+		/* add the replacement edges */
+		for (let [from, toVal] of contractionsToAdd)
+			for (let [to, rememberedPath] of toVal)
+				this.addNewEdge(from, to, rememberedPath);
+	}
 
 
 }
@@ -1197,5 +1243,26 @@ Graph.CycleError = class CycleError extends Error {
 		 */
 		this.cycle = cycle;
 		this.message = `This graph contains a cycle: ${cycle}`;
+	}
+};
+
+/**
+ * @class
+ * @classdesc This type of error is thrown when a graph is expected not to have a branch-less directed cycle, but does.
+ * @extends Error
+ */
+Graph.BranchlessCycleError = class BranchlessCycleError extends Error {
+	constructor(cycle) {
+		super();
+		/**
+		 * the vertices involved in the branch-less cycle
+		 * @public
+		 * @constant cycle
+		 * @memberof Graph.BranchlessCycleError
+		 * @instance
+		 * @type {Array.<string>}
+		 */
+		this.cycle = cycle;
+		this.message = `This graph contains a branch-less cycle: ${cycle}`;
 	}
 };

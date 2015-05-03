@@ -1887,7 +1887,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	   *                   `null`, if there is no cycle
 	   */
 			value: function cycle() {
-				var _this7 = this;
+				var _this8 = this;
 	
 				var visited = []; // stack
 				var handled = new Set();
@@ -1912,7 +1912,7 @@ return /******/ (function(modules) { // webpackBootstrap
 					var _iteratorError19 = undefined;
 	
 					try {
-						for (var _iterator19 = _this7.verticesFrom(a)[Symbol.iterator](), _step19; !(_iteratorNormalCompletion19 = (_step19 = _iterator19.next()).done); _iteratorNormalCompletion19 = true) {
+						for (var _iterator19 = _this8.verticesFrom(a)[Symbol.iterator](), _step19; !(_iteratorNormalCompletion19 = (_step19 = _iterator19.next()).done); _iteratorNormalCompletion19 = true) {
 							var _step19$value = _slicedToArray(_step19.value, 1);
 	
 							var b = _step19$value[0];
@@ -1993,7 +1993,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	   *                   including those two vertices themselves; `null` if no such path exists
 	   */
 			value: function path(from, to) {
-				var _this8 = this;
+				var _this9 = this;
 	
 				if (!this.hasVertex(from) || !this.hasVertex(to)) {
 					return null;
@@ -2004,7 +2004,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				/* recursive auxiliary function: find a path from 'current' to 'to' */
 				var hasPathAux = function hasPathAux(current) {
 					visited.push(current);
-					if (_this8.hasEdge(current, to)) {
+					if (_this9.hasEdge(current, to)) {
 						return [].concat(visited, [to]);
 					}
 					var _iteratorNormalCompletion21 = true;
@@ -2012,7 +2012,7 @@ return /******/ (function(modules) { // webpackBootstrap
 					var _iteratorError21 = undefined;
 	
 					try {
-						for (var _iterator21 = _this8.verticesFrom(current)[Symbol.iterator](), _step21; !(_iteratorNormalCompletion21 = (_step21 = _iterator21.next()).done); _iteratorNormalCompletion21 = true) {
+						for (var _iterator21 = _this9.verticesFrom(current)[Symbol.iterator](), _step21; !(_iteratorNormalCompletion21 = (_step21 = _iterator21.next()).done); _iteratorNormalCompletion21 = true) {
 							var _step21$value = _slicedToArray(_step21.value, 1);
 	
 							var next = _step21$value[0];
@@ -2326,58 +2326,385 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 				return result;
 			}
+		}, {
+			key: 'contractPaths',
 	
-			// TODO: fully implement contractPaths
-			///**
-			// *
-			// */ // TODO: documentation
-			//contractPaths() {
-			//	/* bookkeeping */
-			//	let verticesToRemove = new Set();
-			//	let contractionsToAdd = new Map();
-			//
-			//	/* register the path starting with the given edge */
-			//	const startPath = (from, to) => {
-			//		let path = new Graph();
-			//		path.addNewVertex(from, this.vertexValue(from));
-			//		path.addNewVertex(to, this.vertexValue(to));
-			//		path.addNewEdge(from, to, this.edgeValue(from, to));
-			//
-			//		let current = from;
-			//		while (this.outDegree(to) === 1 && this.inDegree(to) === 1) {
-			//			verticesToRemove.add(to);
-			//			current = to;
-			//			for (let [newTo] of this.verticesFrom(current)) { to = newTo }
-			//			path.addNewVertex(to, this.vertexValue(to));
-			//			path.addNewEdge(current, to, this.edgeValue(current, to));
-			//		}
-			//
-			//		if (!contractionsToAdd.get(from)) { contractionsToAdd.set(from, new Map()) }
-			//		contractionsToAdd.get(from).set(to, path);
-			//
-			//		visitStartPoint(to);
-			//	};
-			//
-			//	/* register all paths starting at the given vertex */
-			//	const visitStartPoint = (from) => {
-			//		for (let [to] of this.verticesFrom(from)) {
-			//			startPath(from, to);
-			//		}
-			//	};
-			//
-			//	/* register all paths starting at source-points */
-			//	for (let [key] of this.sources()) { visitStartPoint(key) }
-			//
-			//	/* remove all necessary vertices and edges */
-			//	for (let key of verticesToRemove) { this.destroyExistingVertex(key) }
-			//	this.clearEdges(); // TODO: do something so that cycles work
-			//
-			//	/* add the replacement edges */
-			//	for (let [from, toVal] of contractionsToAdd)
-			//		for (let [to, rememberedPath] of toVal)
-			//			this.addNewEdge(from, to, rememberedPath);
-			//}
+			/**
+	   * This method replaces stretches of non-branching directed pathway into single edges.
+	   * More specifically, it identifies all 'nexus' vertices in the graph and preserves them.
+	   * It then removes all other vertices and all edges from the graph, then inserts edges
+	   * between nexuses that summarize the connectivity that was there before.
+	   *
+	   * A nexus is any vertex that is *not* characterized by '1 edge in, 1 edge out'.
+	   * A custom `isNexus` function may be provided to manually select additional vertices
+	   * that should be preserved as nexus.
+	   * @param [isNexus] {function(string, *): boolean}
+	   *                  a predicate for identifying additional vertices that should be treated as nexus;
+	   *                  It receives a `key` and `value` associated to a vertex and should return
+	   *                  true if and only if that vertex should be a nexus.
+	   * @throws {Graph.BranchlessCycleError} if the graph contains a cycle with no branches or nexuses
+	   */ // TODO: documentation
+			value: function contractPaths() {
+				var _this10 = this;
 	
+				var isNexus = arguments[0] === undefined ? function () {
+					return false;
+				} : arguments[0];
+	
+				/* what makes a a vertex a nexus (start/end-point) */
+				var nexuses = new Set([].concat(_toConsumableArray(this.vertices())).filter(function (_ref) {
+					var _ref2 = _slicedToArray(_ref, 2);
+	
+					var key = _ref2[0];
+					var val = _ref2[1];
+					return _this10.outDegree(key) !== 1 || _this10.inDegree(key) !== 1 || isNexus(key, val);
+				}).map(function (_ref3) {
+					var _ref32 = _slicedToArray(_ref3, 1);
+	
+					var key = _ref32[0];
+					return key;
+				}));
+	
+				/* error if there is a branch-less cycle */
+				{
+					var _iteratorNormalCompletion29;
+	
+					var _didIteratorError29;
+	
+					var _iteratorError29;
+	
+					var _iterator29, _step29;
+	
+					(function () {
+						var unhandledVertices = new Set([].concat(_toConsumableArray(_this10.vertices())).map(function (_ref4) {
+							var _ref42 = _slicedToArray(_ref4, 1);
+	
+							var key = _ref42[0];
+							return key;
+						}));
+						var checkForBlCycle = function checkForBlCycle(key) {
+							if (!unhandledVertices.has(key)) {
+								return;
+							}
+							unhandledVertices['delete'](key);
+							var _iteratorNormalCompletion27 = true;
+							var _didIteratorError27 = false;
+							var _iteratorError27 = undefined;
+	
+							try {
+								for (var _iterator27 = _this10.verticesFrom(key)[Symbol.iterator](), _step27; !(_iteratorNormalCompletion27 = (_step27 = _iterator27.next()).done); _iteratorNormalCompletion27 = true) {
+									var _step27$value = _slicedToArray(_step27.value, 1);
+	
+									var next = _step27$value[0];
+									checkForBlCycle(next);
+								}
+							} catch (err) {
+								_didIteratorError27 = true;
+								_iteratorError27 = err;
+							} finally {
+								try {
+									if (!_iteratorNormalCompletion27 && _iterator27['return']) {
+										_iterator27['return']();
+									}
+								} finally {
+									if (_didIteratorError27) {
+										throw _iteratorError27;
+									}
+								}
+							}
+	
+							var _iteratorNormalCompletion28 = true;
+							var _didIteratorError28 = false;
+							var _iteratorError28 = undefined;
+	
+							try {
+								for (var _iterator28 = _this10.verticesTo(key)[Symbol.iterator](), _step28; !(_iteratorNormalCompletion28 = (_step28 = _iterator28.next()).done); _iteratorNormalCompletion28 = true) {
+									var _step28$value = _slicedToArray(_step28.value, 1);
+	
+									var next = _step28$value[0];
+									checkForBlCycle(next);
+								}
+							} catch (err) {
+								_didIteratorError28 = true;
+								_iteratorError28 = err;
+							} finally {
+								try {
+									if (!_iteratorNormalCompletion28 && _iterator28['return']) {
+										_iterator28['return']();
+									}
+								} finally {
+									if (_didIteratorError28) {
+										throw _iteratorError28;
+									}
+								}
+							}
+						};
+						_iteratorNormalCompletion29 = true;
+						_didIteratorError29 = false;
+						_iteratorError29 = undefined;
+	
+						try {
+							for (_iterator29 = nexuses[Symbol.iterator](); !(_iteratorNormalCompletion29 = (_step29 = _iterator29.next()).done); _iteratorNormalCompletion29 = true) {
+								var key = _step29.value;
+								checkForBlCycle(key);
+							}
+						} catch (err) {
+							_didIteratorError29 = true;
+							_iteratorError29 = err;
+						} finally {
+							try {
+								if (!_iteratorNormalCompletion29 && _iterator29['return']) {
+									_iterator29['return']();
+								}
+							} finally {
+								if (_didIteratorError29) {
+									throw _iteratorError29;
+								}
+							}
+						}
+	
+						if (unhandledVertices.size > 0) {
+							var startingKey = unhandledVertices.values().next().value,
+							    cycle = [],
+							    current = startingKey;
+							do {
+								cycle.push(current);
+								current = _this10.verticesFrom(current).next().value[0];
+							} while (current !== startingKey);
+							throw new Graph.BranchlessCycleError(cycle);
+						}
+					})();
+				}
+	
+				/* bookkeeping */
+				var contractionsToAdd = new Map();
+	
+				/* register the path starting with the given edge */
+				var startPath = function startPath(start, next) {
+					var backwards = arguments[2] === undefined ? false : arguments[2];
+	
+					/* functions to help branch on `backwards` */
+					var fromTo = function fromTo() {
+						var strt = arguments[0] === undefined ? start : arguments[0];
+						var nxt = arguments[1] === undefined ? next : arguments[1];
+						return backwards ? [nxt, strt] : [strt, nxt];
+					};
+					var verticesNext = function verticesNext(v) {
+						return backwards ? _this10.verticesTo(v) : _this10.verticesFrom(v);
+					};
+	
+					/* bookkeeping */
+					var verticesToRemove = new Set();
+					var edgesToRemove = new Set();
+					var path = new Graph();
+	
+					/* process the start of the path */
+					path.addVertex(start, _this10.vertexValue(start));
+					path.addVertex(next, _this10.vertexValue(next));
+					path.addNewEdge.apply(path, _toConsumableArray(fromTo()).concat([_this10.edgeValue.apply(_this10, _toConsumableArray(fromTo()))]));
+					edgesToRemove.add(fromTo());
+	
+					/* process as [current, next] moves across the path */
+					var current = undefined;
+					while (!nexuses.has(next)) {
+						var _ref5 = [next, verticesNext(next).next().value[0]];
+						current = _ref5[0];
+						next = _ref5[1];
+	
+						path.addVertex(next, _this10.vertexValue(next));
+						path.addNewEdge.apply(path, _toConsumableArray(fromTo(current, next)).concat([_this10.edgeValue.apply(_this10, _toConsumableArray(fromTo(current, next)))]));
+						verticesToRemove.add(current);
+						edgesToRemove.add(fromTo(current, next));
+					}
+	
+					/* register new path contraction */
+					if (!contractionsToAdd.get(fromTo()[0])) {
+						contractionsToAdd.set(fromTo()[0], new Map());
+					}
+					if (!contractionsToAdd.get(fromTo()[0]).get(fromTo()[1])) {
+						contractionsToAdd.get(fromTo()[0]).set(fromTo()[1], new Graph());
+					}
+					contractionsToAdd.get(fromTo()[0]).get(fromTo()[1]).mergeIn(path);
+	
+					/* remove old edges and vertices */
+					var _iteratorNormalCompletion30 = true;
+					var _didIteratorError30 = false;
+					var _iteratorError30 = undefined;
+	
+					try {
+						for (var _iterator30 = edgesToRemove[Symbol.iterator](), _step30; !(_iteratorNormalCompletion30 = (_step30 = _iterator30.next()).done); _iteratorNormalCompletion30 = true) {
+							var key = _step30.value;
+							_this10.removeExistingEdge.apply(_this10, _toConsumableArray(key));
+						}
+					} catch (err) {
+						_didIteratorError30 = true;
+						_iteratorError30 = err;
+					} finally {
+						try {
+							if (!_iteratorNormalCompletion30 && _iterator30['return']) {
+								_iterator30['return']();
+							}
+						} finally {
+							if (_didIteratorError30) {
+								throw _iteratorError30;
+							}
+						}
+					}
+	
+					var _iteratorNormalCompletion31 = true;
+					var _didIteratorError31 = false;
+					var _iteratorError31 = undefined;
+	
+					try {
+						for (var _iterator31 = verticesToRemove[Symbol.iterator](), _step31; !(_iteratorNormalCompletion31 = (_step31 = _iterator31.next()).done); _iteratorNormalCompletion31 = true) {
+							var key = _step31.value;
+							_this10.destroyExistingVertex(key);
+						}
+					} catch (err) {
+						_didIteratorError31 = true;
+						_iteratorError31 = err;
+					} finally {
+						try {
+							if (!_iteratorNormalCompletion31 && _iterator31['return']) {
+								_iterator31['return']();
+							}
+						} finally {
+							if (_didIteratorError31) {
+								throw _iteratorError31;
+							}
+						}
+					}
+				};
+	
+				/* process paths starting at all nexus points */
+				var _iteratorNormalCompletion32 = true;
+				var _didIteratorError32 = false;
+				var _iteratorError32 = undefined;
+	
+				try {
+					for (var _iterator32 = nexuses[Symbol.iterator](), _step32; !(_iteratorNormalCompletion32 = (_step32 = _iterator32.next()).done); _iteratorNormalCompletion32 = true) {
+						var first = _step32.value;
+						var _iteratorNormalCompletion34 = true;
+						var _didIteratorError34 = false;
+						var _iteratorError34 = undefined;
+	
+						try {
+							for (var _iterator34 = this.verticesFrom(first)[Symbol.iterator](), _step34; !(_iteratorNormalCompletion34 = (_step34 = _iterator34.next()).done); _iteratorNormalCompletion34 = true) {
+								var _step34$value = _slicedToArray(_step34.value, 1);
+	
+								var next = _step34$value[0];
+								startPath(first, next, false);
+							}
+						} catch (err) {
+							_didIteratorError34 = true;
+							_iteratorError34 = err;
+						} finally {
+							try {
+								if (!_iteratorNormalCompletion34 && _iterator34['return']) {
+									_iterator34['return']();
+								}
+							} finally {
+								if (_didIteratorError34) {
+									throw _iteratorError34;
+								}
+							}
+						}
+	
+						var _iteratorNormalCompletion35 = true;
+						var _didIteratorError35 = false;
+						var _iteratorError35 = undefined;
+	
+						try {
+							for (var _iterator35 = this.verticesTo(first)[Symbol.iterator](), _step35; !(_iteratorNormalCompletion35 = (_step35 = _iterator35.next()).done); _iteratorNormalCompletion35 = true) {
+								var _step35$value = _slicedToArray(_step35.value, 1);
+	
+								var next = _step35$value[0];
+								startPath(first, next, true);
+							}
+						} catch (err) {
+							_didIteratorError35 = true;
+							_iteratorError35 = err;
+						} finally {
+							try {
+								if (!_iteratorNormalCompletion35 && _iterator35['return']) {
+									_iterator35['return']();
+								}
+							} finally {
+								if (_didIteratorError35) {
+									throw _iteratorError35;
+								}
+							}
+						}
+					}
+				} catch (err) {
+					_didIteratorError32 = true;
+					_iteratorError32 = err;
+				} finally {
+					try {
+						if (!_iteratorNormalCompletion32 && _iterator32['return']) {
+							_iterator32['return']();
+						}
+					} finally {
+						if (_didIteratorError32) {
+							throw _iteratorError32;
+						}
+					}
+				}
+	
+				/* add the replacement edges */
+				var _iteratorNormalCompletion33 = true;
+				var _didIteratorError33 = false;
+				var _iteratorError33 = undefined;
+	
+				try {
+					for (var _iterator33 = contractionsToAdd[Symbol.iterator](), _step33; !(_iteratorNormalCompletion33 = (_step33 = _iterator33.next()).done); _iteratorNormalCompletion33 = true) {
+						var _step33$value = _slicedToArray(_step33.value, 2);
+	
+						var from = _step33$value[0];
+						var toVal = _step33$value[1];
+						var _iteratorNormalCompletion36 = true;
+						var _didIteratorError36 = false;
+						var _iteratorError36 = undefined;
+	
+						try {
+							for (var _iterator36 = toVal[Symbol.iterator](), _step36; !(_iteratorNormalCompletion36 = (_step36 = _iterator36.next()).done); _iteratorNormalCompletion36 = true) {
+								var _step36$value = _slicedToArray(_step36.value, 2);
+	
+								var to = _step36$value[0];
+								var rememberedPath = _step36$value[1];
+	
+								this.addNewEdge(from, to, rememberedPath);
+							}
+						} catch (err) {
+							_didIteratorError36 = true;
+							_iteratorError36 = err;
+						} finally {
+							try {
+								if (!_iteratorNormalCompletion36 && _iterator36['return']) {
+									_iterator36['return']();
+								}
+							} finally {
+								if (_didIteratorError36) {
+									throw _iteratorError36;
+								}
+							}
+						}
+					}
+				} catch (err) {
+					_didIteratorError33 = true;
+					_iteratorError33 = err;
+				} finally {
+					try {
+						if (!_iteratorNormalCompletion33 && _iterator33['return']) {
+							_iterator33['return']();
+						}
+					} finally {
+						if (_didIteratorError33) {
+							throw _iteratorError33;
+						}
+					}
+				}
+			}
 		}]);
 	
 		return Graph;
@@ -2524,29 +2851,29 @@ return /******/ (function(modules) { // webpackBootstrap
 			key: '_refreshMessage',
 			value: function _refreshMessage() {
 				var edges = [];
-				var _iteratorNormalCompletion27 = true;
-				var _didIteratorError27 = false;
-				var _iteratorError27 = undefined;
+				var _iteratorNormalCompletion37 = true;
+				var _didIteratorError37 = false;
+				var _iteratorError37 = undefined;
 	
 				try {
-					for (var _iterator27 = this.edges[Symbol.iterator](), _step27; !(_iteratorNormalCompletion27 = (_step27 = _iterator27.next()).done); _iteratorNormalCompletion27 = true) {
-						var _step27$value = _step27.value;
-						var from = _step27$value.from;
-						var to = _step27$value.to;
+					for (var _iterator37 = this.edges[Symbol.iterator](), _step37; !(_iteratorNormalCompletion37 = (_step37 = _iterator37.next()).done); _iteratorNormalCompletion37 = true) {
+						var _step37$value = _step37.value;
+						var from = _step37$value.from;
+						var to = _step37$value.to;
 	
 						edges.push('(\'' + from + '\', \'' + to + '\')');
 					}
 				} catch (err) {
-					_didIteratorError27 = true;
-					_iteratorError27 = err;
+					_didIteratorError37 = true;
+					_iteratorError37 = err;
 				} finally {
 					try {
-						if (!_iteratorNormalCompletion27 && _iterator27['return']) {
-							_iterator27['return']();
+						if (!_iteratorNormalCompletion37 && _iterator37['return']) {
+							_iterator37['return']();
 						}
 					} finally {
-						if (_didIteratorError27) {
-							throw _iteratorError27;
+						if (_didIteratorError37) {
+							throw _iteratorError37;
 						}
 					}
 				}
@@ -2598,29 +2925,29 @@ return /******/ (function(modules) { // webpackBootstrap
 			key: '_refreshMessage',
 			value: function _refreshMessage() {
 				var edges = [];
-				var _iteratorNormalCompletion28 = true;
-				var _didIteratorError28 = false;
-				var _iteratorError28 = undefined;
+				var _iteratorNormalCompletion38 = true;
+				var _didIteratorError38 = false;
+				var _iteratorError38 = undefined;
 	
 				try {
-					for (var _iterator28 = this.edges[Symbol.iterator](), _step28; !(_iteratorNormalCompletion28 = (_step28 = _iterator28.next()).done); _iteratorNormalCompletion28 = true) {
-						var _step28$value = _step28.value;
-						var from = _step28$value.from;
-						var to = _step28$value.to;
+					for (var _iterator38 = this.edges[Symbol.iterator](), _step38; !(_iteratorNormalCompletion38 = (_step38 = _iterator38.next()).done); _iteratorNormalCompletion38 = true) {
+						var _step38$value = _step38.value;
+						var from = _step38$value.from;
+						var to = _step38$value.to;
 	
 						edges.push('(\'' + from + '\', \'' + to + '\')');
 					}
 				} catch (err) {
-					_didIteratorError28 = true;
-					_iteratorError28 = err;
+					_didIteratorError38 = true;
+					_iteratorError38 = err;
 				} finally {
 					try {
-						if (!_iteratorNormalCompletion28 && _iterator28['return']) {
-							_iterator28['return']();
+						if (!_iteratorNormalCompletion38 && _iterator38['return']) {
+							_iterator38['return']();
 						}
 					} finally {
-						if (_didIteratorError28) {
-							throw _iteratorError28;
+						if (_didIteratorError38) {
+							throw _iteratorError38;
 						}
 					}
 				}
@@ -2693,6 +3020,37 @@ return /******/ (function(modules) { // webpackBootstrap
 		_inherits(CycleError, _Error6);
 	
 		return CycleError;
+	})(Error);
+	
+	/**
+	 * @class
+	 * @classdesc This type of error is thrown when a graph is expected not to have a branch-less directed cycle, but does.
+	 * @extends Error
+	 */
+	Graph.BranchlessCycleError = (function (_Error7) {
+		function BranchlessCycleError(cycle) {
+			_classCallCheck(this, BranchlessCycleError);
+	
+			var _this7 = new _Error7();
+	
+			_this7.__proto__ = BranchlessCycleError.prototype;
+	
+			/**
+	   * the vertices involved in the branch-less cycle
+	   * @public
+	   * @constant cycle
+	   * @memberof Graph.BranchlessCycleError
+	   * @instance
+	   * @type {Array.<string>}
+	   */
+			_this7.cycle = cycle;
+			_this7.message = 'This graph contains a branch-less cycle: ' + cycle;
+			return _this7;
+		}
+	
+		_inherits(BranchlessCycleError, _Error7);
+	
+		return BranchlessCycleError;
 	})(Error);
 	module.exports = exports['default'];
 	// stack
