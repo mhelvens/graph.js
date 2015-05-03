@@ -5,20 +5,47 @@
 //  ////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
- * @public
  * @class Graph
  * @classdesc The main class of this library, to be used for representing a mathematical (di)graph.
+ *
+ * @description Constructor arguments can be used to supply initial vertices and edges.
+ * @param ...parts {Array.<Array>}
+ *        a short notation for vertices and edges to initially add to the graph;
+ *        A vertex should be an array of the form `[key, value]`.
+ *        An edge should be an array of the form `[[from, to], value]`.
+ *        Later values of vertices or edges in this list will overwrite earlier
+ *        values, but vertices need not precede their edges (nor need they be
+ *        separately listed at all).
+ * @example
+ * var map = new Graph(
+ *     ['Amsterdam',            { population: 825000 }], // vertex
+ *     ['Leiden',               { population: 122000 }], // vertex
+ *     [['Amsterdam, 'Leiden'], { distance:   "40km" }]  // edge
+ * );
  */
 export default class Graph {
 
-	constructor() {
+	constructor(...parts) {
+		/* storage */
 		this._vertices     = new Map(); // Map.< string, * >
 		this._edges        = new Map(); // Map.< string, Map.<string, *> >
+
+		/* bookkeeping */
 		this._reverseEdges = new Map(); // Map.< string, Set.<*> >
 		this._sources      = new Set(); // Set.< string >
 		this._sinks        = new Set(); // Set.< string >
 		this._vertexCount  = 0;
 		this._edgeCount    = 0;
+
+		/* add vertices and values from constructor arguments */
+		for (let [key, value] of parts) {
+			if (Array.isArray(key)) {/////////////// an edge
+				let [from, to] = key;
+				this.createEdge(from, to, value);
+			} else if (typeof key === 'string') {/// a vertex
+				this.addVertex(key, value);
+			}
+		}
 	}
 
 
@@ -706,6 +733,7 @@ export default class Graph {
 	////////// (Advanced) Queries //////////
 	////////////////////////////////////////
 
+
 	/**
 	 * Ask whether `this` graph and a given `other` graph are equal.
 	 * Two graphs are equal if they have the same vertices and the same edges.
@@ -738,9 +766,10 @@ export default class Graph {
 		return true;
 	}
 
+
 	/**
 	 * Find any directed cycle in this graph.
-	 * @returns {?array} an array with the keys of a cycle in order;
+	 * @returns {?Array} an array with the keys of a cycle in order;
 	 *                   `null`, if there is no cycle
 	 */
 	cycle() {
@@ -772,6 +801,7 @@ export default class Graph {
 
 		return null;
 	}
+
 
 	/**
 	 * Test whether this graph contains a directed cycle.
@@ -858,6 +888,7 @@ export default class Graph {
 	////////// Cloning and stuff //////////
 	///////////////////////////////////////
 
+
 	/**
 	 * Merge another graph into this graph.
 	 * @param other {Graph} the other graph to merge into this one
@@ -886,6 +917,7 @@ export default class Graph {
 		}
 	}
 
+
 	/**
 	 * Create a clone of this graph.
 	 * @param [trV] {function(*, string): *}
@@ -906,6 +938,7 @@ export default class Graph {
 		result.mergeIn(this, (v1, v2) => trV(v2), (v1, v2) => trE(v2));
 		return result;
 	}
+
 
 	/**
 	 * Create a clone of this graph, but without any transitive edges.
@@ -932,6 +965,58 @@ export default class Graph {
 							result.removeEdge(x, z);
 		return result;
 	}
+
+
+	// TODO: fully implement contractPaths
+	///**
+	// *
+	// */ // TODO: documentation
+	//contractPaths() {
+	//	/* bookkeeping */
+	//	let verticesToRemove = new Set();
+	//	let contractionsToAdd = new Map();
+	//
+	//	/* register the path starting with the given edge */
+	//	const startPath = (from, to) => {
+	//		let path = new Graph();
+	//		path.addNewVertex(from, this.vertexValue(from));
+	//		path.addNewVertex(to, this.vertexValue(to));
+	//		path.addNewEdge(from, to, this.edgeValue(from, to));
+	//
+	//		let current = from;
+	//		while (this.outDegree(to) === 1 && this.inDegree(to) === 1) {
+	//			verticesToRemove.add(to);
+	//			current = to;
+	//			for (let [newTo] of this.verticesFrom(current)) { to = newTo }
+	//			path.addNewVertex(to, this.vertexValue(to));
+	//			path.addNewEdge(current, to, this.edgeValue(current, to));
+	//		}
+	//
+	//		if (!contractionsToAdd.get(from)) { contractionsToAdd.set(from, new Map()) }
+	//		contractionsToAdd.get(from).set(to, path);
+	//
+	//		visitStartPoint(to);
+	//	};
+	//
+	//	/* register all paths starting at the given vertex */
+	//	const visitStartPoint = (from) => {
+	//		for (let [to] of this.verticesFrom(from)) {
+	//			startPath(from, to);
+	//		}
+	//	};
+	//
+	//	/* register all paths starting at source-points */
+	//	for (let [key] of this.sources()) { visitStartPoint(key) }
+	//
+	//	/* remove all necessary vertices and edges */
+	//	for (let key of verticesToRemove) { this.destroyExistingVertex(key) }
+	//	this.clearEdges(); // TODO: do something so that cycles work
+	//
+	//	/* add the replacement edges */
+	//	for (let [from, toVal] of contractionsToAdd)
+	//		for (let [to, rememberedPath] of toVal)
+	//			this.addNewEdge(from, to, rememberedPath);
+	//}
 
 
 }
@@ -1032,7 +1117,7 @@ Graph.EdgeExistsError = class EdgeExistsError extends Error {
 	_refreshMessage() {
 		let edges = [];
 		for (let {from, to} of this.edges) {
-			edges.push("('" + from + "', '" + to + "')");
+			edges.push(`('${from}', '${to}')`);
 		}
 		let anEdges = edges.length === 1 ? "an edge" : "edges";
 		this.message = `This graph has ${anEdges} ${edges.join(", ")}`;
@@ -1066,7 +1151,7 @@ Graph.EdgeNotExistsError = class EdgeNotExistsError extends Error {
 	_refreshMessage() {
 		let edges = [];
 		for (let {from, to} of this.edges) {
-			edges.push("('" + from + "', '" + to + "')");
+			edges.push(`('${from}', '${to}')`);
 		}
 		let anEdges = edges.length === 1 ? "an edge" : "edges";
 		this.message = `This graph does not have ${anEdges} ${edges.join(", ")}`;

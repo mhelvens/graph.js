@@ -40,6 +40,7 @@ API Documentation
 
 
 * [Graph](#Graph)
+    * [new Graph(...parts)](#new_Graph_new)
     * <ins><b>instance</b></ins>
     * [.addNewVertex(key, [value])](#Graph#addNewVertex)
     * [.setVertex(key, [value])](#Graph#setVertex)
@@ -77,7 +78,7 @@ API Documentation
     * [.clearEdges()](#Graph#clearEdges)
     * [.clear()](#Graph#clear)
     * [.equals(other, [eqV], [eqE])](#Graph#equals) ⇒ <code>boolean</code>
-    * [.cycle()](#Graph#cycle) ⇒ <code>array</code>
+    * [.cycle()](#Graph#cycle) ⇒ <code>Array</code>
     * [.hasCycle()](#Graph#hasCycle) ⇒ <code>boolean</code>
     * [.path(from, to)](#Graph#path) ⇒ <code>array</code>
     * [.hasPath(from, to)](#Graph#hasPath) ⇒ <code>boolean</code>
@@ -108,6 +109,26 @@ API Documentation
 ### Graph
 The main class of this library, to be used for representing a mathematical (di)graph.
 
+
+-----
+
+<a name="new_Graph_new"></a>
+#### new Graph(...parts)
+Constructor arguments can be used to supply initial vertices and edges.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| ...parts | <code>Array.&lt;Array&gt;</code> | a short notation for vertices and edges to initially add to the graph;        A vertex should be an array of the form `[key, value]`.        An edge should be an array of the form `[[from, to], value]`.        Later values of vertices or edges in this list will overwrite earlier        values, but vertices need not precede their edges (nor need they be        separately listed at all). |
+
+**Example**  
+```JavaScript
+var map = new Graph(
+    ['Amsterdam',            { population: 825000 }], // vertex
+    ['Leiden',               { population: 122000 }], // vertex
+    [['Amsterdam, 'Leiden'], { distance:   "40km" }]  // edge
+);
+```
 
 -----
 
@@ -769,10 +790,10 @@ Two graphs are equal if they have the same vertices and the same edges.
 -----
 
 <a name="Graph#cycle"></a>
-#### *graph*.cycle() ⇒ <code>array</code>
+#### *graph*.cycle() ⇒ <code>Array</code>
 Find any directed cycle in this graph.
 
-**Returns**: <code>array</code> - an array with the keys of a cycle in order;
+**Returns**: <code>Array</code> - an array with the keys of a cycle in order;
                   `null`, if there is no cycle  
 
 -----
