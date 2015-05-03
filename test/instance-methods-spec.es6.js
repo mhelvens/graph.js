@@ -22,7 +22,7 @@ beforeEach(() => {
 
 
 /* declare and initialize the initial graph */
-var graph;
+let graph;
 beforeEach(() => {
 	graph = new Graph();
 });
@@ -32,7 +32,7 @@ beforeEach(() => {
 
 
 /* bookkeeping for method tests */
-var methodUnderTest = "";
+let methodUnderTest = "";
 
 function describeMethod(method, fn) {
 	describe(`the '${method}' method`, () => {
@@ -51,14 +51,14 @@ function callItWith() {
 }
 
 function expectItWhenBoundWith() {
-	var args = arguments;
+	let args = arguments;
 	return expect(() => {
 		graph[methodUnderTest].apply(graph, args);
 	});
 }
 
 function expectItWhenCalledWith() {
-	var args = Array.prototype.slice.call(arguments, 0);
+	let args = Array.prototype.slice.call(arguments, 0);
 	return expect(graph[methodUnderTest].apply(graph, args));
 }
 
@@ -66,17 +66,17 @@ function expectItWhenCalledWith() {
 // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
 
 
-var originalVertices, originalEdges, originalVertexCount, originalEdgeCount;
+let originalVertices, originalEdges, originalVertexCount, originalEdgeCount;
 
 
 function expectTheGraphNotToHaveChanged() {
-	var vertices = {};
+	let vertices = {};
 	for (let [key, value] of graph.vertices()) {
 		vertices[key] = value;
 	}
 	expect(vertices).toEqual(originalVertices);
 
-	var edges = {};
+	let edges = {};
 	for (let [from, to, value] of graph.edges()) {
 		edges[from + ", " + to] = value;
 	}
@@ -165,7 +165,7 @@ function it_throwsNothingWhenPassedAKeyAndValue() {
 }
 function it_throwsNothingWhenPassedAnotherGraph() {
 	it("throws no exceptions when it is passed another graph as an argument", () => {
-		var g = new Graph();
+		let g = new Graph();
 		expectItWhenBoundWith(g).not.toThrow();
 	});
 }
@@ -1036,66 +1036,66 @@ describeMethod('equals', () => {
 	});
 
 	it("returns falsy when compared to a graph with fewer vertices", () => {
-		var other = graph.clone();
+		let other = graph.clone();
 		graph.addNewVertex('k6');
 		expectItWhenCalledWith(other).toBeFalsy();
 	});
 
 	it("returns falsy when compared to a graph with more vertices", () => {
-		var other = graph.clone();
+		let other = graph.clone();
 		other.addNewVertex('k6');
 		expectItWhenCalledWith(other).toBeFalsy();
 	});
 
 	it("returns falsy when compared to a graph with different vertices", () => {
-		var other = graph.clone();
+		let other = graph.clone();
 		other.removeVertex('k1');
 		other.addNewVertex('k6');
 		expectItWhenCalledWith(other).toBeFalsy();
 	});
 
 	it("returns falsy when compared to a graph with fewer edges", () => {
-		var other = graph.clone();
+		let other = graph.clone();
 		graph.addNewEdge('k1', 'k2');
 		expectItWhenCalledWith(other).toBeFalsy();
 	});
 
 	it("returns falsy when compared to a graph with more edges", () => {
-		var other = graph.clone();
+		let other = graph.clone();
 		other.addNewEdge('k1', 'k2');
 		expectItWhenCalledWith(other).toBeFalsy();
 	});
 
 	it("returns falsy when compared to a graph with different edges", () => {
-		var other = graph.clone();
+		let other = graph.clone();
 		other.addNewEdge('k1', 'k2');
 		other.removeEdge('k2', 'k3');
 		expectItWhenCalledWith(other).toBeFalsy();
 	});
 
 	it("returns falsy when compared to a graph with a different vertex value", () => {
-		var other = graph.clone();
+		let other = graph.clone();
 		other.setVertex('k1', 'new value');
 		expectItWhenCalledWith(other).toBeFalsy();
 	});
 
 	it("returns falsy when compared to a graph with a different edge value", () => {
-		var other = graph.clone();
+		let other = graph.clone();
 		other.setEdge('k2', 'k3', 'new value');
 		expectItWhenCalledWith(other).toBeFalsy();
 	});
 
 	it("returns truthy for graphs that are equal", () => {
-		var other = graph.clone();
+		let other = graph.clone();
 		expectItWhenCalledWith(other).toBeTruthy();
 	});
 
 	it("can be influenced by a custom comparison function", () => {
-		var sillyComparison = (v1, v2, from, to) => {
+		let sillyComparison = (v1, v2, from, to) => {
 			if (from === 'k2' && to === 'k3') { return true }
 			return v1 === v2;
 		};
-		var other = graph.clone();
+		let other = graph.clone();
 		other.setEdge('k2', 'k3', 'new value');
 		expectItWhenCalledWith(other, sillyComparison).toBeTruthy();
 		other.setEdge('k3', 'k4', 'new value');
@@ -1173,7 +1173,7 @@ describeMethod('mergeIn', () => {
 	//         ╵             │
 	//         k5 ───────────╯
 
-	var other;
+	let other;
 	beforeEach(() => {
 		other = new Graph(
 			['k1', "newValue1"],
@@ -1240,7 +1240,7 @@ describeMethod('clone', () => {
 	});
 
 	it("returns a new graph with the same vertices as the original", () => {
-		var newGraph = callItWith();
+		let newGraph = callItWith();
 		for (let [key, val] of newGraph.vertices()) {
 			expect(graph.hasVertex(key)).toBeTruthy();
 			expect(val).toBe(graph.vertexValue(key));
@@ -1252,7 +1252,7 @@ describeMethod('clone', () => {
 	});
 
 	it("returns a new graph with the same edges as the original", () => {
-		var newGraph = callItWith();
+		let newGraph = callItWith();
 		for (let [from, to, val] of newGraph.edges()) {
 			expect(graph.hasEdge(from, to)).toBeTruthy();
 			expect(val).toBe(graph.edgeValue(from, to));
@@ -1264,7 +1264,7 @@ describeMethod('clone', () => {
 	});
 
 	it("returns a new graph with the same vertices as the original, with values influenced by custom value transformer", () => {
-		var newGraph = callItWith(v => `value:${v}`);
+		let newGraph = callItWith(v => `value:${v}`);
 		for (let [key, val] of newGraph.vertices()) {
 			expect(graph.hasVertex(key)).toBeTruthy();
 			expect(val).toBe(`value:${graph.vertexValue(key)}`);
@@ -1276,7 +1276,7 @@ describeMethod('clone', () => {
 	});
 
 	it("returns a new graph with the same edges as the original, with values influenced by custom value transformer", () => {
-		var newGraph = callItWith(v => `value:${v}`);
+		let newGraph = callItWith(v => `value:${v}`);
 		for (let [from, to, val] of newGraph.edges()) {
 			expect(graph.hasEdge(from, to)).toBeTruthy();
 			expect(val).toBe(`value:${graph.edgeValue(from, to)}`);
@@ -1294,7 +1294,7 @@ describeMethod('transitiveReduction', () => {
 
 	it_throwsNothing();
 
-	var newGraph;
+	let newGraph;
 	beforeEach(() => {
 		graph.addEdge('k1', 'k3');
 		graph.addEdge('k2', 'k4');
@@ -1383,7 +1383,7 @@ describeMethod('transitiveReduction', () => {
 describe("default iterable interface", () => {
 
 	it("iterates over each vertex in the graph", () => {
-		var verticesFound = {};
+		let verticesFound = {};
 		for (let [key, value] of graph) {
 			expect(verticesFound[key]).toBeUndefined();
 			verticesFound[key] = value;
@@ -1397,7 +1397,7 @@ describe("default iterable interface", () => {
 describeMethod('vertices', () => {
 
 	it("iterates over each vertex in the graph", () => {
-		var verticesFound = {};
+		let verticesFound = {};
 		for (let [key, value] of callItWith()) {
 			expect(verticesFound[key]).toBeUndefined();
 			verticesFound[key] = value;
@@ -1411,9 +1411,9 @@ describeMethod('vertices', () => {
 describeMethod('edges', () => {
 
 	it("iterates over each edge in the graph", () => {
-		var edgesFound = {};
+		let edgesFound = {};
 		for (let [from, to, value] of callItWith()) {
-			var key = from + ", " + to;
+			let key = from + ", " + to;
 			expect(edgesFound[key]).toBeUndefined();
 			edgesFound[key] = value;
 		}
@@ -1435,7 +1435,7 @@ describeMethod('verticesFrom', () => {
 	});
 
 	it("iterates over each outgoing edge, providing the connected vertex key/value and edge value", () => {
-		var valuesFound = {};
+		let valuesFound = {};
 		for (let [key, value, edgeValue] of callItWith('k2')) {
 			expect(valuesFound[key]).toBeUndefined();
 			valuesFound[key] = [value, edgeValue];
@@ -1461,7 +1461,7 @@ describeMethod('verticesTo', () => {
 	});
 
 	it("iterates over each incoming edge, providing the connected vertex key/value and edge value", () => {
-		var valuesFound = {};
+		let valuesFound = {};
 		for (let [key, value, edgeValue] of callItWith('k3')) {
 			expect(valuesFound[key]).toBeUndefined();
 			valuesFound[key] = [value, edgeValue];
@@ -1487,7 +1487,7 @@ describeMethod('verticesWithPathFrom', () => {
 	});
 
 	it("iterates once over each vertex that is reachable from the given vertex, in no particular order", () => {
-		var valuesFound = {};
+		let valuesFound = {};
 		for (let [key, value] of callItWith('k2')) {
 			expect(valuesFound[key]).toBeUndefined();
 			valuesFound[key] = value;
@@ -1514,7 +1514,7 @@ describeMethod('verticesWithPathTo', () => {
 	});
 
 	it("iterates once over each vertex that has a path to reach the given vertex, in no particular order", () => {
-		var valuesFound = {};
+		let valuesFound = {};
 		for (let [key, value] of callItWith('k4')) {
 			expect(valuesFound[key]).toBeUndefined();
 			valuesFound[key] = value;
@@ -1631,7 +1631,7 @@ describeMethod('vertices_topologically', () => {
 				['n3', 'n23', 'n2'],
 				['n2', 'n3', 'n23']
 			);
-			var cycleInMessage = err.message.substring(err.message.indexOf(':') + 1).trim();
+			let cycleInMessage = err.message.substring(err.message.indexOf(':') + 1).trim();
 			expect(cycleInMessage).toEqualOneOf(
 				'n23,n2,n3',
 				'n3,n23,n2',
@@ -1653,7 +1653,7 @@ describeMethod('vertices_topologically', () => {
 			let x = [...callItWith()];
 		} catch (err) {
 			expect(err.cycle).toEqual(['n1']);
-			var cycleInMessage = err.message.substring(err.message.indexOf(':') + 1).trim();
+			let cycleInMessage = err.message.substring(err.message.indexOf(':') + 1).trim();
 			expect(cycleInMessage).toEqual('n1');
 		}
 	});
@@ -1663,7 +1663,7 @@ describeMethod('vertices_topologically', () => {
 	});
 
 	it("iterates over each vertex in the graph exactly once", () => {
-		var verticesFound = {};
+		let verticesFound = {};
 		for (let [key, value] of callItWith()) {
 			expect(verticesFound[key]).toBeUndefined();
 			verticesFound[key] = value;
@@ -1687,7 +1687,7 @@ describeMethod('vertices_topologically', () => {
 		//         ▼      │
 		//        n23 ◀───╯
 
-		var visited = {};
+		let visited = {};
 
 		for (let [key] of callItWith()) {
 			if (key === 'n2') { expect(visited['n1']).toBeDefined(); }
