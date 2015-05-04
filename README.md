@@ -91,13 +91,13 @@ API Documentation
     * [.contractPaths([isNexus])](#Graph#contractPaths)
     * <ins><b>static</b></ins>
     * [.VertexExistsError](#Graph.VertexExistsError) ⇐ <code>Error</code>
-        * [.vertices](#Graph.VertexExistsError#vertices) : <code>Set.&lt;{key: string, value}&gt;</code>
+        * [.vertices](#Graph.VertexExistsError#vertices) : <code>Set.&lt;array&gt;</code>
     * [.VertexNotExistsError](#Graph.VertexNotExistsError) ⇐ <code>Error</code>
-        * [.vertices](#Graph.VertexNotExistsError#vertices) : <code>Set.&lt;{key: string}&gt;</code>
+        * [.vertices](#Graph.VertexNotExistsError#vertices) : <code>Set.&lt;string&gt;</code>
     * [.EdgeExistsError](#Graph.EdgeExistsError) ⇐ <code>Error</code>
-        * [.edges](#Graph.EdgeExistsError#edges) : <code>Set.&lt;{from: string, to: string, value}&gt;</code>
+        * [.edges](#Graph.EdgeExistsError#edges) : <code>Set.&lt;Array&gt;</code>
     * [.EdgeNotExistsError](#Graph.EdgeNotExistsError) ⇐ <code>Error</code>
-        * [.edges](#Graph.EdgeNotExistsError#edges) : <code>Set.&lt;{from: string, to: string}&gt;</code>
+        * [.edges](#Graph.EdgeNotExistsError#edges) : <code>Set.&lt;Array.&lt;string&gt;&gt;</code>
     * [.HasConnectedEdgesError](#Graph.HasConnectedEdgesError) ⇐ <code>Error</code>
         * [.key](#Graph.HasConnectedEdgesError#key) : <code>string</code>
     * [.CycleError](#Graph.CycleError) ⇐ <code>Error</code>
@@ -963,8 +963,8 @@ This type of error is thrown when specific vertices are expected not to exist, b
 -----
 
 <a name="Graph.VertexExistsError#vertices"></a>
-##### *vertexExistsError*.vertices : <code>Set.&lt;{key: string, value}&gt;</code>
-the set of relevant vertices
+##### *vertexExistsError*.vertices : <code>Set.&lt;array&gt;</code>
+the set of relevant vertices as `[key, value]` shaped arrays
 
 
 -----
@@ -978,8 +978,8 @@ This type of error is thrown when specific vertices are expected to exist, but d
 -----
 
 <a name="Graph.VertexNotExistsError#vertices"></a>
-##### *vertexNotExistsError*.vertices : <code>Set.&lt;{key: string}&gt;</code>
-the set of relevant vertices
+##### *vertexNotExistsError*.vertices : <code>Set.&lt;string&gt;</code>
+the set of relevant vertex keys
 
 
 -----
@@ -993,8 +993,8 @@ This type of error is thrown when specific edges are expected not to exist, but 
 -----
 
 <a name="Graph.EdgeExistsError#edges"></a>
-##### *edgeExistsError*.edges : <code>Set.&lt;{from: string, to: string, value}&gt;</code>
-the set of relevant edges
+##### *edgeExistsError*.edges : <code>Set.&lt;Array&gt;</code>
+the set of relevant edges as `[[from, to], value]` shaped arrays
 
 
 -----
@@ -1008,8 +1008,8 @@ This type of error is thrown when specific edges are expected to exist, but don'
 -----
 
 <a name="Graph.EdgeNotExistsError#edges"></a>
-##### *edgeNotExistsError*.edges : <code>Set.&lt;{from: string, to: string}&gt;</code>
-the set of relevant edges
+##### *edgeNotExistsError*.edges : <code>Set.&lt;Array.&lt;string&gt;&gt;</code>
+the set of relevant edge keys as `[from, to]` shaped arrays
 
 
 -----
@@ -1039,7 +1039,7 @@ This type of error is thrown when a graph is expected not to have a directed cyc
 
 <a name="Graph.CycleError#cycle"></a>
 ##### *cycleError*.cycle : <code>Array.&lt;string&gt;</code>
-the vertices involved in the cycle
+the vertices involved in the cycle, in order but with an unspecified starting point
 
 
 -----
@@ -1054,7 +1054,7 @@ This type of error is thrown when a graph is expected not to have a branch-less 
 
 <a name="Graph.BranchlessCycleError#cycle"></a>
 ##### *branchlessCycleError*.cycle : <code>Array.&lt;string&gt;</code>
-the vertices involved in the branch-less cycle
+the vertices involved in the branch-less cycle, in order but with an unspecified starting point
 
 
 -----

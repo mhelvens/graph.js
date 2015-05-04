@@ -211,16 +211,14 @@ function it_throwsNothingWhenPassedTwoKeysAndValue() {
 }
 function it_throwsErrorIfVertexExists() {
 	it("throws an error if a vertex with the given key already exists", () => {
-		expectItWhenBoundWith('k1').toThrow();
-		expectItWhenBoundWith('k2').toThrow();
-		expectItWhenBoundWith('k1').toThrowSpecific(Graph.VertexExistsError, { vertices: new Set([{ key: 'k1', value: 'oldValue1' }]) });
-		expectItWhenBoundWith('k2').toThrowSpecific(Graph.VertexExistsError, { vertices: new Set([{ key: 'k2', value:  undefined  }]) });
+		expectItWhenBoundWith('k1').toThrowSpecific(Graph.VertexExistsError, { vertices: new Set([ ['k1', 'oldValue1'] ]) });
+		expectItWhenBoundWith('k2').toThrowSpecific(Graph.VertexExistsError, { vertices: new Set([ ['k2',  undefined ] ]) });
 	});
 }
 function it_throwsErrorIfVertexDoesNotExist() {
 	it("throws an error if a vertex with the given key does not exist", () => {
 		expectItWhenBoundWith('newKey').toThrow();
-		expectItWhenBoundWith('newKey').toThrowSpecific(Graph.VertexNotExistsError, { vertices: new Set([{ key: 'newKey' }]) });
+		expectItWhenBoundWith('newKey').toThrowSpecific(Graph.VertexNotExistsError, { vertices: new Set(['newKey']) });
 	});
 }
 function it_throwsErrorIfEdgesAreConnected() {
@@ -235,26 +233,21 @@ function it_throwsErrorIfEdgesAreConnected() {
 }
 function it_throwsErrorIfEdgeExists() {
 	it("throws an error if an edge with the given keys already exists", () => {
-		expectItWhenBoundWith('k2', 'k3').toThrow();
-		expectItWhenBoundWith('k3', 'k4').toThrow();
-		expectItWhenBoundWith('k2', 'k3').toThrowSpecific(Graph.EdgeExistsError, { edges: new Set([{ from: 'k2', to: 'k3', value: 'oldValue23' }]) });
-		expectItWhenBoundWith('k3', 'k4').toThrowSpecific(Graph.EdgeExistsError, { edges: new Set([{ from: 'k3', to: 'k4', value: undefined }]) });
+		expectItWhenBoundWith('k2', 'k3').toThrowSpecific(Graph.EdgeExistsError, { edges: new Set([ [['k2', 'k3'], 'oldValue23'] ]) });
+		expectItWhenBoundWith('k3', 'k4').toThrowSpecific(Graph.EdgeExistsError, { edges: new Set([ [['k3', 'k4'],  undefined  ] ]) });
 	});
 }
 function it_throwsErrorIfEdgeDoesNotExist() {
 	it("throws an error if an edge with the given keys does not exist", () => {
 		expectItWhenBoundWith('k1', 'k2').toThrow();
-		expectItWhenBoundWith('k1', 'k2').toThrowSpecific(Graph.EdgeNotExistsError, { edges: new Set([{ from: 'k1', to: 'k2' }]) });
+		expectItWhenBoundWith('k1', 'k2').toThrowSpecific(Graph.EdgeNotExistsError, { edges: new Set([ ['k1', 'k2'] ]) });
 	});
 }
 function it_throwsErrorIfVerticesDoNotExist() {
 	it("throws an error if the required vertices do not exist", () => {
-		expectItWhenBoundWith('newKey1', 'newKey2').toThrow();
-		expectItWhenBoundWith('k1', 'newKey3').toThrow();
-		expectItWhenBoundWith('newKey4', 'k2').toThrow();
-		expectItWhenBoundWith('newKey1', 'newKey2').toThrowSpecific(Graph.VertexNotExistsError, { vertices: new Set([{ key: 'newKey1' }, { key: 'newKey2' }]) });
-		expectItWhenBoundWith('k1', 'newKey3').toThrowSpecific(Graph.VertexNotExistsError, { vertices: new Set([{ key: 'newKey3' }]) });
-		expectItWhenBoundWith('newKey4', 'k2').toThrowSpecific(Graph.VertexNotExistsError, { vertices: new Set([{ key: 'newKey4' }]) });
+		expectItWhenBoundWith('newKey1', 'newKey2').toThrowSpecific(Graph.VertexNotExistsError, { vertices: new Set([ 'newKey1', 'newKey2' ]) });
+		expectItWhenBoundWith('k1',      'newKey3').toThrowSpecific(Graph.VertexNotExistsError, { vertices: new Set([ 'newKey3'            ]) });
+		expectItWhenBoundWith('newKey4', 'k2'     ).toThrowSpecific(Graph.VertexNotExistsError, { vertices: new Set([ 'newKey4'            ]) });
 	});
 }
 function it_leavesNewVertexWithNewValue() {
@@ -1958,14 +1951,16 @@ describe("Graph.VertexExistsError", () => {
 
 	it("can specify one existing vertex", () => {
 		let err = new Graph.VertexExistsError('x', 1);
-		expect(err.vertices).toEqual(new Set([{ key: 'x', value: 1 }]));
+		expect(err.vertices).toEqual(new Set([
+			['x', 1]
+		]));
 	});
 
 	it("can specify multiple existing vertices", () => {
 		let err = new Graph.VertexExistsError('x', 1).v('y', 2);
 		expect(err.vertices).toEqual(new Set([
-			{ key: 'x', value: 1 },
-			{ key: 'y', value: 2 }
+			['x', 1],
+			['y', 2]
 		]));
 	});
 
@@ -1975,14 +1970,16 @@ describe("Graph.VertexNotExistsError", () => {
 
 	it("can specify one missing vertex", () => {
 		let err = new Graph.VertexNotExistsError('x');
-		expect(err.vertices).toEqual(new Set([{ key: 'x' }]));
+		expect(err.vertices).toEqual(new Set([
+			'x'
+		]));
 	});
 
 	it("can specify multiple missing vertices", () => {
 		let err = new Graph.VertexNotExistsError('x').v('y');
 		expect(err.vertices).toEqual(new Set([
-			{ key: 'x' },
-			{ key: 'y' }
+			'x',
+			'y'
 		]));
 	});
 
@@ -1992,14 +1989,16 @@ describe("Graph.EdgeExistsError", () => {
 
 	it("can specify one existing edge", () => {
 		let err = new Graph.EdgeExistsError('x', 'y', 1);
-		expect(err.edges).toEqual(new Set([{ from: 'x', to: 'y', value: 1 }]));
+		expect(err.edges).toEqual(new Set([
+			[['x', 'y'], 1]
+		]));
 	});
 
 	it("can specify multiple existing edges", () => {
 		let err = new Graph.EdgeExistsError('x', 'y', 1).e('y', 'z', 2);
 		expect(err.edges).toEqual(new Set([
-			{ from: 'x', to: 'y', value: 1 },
-			{ from: 'y', to: 'z', value: 2 }
+			[['x', 'y'], 1],
+			[['y', 'z'], 2]
 		]));
 	});
 
@@ -2009,14 +2008,16 @@ describe("Graph.EdgeNotExistsError", () => {
 
 	it("can specify one missing edge", () => {
 		let err = new Graph.EdgeNotExistsError('x', 'y');
-		expect(err.edges).toEqual(new Set([{ from: 'x', to: 'y' }]));
+		expect(err.edges).toEqual(new Set([
+			['x', 'y']
+		]));
 	});
 
 	it("can specify multiple missing edges", () => {
 		let err = new Graph.EdgeNotExistsError('x', 'y').e('y', 'z');
 		expect(err.edges).toEqual(new Set([
-			{ from: 'x', to: 'y' },
-			{ from: 'y', to: 'z' }
+			['x', 'y'],
+			['y', 'z']
 		]));
 	});
 

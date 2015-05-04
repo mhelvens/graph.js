@@ -3338,12 +3338,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 			_get(Object.getPrototypeOf(VertexExistsError.prototype), 'constructor', this).call(this);
 			/**
-	   * the set of relevant vertices
+	   * the set of relevant vertices as `[key, value]` shaped arrays
 	   * @public
 	   * @constant vertices
 	   * @memberof Graph.VertexExistsError
 	   * @instance
-	   * @type {Set.<{ key: string, value }>}
+	   * @type {Set.<array>}
 	   */
 			this.vertices = new Set();
 			this.v(key, value);
@@ -3354,16 +3354,18 @@ return /******/ (function(modules) { // webpackBootstrap
 		_createClass(VertexExistsError, [{
 			key: 'v',
 			value: function v(key, value) {
-				this.vertices.add({ key: key, value: value });
+				this.vertices.add([key, value]);
 				this._refreshMessage();
 				return this;
 			}
 		}, {
 			key: '_refreshMessage',
 			value: function _refreshMessage() {
-				var aVertices = this.vertices.size === 1 ? 'a vertex' : 'vertices';
-				this.message = 'This graph has ' + aVertices + ' \'' + [].concat(_toConsumableArray(this.vertices)).map(function (v) {
-					return v.key;
+				this.message = 'This graph has ' + (this.vertices.size === 1 ? 'a vertex' : 'vertices') + ' \'' + [].concat(_toConsumableArray(this.vertices)).map(function (_ref6) {
+					var _ref62 = _slicedToArray(_ref6, 1);
+	
+					var key = _ref62[0];
+					return key;
 				}).join('\', \'') + '\'';
 			}
 		}]);
@@ -3382,12 +3384,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 			_get(Object.getPrototypeOf(VertexNotExistError.prototype), 'constructor', this).call(this);
 			/**
-	   * the set of relevant vertices
+	   * the set of relevant vertex keys
 	   * @public
 	   * @constant vertices
 	   * @memberof Graph.VertexNotExistsError
 	   * @instance
-	   * @type {Set.<{ key: string }>}
+	   * @type {Set.<string>}
 	   */
 			this.vertices = new Set();
 			this.v(key);
@@ -3398,17 +3400,14 @@ return /******/ (function(modules) { // webpackBootstrap
 		_createClass(VertexNotExistError, [{
 			key: 'v',
 			value: function v(key) {
-				this.vertices.add({ key: key });
+				this.vertices.add(key);
 				this._refreshMessage();
 				return this;
 			}
 		}, {
 			key: '_refreshMessage',
 			value: function _refreshMessage() {
-				var aVertices = this.vertices.size === 1 ? 'a vertex' : 'vertices';
-				this.message = 'This graph does not have ' + aVertices + ' \'' + [].concat(_toConsumableArray(this.vertices)).map(function (v) {
-					return v.key;
-				}).join('\', \'') + '\'';
+				this.message = 'This graph does not have ' + (this.vertices.size === 1 ? 'a vertex' : 'vertices') + ' \'' + [].concat(_toConsumableArray(this.vertices)).join('\', \'') + '\'';
 			}
 		}]);
 	
@@ -3426,12 +3425,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 			_get(Object.getPrototypeOf(EdgeExistsError.prototype), 'constructor', this).call(this);
 			/**
-	   * the set of relevant edges
+	   * the set of relevant edges as `[[from, to], value]` shaped arrays
 	   * @public
 	   * @constant edges
 	   * @memberof Graph.EdgeExistsError
 	   * @instance
-	   * @type {Set.<{ from: string, to: string, value }>}
+	   * @type {Set.<Array>}
 	   */
 			this.edges = new Set();
 			this.e(from, to, value);
@@ -3442,43 +3441,22 @@ return /******/ (function(modules) { // webpackBootstrap
 		_createClass(EdgeExistsError, [{
 			key: 'e',
 			value: function e(from, to, value) {
-				this.edges.add({ from: from, to: to, value: value });
+				this.edges.add([[from, to], value]);
 				this._refreshMessage();
 				return this;
 			}
 		}, {
 			key: '_refreshMessage',
 			value: function _refreshMessage() {
-				var edges = [];
-				var _iteratorNormalCompletion37 = true;
-				var _didIteratorError37 = false;
-				var _iteratorError37 = undefined;
+				this.message = 'This graph has ' + (this.edges.size === 1 ? 'an edge' : 'edges') + ' ' + [].concat(_toConsumableArray(this.edges)).map(function (_ref7) {
+					var _ref72 = _slicedToArray(_ref7, 1);
 	
-				try {
-					for (var _iterator37 = this.edges[Symbol.iterator](), _step37; !(_iteratorNormalCompletion37 = (_step37 = _iterator37.next()).done); _iteratorNormalCompletion37 = true) {
-						var _step37$value = _step37.value;
-						var from = _step37$value.from;
-						var to = _step37$value.to;
+					var _ref72$0 = _slicedToArray(_ref72[0], 2);
 	
-						edges.push('(\'' + from + '\', \'' + to + '\')');
-					}
-				} catch (err) {
-					_didIteratorError37 = true;
-					_iteratorError37 = err;
-				} finally {
-					try {
-						if (!_iteratorNormalCompletion37 && _iterator37['return']) {
-							_iterator37['return']();
-						}
-					} finally {
-						if (_didIteratorError37) {
-							throw _iteratorError37;
-						}
-					}
-				}
-	
-				var anEdges = edges.length === 1 ? 'an edge' : 'edges';
-				this.message = 'This graph has ' + anEdges + ' ' + edges.join(', ');
+					var from = _ref72$0[0];
+					var to = _ref72$0[1];
+					return '(\'' + from + '\', \'' + to + '\')';
+				}).join(', ');
 			}
 		}]);
 	
@@ -3496,12 +3474,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 			_get(Object.getPrototypeOf(EdgeNotExistsError.prototype), 'constructor', this).call(this);
 			/**
-	   * the set of relevant edges
+	   * the set of relevant edge keys as `[from, to]` shaped arrays
 	   * @public
 	   * @constant edges
 	   * @memberof Graph.EdgeNotExistsError
 	   * @instance
-	   * @type {Set.<{ from: string, to: string }>}
+	   * @type {Set.<Array.<string>>}
 	   */
 			this.edges = new Set();
 			this.e(from, to);
@@ -3512,43 +3490,20 @@ return /******/ (function(modules) { // webpackBootstrap
 		_createClass(EdgeNotExistsError, [{
 			key: 'e',
 			value: function e(from, to) {
-				this.edges.add({ from: from, to: to });
+				this.edges.add([from, to]);
 				this._refreshMessage();
 				return this;
 			}
 		}, {
 			key: '_refreshMessage',
 			value: function _refreshMessage() {
-				var edges = [];
-				var _iteratorNormalCompletion38 = true;
-				var _didIteratorError38 = false;
-				var _iteratorError38 = undefined;
+				this.message = 'This graph does not have ' + (this.edges.size === 1 ? 'an edge' : 'edges') + ' ' + [].concat(_toConsumableArray(this.edges)).map(function (_ref8) {
+					var _ref82 = _slicedToArray(_ref8, 2);
 	
-				try {
-					for (var _iterator38 = this.edges[Symbol.iterator](), _step38; !(_iteratorNormalCompletion38 = (_step38 = _iterator38.next()).done); _iteratorNormalCompletion38 = true) {
-						var _step38$value = _step38.value;
-						var from = _step38$value.from;
-						var to = _step38$value.to;
-	
-						edges.push('(\'' + from + '\', \'' + to + '\')');
-					}
-				} catch (err) {
-					_didIteratorError38 = true;
-					_iteratorError38 = err;
-				} finally {
-					try {
-						if (!_iteratorNormalCompletion38 && _iterator38['return']) {
-							_iterator38['return']();
-						}
-					} finally {
-						if (_didIteratorError38) {
-							throw _iteratorError38;
-						}
-					}
-				}
-	
-				var anEdges = edges.length === 1 ? 'an edge' : 'edges';
-				this.message = 'This graph does not have ' + anEdges + ' ' + edges.join(', ');
+					var from = _ref82[0];
+					var to = _ref82[1];
+					return '(\'' + from + '\', \'' + to + '\')';
+				}).join(', ');
 			}
 		}]);
 	
@@ -3593,7 +3548,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 			_get(Object.getPrototypeOf(CycleError.prototype), 'constructor', this).call(this);
 			/**
-	   * the vertices involved in the cycle
+	   * the vertices involved in the cycle, in order but with an unspecified starting point
 	   * @public
 	   * @constant cycle
 	   * @memberof Graph.CycleError
@@ -3620,7 +3575,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 			_get(Object.getPrototypeOf(BranchlessCycleError.prototype), 'constructor', this).call(this);
 			/**
-	   * the vertices involved in the branch-less cycle
+	   * the vertices involved in the branch-less cycle, in order but with an unspecified starting point
 	   * @public
 	   * @constant cycle
 	   * @memberof Graph.BranchlessCycleError

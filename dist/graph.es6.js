@@ -1076,25 +1076,26 @@ Graph.VertexExistsError = class VertexExistsError extends Error {
 	constructor(key, value) {
 		super();
 		/**
-		 * the set of relevant vertices
+		 * the set of relevant vertices as `[key, value]` shaped arrays
 		 * @public
 		 * @constant vertices
 		 * @memberof Graph.VertexExistsError
 		 * @instance
-		 * @type {Set.<{ key: string, value }>}
+		 * @type {Set.<array>}
 		 */
 		this.vertices = new Set();
 		this.v(key, value);
 	}
 	v(key, value) {
-		this.vertices.add({ key, value });
+		this.vertices.add([key, value]);
 		this._refreshMessage();
 		return this;
 	}
 	_refreshMessage() {
-		let aVertices = this.vertices.size === 1 ? "a vertex" : "vertices";
-		this.message = `This graph has ${aVertices} '${
-			[...this.vertices].map(v => v.key).join("', '")
+		this.message = `This graph has ${
+			this.vertices.size === 1 ? "a vertex" : "vertices"
+		} '${
+			[...this.vertices].map(([key]) => key).join(`', '`)
 		}'`;
 	}
 };
@@ -1108,25 +1109,26 @@ Graph.VertexNotExistsError = class VertexNotExistError extends Error {
 	constructor(key) {
 		super();
 		/**
-		 * the set of relevant vertices
+		 * the set of relevant vertex keys
 		 * @public
 		 * @constant vertices
 		 * @memberof Graph.VertexNotExistsError
 		 * @instance
-		 * @type {Set.<{ key: string }>}
+		 * @type {Set.<string>}
 		 */
 		this.vertices = new Set();
 		this.v(key);
 	}
 	v(key) {
-		this.vertices.add({ key });
+		this.vertices.add(key);
 		this._refreshMessage();
 		return this;
 	}
 	_refreshMessage() {
-		let aVertices = this.vertices.size === 1 ? "a vertex" : "vertices";
-		this.message = `This graph does not have ${aVertices} '${
-			[...this.vertices].map(v => v.key).join("', '")
+		this.message = `This graph does not have ${
+			this.vertices.size === 1 ? "a vertex" : "vertices"
+		} '${
+			[...this.vertices].join(`', '`)
 		}'`;
 	}
 };
@@ -1140,28 +1142,27 @@ Graph.EdgeExistsError = class EdgeExistsError extends Error {
 	constructor(from, to, value) {
 		super();
 		/**
-		 * the set of relevant edges
+		 * the set of relevant edges as `[[from, to], value]` shaped arrays
 		 * @public
 		 * @constant edges
 		 * @memberof Graph.EdgeExistsError
 		 * @instance
-		 * @type {Set.<{ from: string, to: string, value }>}
+		 * @type {Set.<Array>}
 		 */
 		this.edges = new Set();
 		this.e(from, to, value);
 	}
 	e(from, to, value) {
-		this.edges.add({ from, to, value });
+		this.edges.add([[from, to], value]);
 		this._refreshMessage();
 		return this;
 	}
 	_refreshMessage() {
-		let edges = [];
-		for (let {from, to} of this.edges) {
-			edges.push(`('${from}', '${to}')`);
-		}
-		let anEdges = edges.length === 1 ? "an edge" : "edges";
-		this.message = `This graph has ${anEdges} ${edges.join(", ")}`;
+		this.message = `This graph has ${
+			this.edges.size === 1 ? "an edge" : "edges"
+		} ${
+			[...this.edges].map(([[from, to]])=>`('${from}', '${to}')`).join(`, `)
+		}`;
 	}
 };
 
@@ -1174,28 +1175,27 @@ Graph.EdgeNotExistsError = class EdgeNotExistsError extends Error {
 	constructor(from, to) {
 		super();
 		/**
-		 * the set of relevant edges
+		 * the set of relevant edge keys as `[from, to]` shaped arrays
 		 * @public
 		 * @constant edges
 		 * @memberof Graph.EdgeNotExistsError
 		 * @instance
-		 * @type {Set.<{ from: string, to: string }>}
+		 * @type {Set.<Array.<string>>}
 		 */
 		this.edges = new Set();
 		this.e(from, to);
 	}
 	e(from, to) {
-		this.edges.add({ from, to });
+		this.edges.add([from, to]);
 		this._refreshMessage();
 		return this;
 	}
 	_refreshMessage() {
-		let edges = [];
-		for (let {from, to} of this.edges) {
-			edges.push(`('${from}', '${to}')`);
-		}
-		let anEdges = edges.length === 1 ? "an edge" : "edges";
-		this.message = `This graph does not have ${anEdges} ${edges.join(", ")}`;
+		this.message = `This graph does not have ${
+			this.edges.size === 1 ? "an edge" : "edges"
+		} ${
+			[...this.edges].map(([from, to])=>`('${from}', '${to}')`).join(`, `)
+		}`;
 	}
 };
 
@@ -1229,7 +1229,7 @@ Graph.CycleError = class CycleError extends Error {
 	constructor(cycle) {
 		super();
 		/**
-		 * the vertices involved in the cycle
+		 * the vertices involved in the cycle, in order but with an unspecified starting point
 		 * @public
 		 * @constant cycle
 		 * @memberof Graph.CycleError
@@ -1250,7 +1250,7 @@ Graph.BranchlessCycleError = class BranchlessCycleError extends Error {
 	constructor(cycle) {
 		super();
 		/**
-		 * the vertices involved in the branch-less cycle
+		 * the vertices involved in the branch-less cycle, in order but with an unspecified starting point
 		 * @public
 		 * @constant cycle
 		 * @memberof Graph.BranchlessCycleError
