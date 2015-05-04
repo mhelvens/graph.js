@@ -742,14 +742,14 @@ describeMethod('cycle', () => {
 	it_throwsNothing();
 
 	it("returns a descriptive array if the graph contains a cycle (1)", () => {
-		graph.clear();
-
-		graph.createEdge('n1', 'n2');
-		graph.createEdge('n2', 'n3');
-		graph.createEdge('n3', 'n4');
-		graph.createEdge('n4', 'n5');
-		graph.createEdge('n3', 'n23');
-		graph.createEdge('n23', 'n2');
+		graph = new Graph(
+			[['n1', 'n2']],
+			[['n2', 'n3']],
+			[['n3', 'n4']],
+			[['n4', 'n5']],
+			[['n3', 'n23']],
+			[['n23', 'n2']]
+		);
 
 		// n1 ──▶ n2 ──▶ n3 ──▶ n4 ──▶ n5
 		//        ▲      ╷
@@ -765,10 +765,7 @@ describeMethod('cycle', () => {
 	});
 
 	it("returns a descriptive array if the graph contains a cycle (2)", () => {
-		graph.clear();
-
-		graph.createEdge('n1', 'n1');
-
+		graph = new Graph([['n1', 'n1']]);
 		expectItWhenCalledWith().toEqual(['n1']);
 	});
 
@@ -789,14 +786,14 @@ describeMethod('hasCycle', () => {
 	it_throwsNothing();
 
 	it("returns true if the graph contains a cycle (1)", () => {
-		graph.clear();
-
-		graph.createEdge('n1', 'n2');
-		graph.createEdge('n2', 'n3');
-		graph.createEdge('n3', 'n4');
-		graph.createEdge('n4', 'n5');
-		graph.createEdge('n3', 'n23');
-		graph.createEdge('n23', 'n2');
+		graph = new Graph(
+			[['n1', 'n2']],
+			[['n2', 'n3']],
+			[['n3', 'n4']],
+			[['n4', 'n5']],
+			[['n3', 'n23']],
+			[['n23', 'n2']]
+		);
 
 		//  n1 ──▶ n2 ──▶ n3 ──▶ n4 ──▶ n5
 		//         ▲      ╷
@@ -808,10 +805,7 @@ describeMethod('hasCycle', () => {
 	});
 
 	it("returns true if the graph contains a cycle (2)", () => {
-		graph.clear();
-
-		graph.createEdge('n1', 'n1');
-
+		graph = new Graph([['n1', 'n1']]);
 		expectItWhenCalledWith().toBe(true);
 	});
 
@@ -1848,14 +1842,14 @@ describeMethod('sinks', () => {
 describeMethod('vertices_topologically', () => {
 
 	it("throws an error if the graph contains a cycle (1)", () => {
-		graph.clear();
-
-		graph.createEdge('n1', 'n2');
-		graph.createEdge('n2', 'n3');
-		graph.createEdge('n3', 'n4');
-		graph.createEdge('n4', 'n5');
-		graph.createEdge('n3', 'n23');
-		graph.createEdge('n23', 'n2');
+		graph = new Graph(
+			[['n1', 'n2']],
+			[['n2', 'n3']],
+			[['n3', 'n4']],
+			[['n4', 'n5']],
+			[['n3', 'n23']],
+			[['n23', 'n2']]
+		);
 
 		//  n1 ──▶ n2 ──▶ n3 ──▶ n4 ──▶ n5
 		//         ▲      ╷
@@ -1863,7 +1857,6 @@ describeMethod('vertices_topologically', () => {
 		//         ╵      │
 		//        n23 ◀───╯
 
-		expect(() => [...callItWith()]).toThrow();
 		expect(() => [...callItWith()]).toThrowSpecific(Graph.CycleError, {}); // TODO: specify cycle property
 
 		try {
@@ -1885,11 +1878,8 @@ describeMethod('vertices_topologically', () => {
 	});
 
 	it("throws an error if the graph contains a cycle (2)", () => {
-		graph.clear();
+		graph = new Graph([['n1', 'n1']]);
 
-		graph.createEdge('n1', 'n1');
-
-		expect(() => [...callItWith()]).toThrow();
 		expect(() => [...callItWith()]).toThrowSpecific(Graph.CycleError, {}); // TODO: specify cycle property
 
 		try {
@@ -1916,14 +1906,14 @@ describeMethod('vertices_topologically', () => {
 	});
 
 	it("visits vertices only when their predecessors have already been visited", () => {
-		graph.clear();
-
-		graph.createEdge('n3', 'n23');
-		graph.createEdge('n2', 'n23');
-		graph.createEdge('n1', 'n2');
-		graph.createEdge('n2', 'n3');
-		graph.createEdge('n3', 'n4');
-		graph.createEdge('n4', 'n5');
+		graph = new Graph(
+			[['n3', 'n23']],
+			[['n2', 'n23']],
+			[['n1', 'n2']],
+			[['n2', 'n3']],
+			[['n3', 'n4']],
+			[['n4', 'n5']]
+		);
 
 		//  n1 ──▶ n2 ──▶ n3 ──▶ n4 ──▶ n5
 		//         ╷      ╷
