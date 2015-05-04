@@ -1269,9 +1269,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * Iterate over all vertices of the graph, in no particular order.
 	   * @returns { Iterator.<string, *> } an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}
 	   * @example
-	   * for (var it = graph.vertices(), keyVal = it.next(); !it.done;) {
-	   *     var key   = keyVal[0],
-	   *         value = keyVal[1];
+	   * for (var it = graph.vertices(), kv = it.next(); !kv.done; kv = it.next()) {
+	   *     var key   = kv.value[0],
+	   *         value = kv.value[1];
 	   *     // iterates over all vertices of the graph
 	   * }
 	   * @example
@@ -1382,10 +1382,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * Iterate over all edges of the graph, in no particular order.
 	   * @returns { Iterator.<string, string, *> } an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}
 	   * @example
-	   * for (var it = graph.edges(), fromToVal = it.next(); !it.done;) {
-	   *     var from  = fromToVal[0],
-	   *         to    = fromToVal[1],
-	   *         value = fromToVal[2];
+	   * for (var it = graph.edges(), kv = it.next(); !kv.done; kv = it.next()) {
+	   *     var from  = kv.value[0],
+	   *         to    = kv.value[1],
+	   *         value = kv.value[2];
 	   *     // iterates over all edges of the graph
 	   * }
 	   * @example
@@ -1532,10 +1532,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @param from {string} the key of the vertex to take the outgoing edges from
 	   * @returns { Iterator.<string, *, *> } an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}
 	   * @example
-	   * for (var it = graph.verticesFrom(from), toVertexEdge = it.next(); !it.done;) {
-	   *     var to          = toVertexEdge[0],
-	   *         vertexValue = toVertexEdge[1],
-	   *         edgeValue   = toVertexEdge[2];
+	   * for (var it = graph.verticesFrom(from), kv = it.next(); !kv.done; kv = it.next()) {
+	   *     var to          = kv.value[0],
+	   *         vertexValue = kv.value[1],
+	   *         edgeValue   = kv.value[2];
 	   *     // iterates over all outgoing vertices of the `from` vertex
 	   * }
 	   * @example
@@ -1636,10 +1636,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @param to {string} the key of the vertex to take the incoming edges from
 	   * @returns { Iterator.<string, *, *> } an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}
 	   * @example
-	   * for (var it = graph.verticesTo(to), fromVertexEdge = it.next(); !it.done;) {
-	   *     var from        = fromVertexEdge[0],
-	   *         vertexValue = fromVertexEdge[1],
-	   *         edgeValue   = fromVertexEdge[2];
+	   * for (var it = graph.verticesTo(to), kv = it.next(); !kv.done; kv = it.next()) {
+	   *     var from        = kv.value[0],
+	   *         vertexValue = kv.value[1],
+	   *         edgeValue   = kv.value[2];
 	   *     // iterates over all outgoing vertices of the `from` vertex
 	   * }
 	   * @example
@@ -1740,9 +1740,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @param from {string} the key of the vertex to take the reachable vertices from
 	   * @returns { Iterator.<string, *> } an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}
 	   * @example
-	   * for (var it = graph.verticesWithPathFrom(from), keyValue = it.next(); !it.done;) {
-	   *     var key   = keyValue[0],
-	   *         value = keyValue[1];
+	   * for (var it = graph.verticesWithPathFrom(from), kv = it.next(); !kv.done; kv = it.next()) {
+	   *     var key   = kv.value[0],
+	   *         value = kv.value[1];
 	   *     // iterates over all vertices reachable from `from`
 	   * }
 	   * @example
@@ -1845,9 +1845,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @param to {string} the key of the vertex to take the reachable vertices from
 	   * @returns { Iterator.<string, *> } an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}
 	   * @example
-	   * for (var it = graph.verticesWithPathTo(to), keyValue = it.next(); !it.done;) {
-	   *     var key   = keyValue[0],
-	   *         value = keyValue[1];
+	   * for (var it = graph.verticesWithPathTo(to), kv = it.next(); !kv.done; kv = it.next()) {
+	   *     var key   = kv.value[0],
+	   *         value = kv.value[1];
 	   *     // iterates over all vertices from which `to` can be reached
 	   * }
 	   * @example
@@ -1948,9 +1948,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * Iterate over all vertices that have no incoming edges, in no particular order.
 	   * @returns { Iterator.<string, *> } an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}
 	   * @example
-	   * for (var it = graph.sources(), keyValue = it.next(); !it.done;) {
-	   *     var key   = keyValue[0],
-	   *         value = keyValue[1];
+	   * for (var it = graph.sources(), kv = it.next(); !kv.done; kv = it.next()) {
+	   *     var key   = kv.value[0],
+	   *         value = kv.value[1];
 	   *     // iterates over all vertices with no incoming edges
 	   * }
 	   * @example
@@ -2041,9 +2041,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * Iterate over all vertices that have no outgoing edges, in no particular order.
 	   * @returns { Iterator.<string, *> } an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}
 	   * @example
-	   * for (var it = graph.sinks(), keyValue = it.next(); !it.done;) {
-	   *     var key   = keyValue[0],
-	   *         value = keyValue[1];
+	   * for (var it = graph.sinks(), kv = it.next(); !kv.done; kv = it.next()) {
+	   *     var key   = kv.value[0],
+	   *         value = kv.value[1];
 	   *     // iterates over all vertices with no outgoing edges
 	   * }
 	   * @example
@@ -2134,9 +2134,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * Iterate over all vertices of the graph in topological order.
 	   * @returns { Iterator.<string, *> } an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}
 	   * @example
-	   * for (var it = graph.vertices_topologically(), keyVal = it.next(); !it.done;) {
-	   *     var key   = keyVal[0],
-	   *         value = keyVal[1];
+	   * for (var it = graph.vertices_topologically(), kv = it.next(); !kv.done; kv = it.next()) {
+	   *     var key   = kv.value[0],
+	   *         value = kv.value[1];
 	   *     // iterates over all vertices of the graph in topological order
 	   * }
 	   * @example

@@ -5,6 +5,7 @@ install:
   - npm install
 script:
   - npm run build
+  - npm run docs
   - npm run test-ci
 branches:
   only:
