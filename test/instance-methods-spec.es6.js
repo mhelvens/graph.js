@@ -1257,8 +1257,8 @@ describeMethod('clone', () => {
 		}
 	});
 
-	it("returns a new graph with the same vertices as the original, with values influenced by custom value transformer", () => {
-		let newGraph = callItWith(v => `value:${v}`);
+	it("returns a new graph with the same vertices and edges as the original, with values influenced by custom vertex value transformer", () => {
+		let newGraph = callItWith(v=>`value:${v}`, v=>v);
 		for (let [key, val] of newGraph.vertices()) {
 			expect(graph.hasVertex(key)).toBeTruthy();
 			expect(val).toBe(`value:${graph.vertexValue(key)}`);
@@ -1267,10 +1267,26 @@ describeMethod('clone', () => {
 			expect(newGraph.hasVertex(key)).toBeTruthy();
 			expect(`value:${val}`).toBe(newGraph.vertexValue(key));
 		}
+		for (let [from, to, val] of newGraph.edges()) {
+			expect(graph.hasEdge(from, to)).toBeTruthy();
+			expect(val).toBe(graph.edgeValue(from, to));
+		}
+		for (let [from, to, val] of graph.edges()) {
+			expect(newGraph.hasEdge(from, to)).toBeTruthy();
+			expect(val).toBe(newGraph.edgeValue(from, to));
+		}
 	});
 
-	it("returns a new graph with the same edges as the original, with values influenced by custom value transformer", () => {
-		let newGraph = callItWith(v => `value:${v}`);
+	it("returns a new graph with the same vertices and edges as the original, with values influenced by custom edge value transformer", () => {
+		let newGraph = callItWith(undefined, v => `value:${v}`);
+		for (let [key, val] of newGraph.vertices()) {
+			expect(graph.hasVertex(key)).toBeTruthy();
+			expect(val).toBe(graph.vertexValue(key));
+		}
+		for (let [key, val] of graph.vertices()) {
+			expect(newGraph.hasVertex(key)).toBeTruthy();
+			expect(val).toBe(newGraph.vertexValue(key));
+		}
 		for (let [from, to, val] of newGraph.edges()) {
 			expect(graph.hasEdge(from, to)).toBeTruthy();
 			expect(val).toBe(`value:${graph.edgeValue(from, to)}`);
@@ -1934,6 +1950,109 @@ describeMethod('vertices_topologically', () => {
 			}
 			visited[key] = true;
 		}
+	});
+
+});
+
+describe("Graph.VertexExistsError", () => {
+
+	it("can specify one existing vertex", () => {
+		let err = new Graph.VertexExistsError('x', 1);
+		expect(err.vertices).toEqual(new Set([{ key: 'x', value: 1 }]));
+	});
+
+	it("can specify multiple existing vertices", () => {
+		let err = new Graph.VertexExistsError('x', 1).v('y', 2);
+		expect(err.vertices).toEqual(new Set([
+			{ key: 'x', value: 1 },
+			{ key: 'y', value: 2 }
+		]));
+	});
+
+});
+
+describe("Graph.VertexNotExistsError", () => {
+
+	it("can specify one missing vertex", () => {
+		let err = new Graph.VertexNotExistsError('x');
+		expect(err.vertices).toEqual(new Set([{ key: 'x' }]));
+	});
+
+	it("can specify multiple missing vertices", () => {
+		let err = new Graph.VertexNotExistsError('x').v('y');
+		expect(err.vertices).toEqual(new Set([
+			{ key: 'x' },
+			{ key: 'y' }
+		]));
+	});
+
+});
+
+describe("Graph.EdgeExistsError", () => {
+
+	it("can specify one existing edge", () => {
+		let err = new Graph.EdgeExistsError('x', 'y', 1);
+		expect(err.edges).toEqual(new Set([{ from: 'x', to: 'y', value: 1 }]));
+	});
+
+	it("can specify multiple existing edges", () => {
+		let err = new Graph.EdgeExistsError('x', 'y', 1).e('y', 'z', 2);
+		expect(err.edges).toEqual(new Set([
+			{ from: 'x', to: 'y', value: 1 },
+			{ from: 'y', to: 'z', value: 2 }
+		]));
+	});
+
+});
+
+describe("Graph.EdgeNotExistsError", () => {
+
+	it("can specify one missing edge", () => {
+		let err = new Graph.EdgeNotExistsError('x', 'y');
+		expect(err.edges).toEqual(new Set([{ from: 'x', to: 'y' }]));
+	});
+
+	it("can specify multiple missing edges", () => {
+		let err = new Graph.EdgeNotExistsError('x', 'y').e('y', 'z');
+		expect(err.edges).toEqual(new Set([
+			{ from: 'x', to: 'y' },
+			{ from: 'y', to: 'z' }
+		]));
+	});
+
+});
+
+describe("Graph.HasConnectedEdgesError", () => {
+
+	it("can specify that a vertex has connected edges", () => {
+		let err = new Graph.HasConnectedEdgesError('x');
+		expect(err.key).toEqual('x');
+	});
+
+});
+
+describe("Graph.CycleError", () => {
+
+	it("can specify that a graph contains a cycle", () => {
+		let err = new Graph.CycleError(['x', 'y', 'z']);
+		expect(err.cycle).toEqualOneOf(
+			['x', 'y', 'z'],
+			['z', 'x', 'y'],
+			['y', 'z', 'x']
+		);
+	});
+
+});
+
+describe("Graph.BranchlessCycleError", () => {
+
+	it("can specify that a graph contains a branchless cycle", () => {
+		let err = new Graph.BranchlessCycleError(['x', 'y', 'z']);
+		expect(err.cycle).toEqualOneOf(
+			['x', 'y', 'z'],
+			['z', 'x', 'y'],
+			['y', 'z', 'x']
+		);
 	});
 
 });

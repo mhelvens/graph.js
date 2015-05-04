@@ -68,9 +68,9 @@ return /******/ (function(modules) { // webpackBootstrap
 		value: true
 	});
 	
-	var _get = function get(_x5, _x6, _x7) { var _again = true; _function: while (_again) { desc = parent = getter = undefined; _again = false; var object = _x5,
-	    property = _x6,
-	    receiver = _x7; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x5 = parent; _x6 = property; _x7 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+	var _get = function get(_x8, _x9, _x10) { var _again = true; _function: while (_again) { desc = parent = getter = undefined; _again = false; var object = _x8,
+	    property = _x9,
+	    receiver = _x10; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x8 = parent; _x9 = property; _x10 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 	
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 	
@@ -148,8 +148,8 @@ return /******/ (function(modules) { // webpackBootstrap
 						var to = _key2[1];
 	
 						this.createEdge(from, to, value);
-					} else if (typeof key === 'string') {
-						/// a vertex
+					} else {
+						//////////////////////////////// a vertex
 						this.addVertex(key, value);
 					}
 				}
@@ -786,9 +786,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 							from = _step5.value;
 	
-							if (!done.has(from)) {
-								done.set(from, new Set());
-							}
+							done.set(from, new Set());
 							_iteratorNormalCompletion6 = true;
 							_didIteratorError6 = false;
 							_iteratorError6 = undefined;
@@ -1788,92 +1786,90 @@ return /******/ (function(modules) { // webpackBootstrap
 	   *     and `to` keys respectively.
 	   * @returns {boolean} `true` if the two graphs are equal; `false` otherwise
 	   */
-			value: function equals(other, eqV, eqE) {
-				if (!eqV) {
-					eqV = function (x, y) {
-						return x === y;
-					};
-				}
-				if (!eqE) {
-					eqE = eqV;
-				}
-				if (!(other instanceof Graph)) {
-					return false;
-				}
-				if (this.vertexCount() !== other.vertexCount()) {
-					return false;
-				}
-				if (this.edgeCount() !== other.edgeCount()) {
-					return false;
-				}
-				var _iteratorNormalCompletion17 = true;
-				var _didIteratorError17 = false;
-				var _iteratorError17 = undefined;
-	
-				try {
-					for (var _iterator17 = this.vertices()[Symbol.iterator](), _step17; !(_iteratorNormalCompletion17 = (_step17 = _iterator17.next()).done); _iteratorNormalCompletion17 = true) {
-						var _step17$value = _slicedToArray(_step17.value, 2);
-	
-						var key = _step17$value[0];
-						var value = _step17$value[1];
-	
-						if (!other.hasVertex(key)) {
-							return false;
-						}
-						if (!eqV(value, other.vertexValue(key), key)) {
-							return false;
-						}
+			value: function equals(other) {
+				var eqV = arguments[1] === undefined ? function (x, y) {
+					return x === y;
+				} : arguments[1];
+				var eqE = arguments[2] === undefined ? eqV : arguments[2];
+				return (function () {
+					if (!(other instanceof Graph)) {
+						return false;
 					}
-				} catch (err) {
-					_didIteratorError17 = true;
-					_iteratorError17 = err;
-				} finally {
+					if (this.vertexCount() !== other.vertexCount()) {
+						return false;
+					}
+					if (this.edgeCount() !== other.edgeCount()) {
+						return false;
+					}
+					var _iteratorNormalCompletion17 = true;
+					var _didIteratorError17 = false;
+					var _iteratorError17 = undefined;
+	
 					try {
-						if (!_iteratorNormalCompletion17 && _iterator17['return']) {
-							_iterator17['return']();
+						for (var _iterator17 = this.vertices()[Symbol.iterator](), _step17; !(_iteratorNormalCompletion17 = (_step17 = _iterator17.next()).done); _iteratorNormalCompletion17 = true) {
+							var _step17$value = _slicedToArray(_step17.value, 2);
+	
+							var key = _step17$value[0];
+							var value = _step17$value[1];
+	
+							if (!other.hasVertex(key)) {
+								return false;
+							}
+							if (!eqV(value, other.vertexValue(key), key)) {
+								return false;
+							}
 						}
+					} catch (err) {
+						_didIteratorError17 = true;
+						_iteratorError17 = err;
 					} finally {
-						if (_didIteratorError17) {
-							throw _iteratorError17;
+						try {
+							if (!_iteratorNormalCompletion17 && _iterator17['return']) {
+								_iterator17['return']();
+							}
+						} finally {
+							if (_didIteratorError17) {
+								throw _iteratorError17;
+							}
 						}
 					}
-				}
 	
-				var _iteratorNormalCompletion18 = true;
-				var _didIteratorError18 = false;
-				var _iteratorError18 = undefined;
+					var _iteratorNormalCompletion18 = true;
+					var _didIteratorError18 = false;
+					var _iteratorError18 = undefined;
 	
-				try {
-					for (var _iterator18 = this.edges()[Symbol.iterator](), _step18; !(_iteratorNormalCompletion18 = (_step18 = _iterator18.next()).done); _iteratorNormalCompletion18 = true) {
-						var _step18$value = _slicedToArray(_step18.value, 3);
-	
-						var from = _step18$value[0];
-						var to = _step18$value[1];
-						var value = _step18$value[2];
-	
-						if (!other.hasEdge(from, to)) {
-							return false;
-						}
-						if (!eqE(value, other.edgeValue(from, to), from, to)) {
-							return false;
-						}
-					}
-				} catch (err) {
-					_didIteratorError18 = true;
-					_iteratorError18 = err;
-				} finally {
 					try {
-						if (!_iteratorNormalCompletion18 && _iterator18['return']) {
-							_iterator18['return']();
+						for (var _iterator18 = this.edges()[Symbol.iterator](), _step18; !(_iteratorNormalCompletion18 = (_step18 = _iterator18.next()).done); _iteratorNormalCompletion18 = true) {
+							var _step18$value = _slicedToArray(_step18.value, 3);
+	
+							var from = _step18$value[0];
+							var to = _step18$value[1];
+							var value = _step18$value[2];
+	
+							if (!other.hasEdge(from, to)) {
+								return false;
+							}
+							if (!eqE(value, other.edgeValue(from, to), from, to)) {
+								return false;
+							}
 						}
+					} catch (err) {
+						_didIteratorError18 = true;
+						_iteratorError18 = err;
 					} finally {
-						if (_didIteratorError18) {
-							throw _iteratorError18;
+						try {
+							if (!_iteratorNormalCompletion18 && _iterator18['return']) {
+								_iterator18['return']();
+							}
+						} finally {
+							if (_didIteratorError18) {
+								throw _iteratorError18;
+							}
 						}
 					}
-				}
 	
-				return true;
+					return true;
+				}).apply(this, arguments);
 			}
 		}, {
 			key: 'cycle',
@@ -2200,22 +2196,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	   *     and `to` keys respectively.
 	   * @returns {Graph} a clone of this graph
 	   */
-			value: function clone(trV, trE) {
-				if (!trV) {
-					trV = function (v) {
-						return v;
-					};
-				}
-				if (!trE) {
-					trE = trV;
-				}
-				var result = new Graph();
-				result.mergeIn(this, function (v1, v2) {
-					return trV(v2);
-				}, function (v1, v2) {
-					return trE(v2);
-				});
-				return result;
+			value: function clone() {
+				var trV = arguments[0] === undefined ? function (v) {
+					return v;
+				} : arguments[0];
+				var trE = arguments[1] === undefined ? trV : arguments[1];
+				return (function () {
+					var result = new Graph();
+					result.mergeIn(this, function (v1, v2) {
+						return trV(v2);
+					}, function (v1, v2) {
+						return trE(v2);
+					});
+					return result;
+				}).apply(this, arguments);
 			}
 		}, {
 			key: 'transitiveReduction',
@@ -2234,14 +2228,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @returns {Graph} a clone of this graph with all transitive edges removed
 	   */
 			value: function transitiveReduction(trV, trE) {
-				if (!trV) {
-					trV = function (v) {
-						return v;
-					};
-				}
-				if (!trE) {
-					trE = trV;
-				}
+				// argument defaults are handled in `clone`
 				var result = this.clone(trV, trE);
 				var _iteratorNormalCompletion24 = true;
 				var _didIteratorError24 = false;
@@ -2477,9 +2464,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				var contractionsToAdd = new Map();
 	
 				/* register the path starting with the given edge */
-				var startPath = function startPath(start, next) {
-					var backwards = arguments[2] === undefined ? false : arguments[2];
-	
+				var startPath = function startPath(start, next, backwards) {
 					/* functions to help branch on `backwards` */
 					var fromTo = function fromTo() {
 						var strt = arguments[0] === undefined ? start : arguments[0];

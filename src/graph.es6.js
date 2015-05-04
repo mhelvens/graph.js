@@ -42,7 +42,7 @@ export default class Graph {
 			if (Array.isArray(key)) {/////////////// an edge
 				let [from, to] = key;
 				this.createEdge(from, to, value);
-			} else if (typeof key === 'string') {/// a vertex
+			} else {//////////////////////////////// a vertex
 				this.addVertex(key, value);
 			}
 		}
@@ -474,7 +474,7 @@ export default class Graph {
 	*edges() {
 		let done = new Map();
 		for (let from of this._edges.keys()) {
-			if (!done.has(from)) { done.set(from, new Set()) }
+			done.set(from, new Set());
 			for (let to of this._edges.get(from).keys()) {
 				if (this.hasEdge(from, to) && !done.get(from).has(to)) {
 					done.get(from).add(to);
@@ -749,9 +749,7 @@ export default class Graph {
 	 *     and `to` keys respectively.
 	 * @returns {boolean} `true` if the two graphs are equal; `false` otherwise
 	 */
-	equals(other, eqV, eqE) {
-		if (!eqV) { eqV = (x,y) => (x===y) }
-		if (!eqE) { eqE = eqV              }
+	equals(other, eqV=(x,y)=>(x===y), eqE=eqV) {
 		if (!(other instanceof Graph))                  { return false }
 		if (this.vertexCount() !== other.vertexCount()) { return false }
 		if (this.edgeCount()   !== other.edgeCount()  ) { return false }
@@ -931,9 +929,7 @@ export default class Graph {
 	 *     and `to` keys respectively.
 	 * @returns {Graph} a clone of this graph
 	 */
-	clone(trV, trE) {
-		if (!trV) { trV = v=>v }
-		if (!trE) { trE = trV  }
+	clone(trV=(v=>v), trE=trV) {
 		let result = new Graph();
 		result.mergeIn(this, (v1, v2) => trV(v2), (v1, v2) => trE(v2));
 		return result;
@@ -954,8 +950,7 @@ export default class Graph {
 	 * @returns {Graph} a clone of this graph with all transitive edges removed
 	 */
 	transitiveReduction(trV, trE) {
-		if (!trV) { trV = v=>v }
-		if (!trE) { trE = trV  }
+		// argument defaults are handled in `clone`
 		let result = this.clone(trV, trE);
 		for (let [x] of this.vertices())
 			for (let [y] of this.vertices())
@@ -981,7 +976,7 @@ export default class Graph {
 	 *                  true if and only if that vertex should be a nexus.
 	 * @throws {Graph.BranchlessCycleError} if the graph contains a cycle with no branches or nexuses
 	 */
-	contractPaths(isNexus = ()=>false) {
+	contractPaths(isNexus=(()=>false)) {
 
 		/* what makes a a vertex a nexus (start/end-point) */
 		let nexuses = new Set(
@@ -1016,7 +1011,7 @@ export default class Graph {
 		let contractionsToAdd = new Map();
 
 		/* register the path starting with the given edge */
-		const startPath = (start, next, backwards = false) => {
+		const startPath = (start, next, backwards) => {
 			/* functions to help branch on `backwards` */
 			const fromTo       = (strt = start, nxt = next) => backwards ? [nxt, strt] : [strt, nxt];
 			const verticesNext = (v) => backwards ? this.verticesTo(v) : this.verticesFrom(v);
@@ -1099,7 +1094,7 @@ Graph.VertexExistsError = class VertexExistsError extends Error {
 	_refreshMessage() {
 		let aVertices = this.vertices.size === 1 ? "a vertex" : "vertices";
 		this.message = `This graph has ${aVertices} '${
-			[...this.vertices].map((v) => v.key).join("', '")
+			[...this.vertices].map(v => v.key).join("', '")
 		}'`;
 	}
 };
@@ -1131,7 +1126,7 @@ Graph.VertexNotExistsError = class VertexNotExistError extends Error {
 	_refreshMessage() {
 		let aVertices = this.vertices.size === 1 ? "a vertex" : "vertices";
 		this.message = `This graph does not have ${aVertices} '${
-			[...this.vertices].map((v) => v.key).join("', '")
+			[...this.vertices].map(v => v.key).join("', '")
 		}'`;
 	}
 };
