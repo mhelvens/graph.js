@@ -14,13 +14,13 @@
  *        A vertex should be an array of the form `[key, value]`.
  *        An edge should be an array of the form `[[from, to], value]`.
  *        Later values of vertices or edges in this list will overwrite earlier
- *        values, but vertices need not precede their edges (nor need they be
- *        separately listed at all).
+ *        values, but vertices need not precede their edges. Vertices that are
+ *        connected but store no value need not be listed at all.
  * @example
  * var map = new Graph(
- *     ['Amsterdam',            { population: 825000 }], // vertex
- *     ['Leiden',               { population: 122000 }], // vertex
- *     [['Amsterdam, 'Leiden'], { distance:   "40km" }]  // edge
+ *     ['Amsterdam',             { population: 825000 }], // vertex
+ *     ['Leiden',                { population: 122000 }], // vertex
+ *     [['Amsterdam', 'Leiden'], { distance:   "40km" }]  // edge
  * );
  */
 export default class Graph {
