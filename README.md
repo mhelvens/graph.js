@@ -122,7 +122,7 @@ Constructor arguments can be used to supply initial vertices and edges.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| ...parts | <code>Array.&lt;Array&gt;</code> | a short notation for vertices and edges to initially add to the graph;        A vertex should be an array of the form `[key, value]`.        An edge should be an array of the form `[[from, to], value]`.        Later values of vertices or edges in this list will overwrite earlier        values, but vertices need not precede their edges (nor need they be        separately listed at all). |
+| ...parts | <code>Array.&lt;Array&gt;</code> | a short notation for vertices and edges to initially add to the graph;        A vertex should be an array of the form `[key, value]`.        An edge should be an array of the form `[[from, to], value]`.        Later values of vertices or edges in this list will overwrite earlier        values, but vertices need not precede their edges. Vertices that are        connected but store no values need not be listed at all. |
 
 **Example**  
 ```JavaScript
