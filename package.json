@@ -37,7 +37,7 @@
     "karma": "~0.12",
     "karma-babel-preprocessor": "~5",
     "karma-cli": "~0.0",
-    "karma-coverage": "~0.3",
+    "karma-coverage": "~0.2",
     "karma-coveralls": "~0.1",
     "karma-jasmine": "~0.3",
     "karma-phantomjs-launcher": "~0.1",
