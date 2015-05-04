@@ -75,15 +75,19 @@ return /******/ (function(modules) { // webpackBootstrap
 		value: true
 	});
 	
-	var _slicedToArray = function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i['return']) _i['return'](); } finally { if (_d) throw _e; } } return _arr; } else { throw new TypeError('Invalid attempt to destructure non-iterable instance'); } };
-	
-	var _toConsumableArray = function (arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i]; return arr2; } else { return Array.from(arr); } };
-	
-	var _inherits = function (subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; };
-	
-	var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
+	var _get = function get(_x5, _x6, _x7) { var _again = true; _function: while (_again) { desc = parent = getter = undefined; _again = false; var object = _x5,
+	    property = _x6,
+	    receiver = _x7; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x5 = parent; _x6 = property; _x7 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 	
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+	
+	function _slicedToArray(arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i['return']) _i['return'](); } finally { if (_d) throw _e; } } return _arr; } else { throw new TypeError('Invalid attempt to destructure non-iterable instance'); } }
+	
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i]; return arr2; } else { return Array.from(arr); } }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
 	'use strict';
 	
@@ -101,8 +105,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	 *        A vertex should be an array of the form `[key, value]`.
 	 *        An edge should be an array of the form `[[from, to], value]`.
 	 *        Later values of vertices or edges in this list will overwrite earlier
-	 *        values, but vertices need not precede their edges (nor need they be
-	 *        separately listed at all).
+	 *        values, but vertices need not precede their edges. Vertices that are
+	 *        connected but store no values need not be listed at all.
 	 * @example
 	 * var map = new Graph(
 	 *     ['Amsterdam',            { population: 825000 }], // vertex
@@ -1887,7 +1891,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	   *                   `null`, if there is no cycle
 	   */
 			value: function cycle() {
-				var _this8 = this;
+				var _this2 = this;
 	
 				var visited = []; // stack
 				var handled = new Set();
@@ -1912,7 +1916,7 @@ return /******/ (function(modules) { // webpackBootstrap
 					var _iteratorError19 = undefined;
 	
 					try {
-						for (var _iterator19 = _this8.verticesFrom(a)[Symbol.iterator](), _step19; !(_iteratorNormalCompletion19 = (_step19 = _iterator19.next()).done); _iteratorNormalCompletion19 = true) {
+						for (var _iterator19 = _this2.verticesFrom(a)[Symbol.iterator](), _step19; !(_iteratorNormalCompletion19 = (_step19 = _iterator19.next()).done); _iteratorNormalCompletion19 = true) {
 							var _step19$value = _slicedToArray(_step19.value, 1);
 	
 							var b = _step19$value[0];
@@ -1993,7 +1997,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	   *                   including those two vertices themselves; `null` if no such path exists
 	   */
 			value: function path(from, to) {
-				var _this9 = this;
+				var _this3 = this;
 	
 				if (!this.hasVertex(from) || !this.hasVertex(to)) {
 					return null;
@@ -2004,7 +2008,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				/* recursive auxiliary function: find a path from 'current' to 'to' */
 				var hasPathAux = function hasPathAux(current) {
 					visited.push(current);
-					if (_this9.hasEdge(current, to)) {
+					if (_this3.hasEdge(current, to)) {
 						return [].concat(visited, [to]);
 					}
 					var _iteratorNormalCompletion21 = true;
@@ -2012,7 +2016,7 @@ return /******/ (function(modules) { // webpackBootstrap
 					var _iteratorError21 = undefined;
 	
 					try {
-						for (var _iterator21 = _this9.verticesFrom(current)[Symbol.iterator](), _step21; !(_iteratorNormalCompletion21 = (_step21 = _iterator21.next()).done); _iteratorNormalCompletion21 = true) {
+						for (var _iterator21 = _this3.verticesFrom(current)[Symbol.iterator](), _step21; !(_iteratorNormalCompletion21 = (_step21 = _iterator21.next()).done); _iteratorNormalCompletion21 = true) {
 							var _step21$value = _slicedToArray(_step21.value, 1);
 	
 							var next = _step21$value[0];
@@ -2343,9 +2347,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	   *                  It receives a `key` and `value` associated to a vertex and should return
 	   *                  true if and only if that vertex should be a nexus.
 	   * @throws {Graph.BranchlessCycleError} if the graph contains a cycle with no branches or nexuses
-	   */ // TODO: documentation
+	   */
 			value: function contractPaths() {
-				var _this10 = this;
+				var _this4 = this;
 	
 				var isNexus = arguments[0] === undefined ? function () {
 					return false;
@@ -2357,7 +2361,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 					var key = _ref2[0];
 					var val = _ref2[1];
-					return _this10.outDegree(key) !== 1 || _this10.inDegree(key) !== 1 || isNexus(key, val);
+					return _this4.outDegree(key) !== 1 || _this4.inDegree(key) !== 1 || isNexus(key, val);
 				}).map(function (_ref3) {
 					var _ref32 = _slicedToArray(_ref3, 1);
 	
@@ -2376,7 +2380,7 @@ return /******/ (function(modules) { // webpackBootstrap
 					var _iterator29, _step29;
 	
 					(function () {
-						var unhandledVertices = new Set([].concat(_toConsumableArray(_this10.vertices())).map(function (_ref4) {
+						var unhandledVertices = new Set([].concat(_toConsumableArray(_this4.vertices())).map(function (_ref4) {
 							var _ref42 = _slicedToArray(_ref4, 1);
 	
 							var key = _ref42[0];
@@ -2392,7 +2396,7 @@ return /******/ (function(modules) { // webpackBootstrap
 							var _iteratorError27 = undefined;
 	
 							try {
-								for (var _iterator27 = _this10.verticesFrom(key)[Symbol.iterator](), _step27; !(_iteratorNormalCompletion27 = (_step27 = _iterator27.next()).done); _iteratorNormalCompletion27 = true) {
+								for (var _iterator27 = _this4.verticesFrom(key)[Symbol.iterator](), _step27; !(_iteratorNormalCompletion27 = (_step27 = _iterator27.next()).done); _iteratorNormalCompletion27 = true) {
 									var _step27$value = _slicedToArray(_step27.value, 1);
 	
 									var next = _step27$value[0];
@@ -2418,7 +2422,7 @@ return /******/ (function(modules) { // webpackBootstrap
 							var _iteratorError28 = undefined;
 	
 							try {
-								for (var _iterator28 = _this10.verticesTo(key)[Symbol.iterator](), _step28; !(_iteratorNormalCompletion28 = (_step28 = _iterator28.next()).done); _iteratorNormalCompletion28 = true) {
+								for (var _iterator28 = _this4.verticesTo(key)[Symbol.iterator](), _step28; !(_iteratorNormalCompletion28 = (_step28 = _iterator28.next()).done); _iteratorNormalCompletion28 = true) {
 									var _step28$value = _slicedToArray(_step28.value, 1);
 	
 									var next = _step28$value[0];
@@ -2469,7 +2473,7 @@ return /******/ (function(modules) { // webpackBootstrap
 							    current = startingKey;
 							do {
 								cycle.push(current);
-								current = _this10.verticesFrom(current).next().value[0];
+								current = _this4.verticesFrom(current).next().value[0];
 							} while (current !== startingKey);
 							throw new Graph.BranchlessCycleError(cycle);
 						}
@@ -2490,7 +2494,7 @@ return /******/ (function(modules) { // webpackBootstrap
 						return backwards ? [nxt, strt] : [strt, nxt];
 					};
 					var verticesNext = function verticesNext(v) {
-						return backwards ? _this10.verticesTo(v) : _this10.verticesFrom(v);
+						return backwards ? _this4.verticesTo(v) : _this4.verticesFrom(v);
 					};
 	
 					/* bookkeeping */
@@ -2499,9 +2503,9 @@ return /******/ (function(modules) { // webpackBootstrap
 					var path = new Graph();
 	
 					/* process the start of the path */
-					path.addVertex(start, _this10.vertexValue(start));
-					path.addVertex(next, _this10.vertexValue(next));
-					path.addNewEdge.apply(path, _toConsumableArray(fromTo()).concat([_this10.edgeValue.apply(_this10, _toConsumableArray(fromTo()))]));
+					path.addVertex(start, _this4.vertexValue(start));
+					path.addVertex(next, _this4.vertexValue(next));
+					path.addNewEdge.apply(path, _toConsumableArray(fromTo()).concat([_this4.edgeValue.apply(_this4, _toConsumableArray(fromTo()))]));
 					edgesToRemove.add(fromTo());
 	
 					/* process as [current, next] moves across the path */
@@ -2511,8 +2515,8 @@ return /******/ (function(modules) { // webpackBootstrap
 						current = _ref5[0];
 						next = _ref5[1];
 	
-						path.addVertex(next, _this10.vertexValue(next));
-						path.addNewEdge.apply(path, _toConsumableArray(fromTo(current, next)).concat([_this10.edgeValue.apply(_this10, _toConsumableArray(fromTo(current, next)))]));
+						path.addVertex(next, _this4.vertexValue(next));
+						path.addNewEdge.apply(path, _toConsumableArray(fromTo(current, next)).concat([_this4.edgeValue.apply(_this4, _toConsumableArray(fromTo(current, next)))]));
 						verticesToRemove.add(current);
 						edgesToRemove.add(fromTo(current, next));
 					}
@@ -2534,7 +2538,7 @@ return /******/ (function(modules) { // webpackBootstrap
 					try {
 						for (var _iterator30 = edgesToRemove[Symbol.iterator](), _step30; !(_iteratorNormalCompletion30 = (_step30 = _iterator30.next()).done); _iteratorNormalCompletion30 = true) {
 							var key = _step30.value;
-							_this10.removeExistingEdge.apply(_this10, _toConsumableArray(key));
+							_this4.removeExistingEdge.apply(_this4, _toConsumableArray(key));
 						}
 					} catch (err) {
 						_didIteratorError30 = true;
@@ -2558,7 +2562,7 @@ return /******/ (function(modules) { // webpackBootstrap
 					try {
 						for (var _iterator31 = verticesToRemove[Symbol.iterator](), _step31; !(_iteratorNormalCompletion31 = (_step31 = _iterator31.next()).done); _iteratorNormalCompletion31 = true) {
 							var key = _step31.value;
-							_this10.destroyExistingVertex(key);
+							_this4.destroyExistingVertex(key);
 						}
 					} catch (err) {
 						_didIteratorError31 = true;
@@ -2725,10 +2729,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		function VertexExistsError(key, value) {
 			_classCallCheck(this, VertexExistsError);
 	
-			var _this = new _Error();
-	
-			_this.__proto__ = VertexExistsError.prototype;
-	
+			_get(Object.getPrototypeOf(VertexExistsError.prototype), 'constructor', this).call(this);
 			/**
 	   * the set of relevant vertices
 	   * @public
@@ -2737,9 +2738,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @instance
 	   * @type {Set.<{ key: string, value }>}
 	   */
-			_this.vertices = new Set();
-			_this.v(key, value);
-			return _this;
+			this.vertices = new Set();
+			this.v(key, value);
 		}
 	
 		_inherits(VertexExistsError, _Error);
@@ -2773,10 +2773,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		function VertexNotExistError(key) {
 			_classCallCheck(this, VertexNotExistError);
 	
-			var _this2 = new _Error2();
-	
-			_this2.__proto__ = VertexNotExistError.prototype;
-	
+			_get(Object.getPrototypeOf(VertexNotExistError.prototype), 'constructor', this).call(this);
 			/**
 	   * the set of relevant vertices
 	   * @public
@@ -2785,9 +2782,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @instance
 	   * @type {Set.<{ key: string }>}
 	   */
-			_this2.vertices = new Set();
-			_this2.v(key);
-			return _this2;
+			this.vertices = new Set();
+			this.v(key);
 		}
 	
 		_inherits(VertexNotExistError, _Error2);
@@ -2821,10 +2817,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		function EdgeExistsError(from, to, value) {
 			_classCallCheck(this, EdgeExistsError);
 	
-			var _this3 = new _Error3();
-	
-			_this3.__proto__ = EdgeExistsError.prototype;
-	
+			_get(Object.getPrototypeOf(EdgeExistsError.prototype), 'constructor', this).call(this);
 			/**
 	   * the set of relevant edges
 	   * @public
@@ -2833,9 +2826,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @instance
 	   * @type {Set.<{ from: string, to: string, value }>}
 	   */
-			_this3.edges = new Set();
-			_this3.e(from, to, value);
-			return _this3;
+			this.edges = new Set();
+			this.e(from, to, value);
 		}
 	
 		_inherits(EdgeExistsError, _Error3);
@@ -2895,10 +2887,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		function EdgeNotExistsError(from, to) {
 			_classCallCheck(this, EdgeNotExistsError);
 	
-			var _this4 = new _Error4();
-	
-			_this4.__proto__ = EdgeNotExistsError.prototype;
-	
+			_get(Object.getPrototypeOf(EdgeNotExistsError.prototype), 'constructor', this).call(this);
 			/**
 	   * the set of relevant edges
 	   * @public
@@ -2907,9 +2896,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @instance
 	   * @type {Set.<{ from: string, to: string }>}
 	   */
-			_this4.edges = new Set();
-			_this4.e(from, to);
-			return _this4;
+			this.edges = new Set();
+			this.e(from, to);
 		}
 	
 		_inherits(EdgeNotExistsError, _Error4);
@@ -2969,10 +2957,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		function HasConnectedEdgesError(key) {
 			_classCallCheck(this, HasConnectedEdgesError);
 	
-			var _this5 = new _Error5();
-	
-			_this5.__proto__ = HasConnectedEdgesError.prototype;
-	
+			_get(Object.getPrototypeOf(HasConnectedEdgesError.prototype), 'constructor', this).call(this);
 			/**
 	   * the key of the relevant vertex
 	   * @public
@@ -2981,9 +2966,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @instance
 	   * @type {string}
 	   */
-			_this5.key = key;
-			_this5.message = 'The \'' + key + '\' vertex has connected edges';
-			return _this5;
+			this.key = key;
+			this.message = 'The \'' + key + '\' vertex has connected edges';
 		}
 	
 		_inherits(HasConnectedEdgesError, _Error5);
@@ -3000,10 +2984,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		function CycleError(cycle) {
 			_classCallCheck(this, CycleError);
 	
-			var _this6 = new _Error6();
-	
-			_this6.__proto__ = CycleError.prototype;
-	
+			_get(Object.getPrototypeOf(CycleError.prototype), 'constructor', this).call(this);
 			/**
 	   * the vertices involved in the cycle
 	   * @public
@@ -3012,9 +2993,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @instance
 	   * @type {Array.<string>}
 	   */
-			_this6.cycle = cycle;
-			_this6.message = 'This graph contains a cycle: ' + cycle;
-			return _this6;
+			this.cycle = cycle;
+			this.message = 'This graph contains a cycle: ' + cycle;
 		}
 	
 		_inherits(CycleError, _Error6);
@@ -3031,10 +3011,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		function BranchlessCycleError(cycle) {
 			_classCallCheck(this, BranchlessCycleError);
 	
-			var _this7 = new _Error7();
-	
-			_this7.__proto__ = BranchlessCycleError.prototype;
-	
+			_get(Object.getPrototypeOf(BranchlessCycleError.prototype), 'constructor', this).call(this);
 			/**
 	   * the vertices involved in the branch-less cycle
 	   * @public
@@ -3043,9 +3020,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @instance
 	   * @type {Array.<string>}
 	   */
-			_this7.cycle = cycle;
-			_this7.message = 'This graph contains a branch-less cycle: ' + cycle;
-			return _this7;
+			this.cycle = cycle;
+			this.message = 'This graph contains a branch-less cycle: ' + cycle;
 		}
 	
 		_inherits(BranchlessCycleError, _Error7);
@@ -3061,9 +3037,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/* WEBPACK VAR INJECTION */(function(global) {"use strict";
 	
-	__webpack_require__(4);
-	
 	__webpack_require__(5);
+	
+	__webpack_require__(4);
 	
 	if (global._babelPolyfill) {
 	  throw new Error("only one instance of babel/polyfill is allowed");
@@ -3073,61 +3049,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 4 */
-/***/ function(module, exports, __webpack_require__) {
-
-	__webpack_require__(6);
-	__webpack_require__(7);
-	__webpack_require__(8);
-	__webpack_require__(9);
-	__webpack_require__(10);
-	__webpack_require__(11);
-	__webpack_require__(12);
-	__webpack_require__(13);
-	__webpack_require__(14);
-	__webpack_require__(15);
-	__webpack_require__(16);
-	__webpack_require__(17);
-	__webpack_require__(18);
-	__webpack_require__(19);
-	__webpack_require__(20);
-	__webpack_require__(21);
-	__webpack_require__(22);
-	__webpack_require__(23);
-	__webpack_require__(24);
-	__webpack_require__(25);
-	__webpack_require__(26);
-	__webpack_require__(27);
-	__webpack_require__(28);
-	__webpack_require__(29);
-	__webpack_require__(30);
-	__webpack_require__(31);
-	__webpack_require__(32);
-	__webpack_require__(33);
-	__webpack_require__(34);
-	__webpack_require__(35);
-	__webpack_require__(36);
-	__webpack_require__(37);
-	__webpack_require__(38);
-	__webpack_require__(39);
-	__webpack_require__(40);
-	__webpack_require__(41);
-	__webpack_require__(42);
-	__webpack_require__(43);
-	__webpack_require__(44);
-	__webpack_require__(45);
-	__webpack_require__(46);
-	__webpack_require__(47);
-	__webpack_require__(48);
-	__webpack_require__(49);
-	__webpack_require__(50);
-	__webpack_require__(51);
-	__webpack_require__(52);
-	__webpack_require__(53);
-	module.exports = __webpack_require__(54).core;
-
-
-/***/ },
-/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -3698,6 +3619,61 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
+/* 5 */
+/***/ function(module, exports, __webpack_require__) {
+
+	__webpack_require__(6);
+	__webpack_require__(7);
+	__webpack_require__(8);
+	__webpack_require__(9);
+	__webpack_require__(10);
+	__webpack_require__(11);
+	__webpack_require__(12);
+	__webpack_require__(13);
+	__webpack_require__(14);
+	__webpack_require__(15);
+	__webpack_require__(16);
+	__webpack_require__(17);
+	__webpack_require__(18);
+	__webpack_require__(19);
+	__webpack_require__(20);
+	__webpack_require__(21);
+	__webpack_require__(22);
+	__webpack_require__(23);
+	__webpack_require__(24);
+	__webpack_require__(25);
+	__webpack_require__(26);
+	__webpack_require__(27);
+	__webpack_require__(28);
+	__webpack_require__(29);
+	__webpack_require__(30);
+	__webpack_require__(31);
+	__webpack_require__(32);
+	__webpack_require__(33);
+	__webpack_require__(34);
+	__webpack_require__(35);
+	__webpack_require__(36);
+	__webpack_require__(37);
+	__webpack_require__(38);
+	__webpack_require__(39);
+	__webpack_require__(40);
+	__webpack_require__(41);
+	__webpack_require__(42);
+	__webpack_require__(43);
+	__webpack_require__(44);
+	__webpack_require__(45);
+	__webpack_require__(46);
+	__webpack_require__(47);
+	__webpack_require__(48);
+	__webpack_require__(49);
+	__webpack_require__(50);
+	__webpack_require__(51);
+	__webpack_require__(52);
+	__webpack_require__(53);
+	module.exports = __webpack_require__(54).core;
+
+
+/***/ },
 /* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -3994,8 +3970,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  , setTag   = __webpack_require__(56).set
 	  , uid      = __webpack_require__(60)
 	  , $def     = __webpack_require__(57)
-	  , keyOf    = __webpack_require__(65)
-	  , enumKeys = __webpack_require__(66)
+	  , keyOf    = __webpack_require__(66)
+	  , enumKeys = __webpack_require__(67)
 	  , assertObject = __webpack_require__(61).obj
 	  , has      = $.has
 	  , $create  = $.create
@@ -4116,7 +4092,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    'hasInstance,isConcatSpreadable,iterator,match,replace,search,' +
 	    'species,split,toPrimitive,toStringTag,unscopables'
 	  ).split(','), function(it){
-	    var sym = __webpack_require__(67)(it);
+	    var sym = __webpack_require__(68)(it);
 	    symbolStatics[it] = useNative ? sym : wrap(sym);
 	  }
 	);
@@ -4155,7 +4131,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	// 19.1.3.1 Object.assign(target, source)
 	var $def = __webpack_require__(57);
-	$def($def.S, 'Object', {assign: __webpack_require__(68)});
+	$def($def.S, 'Object', {assign: __webpack_require__(65)});
 
 /***/ },
 /* 9 */
@@ -4186,7 +4162,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var $   = __webpack_require__(54)
 	  , cof = __webpack_require__(56)
 	  , tmp = {};
-	tmp[__webpack_require__(67)('toStringTag')] = 'z';
+	tmp[__webpack_require__(68)('toStringTag')] = 'z';
 	if($.FW && cof(tmp) != 'z')$.hide(Object.prototype, 'toString', function toString(){
 	  return '[object ' + cof.classof(this) + ']';
 	});
@@ -4262,7 +4238,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports, __webpack_require__) {
 
 	var $             = __webpack_require__(54)
-	  , HAS_INSTANCE  = __webpack_require__(67)('hasInstance')
+	  , HAS_INSTANCE  = __webpack_require__(68)('hasInstance')
 	  , FunctionProto = Function.prototype;
 	// 19.2.3.6 Function.prototype[@@hasInstance](V)
 	if(!(HAS_INSTANCE in FunctionProto))$.setDesc(FunctionProto, HAS_INSTANCE, {value: function(O){
@@ -4906,7 +4882,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  , forOf    = __webpack_require__(79)
 	  , setProto = __webpack_require__(69).set
 	  , species  = __webpack_require__(78)
-	  , SPECIES  = __webpack_require__(67)('species')
+	  , SPECIES  = __webpack_require__(68)('species')
 	  , RECORD   = __webpack_require__(60).safe('record')
 	  , PROMISE  = 'Promise'
 	  , global   = $.g
@@ -5230,7 +5206,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  , $def      = __webpack_require__(57)
 	  , setProto  = __webpack_require__(69)
 	  , $iter     = __webpack_require__(71)
-	  , ITERATOR  = __webpack_require__(67)('iterator')
+	  , ITERATOR  = __webpack_require__(68)('iterator')
 	  , ITER      = __webpack_require__(60).safe('iter')
 	  , step      = $iter.step
 	  , assert    = __webpack_require__(61)
@@ -5559,7 +5535,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	__webpack_require__(28);
 	var $           = __webpack_require__(54)
 	  , Iterators   = __webpack_require__(71).Iterators
-	  , ITERATOR    = __webpack_require__(67)('iterator')
+	  , ITERATOR    = __webpack_require__(68)('iterator')
 	  , ArrayValues = Iterators.Array
 	  , NodeList    = $.g.NodeList;
 	if($.FW && NodeList && !(ITERATOR in NodeList.prototype)){
@@ -5693,7 +5669,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports, __webpack_require__) {
 
 	var $        = __webpack_require__(54)
-	  , TAG      = __webpack_require__(67)('toStringTag')
+	  , TAG      = __webpack_require__(68)('toStringTag')
 	  , toString = {}.toString;
 	function cof(it){
 	  return toString.call(it).slice(8, -1);
@@ -5911,48 +5887,8 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 65 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var $ = __webpack_require__(54);
-	module.exports = function(object, el){
-	  var O      = $.toObject(object)
-	    , keys   = $.getKeys(O)
-	    , length = keys.length
-	    , index  = 0
-	    , key;
-	  while(length > index)if(O[key = keys[index++]] === el)return key;
-	};
-
-/***/ },
-/* 66 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var $ = __webpack_require__(54);
-	module.exports = function(it){
-	  var keys       = $.getKeys(it)
-	    , getDesc    = $.getDesc
-	    , getSymbols = $.getSymbols;
-	  if(getSymbols)$.each.call(getSymbols(it), function(key){
-	    if(getDesc(it, key).enumerable)keys.push(key);
-	  });
-	  return keys;
-	};
-
-/***/ },
-/* 67 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var global = __webpack_require__(54).g
-	  , store  = {};
-	module.exports = function(name){
-	  return store[name] || (store[name] =
-	    global.Symbol && global.Symbol[name] || __webpack_require__(60).safe('Symbol.' + name));
-	};
-
-/***/ },
-/* 68 */
-/***/ function(module, exports, __webpack_require__) {
-
 	var $        = __webpack_require__(54)
-	  , enumKeys = __webpack_require__(66);
+	  , enumKeys = __webpack_require__(67);
 	// 19.1.2.1 Object.assign(target, source, ...)
 	/* eslint-disable no-unused-vars */
 	module.exports = Object.assign || function assign(target, source){
@@ -5969,6 +5905,46 @@ return /******/ (function(modules) { // webpackBootstrap
 	    while(length > j)T[key = keys[j++]] = S[key];
 	  }
 	  return T;
+	};
+
+/***/ },
+/* 66 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var $ = __webpack_require__(54);
+	module.exports = function(object, el){
+	  var O      = $.toObject(object)
+	    , keys   = $.getKeys(O)
+	    , length = keys.length
+	    , index  = 0
+	    , key;
+	  while(length > index)if(O[key = keys[index++]] === el)return key;
+	};
+
+/***/ },
+/* 67 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var $ = __webpack_require__(54);
+	module.exports = function(it){
+	  var keys       = $.getKeys(it)
+	    , getDesc    = $.getDesc
+	    , getSymbols = $.getSymbols;
+	  if(getSymbols)$.each.call(getSymbols(it), function(key){
+	    if(getDesc(it, key).enumerable)keys.push(key);
+	  });
+	  return keys;
+	};
+
+/***/ },
+/* 68 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var global = __webpack_require__(54).g
+	  , store  = {};
+	module.exports = function(name){
+	  return store[name] || (store[name] =
+	    global.Symbol && global.Symbol[name] || __webpack_require__(60).safe('Symbol.' + name));
 	};
 
 /***/ },
@@ -6031,7 +6007,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var $                 = __webpack_require__(54)
 	  , cof               = __webpack_require__(56)
 	  , assertObject      = __webpack_require__(61).obj
-	  , SYMBOL_ITERATOR   = __webpack_require__(67)('iterator')
+	  , SYMBOL_ITERATOR   = __webpack_require__(68)('iterator')
 	  , FF_ITERATOR       = '@@iterator'
 	  , Iterators         = {}
 	  , IteratorPrototype = {};
@@ -6077,7 +6053,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  , $               = __webpack_require__(54)
 	  , cof             = __webpack_require__(56)
 	  , $iter           = __webpack_require__(71)
-	  , SYMBOL_ITERATOR = __webpack_require__(67)('iterator')
+	  , SYMBOL_ITERATOR = __webpack_require__(68)('iterator')
 	  , FF_ITERATOR     = '@@iterator'
 	  , KEYS            = 'keys'
 	  , VALUES          = 'values'
@@ -6187,7 +6163,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 76 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var SYMBOL_ITERATOR = __webpack_require__(67)('iterator')
+	var SYMBOL_ITERATOR = __webpack_require__(68)('iterator')
 	  , SAFE_CLOSING    = false;
 	try {
 	  var riter = [7][SYMBOL_ITERATOR]();
@@ -6213,7 +6189,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	// 22.1.3.31 Array.prototype[@@unscopables]
 	var $           = __webpack_require__(54)
-	  , UNSCOPABLES = __webpack_require__(67)('unscopables');
+	  , UNSCOPABLES = __webpack_require__(68)('unscopables');
 	if($.FW && !(UNSCOPABLES in []))$.hide(Array.prototype, UNSCOPABLES, {});
 	module.exports = function(key){
 	  if($.FW)[][UNSCOPABLES][key] = true;
@@ -6224,7 +6200,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports, __webpack_require__) {
 
 	var $       = __webpack_require__(54)
-	  , SPECIES = __webpack_require__(67)('species');
+	  , SPECIES = __webpack_require__(68)('species');
 	module.exports = function(C){
 	  if($.DESC && !(SPECIES in C))$.setDesc(C, SPECIES, {
 	    configurable: true,

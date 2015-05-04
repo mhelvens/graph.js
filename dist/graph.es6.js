@@ -14,8 +14,8 @@
  *        A vertex should be an array of the form `[key, value]`.
  *        An edge should be an array of the form `[[from, to], value]`.
  *        Later values of vertices or edges in this list will overwrite earlier
- *        values, but vertices need not precede their edges (nor need they be
- *        separately listed at all).
+ *        values, but vertices need not precede their edges. Vertices that are
+ *        connected but store no values need not be listed at all.
  * @example
  * var map = new Graph(
  *     ['Amsterdam',            { population: 825000 }], // vertex
@@ -980,7 +980,7 @@ export default class Graph {
 	 *                  It receives a `key` and `value` associated to a vertex and should return
 	 *                  true if and only if that vertex should be a nexus.
 	 * @throws {Graph.BranchlessCycleError} if the graph contains a cycle with no branches or nexuses
-	 */ // TODO: documentation
+	 */
 	contractPaths(isNexus = ()=>false) {
 
 		/* what makes a a vertex a nexus (start/end-point) */
