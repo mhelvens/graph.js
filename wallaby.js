@@ -1,12 +1,16 @@
 var babel = require('babel');
 var wallabyWebpack = require('wallaby-webpack');
+var webpack = require('webpack');
 
 var wallabyPostprocessor = wallabyWebpack({
 		module: {
 			loaders: [
 				{ test: /\.es6\.js$/, loader: 'babel?compact=true' }
 			]
-		}
+		},
+		plugins: [
+			new webpack.optimize.OccurenceOrderPlugin()
+		]
 	}
 );
 

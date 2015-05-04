@@ -16,5 +16,8 @@ module.exports = {
 		loaders: [
 			{ test: /\.es6\.js$/, loader: 'babel?compact=false' }
 		]
-	}
+	},
+	plugins: [
+		new webpack.optimize.OccurenceOrderPlugin()
+	]
 };
