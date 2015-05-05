@@ -1654,7 +1654,7 @@ describeMethod('vertices', () => {
 
 	it("iterates over each vertex in the graph (ES5 style)", () => {
 		let verticesFound = {};
-		for (var it = callItWith(), kv = it.next(); !kv.done; kv = it.next()) {
+		for (var it = callItWith(), kv; !(kv = it.next()).done;) {
 			var key   = kv.value[0],
 				value = kv.value[1];
 			expect(verticesFound[key]).toBeUndefined();
@@ -1680,7 +1680,7 @@ describeMethod('edges', () => {
 
 	it("iterates over each edge in the graph (ES5 style)", () => {
 		let edgesFound = {};
-		for (var it = callItWith(), kv = it.next(); !kv.done; kv = it.next()) {
+		for (var it = callItWith(), kv; !(kv = it.next()).done;) {
 			var from  = kv.value[0],
 				to    = kv.value[1],
 				value = kv.value[2];
@@ -1718,7 +1718,7 @@ describeMethod('verticesFrom', () => {
 
 	it("iterates over each outgoing edge, providing the connected vertex key/value and edge value (ES5 style)", () => {
 		let valuesFound = {};
-		for (var it = callItWith('k2'), kv = it.next(); !kv.done; kv = it.next()) {
+		for (var it = callItWith('k2'), kv; !(kv = it.next()).done;) {
 			var key       = kv.value[0],
 				value     = kv.value[1],
 				edgeValue = kv.value[2];
@@ -1758,7 +1758,7 @@ describeMethod('verticesTo', () => {
 
 	it("iterates over each incoming edge, providing the connected vertex key/value and edge value (ES5 style)", () => {
 		let valuesFound = {};
-		for (var it = callItWith('k3'), kv = it.next(); !kv.done; kv = it.next()) {
+		for (var it = callItWith('k3'), kv; !(kv = it.next()).done;) {
 			var key       = kv.value[0],
 				value     = kv.value[1],
 				edgeValue = kv.value[2];
@@ -1799,7 +1799,7 @@ describeMethod('verticesWithPathFrom', () => {
 
 	it("iterates once over each vertex that is reachable from the given vertex, in no particular order (ES5 style)", () => {
 		let valuesFound = {};
-		for (var it = callItWith('k2'), kv = it.next(); !kv.done; kv = it.next()) {
+		for (var it = callItWith('k2'), kv; !(kv = it.next()).done;) {
 			var key   = kv.value[0],
 				value = kv.value[1];
 			expect(valuesFound[key]).toBeUndefined();
@@ -1840,7 +1840,7 @@ describeMethod('verticesWithPathTo', () => {
 
 	it("iterates once over each vertex that has a path to reach the given vertex, in no particular order (ES5 style)", () => {
 		let valuesFound = {};
-		for (var it = callItWith('k4'), kv = it.next(); !kv.done; kv = it.next()) {
+		for (var it = callItWith('k4'), kv; !(kv = it.next()).done;) {
 			var key   = kv.value[0],
 				value = kv.value[1];
 			expect(valuesFound[key]).toBeUndefined();
@@ -1875,7 +1875,7 @@ describeMethod('sources', () => {
 
 	it("visits all vertices with no incoming edges exactly once (ES5 style)", () => {
 		let valuesFound = {};
-		for (var it = callItWith(), kv = it.next(); !kv.done; kv = it.next()) {
+		for (var it = callItWith(), kv; !(kv = it.next()).done;) {
 			var key   = kv.value[0],
 				value = kv.value[1];
 			expect(valuesFound[key]).toBeUndefined();
@@ -1926,7 +1926,7 @@ describeMethod('sinks', () => {
 
 	it("visits all vertices with no outgoing edges exactly once (ES5 style)", () => {
 		let valuesFound = {};
-		for (var it = callItWith(), kv = it.next(); !kv.done; kv = it.next()) {
+		for (var it = callItWith(), kv; !(kv = it.next()).done;) {
 			var key   = kv.value[0],
 				value = kv.value[1];
 			expect(valuesFound[key]).toBeUndefined();
@@ -2026,7 +2026,7 @@ describeMethod('vertices_topologically', () => {
 
 	it("iterates over each vertex in the graph exactly once (ES5 style)", () => {
 		let verticesFound = {};
-		for (var it = callItWith(), kv = it.next(); !kv.done; kv = it.next()) {
+		for (var it = callItWith(), kv; !(kv = it.next()).done;) {
 			var key   = kv.value[0],
 				value = kv.value[1];
 			expect(verticesFound[key]).toBeUndefined();
