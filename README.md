@@ -12,15 +12,66 @@ as well as traversing and analyzing them in various ways. It was originally crea
 track dependencies between options and modules. It is written in ECMAScript 6, but
 auto-generated ECMAScript 5 versions are shipped with it.
 
-If you want to run this library in an ECMAScript 5 context, it depends on the [Babel ES6 polyfill](https://babeljs.io/docs/usage/polyfill/).
-For your convenience, a version is provided with this polyfill already baked in, but you also
-have the option of providing it yourself.
-
 Feedback of any kind (questions, issues, pull requests) is greatly appreciated.
 
 
-Files
------
+Installing graph.js
+-------------------
+
+When running in an ECMAScript 5 environment, this library depends on the
+[Babel ES6 polyfill](https://babeljs.io/docs/usage/polyfill).
+For your convenience, a standalone version of graph.js is available,
+which has the polyfill already baked in.
+
+graph.js is available from [NPM](https://www.npmjs.org) and [Bower](http://bower.io):
+
+```shell
+npm install delta.js --save
+```
+
+```shell
+bower install delta.js --save
+```
+
+The Babel polyfill is [not distributed through Bower](https://github.com/babel/babel/issues/315).
+So Bower users have to either use the standalone version of graph.js, or get the polyfill from
+someplace else, like NPM.
+
+
+Loading graph.js
+----------------
+
+The graph.js library supports all popular module systems:
+[ECMAScript 6](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import),
+CommonJS ([Node.js](https://nodejs.org),
+          [IO.js](https://iojs.org),
+          [browserify](http://browserify.org),
+          [webpack](http://webpack.github.io)),
+AMD ([RequireJS](http://requirejs.org)),
+and good old-fashioned [HTML script tags](https://developer.mozilla.org/en/docs/Web/HTML/Element/script).
+
+```javascript
+import Graph from 'graph.js'; // the ES6 version is default
+// use Graph
+```
+
+```javascript
+var Graph = require('graph.js/dist/graph.full.js');
+// use Graph
+```
+
+```javascript
+requirejs(['graph.js/dist/graph.full.js'], function (Graph) {
+    // use Graph
+});
+```
+
+```html
+<script src="graph.js/dist/graph.full.js"></script>
+<script>
+    // use Graph
+</script>
+```
 
 The `dist` directory offers different files for use in different circumstances.
 Use the following table to determine which file to use in your situation.
@@ -31,9 +82,10 @@ Use the following table to determine which file to use in your situation.
 | `graph.js`,<br>`graph.min.js`           | requires you to load the [Babel polyfill](https://babeljs.io/docs/usage/polyfill/) yourself |
 | `graph.full.js`,<br>`graph.full.min.js` | already includes the Babel polyfill                                                         |
 
-If you don't know which you need, you probably want `graph.full.min.js`, because it will work out-of-the-box.
-But it is generally more elegant to load the polyfill yourself, especially if you use other libraries that also
-depend on it.
+If you don't know which you need, you probably want `graph.full.js`, because it will work out-of-the-box.
+But it is generally more elegant to load the polyfill yourself, especially if you use other libraries that
+also depend on it.
+
 
 API Documentation
 -----------------
