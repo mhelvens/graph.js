@@ -26,11 +26,11 @@ which has the polyfill already baked in.
 graph.js is available from [NPM](https://www.npmjs.org) and [Bower](http://bower.io):
 
 ```shell
-npm install delta.js --save
+npm install graph.js --save
 ```
 
 ```shell
-bower install delta.js --save
+bower install graph.js --save
 ```
 
 The Babel polyfill is [not distributed through Bower](https://github.com/babel/babel/issues/315).
