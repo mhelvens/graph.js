@@ -766,38 +766,64 @@ export default class Graph {
 
 
 	/**
+	 * Iterate over all directed cycles in this graph, in no particular order.
+	 * If you mutate the graph in between iterations, behavior of the iterator
+	 * becomes unspecified. (So, don't.)
+	 * @returns { Iterator.< Array.<string> > }
+	 *          an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}.
+	 *          Each iterated value is an array containing the vertices of the cycle in order.
+	 * @example
+	 * for (var it = graph.cycles(), kv; !(kv = it.next()).done;) {
+	 *     var cycle = kv.value;
+	 *     // iterates over all cycles of the graph
+	 * }
+	 * @example
+	 * // in ECMAScript 6, you can use a for..of loop
+	 * for (let cycle of graph.cycles()) {
+	 *     // iterates over all cycles of the graph
+	 * }
+	 */
+	*cycles() {
+		let stack = []; // stack
+		let visited = new Set();
+
+		let _this = this;
+		function *visit (a) {
+			/* record that this vertex has been visited */
+			visited.add(a);
+
+			/* if a cycle is found, record it and return */
+			let i = stack.indexOf(a);
+			if (i >= 0) {
+				yield stack.slice(i);
+				return;
+			}
+
+			/* recursively visit successors to check for cycles */
+			stack.push(a);
+			for (let [b] of _this.verticesFrom(a)) {
+				yield* visit(b);
+			}
+			stack.pop();
+		}
+
+		for (let [a] of this.vertices()) {
+			/* if this vertex was already handled, no cycle can be found here */
+			if (visited.has(a)) { continue }
+
+			yield* visit(a);
+		}
+	}
+
+
+	/**
 	 * Find any directed cycle in this graph.
 	 * @returns {?Array} an array with the keys of a cycle in order;
 	 *                   `null`, if there is no cycle
 	 */
 	cycle() {
-		let visited = []; // stack
-		let handled = new Set();
-
-		const visit = (a) => {
-			/* if a cycle is found, record it and return */
-			let i = visited.indexOf(a);
-			if (i >= 0) { return visited.slice(i) }
-
-			/* if this vertex was already handled, no cycle can be found here */
-			if (handled.has(a)) { return null }
-			handled.add(a);
-
-			/* recursively visit successors to check for cycles */
-			visited.push(a);
-			for (let [b] of this.verticesFrom(a)) {
-				let result = visit(b);
-				if (result) { return result }
-			}
-			visited.pop();
-		};
-
-		for (let [a] of this.vertices()) {
-			let result = visit(a);
-			if (result) { return result }
-		}
-
-		return null;
+		let result = this.cycles().next();
+		return result.done ? null : result.value;
 	}
 
 
@@ -805,7 +831,7 @@ export default class Graph {
 	 * Test whether this graph contains a directed cycle.
 	 * @returns {boolean} whether this graph contains a directed cycle
 	 */
-	hasCycle() { return !!this.cycle() }
+	hasCycle() { return !this.cycles().next().done }
 
 
 	/**
