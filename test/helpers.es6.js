@@ -3,6 +3,15 @@
 /* export utility stuff */
 export var any = jasmine.any;
 
+export function cycleArrays(...vertices) {
+	let result = [];
+	for (let i = 0; i < vertices.length; ++i) {
+		result.push([...vertices]);
+		vertices.unshift(vertices.pop());
+	}
+	return result;
+}
+
 /* add matchers */
 beforeEach(() => {
 

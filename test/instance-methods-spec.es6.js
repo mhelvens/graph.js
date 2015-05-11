@@ -1,5 +1,5 @@
-import {any} from './helpers.es6.js';
-import Graph from '../src/graph.es6.js';
+import {any, cycleArrays} from './helpers.es6.js';
+import Graph              from '../src/graph.es6.js';
 
 
 // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
@@ -809,6 +809,175 @@ describeMethod('hasCycle', () => {
 	it("returns false if the graph contains no cycle (2)", () => {
 		graph.clear();
 		expectItWhenCalledWith().toBe(false);
+	});
+
+});
+
+
+describeMethod('cycles', () => {
+
+	it_throwsNothing();
+
+	let cycleCount;
+	let cyclesByLength;
+	beforeEach(() => {
+		cycleCount = 0;
+		cyclesByLength = [];
+	});
+	function getCycles() {
+		for (let cycle of callItWith()) {
+			cycleCount += 1;
+			cyclesByLength[cycle.length] = cycle;
+		}
+	}
+
+	it("iterates over all cycles in the graph in no particular order (no cycles)", () => {
+		expect(callItWith().next().done).toBeTruthy();
+	});
+
+	it("iterates over all cycles in the graph in no particular order (single cycle)", () => {
+		graph = new Graph(
+			[['n1', 'n2']],
+			[['n2', 'n3']],
+			[['n3', 'n4']],
+			[['n4', 'n5']],
+			[['n3', 'n23']],
+			[['n23', 'n2']]
+		);
+
+		// n1 ──▶ n2 ──▶ n3 ──▶ n4 ──▶ n5
+		//        ▲      ╷
+		//        │      │
+		//        ╵      │
+		//       n23 ◀───╯
+
+		getCycles();
+
+		expect(cycleCount).toEqual(1);
+
+		expect(cyclesByLength[3]).toEqualOneOf(...cycleArrays('n23', 'n2', 'n3'));
+	});
+
+	it("iterates over all cycles in the graph in no particular order (cycles sharing one edge)", () => {
+		graph = new Graph(
+			[['n1', 'n2']],
+			[['n2', 'n5']],
+			[['n5', 'n4']],
+			[['n4', 'n1']],
+			[['n5', 'n3']],
+			[['n3', 'n2']]
+		);
+
+		// n1 ──▶ n2 ◀── n3
+		// ▲      ╷      ▲
+		// │      │      │
+		// ╵      ▼      │
+		// n4 ◀── n5 ────╯
+
+		getCycles();
+
+		expect(cycleCount).toEqual(2);
+		expect(cyclesByLength[4]).toEqualOneOf(...cycleArrays('n4', 'n1', 'n2', 'n5'));
+		expect(cyclesByLength[3]).toEqualOneOf(...cycleArrays('n2', 'n5', 'n3'));
+	});
+
+	it("iterates over all cycles in the graph in no particular order (cycles sharing one vertex)", () => {
+		graph = new Graph(
+			[['n1', 'n2']],
+			[['n2', 'n4']],
+			[['n4', 'n1']],
+			[['n2', 'n3']],
+			[['n3', 'n2']]
+		);
+
+		// n1 ──▶ n2 ◀───╮
+		// ▲      ╷╷     │
+		// │      │╰───▶ n3
+		// ╵      │
+		// n4 ◀───╯
+
+		getCycles();
+
+		expect(cyclesByLength[3]).toEqualOneOf(...cycleArrays('n1', 'n2', 'n4'));
+		expect(cyclesByLength[2]).toEqualOneOf(...cycleArrays('n2', 'n3'));
+	});
+
+	it("iterates over all cycles in the graph in no particular order (cycles sharing two edges)", () => {
+		graph = new Graph(
+			[['n1', 'n2']],
+			[['n2', 'n3']],
+			[['n3', 'n4']],
+			[['n4', 'n5']],
+			[['n3', 'n23']],
+			[['n4', 'n23']],
+			[['n23', 'n2']]
+		);
+
+		// n1 ──▶ n2 ──▶ n3 ──▶ n4 ──▶ n5
+		//        ▲      ╷      ╷
+		//        │      │      │
+		//        ╵      │      │
+		//       n23 ◀───┴──────╯
+
+		getCycles();
+
+		expect(cycleCount).toEqual(2);
+		expect(cyclesByLength[3]).toEqualOneOf(...cycleArrays('n23', 'n2', 'n3'));
+		expect(cyclesByLength[4]).toEqualOneOf(...cycleArrays('n23', 'n2', 'n3', 'n4'));
+	});
+
+	it("iterates over all cycles in the graph in no particular order (three cycles sharing edges)", () => {
+		graph = new Graph(
+			[['n1', 'n2']],
+			[['n2', 'n3']],
+			[['n3', 'n4']],
+			[['n4', 'n5']],
+			[['n3', 'n23']],
+			[['n4', 'n45']],
+			[['n5', 'n45']],
+			[['n45', 'n23']],
+			[['n23', 'n2']]
+		);
+
+		// n1 ──▶ n2 ──▶ n3 ──▶ n4 ──▶ n5
+		//        ▲      ╷      ╷      ╷
+		//        │      │      │      │
+		//        ╵      │      ▼      │
+		//       n23 ◀───┴──── n45 ◀───╯
+
+		getCycles();
+
+		expect(cycleCount).toEqual(3);
+		expect(cyclesByLength[3]).toEqualOneOf(...cycleArrays('n23', 'n2', 'n3'));
+		expect(cyclesByLength[5]).toEqualOneOf(...cycleArrays('n23', 'n2', 'n3', 'n4', 'n45'));
+		expect(cyclesByLength[6]).toEqualOneOf(...cycleArrays('n23', 'n2', 'n3', 'n4', 'n5', 'n45'));
+	});
+
+	it("iterates over all cycles in the graph in no particular order (disconnected graphs + single-vertex cycle)", () => {
+		graph = new Graph(
+			[['n1', 'n2']],
+			[['n2', 'n3']],
+			[['n3', 'n23']],
+			[['n23', 'n2']],
+			[['n4', 'n5']],
+			[['n5', 'n54']],
+			[['n54', 'n45']],
+			[['n45', 'n4']],
+			[['n6', 'n6']]
+		);
+
+		// n1 ──▶ n2 ──▶ n3     n4 ──▶ n5     n6 ─╮
+		//        ▲      ╷      ▲      ╷      ▲   │
+		//        │      │      │      │      ╰───╯
+		//        ╵      │      ╵      ▼
+		//       n23 ◀───╯     n45 ◀─╴n54
+
+		getCycles();
+
+		expect(cycleCount).toEqual(3);
+		expect(cyclesByLength[3]).toEqualOneOf(...cycleArrays('n23', 'n2', 'n3'));
+		expect(cyclesByLength[4]).toEqualOneOf(...cycleArrays('n45', 'n4', 'n5', 'n54'));
+		expect(cyclesByLength[1]).toEqual(['n6']);
 	});
 
 });

@@ -130,6 +130,7 @@ API Documentation
     * [.clearEdges()](#Graph#clearEdges)
     * [.clear()](#Graph#clear)
     * [.equals(other, [eqV], [eqE])](#Graph#equals) ⇒ <code>boolean</code>
+    * [.cycles()](#Graph#cycles) ⇒ <code>Iterator.&lt;Array.&lt;string&gt;&gt;</code>
     * [.cycle()](#Graph#cycle) ⇒ <code>Array</code>
     * [.hasCycle()](#Graph#hasCycle) ⇒ <code>boolean</code>
     * [.path(from, to)](#Graph#path) ⇒ <code>array</code>
@@ -841,6 +842,31 @@ Two graphs are equal if they have the same vertices and the same edges.
 | [eqE] | <code>function</code> | a custom equality function for values stored in edges;     defaults to the function given for `trV`; The first two arguments     are the values to compare. The third and fourth are the `from`     and `to` keys respectively. |
 
 **Returns**: <code>boolean</code> - `true` if the two graphs are equal; `false` otherwise  
+
+-----
+
+<a name="Graph#cycles"></a>
+#### *graph*.cycles() ⇒ <code>Iterator.&lt;Array.&lt;string&gt;&gt;</code>
+Iterate over all directed cycles in this graph, in no particular order.
+If you mutate the graph in between iterations, behavior of the iterator
+becomes unspecified. (So, don't.)
+
+**Returns**: <code>Iterator.&lt;Array.&lt;string&gt;&gt;</code> - an object conforming to the [ES6 iterator protocol](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol).
+         Each iterated value is an array containing the vertices of the cycle in order.  
+**Example**  
+```JavaScript
+for (var it = graph.cycles(), kv; !(kv = it.next()).done;) {
+    var cycle = kv.value;
+    // iterates over all cycles of the graph
+}
+```
+**Example**  
+```JavaScript
+// in ECMAScript 6, you can use a for..of loop
+for (let cycle of graph.cycles()) {
+    // iterates over all cycles of the graph
+}
+```
 
 -----
 
