@@ -1047,14 +1047,14 @@ describeMethod('path', () => {
 	});
 
 	it("returns a descriptive array if the path exists (6: including part of a cycle, part 1)", () => {
-		graph.clear();
-
-		graph.createEdge('n1', 'n2');
-		graph.createEdge('n2', 'n3');
-		graph.createEdge('n3', 'n4');
-		graph.createEdge('n4', 'n5');
-		graph.createEdge('n3', 'n23');
-		graph.createEdge('n23', 'n2');
+		graph = new Graph(
+			[['n1', 'n2']],
+			[['n2', 'n3']],
+			[['n3', 'n4']],
+			[['n4', 'n5']],
+			[['n3', 'n23']],
+			[['n23', 'n2']]
+		);
 
 		//  n1 ──▶ n2 ──▶ n3 ──▶ n4 ──▶ n5
 		//         ▲      ╷
@@ -1066,14 +1066,14 @@ describeMethod('path', () => {
 	});
 
 	it("returns a descriptive array if the path exists (7: including part of a cycle, part 2)", () => {
-		graph.clear();
-
-		graph.createEdge('n3', 'n23'); // same graph as above, but creating the loopy bit
-		graph.createEdge('n23', 'n2'); // first; insertion order matters for some engines
-		graph.createEdge('n1', 'n2');
-		graph.createEdge('n2', 'n3');
-		graph.createEdge('n3', 'n4');
-		graph.createEdge('n4', 'n5');
+		graph = new Graph(
+			[['n3', 'n23']],
+			[['n23', 'n2']],
+			[['n1', 'n2' ]],
+			[['n2', 'n3' ]],
+			[['n3', 'n4' ]],
+			[['n4', 'n5' ]]
+		);
 
 		//  n1 ──▶ n2 ──▶ n3 ──▶ n4 ──▶ n5
 		//         ▲      ╷
@@ -1142,14 +1142,14 @@ describeMethod('hasPath', () => {
 	});
 
 	it("returns true if the path exists (6: including part of a cycle, part 1)", () => {
-		graph.clear();
-
-		graph.createEdge('n1', 'n2');
-		graph.createEdge('n2', 'n3');
-		graph.createEdge('n3', 'n4');
-		graph.createEdge('n4', 'n5');
-		graph.createEdge('n3', 'n23');
-		graph.createEdge('n23', 'n2');
+		graph = new Graph(
+			[['n1', 'n2']],
+			[['n2', 'n3']],
+			[['n3', 'n4']],
+			[['n4', 'n5']],
+			[['n3', 'n23']],
+			[['n23', 'n2']]
+		);
 
 		//  n1 ──▶ n2 ──▶ n3 ──▶ n4 ──▶ n5
 		//         ▲      ╷
@@ -1161,14 +1161,14 @@ describeMethod('hasPath', () => {
 	});
 
 	it("returns true if the path exists (7: including part of a cycle, part 2)", () => {
-		graph.clear();
-
-		graph.createEdge('n3', 'n23'); // same graph as above, but creating the loopy bit
-		graph.createEdge('n23', 'n2'); // first; insertion order matters for some engines
-		graph.createEdge('n1', 'n2');
-		graph.createEdge('n2', 'n3');
-		graph.createEdge('n3', 'n4');
-		graph.createEdge('n4', 'n5');
+		graph = new Graph(
+			[['n3', 'n23']],
+			[['n23', 'n2']],
+			[['n1', 'n2' ]],
+			[['n2', 'n3' ]],
+			[['n3', 'n4' ]],
+			[['n4', 'n5' ]]
+		);
 
 		//  n1 ──▶ n2 ──▶ n3 ──▶ n4 ──▶ n5
 		//         ▲      ╷
