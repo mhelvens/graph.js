@@ -2509,7 +2509,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * becomes unspecified. (So, don't.)
 	   * @returns { Iterator.< Array.<string> > }
 	   *          an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}.
-	   *          Each iterated value is an array containing the vertices of the cycle in order.
+	   *          Each iterated value is an array containing the vertex-keys of the cycle, in order.
 	   * @example
 	   * for (var it = graph.cycles(), kv; !(kv = it.next()).done;) {
 	   *     var cycle = kv.value;
@@ -2715,67 +2715,165 @@ return /******/ (function(modules) { // webpackBootstrap
 				return !this.cycles().next().done;
 			}
 		}, {
+			key: 'paths',
+	
+			/**
+	   * Iterate over all paths between two given keys in this graph, in no particular order.
+	   * If you mutate the graph in between iterations, behavior of the iterator
+	   * becomes unspecified. (So, don't.)
+	   * @param from {string} the key for the originating vertex
+	   * @param to   {string} the key for the terminating vertex
+	   * @throws {Graph.VertexNotExistsError} if the `from` and/or `to` vertices do not yet exist in the graph
+	   * @returns { Iterator.< Array.<string> > }
+	   *          an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}.
+	   *          Each iterated value is an array containing the vertex-keys of the path, in order.
+	   * @example
+	   * for (var it = graph.paths(), kv; !(kv = it.next()).done;) {
+	   *     var path = kv.value;
+	   *     // iterates over all paths between `from` and `to` in the graph
+	   * }
+	   * @example
+	   * // in ECMAScript 6, you can use a for..of loop
+	   * for (let path of graph.paths()) {
+	   *     // iterates over all paths between `from` and `to` in the graph
+	   * }
+	   */
+			value: function paths(from, to) {
+				if (!this.hasVertex(from)) {
+					if (this.hasVertex(to)) {
+						throw new Graph.VertexNotExistsError(from);
+					} else {
+						throw new Graph.VertexNotExistsError(from).v(to);
+					}
+				} else if (!this.hasVertex(to)) {
+					throw new Graph.VertexNotExistsError(to);
+				}
+				return this._paths(from, to);
+			}
+		}, {
+			key: '_paths',
+			value: regeneratorRuntime.mark(function _paths(from, to) {
+				var marked2$0, stack, _this, pathsFromPrefix;
+	
+				return regeneratorRuntime.wrap(function _paths$(context$2$0) {
+					while (1) switch (context$2$0.prev = context$2$0.next) {
+						case 0:
+							pathsFromPrefix = function pathsFromPrefix(current) {
+								var _iteratorNormalCompletion21, _didIteratorError21, _iteratorError21, _iterator21, _step21, _step21$value, next;
+	
+								return regeneratorRuntime.wrap(function pathsFromPrefix$(context$3$0) {
+									while (1) switch (context$3$0.prev = context$3$0.next) {
+										case 0:
+											stack.push(current);
+											_iteratorNormalCompletion21 = true;
+											_didIteratorError21 = false;
+											_iteratorError21 = undefined;
+											context$3$0.prev = 4;
+											_iterator21 = _this.verticesFrom(current)[Symbol.iterator]();
+	
+										case 6:
+											if (_iteratorNormalCompletion21 = (_step21 = _iterator21.next()).done) {
+												context$3$0.next = 19;
+												break;
+											}
+	
+											_step21$value = _slicedToArray(_step21.value, 1);
+											next = _step21$value[0];
+	
+											if (!(next === to)) {
+												context$3$0.next = 14;
+												break;
+											}
+	
+											context$3$0.next = 12;
+											return [].concat(stack, [to]);
+	
+										case 12:
+											context$3$0.next = 16;
+											break;
+	
+										case 14:
+											if (!(stack.indexOf(next) === -1)) {
+												context$3$0.next = 16;
+												break;
+											}
+	
+											return context$3$0.delegateYield(pathsFromPrefix(next), 't19', 16);
+	
+										case 16:
+											_iteratorNormalCompletion21 = true;
+											context$3$0.next = 6;
+											break;
+	
+										case 19:
+											context$3$0.next = 25;
+											break;
+	
+										case 21:
+											context$3$0.prev = 21;
+											context$3$0.t20 = context$3$0['catch'](4);
+											_didIteratorError21 = true;
+											_iteratorError21 = context$3$0.t20;
+	
+										case 25:
+											context$3$0.prev = 25;
+											context$3$0.prev = 26;
+	
+											if (!_iteratorNormalCompletion21 && _iterator21['return']) {
+												_iterator21['return']();
+											}
+	
+										case 28:
+											context$3$0.prev = 28;
+	
+											if (!_didIteratorError21) {
+												context$3$0.next = 31;
+												break;
+											}
+	
+											throw _iteratorError21;
+	
+										case 31:
+											return context$3$0.finish(28);
+	
+										case 32:
+											return context$3$0.finish(25);
+	
+										case 33:
+											stack.pop();
+	
+										case 34:
+										case 'end':
+											return context$3$0.stop();
+									}
+								}, marked2$0[0], this, [[4, 21, 25, 33], [26,, 28, 32]]);
+							};
+	
+							marked2$0 = [pathsFromPrefix].map(regeneratorRuntime.mark);
+							stack = [];
+							_this = this;
+							return context$2$0.delegateYield(pathsFromPrefix(from), 't21', 5);
+	
+						case 5:
+						case 'end':
+							return context$2$0.stop();
+					}
+				}, _paths, this);
+			})
+		}, {
 			key: 'path',
 	
 			/**
 	   * Find any path between a given pair of keys.
 	   * @param from {string} the originating vertex
 	   * @param to   {string} the terminating vertex
-	   * @returns {?array} an array with the keys of the path found between the two vertices,
+	   * @throws {Graph.VertexNotExistsError} if the `from` and/or `to` vertices do not yet exist in the graph
+	   * @returns {?Array} an array with the keys of the path found between the two vertices,
 	   *                   including those two vertices themselves; `null` if no such path exists
 	   */
 			value: function path(from, to) {
-				var _this2 = this;
-	
-				if (!this.hasVertex(from) || !this.hasVertex(to)) {
-					return null;
-				}
-	
-				var visited = [];
-	
-				/* recursive auxiliary function: find a path from 'current' to 'to' */
-				var hasPathAux = function hasPathAux(current) {
-					visited.push(current);
-					if (_this2.hasEdge(current, to)) {
-						return [].concat(visited, [to]);
-					}
-					var _iteratorNormalCompletion21 = true;
-					var _didIteratorError21 = false;
-					var _iteratorError21 = undefined;
-	
-					try {
-						for (var _iterator21 = _this2.verticesFrom(current)[Symbol.iterator](), _step21; !(_iteratorNormalCompletion21 = (_step21 = _iterator21.next()).done); _iteratorNormalCompletion21 = true) {
-							var _step21$value = _slicedToArray(_step21.value, 1);
-	
-							var next = _step21$value[0];
-	
-							if (visited.indexOf(next) === -1) {
-								var result = hasPathAux(next);
-								if (result) {
-									return result;
-								}
-							}
-						}
-					} catch (err) {
-						_didIteratorError21 = true;
-						_iteratorError21 = err;
-					} finally {
-						try {
-							if (!_iteratorNormalCompletion21 && _iterator21['return']) {
-								_iterator21['return']();
-							}
-						} finally {
-							if (_didIteratorError21) {
-								throw _iteratorError21;
-							}
-						}
-					}
-	
-					visited.pop();
-					return null;
-				};
-	
-				return hasPathAux(from);
+				var result = this.paths(from, to).next();
+				return result.done ? null : result.value;
 			}
 		}, {
 			key: 'hasPath',
@@ -2784,10 +2882,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * Test whether there is a directed path between a given pair of keys.
 	   * @param from {string} the originating vertex
 	   * @param to   {string} the terminating vertex
+	   * @throws {Graph.VertexNotExistsError} if the `from` and/or `to` vertices do not yet exist in the graph
 	   * @returns {boolean} whether such a path exists
 	   */
 			value: function hasPath(from, to) {
-				return !!this.path(from, to);
+				return !this.paths(from, to).next().done;
 			}
 		}, {
 			key: 'outDegree',
@@ -3068,7 +3167,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @throws {Graph.BranchlessCycleError} if the graph contains a cycle with no branches or nexuses
 	   */
 			value: function contractPaths() {
-				var _this3 = this;
+				var _this2 = this;
 	
 				var isNexus = arguments[0] === undefined ? function () {
 					return false;
@@ -3080,7 +3179,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 					var key = _ref2[0];
 					var val = _ref2[1];
-					return _this3.outDegree(key) !== 1 || _this3.inDegree(key) !== 1 || isNexus(key, val);
+					return _this2.outDegree(key) !== 1 || _this2.inDegree(key) !== 1 || isNexus(key, val);
 				}).map(function (_ref3) {
 					var _ref32 = _slicedToArray(_ref3, 1);
 	
@@ -3099,7 +3198,7 @@ return /******/ (function(modules) { // webpackBootstrap
 					var _iterator29, _step29;
 	
 					(function () {
-						var unhandledVertices = new Set([].concat(_toConsumableArray(_this3.vertices())).map(function (_ref4) {
+						var unhandledVertices = new Set([].concat(_toConsumableArray(_this2.vertices())).map(function (_ref4) {
 							var _ref42 = _slicedToArray(_ref4, 1);
 	
 							var key = _ref42[0];
@@ -3115,7 +3214,7 @@ return /******/ (function(modules) { // webpackBootstrap
 							var _iteratorError27 = undefined;
 	
 							try {
-								for (var _iterator27 = _this3.verticesFrom(key)[Symbol.iterator](), _step27; !(_iteratorNormalCompletion27 = (_step27 = _iterator27.next()).done); _iteratorNormalCompletion27 = true) {
+								for (var _iterator27 = _this2.verticesFrom(key)[Symbol.iterator](), _step27; !(_iteratorNormalCompletion27 = (_step27 = _iterator27.next()).done); _iteratorNormalCompletion27 = true) {
 									var _step27$value = _slicedToArray(_step27.value, 1);
 	
 									var next = _step27$value[0];
@@ -3141,7 +3240,7 @@ return /******/ (function(modules) { // webpackBootstrap
 							var _iteratorError28 = undefined;
 	
 							try {
-								for (var _iterator28 = _this3.verticesTo(key)[Symbol.iterator](), _step28; !(_iteratorNormalCompletion28 = (_step28 = _iterator28.next()).done); _iteratorNormalCompletion28 = true) {
+								for (var _iterator28 = _this2.verticesTo(key)[Symbol.iterator](), _step28; !(_iteratorNormalCompletion28 = (_step28 = _iterator28.next()).done); _iteratorNormalCompletion28 = true) {
 									var _step28$value = _slicedToArray(_step28.value, 1);
 	
 									var next = _step28$value[0];
@@ -3192,7 +3291,7 @@ return /******/ (function(modules) { // webpackBootstrap
 							    current = startingKey;
 							do {
 								cycle.push(current);
-								current = _this3.verticesFrom(current).next().value[0];
+								current = _this2.verticesFrom(current).next().value[0];
 							} while (current !== startingKey);
 							throw new Graph.BranchlessCycleError(cycle);
 						}
@@ -3211,7 +3310,7 @@ return /******/ (function(modules) { // webpackBootstrap
 						return backwards ? [nxt, strt] : [strt, nxt];
 					};
 					var verticesNext = function verticesNext(v) {
-						return backwards ? _this3.verticesTo(v) : _this3.verticesFrom(v);
+						return backwards ? _this2.verticesTo(v) : _this2.verticesFrom(v);
 					};
 	
 					/* bookkeeping */
@@ -3220,9 +3319,9 @@ return /******/ (function(modules) { // webpackBootstrap
 					var path = new Graph();
 	
 					/* process the start of the path */
-					path.addVertex(start, _this3.vertexValue(start));
-					path.addVertex(next, _this3.vertexValue(next));
-					path.addNewEdge.apply(path, _toConsumableArray(fromTo()).concat([_this3.edgeValue.apply(_this3, _toConsumableArray(fromTo()))]));
+					path.addVertex(start, _this2.vertexValue(start));
+					path.addVertex(next, _this2.vertexValue(next));
+					path.addNewEdge.apply(path, _toConsumableArray(fromTo()).concat([_this2.edgeValue.apply(_this2, _toConsumableArray(fromTo()))]));
 					edgesToRemove.add(fromTo());
 	
 					/* process as [current, next] moves across the path */
@@ -3232,8 +3331,8 @@ return /******/ (function(modules) { // webpackBootstrap
 						current = _ref5[0];
 						next = _ref5[1];
 	
-						path.addVertex(next, _this3.vertexValue(next));
-						path.addNewEdge.apply(path, _toConsumableArray(fromTo(current, next)).concat([_this3.edgeValue.apply(_this3, _toConsumableArray(fromTo(current, next)))]));
+						path.addVertex(next, _this2.vertexValue(next));
+						path.addNewEdge.apply(path, _toConsumableArray(fromTo(current, next)).concat([_this2.edgeValue.apply(_this2, _toConsumableArray(fromTo(current, next)))]));
 						verticesToRemove.add(current);
 						edgesToRemove.add(fromTo(current, next));
 					}
@@ -3255,7 +3354,7 @@ return /******/ (function(modules) { // webpackBootstrap
 					try {
 						for (var _iterator30 = edgesToRemove[Symbol.iterator](), _step30; !(_iteratorNormalCompletion30 = (_step30 = _iterator30.next()).done); _iteratorNormalCompletion30 = true) {
 							var key = _step30.value;
-							_this3.removeExistingEdge.apply(_this3, _toConsumableArray(key));
+							_this2.removeExistingEdge.apply(_this2, _toConsumableArray(key));
 						}
 					} catch (err) {
 						_didIteratorError30 = true;
@@ -3279,7 +3378,7 @@ return /******/ (function(modules) { // webpackBootstrap
 					try {
 						for (var _iterator31 = verticesToRemove[Symbol.iterator](), _step31; !(_iteratorNormalCompletion31 = (_step31 = _iterator31.next()).done); _iteratorNormalCompletion31 = true) {
 							var key = _step31.value;
-							_this3.destroyExistingVertex(key);
+							_this2.destroyExistingVertex(key);
 						}
 					} catch (err) {
 						_didIteratorError31 = true;
@@ -3453,7 +3552,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @constant vertices
 	   * @memberof Graph.VertexExistsError
 	   * @instance
-	   * @type {Set.<array>}
+	   * @type {Set.<Array>}
 	   */
 			this.vertices = new Set();
 			this.v(key, value);

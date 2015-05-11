@@ -730,90 +730,6 @@ describeMethod('clear', () => {
 // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
 
 
-describeMethod('cycle', () => {
-
-	it_throwsNothing();
-
-	it("returns a descriptive array if the graph contains a cycle (1)", () => {
-		graph = new Graph(
-			[['n1', 'n2']],
-			[['n2', 'n3']],
-			[['n3', 'n4']],
-			[['n4', 'n5']],
-			[['n3', 'n23']],
-			[['n23', 'n2']]
-		);
-
-		// n1 ──▶ n2 ──▶ n3 ──▶ n4 ──▶ n5
-		//        ▲      ╷
-		//        │      │
-		//        ╵      │
-		//       n23 ◀───╯
-
-		expectItWhenCalledWith().toEqualOneOf(
-			['n23', 'n2', 'n3'],
-			['n3', 'n23', 'n2'],
-			['n2', 'n3', 'n23']
-		);
-	});
-
-	it("returns a descriptive array if the graph contains a cycle (2)", () => {
-		graph = new Graph([['n1', 'n1']]);
-		expectItWhenCalledWith().toEqual(['n1']);
-	});
-
-	it("returns null if the graph contains no cycle (1)", () => {
-		expectItWhenCalledWith().toBeNull();
-	});
-
-	it("returns null if the graph contains no cycle (2)", () => {
-		graph.clear();
-		expectItWhenCalledWith().toBeNull();
-	});
-
-});
-
-
-describeMethod('hasCycle', () => {
-
-	it_throwsNothing();
-
-	it("returns true if the graph contains a cycle (1)", () => {
-		graph = new Graph(
-			[['n1', 'n2']],
-			[['n2', 'n3']],
-			[['n3', 'n4']],
-			[['n4', 'n5']],
-			[['n3', 'n23']],
-			[['n23', 'n2']]
-		);
-
-		//  n1 ──▶ n2 ──▶ n3 ──▶ n4 ──▶ n5
-		//         ▲      ╷
-		//         │      │
-		//         ╵      │
-		//        n23 ◀───╯
-
-		expectItWhenCalledWith().toBe(true);
-	});
-
-	it("returns true if the graph contains a cycle (2)", () => {
-		graph = new Graph([['n1', 'n1']]);
-		expectItWhenCalledWith().toBe(true);
-	});
-
-	it("returns false if the graph contains no cycle (1)", () => {
-		expectItWhenCalledWith().toBe(false);
-	});
-
-	it("returns false if the graph contains no cycle (2)", () => {
-		graph.clear();
-		expectItWhenCalledWith().toBe(false);
-	});
-
-});
-
-
 describeMethod('cycles', () => {
 
 	it_throwsNothing();
@@ -983,14 +899,196 @@ describeMethod('cycles', () => {
 });
 
 
+describeMethod('cycle', () => {
+
+	it_throwsNothing();
+
+	it("returns a descriptive array if the graph contains a cycle (1)", () => {
+		graph = new Graph(
+			[['n1', 'n2']],
+			[['n2', 'n3']],
+			[['n3', 'n4']],
+			[['n4', 'n5']],
+			[['n3', 'n23']],
+			[['n23', 'n2']]
+		);
+
+		// n1 ──▶ n2 ──▶ n3 ──▶ n4 ──▶ n5
+		//        ▲      ╷
+		//        │      │
+		//        ╵      │
+		//       n23 ◀───╯
+
+		expectItWhenCalledWith().toEqualOneOf(
+			['n23', 'n2', 'n3'],
+			['n3', 'n23', 'n2'],
+			['n2', 'n3', 'n23']
+		);
+	});
+
+	it("returns a descriptive array if the graph contains a cycle (2)", () => {
+		graph = new Graph([['n1', 'n1']]);
+		expectItWhenCalledWith().toEqual(['n1']);
+	});
+
+	it("returns null if the graph contains no cycle (1)", () => {
+		expectItWhenCalledWith().toBeNull();
+	});
+
+	it("returns null if the graph contains no cycle (2)", () => {
+		graph.clear();
+		expectItWhenCalledWith().toBeNull();
+	});
+
+});
+
+
+describeMethod('hasCycle', () => {
+
+	it_throwsNothing();
+
+	it("returns true if the graph contains a cycle (1)", () => {
+		graph = new Graph(
+			[['n1', 'n2']],
+			[['n2', 'n3']],
+			[['n3', 'n4']],
+			[['n4', 'n5']],
+			[['n3', 'n23']],
+			[['n23', 'n2']]
+		);
+
+		//  n1 ──▶ n2 ──▶ n3 ──▶ n4 ──▶ n5
+		//         ▲      ╷
+		//         │      │
+		//         ╵      │
+		//        n23 ◀───╯
+
+		expectItWhenCalledWith().toBe(true);
+	});
+
+	it("returns true if the graph contains a cycle (2)", () => {
+		graph = new Graph([['n1', 'n1']]);
+		expectItWhenCalledWith().toBe(true);
+	});
+
+	it("returns false if the graph contains no cycle (1)", () => {
+		expectItWhenCalledWith().toBe(false);
+	});
+
+	it("returns false if the graph contains no cycle (2)", () => {
+		graph.clear();
+		expectItWhenCalledWith().toBe(false);
+	});
+
+});
+
+
+describeMethod('paths', () => {
+
+	it_throwsErrorIfVerticesDoNotExist();
+
+	//  k1     k2 ──▶ k3 ──▶ k4
+	//         ╷      ▲
+	//         │      │
+	//         ▼      │
+	//         k5 ────╯
+
+	it("iterates over all paths between the given keys, in no particular order (no path)", () => {
+		expect(new Set(callItWith('k1', 'k2'))).toEqual(new Set([]));
+	});
+
+	it("iterates over all paths between the given keys, in no particular order (no implicit self-loop)", () => {
+		expect(new Set(callItWith('k3', 'k3'))).toEqual(new Set([]));
+	});
+
+	it("iterates over all paths between the given keys, in no particular order (single edge)", () => {
+		expect(new Set(callItWith('k2', 'k5'))).toEqual(new Set([
+			['k2', 'k5']
+		]));
+	});
+
+	it("iterates over all paths between the given keys, in no particular order (transitive)", () => {
+		expect(new Set(callItWith('k2', 'k3'))).toEqual(new Set([
+			['k2', 'k3'],
+			['k2', 'k5', 'k3']
+		]));
+		expect(new Set(callItWith('k2', 'k4'))).toEqual(new Set([
+			['k2', 'k3', 'k4'],
+			['k2', 'k5', 'k3', 'k4']
+		]));
+	});
+
+	it("iterates over all paths between the given keys, in no particular order (reflexive cycle)", () => {
+		graph.addNewEdge('k1', 'k1');
+		expect(new Set(callItWith('k1', 'k1'))).toEqual(new Set([
+			['k1', 'k1']
+		]));
+	});
+
+	it("iterates over all paths between the given keys, in no particular order (symmetric cycle)", () => {
+		graph.addNewEdge('k4', 'k3');
+		expect(new Set(callItWith('k3', 'k3'))).toEqual(new Set([
+			['k3', 'k4', 'k3']
+		]));
+	});
+
+	it("iterates over all paths between the given keys, in no particular order (larger cycle)", () => {
+		graph.addNewEdge('k4', 'k1');
+		graph.addNewEdge('k1', 'k2');
+		expect(new Set(callItWith('k3', 'k3'))).toEqual(new Set([
+			['k3', 'k4', 'k1', 'k2', 'k3'],
+			['k3', 'k4', 'k1', 'k2', 'k5', 'k3']
+		]));
+	});
+
+	it("iterates over all paths between the given keys, in no particular order (including part of a cycle, part 1)", () => {
+		graph = new Graph(
+			[['n1', 'n2']],
+			[['n2', 'n3']],
+			[['n3', 'n4']],
+			[['n4', 'n5']],
+			[['n3', 'n23']],
+			[['n23', 'n2']]
+		);
+
+		//  n1 ──▶ n2 ──▶ n3 ──▶ n4 ──▶ n5
+		//         ▲      ╷
+		//         │      │
+		//         ╵      │
+		//        n23 ◀───╯
+
+		expect(new Set(callItWith('n1', 'n5'))).toEqual(new Set([
+			['n1', 'n2', 'n3', 'n4', 'n5']
+		]));
+	});
+
+	it("iterates over all paths between the given keys, in no particular order (including part of a cycle, part 2)", () => {
+		graph = new Graph( // reordered edge insertions compared to test above
+			[['n3', 'n23']],
+			[['n23', 'n2']],
+			[['n1', 'n2' ]],
+			[['n2', 'n3' ]],
+			[['n3', 'n4' ]],
+			[['n4', 'n5' ]]
+		);
+
+		//  n1 ──▶ n2 ──▶ n3 ──▶ n4 ──▶ n5
+		//         ▲      ╷
+		//         │      │
+		//         ╵      │
+		//        n23 ◀───╯
+
+		expect(new Set(callItWith('n1', 'n5'))).toEqual(new Set([
+			['n1', 'n2', 'n3', 'n4', 'n5']
+		]));
+	});
+
+});
+
+
 describeMethod('path', () => {
 
-	it("throws nothing when passed two key arguments", () => {
-		expectItWhenBoundWith('k1', 'k2').not.toThrow();
-		expectItWhenBoundWith('k2', 'k3').not.toThrow();
-		expectItWhenBoundWith('newKey', 'k2').not.toThrow();
-		expectItWhenBoundWith('newKey1', 'newKey2').not.toThrow();
-	});
+	it_throwsErrorIfVerticesDoNotExist();
 
 	it("returns null if the path doesn't exist (1)", () => {
 		expectItWhenCalledWith('k1', 'k2').toBeNull();
@@ -998,7 +1096,7 @@ describeMethod('path', () => {
 		expectItWhenCalledWith('k2', 'k1').toBeNull();
 	});
 
-	it("returns null if the path doesn't exist (2: self-loop)", () => {
+	it("returns null if the path doesn't exist (2: implicit self-loop)", () => {
 		expectItWhenCalledWith('k2', 'k2').toBeNull();
 	});
 
@@ -1089,12 +1187,7 @@ describeMethod('path', () => {
 
 describeMethod('hasPath', () => {
 
-	it("throws nothing when passed two key arguments", () => {
-		expectItWhenBoundWith('k1', 'k2').not.toThrow();
-		expectItWhenBoundWith('k2', 'k3').not.toThrow();
-		expectItWhenBoundWith('newKey', 'k2').not.toThrow();
-		expectItWhenBoundWith('newKey1', 'newKey2').not.toThrow();
-	});
+	it_throwsErrorIfVerticesDoNotExist();
 
 	it("returns false if the path doesn't exist (1)", () => {
 		expectItWhenCalledWith('k1', 'k2').toBe(false);

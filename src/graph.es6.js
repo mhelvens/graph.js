@@ -771,7 +771,7 @@ export default class Graph {
 	 * becomes unspecified. (So, don't.)
 	 * @returns { Iterator.< Array.<string> > }
 	 *          an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}.
-	 *          Each iterated value is an array containing the vertices of the cycle in order.
+	 *          Each iterated value is an array containing the vertex-keys of the cycle, in order.
 	 * @example
 	 * for (var it = graph.cycles(), kv; !(kv = it.next()).done;) {
 	 *     var cycle = kv.value;
@@ -835,34 +835,69 @@ export default class Graph {
 
 
 	/**
+	 * Iterate over all paths between two given keys in this graph, in no particular order.
+	 * If you mutate the graph in between iterations, behavior of the iterator
+	 * becomes unspecified. (So, don't.)
+	 * @param from {string} the key for the originating vertex
+	 * @param to   {string} the key for the terminating vertex
+	 * @throws {Graph.VertexNotExistsError} if the `from` and/or `to` vertices do not yet exist in the graph
+	 * @returns { Iterator.< Array.<string> > }
+	 *          an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}.
+	 *          Each iterated value is an array containing the vertex-keys of the path, in order.
+	 * @example
+	 * for (var it = graph.paths(), kv; !(kv = it.next()).done;) {
+	 *     var path = kv.value;
+	 *     // iterates over all paths between `from` and `to` in the graph
+	 * }
+	 * @example
+	 * // in ECMAScript 6, you can use a for..of loop
+	 * for (let path of graph.paths()) {
+	 *     // iterates over all paths between `from` and `to` in the graph
+	 * }
+	 */
+	paths(from, to) {
+		if (!this.hasVertex(from)) {
+			if (this.hasVertex(to)) {
+				throw new Graph.VertexNotExistsError(from);
+			} else {
+				throw new Graph.VertexNotExistsError(from).v(to);
+			}
+		} else if (!this.hasVertex(to)) {
+			throw new Graph.VertexNotExistsError(to);
+		}
+		return this._paths(from, to);
+	}
+	*_paths(from, to) {
+		let stack = [];
+
+		let _this = this;
+		function *pathsFromPrefix(current) {
+			stack.push(current);
+			for (let [next] of _this.verticesFrom(current)) {
+				if (next === to) {
+					yield [...stack, to];
+				} else if (stack.indexOf(next) === -1) {
+					yield* pathsFromPrefix(next);
+				}
+			}
+			stack.pop();
+		}
+
+		yield* pathsFromPrefix(from);
+	}
+
+
+	/**
 	 * Find any path between a given pair of keys.
 	 * @param from {string} the originating vertex
 	 * @param to   {string} the terminating vertex
-	 * @returns {?array} an array with the keys of the path found between the two vertices,
+	 * @throws {Graph.VertexNotExistsError} if the `from` and/or `to` vertices do not yet exist in the graph
+	 * @returns {?Array} an array with the keys of the path found between the two vertices,
 	 *                   including those two vertices themselves; `null` if no such path exists
 	 */
 	path(from, to) {
-		if (!this.hasVertex(from) || !this.hasVertex(to)) { return null }
-
-		let visited = [];
-
-		/* recursive auxiliary function: find a path from 'current' to 'to' */
-		const hasPathAux = (current) => {
-			visited.push(current);
-			if (this.hasEdge(current, to)) {
-				return [...visited, to];
-			}
-			for (let [next] of this.verticesFrom(current)) {
-				if (visited.indexOf(next) === -1) {
-					let result = hasPathAux(next);
-					if (result) { return result }
-				}
-			}
-			visited.pop();
-			return null;
-		};
-
-		return hasPathAux(from);
+		let result = this.paths(from, to).next();
+		return result.done ? null : result.value;
 	}
 
 
@@ -870,9 +905,10 @@ export default class Graph {
 	 * Test whether there is a directed path between a given pair of keys.
 	 * @param from {string} the originating vertex
 	 * @param to   {string} the terminating vertex
+	 * @throws {Graph.VertexNotExistsError} if the `from` and/or `to` vertices do not yet exist in the graph
 	 * @returns {boolean} whether such a path exists
 	 */
-	hasPath(from, to) { return !!this.path(from, to) }
+	hasPath(from, to) { return !this.paths(from, to).next().done }
 
 
 	/**
@@ -1107,7 +1143,7 @@ Graph.VertexExistsError = class VertexExistsError extends Error {
 		 * @constant vertices
 		 * @memberof Graph.VertexExistsError
 		 * @instance
-		 * @type {Set.<array>}
+		 * @type {Set.<Array>}
 		 */
 		this.vertices = new Set();
 		this.v(key, value);

@@ -133,7 +133,8 @@ API Documentation
     * [.cycles()](#Graph#cycles) ⇒ <code>Iterator.&lt;Array.&lt;string&gt;&gt;</code>
     * [.cycle()](#Graph#cycle) ⇒ <code>Array</code>
     * [.hasCycle()](#Graph#hasCycle) ⇒ <code>boolean</code>
-    * [.path(from, to)](#Graph#path) ⇒ <code>array</code>
+    * [.paths(from, to)](#Graph#paths) ⇒ <code>Iterator.&lt;Array.&lt;string&gt;&gt;</code>
+    * [.path(from, to)](#Graph#path) ⇒ <code>Array</code>
     * [.hasPath(from, to)](#Graph#hasPath) ⇒ <code>boolean</code>
     * [.outDegree(key)](#Graph#outDegree) ⇒ <code>number</code>
     * [.inDegree(key)](#Graph#inDegree) ⇒ <code>number</code>
@@ -144,7 +145,7 @@ API Documentation
     * [.contractPaths([isNexus])](#Graph#contractPaths)
     * <ins><b>static</b></ins>
     * [.VertexExistsError](#Graph.VertexExistsError) ⇐ <code>Error</code>
-        * [.vertices](#Graph.VertexExistsError#vertices) : <code>Set.&lt;array&gt;</code>
+        * [.vertices](#Graph.VertexExistsError#vertices) : <code>Set.&lt;Array&gt;</code>
     * [.VertexNotExistsError](#Graph.VertexNotExistsError) ⇐ <code>Error</code>
         * [.vertices](#Graph.VertexNotExistsError#vertices) : <code>Set.&lt;string&gt;</code>
     * [.EdgeExistsError](#Graph.EdgeExistsError) ⇐ <code>Error</code>
@@ -852,7 +853,7 @@ If you mutate the graph in between iterations, behavior of the iterator
 becomes unspecified. (So, don't.)
 
 **Returns**: <code>Iterator.&lt;Array.&lt;string&gt;&gt;</code> - an object conforming to the [ES6 iterator protocol](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol).
-         Each iterated value is an array containing the vertices of the cycle in order.  
+         Each iterated value is an array containing the vertex-keys of the cycle, in order.  
 **Example**  
 ```JavaScript
 for (var it = graph.cycles(), kv; !(kv = it.next()).done;) {
@@ -887,8 +888,43 @@ Test whether this graph contains a directed cycle.
 
 -----
 
+<a name="Graph#paths"></a>
+#### *graph*.paths(from, to) ⇒ <code>Iterator.&lt;Array.&lt;string&gt;&gt;</code>
+Iterate over all paths between two given keys in this graph, in no particular order.
+If you mutate the graph in between iterations, behavior of the iterator
+becomes unspecified. (So, don't.)
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| from | <code>string</code> | the key for the originating vertex |
+| to | <code>string</code> | the key for the terminating vertex |
+
+**Throws**:
+
+- <code>[VertexNotExistsError](#Graph.VertexNotExistsError)</code> if the `from` and/or `to` vertices do not yet exist in the graph
+
+**Returns**: <code>Iterator.&lt;Array.&lt;string&gt;&gt;</code> - an object conforming to the [ES6 iterator protocol](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol).
+         Each iterated value is an array containing the vertex-keys of the path, in order.  
+**Example**  
+```JavaScript
+for (var it = graph.paths(), kv; !(kv = it.next()).done;) {
+    var path = kv.value;
+    // iterates over all paths between `from` and `to` in the graph
+}
+```
+**Example**  
+```JavaScript
+// in ECMAScript 6, you can use a for..of loop
+for (let path of graph.paths()) {
+    // iterates over all paths between `from` and `to` in the graph
+}
+```
+
+-----
+
 <a name="Graph#path"></a>
-#### *graph*.path(from, to) ⇒ <code>array</code>
+#### *graph*.path(from, to) ⇒ <code>Array</code>
 Find any path between a given pair of keys.
 
 
@@ -897,7 +933,11 @@ Find any path between a given pair of keys.
 | from | <code>string</code> | the originating vertex |
 | to | <code>string</code> | the terminating vertex |
 
-**Returns**: <code>array</code> - an array with the keys of the path found between the two vertices,
+**Throws**:
+
+- <code>[VertexNotExistsError](#Graph.VertexNotExistsError)</code> if the `from` and/or `to` vertices do not yet exist in the graph
+
+**Returns**: <code>Array</code> - an array with the keys of the path found between the two vertices,
                   including those two vertices themselves; `null` if no such path exists  
 
 -----
@@ -911,6 +951,10 @@ Test whether there is a directed path between a given pair of keys.
 | --- | --- | --- |
 | from | <code>string</code> | the originating vertex |
 | to | <code>string</code> | the terminating vertex |
+
+**Throws**:
+
+- <code>[VertexNotExistsError](#Graph.VertexNotExistsError)</code> if the `from` and/or `to` vertices do not yet exist in the graph
 
 **Returns**: <code>boolean</code> - whether such a path exists  
 
@@ -1041,7 +1085,7 @@ This type of error is thrown when specific vertices are expected not to exist, b
 -----
 
 <a name="Graph.VertexExistsError#vertices"></a>
-##### *vertexExistsError*.vertices : <code>Set.&lt;array&gt;</code>
+##### *vertexExistsError*.vertices : <code>Set.&lt;Array&gt;</code>
 the set of relevant vertices as `[key, value]` shaped arrays
 
 
