@@ -69,9 +69,9 @@ return /******/ (function(modules) { // webpackBootstrap
 		value: true
 	});
 	
-	var _get = function get(_x8, _x9, _x10) { var _again = true; _function: while (_again) { desc = parent = getter = undefined; _again = false; var object = _x8,
-	    property = _x9,
-	    receiver = _x10; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x8 = parent; _x9 = property; _x10 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+	var _get = function get(_x9, _x10, _x11) { var _again = true; _function: while (_again) { desc = parent = getter = undefined; _again = false; var object = _x9,
+	    property = _x10,
+	    receiver = _x11; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x9 = parent; _x10 = property; _x11 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 	
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 	
@@ -1876,12 +1876,13 @@ return /******/ (function(modules) { // webpackBootstrap
 			key: 'cycles',
 	
 			/**
-	   * Iterate over all directed cycles in this graph, in no particular order.
+	   * Iterate over all simple directed cycles in this graph, in no particular order.
 	   * If you mutate the graph in between iterations, behavior of the iterator
 	   * becomes unspecified. (So, don't.)
 	   * @returns { Iterator.< Array.<string> > }
 	   *          an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}.
-	   *          Each iterated value is an array containing the vertex-keys of the cycle, in order.
+	   *          Each iterated value is an array containing the vertex keys describing the cycle.
+	   *          These arrays will contain each vertex key only once — even the first/last one.
 	   * @example
 	   * for (var it = graph.cycles(), kv; !(kv = it.next()).done;) {
 	   *     var cycle = kv.value;
@@ -1894,134 +1895,121 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * }
 	   */
 			value: regeneratorRuntime.mark(function cycles() {
-				var marked2$0, stack, visited, _this, visit, _iteratorNormalCompletion20, _didIteratorError20, _iteratorError20, _iterator20, _step20, _step20$value, a;
+				var marked2$0, pointStack, markedStack, mark, _this, backtrack, sortedKeys, _iteratorNormalCompletion19, _didIteratorError19, _iteratorError19, _iterator19, _step19, a;
 	
 				return regeneratorRuntime.wrap(function cycles$(context$2$0) {
 					while (1) switch (context$2$0.prev = context$2$0.next) {
 						case 0:
-							visit = function visit(a) {
-								var i, _iteratorNormalCompletion19, _didIteratorError19, _iteratorError19, _iterator19, _step19, _step19$value, b;
+							backtrack = function backtrack(v) {
+								var out = arguments[1] === undefined ? {} : arguments[1];
 	
-								return regeneratorRuntime.wrap(function visit$(context$3$0) {
+								var _arr, _i, _arr$_i, w, o, u;
+	
+								return regeneratorRuntime.wrap(function backtrack$(context$3$0) {
 									while (1) switch (context$3$0.prev = context$3$0.next) {
 										case 0:
-											/* record that this vertex has been visited */
-											visited.add(a);
-	
-											i = stack.indexOf(a);
-	
-											if (!(i >= 0)) {
-												context$3$0.next = 6;
-												break;
-											}
-	
-											context$3$0.next = 5;
-											return stack.slice(i);
+											pointStack.push(v);
+											mark.add(v);
+											markedStack.push(v);
+											_arr = [].concat(_toConsumableArray(_this.verticesFrom(v)));
+											_i = 0;
 	
 										case 5:
-											return context$3$0.abrupt('return');
-	
-										case 6:
-	
-											/* recursively visit successors to check for cycles */
-											stack.push(a);
-											_iteratorNormalCompletion19 = true;
-											_didIteratorError19 = false;
-											_iteratorError19 = undefined;
-											context$3$0.prev = 10;
-											_iterator19 = _this.verticesFrom(a)[Symbol.iterator]();
-	
-										case 12:
-											if (_iteratorNormalCompletion19 = (_step19 = _iterator19.next()).done) {
-												context$3$0.next = 19;
+											if (!(_i < _arr.length)) {
+												context$3$0.next = 23;
 												break;
 											}
 	
-											_step19$value = _slicedToArray(_step19.value, 1);
-											b = _step19$value[0];
-											return context$3$0.delegateYield(visit(b), 't15', 16);
+											_arr$_i = _slicedToArray(_arr[_i], 1);
+											w = _arr$_i[0];
+	
+											if (!(w < pointStack[0])) {
+												context$3$0.next = 10;
+												break;
+											}
+	
+											return context$3$0.abrupt('continue', 20);
+	
+										case 10:
+											if (!(w === pointStack[0])) {
+												context$3$0.next = 16;
+												break;
+											}
+	
+											context$3$0.next = 13;
+											return [].concat(pointStack);
+	
+										case 13:
+											out.found = true;
+											context$3$0.next = 20;
+											break;
 	
 										case 16:
-											_iteratorNormalCompletion19 = true;
-											context$3$0.next = 12;
-											break;
-	
-										case 19:
-											context$3$0.next = 25;
-											break;
-	
-										case 21:
-											context$3$0.prev = 21;
-											context$3$0.t16 = context$3$0['catch'](10);
-											_didIteratorError19 = true;
-											_iteratorError19 = context$3$0.t16;
-	
-										case 25:
-											context$3$0.prev = 25;
-											context$3$0.prev = 26;
-	
-											if (!_iteratorNormalCompletion19 && _iterator19['return']) {
-												_iterator19['return']();
-											}
-	
-										case 28:
-											context$3$0.prev = 28;
-	
-											if (!_didIteratorError19) {
-												context$3$0.next = 31;
+											if (mark.has(w)) {
+												context$3$0.next = 20;
 												break;
 											}
 	
-											throw _iteratorError19;
+											o = {};
+											return context$3$0.delegateYield(backtrack(w, o), 't15', 19);
 	
-										case 31:
-											return context$3$0.finish(28);
+										case 19:
+											out.found = out.found || o.found;
 	
-										case 32:
-											return context$3$0.finish(25);
+										case 20:
+											_i++;
+											context$3$0.next = 5;
+											break;
 	
-										case 33:
-											stack.pop();
+										case 23:
+											if (out.found) {
+												u = undefined;
 	
-										case 34:
+												do {
+													u = markedStack.pop();
+													mark['delete'](u);
+												} while (u !== v);
+											}
+											pointStack.pop();
+	
+										case 25:
 										case 'end':
 											return context$3$0.stop();
 									}
-								}, marked2$0[0], this, [[10, 21, 25, 33], [26,, 28, 32]]);
+								}, marked2$0[0], this);
 							};
 	
-							marked2$0 = [visit].map(regeneratorRuntime.mark);
-							stack = [];
-							visited = new Set();
+							marked2$0 = [backtrack].map(regeneratorRuntime.mark);
+							pointStack = [];
+							markedStack = undefined, mark = undefined;
 							_this = this;
-							_iteratorNormalCompletion20 = true;
-							_didIteratorError20 = false;
-							_iteratorError20 = undefined;
-							context$2$0.prev = 8;
-							_iterator20 = this.vertices()[Symbol.iterator]();
+							sortedKeys = [].concat(_toConsumableArray(this.vertices())).map(function (_ref) {
+								var _ref2 = _slicedToArray(_ref, 1);
 	
-						case 10:
-							if (_iteratorNormalCompletion20 = (_step20 = _iterator20.next()).done) {
+								var k = _ref2[0];
+								return k;
+							}).sort();
+							_iteratorNormalCompletion19 = true;
+							_didIteratorError19 = false;
+							_iteratorError19 = undefined;
+							context$2$0.prev = 9;
+							_iterator19 = sortedKeys[Symbol.iterator]();
+	
+						case 11:
+							if (_iteratorNormalCompletion19 = (_step19 = _iterator19.next()).done) {
 								context$2$0.next = 19;
 								break;
 							}
 	
-							_step20$value = _slicedToArray(_step20.value, 1);
-							a = _step20$value[0];
+							a = _step19.value;
 	
-							if (!visited.has(a)) {
-								context$2$0.next = 15;
-								break;
-							}
-	
-							return context$2$0.abrupt('continue', 16);
-	
-						case 15:
-							return context$2$0.delegateYield(visit(a), 't17', 16);
+							markedStack = [];
+							mark = new Set();
+							return context$2$0.delegateYield(backtrack(a), 't16', 16);
 	
 						case 16:
-							_iteratorNormalCompletion20 = true;
-							context$2$0.next = 10;
+							_iteratorNormalCompletion19 = true;
+							context$2$0.next = 11;
 							break;
 	
 						case 19:
@@ -2030,27 +2018,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 						case 21:
 							context$2$0.prev = 21;
-							context$2$0.t18 = context$2$0['catch'](8);
-							_didIteratorError20 = true;
-							_iteratorError20 = context$2$0.t18;
+							context$2$0.t17 = context$2$0['catch'](9);
+							_didIteratorError19 = true;
+							_iteratorError19 = context$2$0.t17;
 	
 						case 25:
 							context$2$0.prev = 25;
 							context$2$0.prev = 26;
 	
-							if (!_iteratorNormalCompletion20 && _iterator20['return']) {
-								_iterator20['return']();
+							if (!_iteratorNormalCompletion19 && _iterator19['return']) {
+								_iterator19['return']();
 							}
 	
 						case 28:
 							context$2$0.prev = 28;
 	
-							if (!_didIteratorError20) {
+							if (!_didIteratorError19) {
 								context$2$0.next = 31;
 								break;
 							}
 	
-							throw _iteratorError20;
+							throw _iteratorError19;
 	
 						case 31:
 							return context$2$0.finish(28);
@@ -2062,15 +2050,15 @@ return /******/ (function(modules) { // webpackBootstrap
 						case 'end':
 							return context$2$0.stop();
 					}
-				}, cycles, this, [[8, 21, 25, 33], [26,, 28, 32]]);
+				}, cycles, this, [[9, 21, 25, 33], [26,, 28, 32]]);
 			})
 		}, {
 			key: 'cycle',
 	
 			/**
 	   * Find any directed cycle in this graph.
-	   * @returns {?Array} an array with the keys of a cycle in order;
-	   *                   `null`, if there is no cycle
+	   * @returns {?Array} an array containing the vertex keys describing the cycle; `null`, if there is no cycle;
+	   *                   The array will contain each vertex key only once — even the first/last one.
 	   */
 			value: function cycle() {
 				var result = this.cycles().next();
@@ -2081,7 +2069,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 			/**
 	   * Test whether this graph contains a directed cycle.
-	   * @returns {boolean} whether this graph contains a directed cycle
+	   * @returns {boolean} whether this graph contains any directed cycle
 	   */
 			value: function hasCycle() {
 				return !this.cycles().next().done;
@@ -2098,7 +2086,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @throws {Graph.VertexNotExistsError} if the `from` and/or `to` vertices do not yet exist in the graph
 	   * @returns { Iterator.< Array.<string> > }
 	   *          an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}.
-	   *          Each iterated value is an array containing the vertex-keys of the path, in order.
+	   *          Each iterated value is an array containing the vertex-keys describing the path.
 	   * @example
 	   * for (var it = graph.paths(), kv; !(kv = it.next()).done;) {
 	   *     var path = kv.value;
@@ -2131,26 +2119,26 @@ return /******/ (function(modules) { // webpackBootstrap
 					while (1) switch (context$2$0.prev = context$2$0.next) {
 						case 0:
 							pathsFromPrefix = function pathsFromPrefix(current) {
-								var _iteratorNormalCompletion21, _didIteratorError21, _iteratorError21, _iterator21, _step21, _step21$value, next;
+								var _iteratorNormalCompletion20, _didIteratorError20, _iteratorError20, _iterator20, _step20, _step20$value, next;
 	
 								return regeneratorRuntime.wrap(function pathsFromPrefix$(context$3$0) {
 									while (1) switch (context$3$0.prev = context$3$0.next) {
 										case 0:
 											stack.push(current);
-											_iteratorNormalCompletion21 = true;
-											_didIteratorError21 = false;
-											_iteratorError21 = undefined;
+											_iteratorNormalCompletion20 = true;
+											_didIteratorError20 = false;
+											_iteratorError20 = undefined;
 											context$3$0.prev = 4;
-											_iterator21 = _this.verticesFrom(current)[Symbol.iterator]();
+											_iterator20 = _this.verticesFrom(current)[Symbol.iterator]();
 	
 										case 6:
-											if (_iteratorNormalCompletion21 = (_step21 = _iterator21.next()).done) {
+											if (_iteratorNormalCompletion20 = (_step20 = _iterator20.next()).done) {
 												context$3$0.next = 19;
 												break;
 											}
 	
-											_step21$value = _slicedToArray(_step21.value, 1);
-											next = _step21$value[0];
+											_step20$value = _slicedToArray(_step20.value, 1);
+											next = _step20$value[0];
 	
 											if (!(next === to)) {
 												context$3$0.next = 14;
@@ -2170,10 +2158,10 @@ return /******/ (function(modules) { // webpackBootstrap
 												break;
 											}
 	
-											return context$3$0.delegateYield(pathsFromPrefix(next), 't19', 16);
+											return context$3$0.delegateYield(pathsFromPrefix(next), 't18', 16);
 	
 										case 16:
-											_iteratorNormalCompletion21 = true;
+											_iteratorNormalCompletion20 = true;
 											context$3$0.next = 6;
 											break;
 	
@@ -2183,27 +2171,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 										case 21:
 											context$3$0.prev = 21;
-											context$3$0.t20 = context$3$0['catch'](4);
-											_didIteratorError21 = true;
-											_iteratorError21 = context$3$0.t20;
+											context$3$0.t19 = context$3$0['catch'](4);
+											_didIteratorError20 = true;
+											_iteratorError20 = context$3$0.t19;
 	
 										case 25:
 											context$3$0.prev = 25;
 											context$3$0.prev = 26;
 	
-											if (!_iteratorNormalCompletion21 && _iterator21['return']) {
-												_iterator21['return']();
+											if (!_iteratorNormalCompletion20 && _iterator20['return']) {
+												_iterator20['return']();
 											}
 	
 										case 28:
 											context$3$0.prev = 28;
 	
-											if (!_didIteratorError21) {
+											if (!_didIteratorError20) {
 												context$3$0.next = 31;
 												break;
 											}
 	
-											throw _iteratorError21;
+											throw _iteratorError20;
 	
 										case 31:
 											return context$3$0.finish(28);
@@ -2224,7 +2212,7 @@ return /******/ (function(modules) { // webpackBootstrap
 							marked2$0 = [pathsFromPrefix].map(regeneratorRuntime.mark);
 							stack = [];
 							_this = this;
-							return context$2$0.delegateYield(pathsFromPrefix(from), 't21', 5);
+							return context$2$0.delegateYield(pathsFromPrefix(from), 't20', 5);
 	
 						case 5:
 						case 'end':
@@ -2335,17 +2323,45 @@ return /******/ (function(modules) { // webpackBootstrap
 				if (!mE) {
 					mE = mV;
 				}
+				var _iteratorNormalCompletion21 = true;
+				var _didIteratorError21 = false;
+				var _iteratorError21 = undefined;
+	
+				try {
+					for (var _iterator21 = other.vertices()[Symbol.iterator](), _step21; !(_iteratorNormalCompletion21 = (_step21 = _iterator21.next()).done); _iteratorNormalCompletion21 = true) {
+						var _step21$value = _slicedToArray(_step21.value, 1);
+	
+						var key = _step21$value[0];
+	
+						this.addVertex(key, mV(this.vertexValue(key), other.vertexValue(key)));
+					}
+				} catch (err) {
+					_didIteratorError21 = true;
+					_iteratorError21 = err;
+				} finally {
+					try {
+						if (!_iteratorNormalCompletion21 && _iterator21['return']) {
+							_iterator21['return']();
+						}
+					} finally {
+						if (_didIteratorError21) {
+							throw _iteratorError21;
+						}
+					}
+				}
+	
 				var _iteratorNormalCompletion22 = true;
 				var _didIteratorError22 = false;
 				var _iteratorError22 = undefined;
 	
 				try {
-					for (var _iterator22 = other.vertices()[Symbol.iterator](), _step22; !(_iteratorNormalCompletion22 = (_step22 = _iterator22.next()).done); _iteratorNormalCompletion22 = true) {
-						var _step22$value = _slicedToArray(_step22.value, 1);
+					for (var _iterator22 = other.edges()[Symbol.iterator](), _step22; !(_iteratorNormalCompletion22 = (_step22 = _iterator22.next()).done); _iteratorNormalCompletion22 = true) {
+						var _step22$value = _slicedToArray(_step22.value, 2);
 	
-						var key = _step22$value[0];
+						var from = _step22$value[0];
+						var to = _step22$value[1];
 	
-						this.addVertex(key, mV(this.vertexValue(key), other.vertexValue(key)));
+						this.addEdge(from, to, mE(this.edgeValue(from, to), other.edgeValue(from, to), from, to));
 					}
 				} catch (err) {
 					_didIteratorError22 = true;
@@ -2358,34 +2374,6 @@ return /******/ (function(modules) { // webpackBootstrap
 					} finally {
 						if (_didIteratorError22) {
 							throw _iteratorError22;
-						}
-					}
-				}
-	
-				var _iteratorNormalCompletion23 = true;
-				var _didIteratorError23 = false;
-				var _iteratorError23 = undefined;
-	
-				try {
-					for (var _iterator23 = other.edges()[Symbol.iterator](), _step23; !(_iteratorNormalCompletion23 = (_step23 = _iterator23.next()).done); _iteratorNormalCompletion23 = true) {
-						var _step23$value = _slicedToArray(_step23.value, 2);
-	
-						var from = _step23$value[0];
-						var to = _step23$value[1];
-	
-						this.addEdge(from, to, mE(this.edgeValue(from, to), other.edgeValue(from, to), from, to));
-					}
-				} catch (err) {
-					_didIteratorError23 = true;
-					_iteratorError23 = err;
-				} finally {
-					try {
-						if (!_iteratorNormalCompletion23 && _iterator23['return']) {
-							_iterator23['return']();
-						}
-					} finally {
-						if (_didIteratorError23) {
-							throw _iteratorError23;
 						}
 					}
 				}
@@ -2440,80 +2428,80 @@ return /******/ (function(modules) { // webpackBootstrap
 			value: function transitiveReduction(trV, trE) {
 				// argument defaults are handled in `clone`
 				var result = this.clone(trV, trE);
-				var _iteratorNormalCompletion24 = true;
-				var _didIteratorError24 = false;
-				var _iteratorError24 = undefined;
+				var _iteratorNormalCompletion23 = true;
+				var _didIteratorError23 = false;
+				var _iteratorError23 = undefined;
 	
 				try {
-					for (var _iterator24 = this.vertices()[Symbol.iterator](), _step24; !(_iteratorNormalCompletion24 = (_step24 = _iterator24.next()).done); _iteratorNormalCompletion24 = true) {
-						var _step24$value = _slicedToArray(_step24.value, 1);
+					for (var _iterator23 = this.vertices()[Symbol.iterator](), _step23; !(_iteratorNormalCompletion23 = (_step23 = _iterator23.next()).done); _iteratorNormalCompletion23 = true) {
+						var _step23$value = _slicedToArray(_step23.value, 1);
 	
-						var x = _step24$value[0];
-						var _iteratorNormalCompletion25 = true;
-						var _didIteratorError25 = false;
-						var _iteratorError25 = undefined;
+						var x = _step23$value[0];
+						var _iteratorNormalCompletion24 = true;
+						var _didIteratorError24 = false;
+						var _iteratorError24 = undefined;
 	
 						try {
-							for (var _iterator25 = this.vertices()[Symbol.iterator](), _step25; !(_iteratorNormalCompletion25 = (_step25 = _iterator25.next()).done); _iteratorNormalCompletion25 = true) {
-								var _step25$value = _slicedToArray(_step25.value, 1);
+							for (var _iterator24 = this.vertices()[Symbol.iterator](), _step24; !(_iteratorNormalCompletion24 = (_step24 = _iterator24.next()).done); _iteratorNormalCompletion24 = true) {
+								var _step24$value = _slicedToArray(_step24.value, 1);
 	
-								var y = _step25$value[0];
+								var y = _step24$value[0];
 	
 								if (result.hasEdge(x, y)) {
-									var _iteratorNormalCompletion26 = true;
-									var _didIteratorError26 = false;
-									var _iteratorError26 = undefined;
+									var _iteratorNormalCompletion25 = true;
+									var _didIteratorError25 = false;
+									var _iteratorError25 = undefined;
 	
 									try {
-										for (var _iterator26 = this.vertices()[Symbol.iterator](), _step26; !(_iteratorNormalCompletion26 = (_step26 = _iterator26.next()).done); _iteratorNormalCompletion26 = true) {
-											var _step26$value = _slicedToArray(_step26.value, 1);
+										for (var _iterator25 = this.vertices()[Symbol.iterator](), _step25; !(_iteratorNormalCompletion25 = (_step25 = _iterator25.next()).done); _iteratorNormalCompletion25 = true) {
+											var _step25$value = _slicedToArray(_step25.value, 1);
 	
-											var z = _step26$value[0];
+											var z = _step25$value[0];
 	
 											if (result.hasPath(y, z)) result.removeEdge(x, z);
 										}
 									} catch (err) {
-										_didIteratorError26 = true;
-										_iteratorError26 = err;
+										_didIteratorError25 = true;
+										_iteratorError25 = err;
 									} finally {
 										try {
-											if (!_iteratorNormalCompletion26 && _iterator26['return']) {
-												_iterator26['return']();
+											if (!_iteratorNormalCompletion25 && _iterator25['return']) {
+												_iterator25['return']();
 											}
 										} finally {
-											if (_didIteratorError26) {
-												throw _iteratorError26;
+											if (_didIteratorError25) {
+												throw _iteratorError25;
 											}
 										}
 									}
 								}
 							}
 						} catch (err) {
-							_didIteratorError25 = true;
-							_iteratorError25 = err;
+							_didIteratorError24 = true;
+							_iteratorError24 = err;
 						} finally {
 							try {
-								if (!_iteratorNormalCompletion25 && _iterator25['return']) {
-									_iterator25['return']();
+								if (!_iteratorNormalCompletion24 && _iterator24['return']) {
+									_iterator24['return']();
 								}
 							} finally {
-								if (_didIteratorError25) {
-									throw _iteratorError25;
+								if (_didIteratorError24) {
+									throw _iteratorError24;
 								}
 							}
 						}
 					}
 				} catch (err) {
-					_didIteratorError24 = true;
-					_iteratorError24 = err;
+					_didIteratorError23 = true;
+					_iteratorError23 = err;
 				} finally {
 					try {
-						if (!_iteratorNormalCompletion24 && _iterator24['return']) {
-							_iterator24['return']();
+						if (!_iteratorNormalCompletion23 && _iterator23['return']) {
+							_iterator23['return']();
 						}
 					} finally {
-						if (_didIteratorError24) {
-							throw _iteratorError24;
+						if (_didIteratorError23) {
+							throw _iteratorError23;
 						}
 					}
 				}
@@ -2546,34 +2534,34 @@ return /******/ (function(modules) { // webpackBootstrap
 				} : arguments[0];
 	
 				/* what makes a a vertex a nexus (start/end-point) */
-				var nexuses = new Set([].concat(_toConsumableArray(this.vertices())).filter(function (_ref) {
-					var _ref2 = _slicedToArray(_ref, 2);
-	
-					var key = _ref2[0];
-					var val = _ref2[1];
-					return _this2.outDegree(key) !== 1 || _this2.inDegree(key) !== 1 || isNexus(key, val);
-				}).map(function (_ref3) {
-					var _ref32 = _slicedToArray(_ref3, 1);
+				var nexuses = new Set([].concat(_toConsumableArray(this.vertices())).filter(function (_ref3) {
+					var _ref32 = _slicedToArray(_ref3, 2);
 	
 					var key = _ref32[0];
+					var val = _ref32[1];
+					return _this2.outDegree(key) !== 1 || _this2.inDegree(key) !== 1 || isNexus(key, val);
+				}).map(function (_ref4) {
+					var _ref42 = _slicedToArray(_ref4, 1);
+	
+					var key = _ref42[0];
 					return key;
 				}));
 	
 				/* error if there is a branch-less cycle */
 				{
-					var _iteratorNormalCompletion29;
+					var _iteratorNormalCompletion28;
 	
-					var _didIteratorError29;
+					var _didIteratorError28;
 	
-					var _iteratorError29;
+					var _iteratorError28;
 	
-					var _iterator29, _step29;
+					var _iterator28, _step28;
 	
 					(function () {
-						var unhandledVertices = new Set([].concat(_toConsumableArray(_this2.vertices())).map(function (_ref4) {
-							var _ref42 = _slicedToArray(_ref4, 1);
+						var unhandledVertices = new Set([].concat(_toConsumableArray(_this2.vertices())).map(function (_ref5) {
+							var _ref52 = _slicedToArray(_ref5, 1);
 	
-							var key = _ref42[0];
+							var key = _ref52[0];
 							return key;
 						}));
 						var checkForBlCycle = function checkForBlCycle(key) {
@@ -2581,12 +2569,38 @@ return /******/ (function(modules) { // webpackBootstrap
 								return;
 							}
 							unhandledVertices['delete'](key);
+							var _iteratorNormalCompletion26 = true;
+							var _didIteratorError26 = false;
+							var _iteratorError26 = undefined;
+	
+							try {
+								for (var _iterator26 = _this2.verticesFrom(key)[Symbol.iterator](), _step26; !(_iteratorNormalCompletion26 = (_step26 = _iterator26.next()).done); _iteratorNormalCompletion26 = true) {
+									var _step26$value = _slicedToArray(_step26.value, 1);
+	
+									var next = _step26$value[0];
+									checkForBlCycle(next);
+								}
+							} catch (err) {
+								_didIteratorError26 = true;
+								_iteratorError26 = err;
+							} finally {
+								try {
+									if (!_iteratorNormalCompletion26 && _iterator26['return']) {
+										_iterator26['return']();
+									}
+								} finally {
+									if (_didIteratorError26) {
+										throw _iteratorError26;
+									}
+								}
+							}
+	
 							var _iteratorNormalCompletion27 = true;
 							var _didIteratorError27 = false;
 							var _iteratorError27 = undefined;
 	
 							try {
-								for (var _iterator27 = _this2.verticesFrom(key)[Symbol.iterator](), _step27; !(_iteratorNormalCompletion27 = (_step27 = _iterator27.next()).done); _iteratorNormalCompletion27 = true) {
+								for (var _iterator27 = _this2.verticesTo(key)[Symbol.iterator](), _step27; !(_iteratorNormalCompletion27 = (_step27 = _iterator27.next()).done); _iteratorNormalCompletion27 = true) {
 									var _step27$value = _slicedToArray(_step27.value, 1);
 	
 									var next = _step27$value[0];
@@ -2606,53 +2620,27 @@ return /******/ (function(modules) { // webpackBootstrap
 									}
 								}
 							}
-	
-							var _iteratorNormalCompletion28 = true;
-							var _didIteratorError28 = false;
-							var _iteratorError28 = undefined;
-	
-							try {
-								for (var _iterator28 = _this2.verticesTo(key)[Symbol.iterator](), _step28; !(_iteratorNormalCompletion28 = (_step28 = _iterator28.next()).done); _iteratorNormalCompletion28 = true) {
-									var _step28$value = _slicedToArray(_step28.value, 1);
-	
-									var next = _step28$value[0];
-									checkForBlCycle(next);
-								}
-							} catch (err) {
-								_didIteratorError28 = true;
-								_iteratorError28 = err;
-							} finally {
-								try {
-									if (!_iteratorNormalCompletion28 && _iterator28['return']) {
-										_iterator28['return']();
-									}
-								} finally {
-									if (_didIteratorError28) {
-										throw _iteratorError28;
-									}
-								}
-							}
 						};
-						_iteratorNormalCompletion29 = true;
-						_didIteratorError29 = false;
-						_iteratorError29 = undefined;
+						_iteratorNormalCompletion28 = true;
+						_didIteratorError28 = false;
+						_iteratorError28 = undefined;
 	
 						try {
-							for (_iterator29 = nexuses[Symbol.iterator](); !(_iteratorNormalCompletion29 = (_step29 = _iterator29.next()).done); _iteratorNormalCompletion29 = true) {
-								var key = _step29.value;
+							for (_iterator28 = nexuses[Symbol.iterator](); !(_iteratorNormalCompletion28 = (_step28 = _iterator28.next()).done); _iteratorNormalCompletion28 = true) {
+								var key = _step28.value;
 								checkForBlCycle(key);
 							}
 						} catch (err) {
-							_didIteratorError29 = true;
-							_iteratorError29 = err;
+							_didIteratorError28 = true;
+							_iteratorError28 = err;
 						} finally {
 							try {
-								if (!_iteratorNormalCompletion29 && _iterator29['return']) {
-									_iterator29['return']();
+								if (!_iteratorNormalCompletion28 && _iterator28['return']) {
+									_iterator28['return']();
 								}
 							} finally {
-								if (_didIteratorError29) {
-									throw _iteratorError29;
+								if (_didIteratorError28) {
+									throw _iteratorError28;
 								}
 							}
 						}
@@ -2699,9 +2687,9 @@ return /******/ (function(modules) { // webpackBootstrap
 					/* process as [current, next] moves across the path */
 					var current = undefined;
 					while (!nexuses.has(next)) {
-						var _ref5 = [next, verticesNext(next).next().value[0]];
-						current = _ref5[0];
-						next = _ref5[1];
+						var _ref6 = [next, verticesNext(next).next().value[0]];
+						current = _ref6[0];
+						next = _ref6[1];
 	
 						path.addVertex(next, _this2.vertexValue(next));
 						path.addNewEdge.apply(path, _toConsumableArray(fromTo(current, next)).concat([_this2.edgeValue.apply(_this2, _toConsumableArray(fromTo(current, next)))]));
@@ -2719,14 +2707,38 @@ return /******/ (function(modules) { // webpackBootstrap
 					contractionsToAdd.get(fromTo()[0]).get(fromTo()[1]).mergeIn(path);
 	
 					/* remove old edges and vertices */
+					var _iteratorNormalCompletion29 = true;
+					var _didIteratorError29 = false;
+					var _iteratorError29 = undefined;
+	
+					try {
+						for (var _iterator29 = edgesToRemove[Symbol.iterator](), _step29; !(_iteratorNormalCompletion29 = (_step29 = _iterator29.next()).done); _iteratorNormalCompletion29 = true) {
+							var key = _step29.value;
+							_this2.removeExistingEdge.apply(_this2, _toConsumableArray(key));
+						}
+					} catch (err) {
+						_didIteratorError29 = true;
+						_iteratorError29 = err;
+					} finally {
+						try {
+							if (!_iteratorNormalCompletion29 && _iterator29['return']) {
+								_iterator29['return']();
+							}
+						} finally {
+							if (_didIteratorError29) {
+								throw _iteratorError29;
+							}
+						}
+					}
+	
 					var _iteratorNormalCompletion30 = true;
 					var _didIteratorError30 = false;
 					var _iteratorError30 = undefined;
 	
 					try {
-						for (var _iterator30 = edgesToRemove[Symbol.iterator](), _step30; !(_iteratorNormalCompletion30 = (_step30 = _iterator30.next()).done); _iteratorNormalCompletion30 = true) {
+						for (var _iterator30 = verticesToRemove[Symbol.iterator](), _step30; !(_iteratorNormalCompletion30 = (_step30 = _iterator30.next()).done); _iteratorNormalCompletion30 = true) {
 							var key = _step30.value;
-							_this2.removeExistingEdge.apply(_this2, _toConsumableArray(key));
+							_this2.destroyExistingVertex(key);
 						}
 					} catch (err) {
 						_didIteratorError30 = true;
@@ -2742,50 +2754,52 @@ return /******/ (function(modules) { // webpackBootstrap
 							}
 						}
 					}
-	
-					var _iteratorNormalCompletion31 = true;
-					var _didIteratorError31 = false;
-					var _iteratorError31 = undefined;
-	
-					try {
-						for (var _iterator31 = verticesToRemove[Symbol.iterator](), _step31; !(_iteratorNormalCompletion31 = (_step31 = _iterator31.next()).done); _iteratorNormalCompletion31 = true) {
-							var key = _step31.value;
-							_this2.destroyExistingVertex(key);
-						}
-					} catch (err) {
-						_didIteratorError31 = true;
-						_iteratorError31 = err;
-					} finally {
-						try {
-							if (!_iteratorNormalCompletion31 && _iterator31['return']) {
-								_iterator31['return']();
-							}
-						} finally {
-							if (_didIteratorError31) {
-								throw _iteratorError31;
-							}
-						}
-					}
 				};
 	
 				/* process paths starting at all nexus points */
-				var _iteratorNormalCompletion32 = true;
-				var _didIteratorError32 = false;
-				var _iteratorError32 = undefined;
+				var _iteratorNormalCompletion31 = true;
+				var _didIteratorError31 = false;
+				var _iteratorError31 = undefined;
 	
 				try {
-					for (var _iterator32 = nexuses[Symbol.iterator](), _step32; !(_iteratorNormalCompletion32 = (_step32 = _iterator32.next()).done); _iteratorNormalCompletion32 = true) {
-						var first = _step32.value;
+					for (var _iterator31 = nexuses[Symbol.iterator](), _step31; !(_iteratorNormalCompletion31 = (_step31 = _iterator31.next()).done); _iteratorNormalCompletion31 = true) {
+						var first = _step31.value;
+						var _iteratorNormalCompletion33 = true;
+						var _didIteratorError33 = false;
+						var _iteratorError33 = undefined;
+	
+						try {
+							for (var _iterator33 = this.verticesFrom(first)[Symbol.iterator](), _step33; !(_iteratorNormalCompletion33 = (_step33 = _iterator33.next()).done); _iteratorNormalCompletion33 = true) {
+								var _step33$value = _slicedToArray(_step33.value, 1);
+	
+								var next = _step33$value[0];
+								startPath(first, next, false);
+							}
+						} catch (err) {
+							_didIteratorError33 = true;
+							_iteratorError33 = err;
+						} finally {
+							try {
+								if (!_iteratorNormalCompletion33 && _iterator33['return']) {
+									_iterator33['return']();
+								}
+							} finally {
+								if (_didIteratorError33) {
+									throw _iteratorError33;
+								}
+							}
+						}
+	
 						var _iteratorNormalCompletion34 = true;
 						var _didIteratorError34 = false;
 						var _iteratorError34 = undefined;
 	
 						try {
-							for (var _iterator34 = this.verticesFrom(first)[Symbol.iterator](), _step34; !(_iteratorNormalCompletion34 = (_step34 = _iterator34.next()).done); _iteratorNormalCompletion34 = true) {
+							for (var _iterator34 = this.verticesTo(first)[Symbol.iterator](), _step34; !(_iteratorNormalCompletion34 = (_step34 = _iterator34.next()).done); _iteratorNormalCompletion34 = true) {
 								var _step34$value = _slicedToArray(_step34.value, 1);
 	
 								var next = _step34$value[0];
-								startPath(first, next, false);
+								startPath(first, next, true);
 							}
 						} catch (err) {
 							_didIteratorError34 = true;
@@ -2801,17 +2815,45 @@ return /******/ (function(modules) { // webpackBootstrap
 								}
 							}
 						}
+					}
+				} catch (err) {
+					_didIteratorError31 = true;
+					_iteratorError31 = err;
+				} finally {
+					try {
+						if (!_iteratorNormalCompletion31 && _iterator31['return']) {
+							_iterator31['return']();
+						}
+					} finally {
+						if (_didIteratorError31) {
+							throw _iteratorError31;
+						}
+					}
+				}
 	
+				/* add the replacement edges */
+				var _iteratorNormalCompletion32 = true;
+				var _didIteratorError32 = false;
+				var _iteratorError32 = undefined;
+	
+				try {
+					for (var _iterator32 = contractionsToAdd[Symbol.iterator](), _step32; !(_iteratorNormalCompletion32 = (_step32 = _iterator32.next()).done); _iteratorNormalCompletion32 = true) {
+						var _step32$value = _slicedToArray(_step32.value, 2);
+	
+						var from = _step32$value[0];
+						var toVal = _step32$value[1];
 						var _iteratorNormalCompletion35 = true;
 						var _didIteratorError35 = false;
 						var _iteratorError35 = undefined;
 	
 						try {
-							for (var _iterator35 = this.verticesTo(first)[Symbol.iterator](), _step35; !(_iteratorNormalCompletion35 = (_step35 = _iterator35.next()).done); _iteratorNormalCompletion35 = true) {
-								var _step35$value = _slicedToArray(_step35.value, 1);
+							for (var _iterator35 = toVal[Symbol.iterator](), _step35; !(_iteratorNormalCompletion35 = (_step35 = _iterator35.next()).done); _iteratorNormalCompletion35 = true) {
+								var _step35$value = _slicedToArray(_step35.value, 2);
 	
-								var next = _step35$value[0];
-								startPath(first, next, true);
+								var to = _step35$value[0];
+								var rememberedPath = _step35$value[1];
+	
+								this.addNewEdge(from, to, rememberedPath);
 							}
 						} catch (err) {
 							_didIteratorError35 = true;
@@ -2839,60 +2881,6 @@ return /******/ (function(modules) { // webpackBootstrap
 					} finally {
 						if (_didIteratorError32) {
 							throw _iteratorError32;
-						}
-					}
-				}
-	
-				/* add the replacement edges */
-				var _iteratorNormalCompletion33 = true;
-				var _didIteratorError33 = false;
-				var _iteratorError33 = undefined;
-	
-				try {
-					for (var _iterator33 = contractionsToAdd[Symbol.iterator](), _step33; !(_iteratorNormalCompletion33 = (_step33 = _iterator33.next()).done); _iteratorNormalCompletion33 = true) {
-						var _step33$value = _slicedToArray(_step33.value, 2);
-	
-						var from = _step33$value[0];
-						var toVal = _step33$value[1];
-						var _iteratorNormalCompletion36 = true;
-						var _didIteratorError36 = false;
-						var _iteratorError36 = undefined;
-	
-						try {
-							for (var _iterator36 = toVal[Symbol.iterator](), _step36; !(_iteratorNormalCompletion36 = (_step36 = _iterator36.next()).done); _iteratorNormalCompletion36 = true) {
-								var _step36$value = _slicedToArray(_step36.value, 2);
-	
-								var to = _step36$value[0];
-								var rememberedPath = _step36$value[1];
-	
-								this.addNewEdge(from, to, rememberedPath);
-							}
-						} catch (err) {
-							_didIteratorError36 = true;
-							_iteratorError36 = err;
-						} finally {
-							try {
-								if (!_iteratorNormalCompletion36 && _iterator36['return']) {
-									_iterator36['return']();
-								}
-							} finally {
-								if (_didIteratorError36) {
-									throw _iteratorError36;
-								}
-							}
-						}
-					}
-				} catch (err) {
-					_didIteratorError33 = true;
-					_iteratorError33 = err;
-				} finally {
-					try {
-						if (!_iteratorNormalCompletion33 && _iterator33['return']) {
-							_iterator33['return']();
-						}
-					} finally {
-						if (_didIteratorError33) {
-							throw _iteratorError33;
 						}
 					}
 				}
@@ -2942,10 +2930,10 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: '_refreshMessage',
 			value: function _refreshMessage() {
-				this.message = 'This graph has ' + (this.vertices.size === 1 ? 'a vertex' : 'vertices') + ' \'' + [].concat(_toConsumableArray(this.vertices)).map(function (_ref6) {
-					var _ref62 = _slicedToArray(_ref6, 1);
+				this.message = 'This graph has ' + (this.vertices.size === 1 ? 'a vertex' : 'vertices') + ' \'' + [].concat(_toConsumableArray(this.vertices)).map(function (_ref7) {
+					var _ref72 = _slicedToArray(_ref7, 1);
 	
-					var key = _ref62[0];
+					var key = _ref72[0];
 					return key;
 				}).join('\', \'') + '\'';
 			}
@@ -3029,13 +3017,13 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: '_refreshMessage',
 			value: function _refreshMessage() {
-				this.message = 'This graph has ' + (this.edges.size === 1 ? 'an edge' : 'edges') + ' ' + [].concat(_toConsumableArray(this.edges)).map(function (_ref7) {
-					var _ref72 = _slicedToArray(_ref7, 1);
+				this.message = 'This graph has ' + (this.edges.size === 1 ? 'an edge' : 'edges') + ' ' + [].concat(_toConsumableArray(this.edges)).map(function (_ref8) {
+					var _ref82 = _slicedToArray(_ref8, 1);
 	
-					var _ref72$0 = _slicedToArray(_ref72[0], 2);
+					var _ref82$0 = _slicedToArray(_ref82[0], 2);
 	
-					var from = _ref72$0[0];
-					var to = _ref72$0[1];
+					var from = _ref82$0[0];
+					var to = _ref82$0[1];
 					return '(\'' + from + '\', \'' + to + '\')';
 				}).join(', ');
 			}
@@ -3078,11 +3066,11 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: '_refreshMessage',
 			value: function _refreshMessage() {
-				this.message = 'This graph does not have ' + (this.edges.size === 1 ? 'an edge' : 'edges') + ' ' + [].concat(_toConsumableArray(this.edges)).map(function (_ref8) {
-					var _ref82 = _slicedToArray(_ref8, 2);
+				this.message = 'This graph does not have ' + (this.edges.size === 1 ? 'an edge' : 'edges') + ' ' + [].concat(_toConsumableArray(this.edges)).map(function (_ref9) {
+					var _ref92 = _slicedToArray(_ref9, 2);
 	
-					var from = _ref82[0];
-					var to = _ref82[1];
+					var from = _ref92[0];
+					var to = _ref92[1];
 					return '(\'' + from + '\', \'' + to + '\')';
 				}).join(', ');
 			}
@@ -3173,10 +3161,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	})(Error);
 	module.exports = exports['default'];
 	// stack
-	// stack
-	/* if a cycle is found, record it and return */
 
-	/* if this vertex was already handled, no cycle can be found here */
+	// This algorithm is based on the following article:
+	// Enumeration of the elementary circuits of a directed graph
+	// R. Tarjan, SIAM Journal on Computing, 2 (1973), pp. 211-216
+	// http://dx.doi.org/10.1137/0202017
+	// -----
+	// TODO: implement the improved version as defined by Johnson:
+	// Finding all the elementary circuits of a directed graph.
+	// D. B. Johnson, SIAM Journal on Computing 4, no. 1, 77-84, 1975.
+	// http://dx.doi.org/10.1137/0204007
+
+	/* bookkeeping */
+
+	/* the main recursive backtracking algorithm */
+	// if a simple cycle continuing the partial path on the pointStack has been found
+
+	/* start backtracking from each vertex in the graph, in alphabetical order of keys */
 
 /***/ }
 

@@ -766,12 +766,13 @@ export default class Graph {
 
 
 	/**
-	 * Iterate over all directed cycles in this graph, in no particular order.
+	 * Iterate over all simple directed cycles in this graph, in no particular order.
 	 * If you mutate the graph in between iterations, behavior of the iterator
 	 * becomes unspecified. (So, don't.)
 	 * @returns { Iterator.< Array.<string> > }
 	 *          an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}.
-	 *          Each iterated value is an array containing the vertex-keys of the cycle, in order.
+	 *          Each iterated value is an array containing the vertex keys describing the cycle.
+	 *          These arrays will contain each vertex key only once — even the first/last one.
 	 * @example
 	 * for (var it = graph.cycles(), kv; !(kv = it.next()).done;) {
 	 *     var cycle = kv.value;
@@ -784,42 +785,61 @@ export default class Graph {
 	 * }
 	 */
 	*cycles() {
-		let stack = []; // stack
-		let visited = new Set();
+		// This algorithm is based on the following article:
+		// Enumeration of the elementary circuits of a directed graph
+		// R. Tarjan, SIAM Journal on Computing, 2 (1973), pp. 211-216
+		// http://dx.doi.org/10.1137/0202017
+		// -----
+		// TODO: implement the improved version as defined by Johnson:
+		// Finding all the elementary circuits of a directed graph.
+		// D. B. Johnson, SIAM Journal on Computing 4, no. 1, 77-84, 1975.
+		// http://dx.doi.org/10.1137/0204007
 
+		/* bookkeeping */
+		let pointStack = [];
+		let markedStack, mark;
+
+		/* the main recursive backtracking algorithm */
 		let _this = this;
-		function *visit (a) {
-			/* record that this vertex has been visited */
-			visited.add(a);
-
-			/* if a cycle is found, record it and return */
-			let i = stack.indexOf(a);
-			if (i >= 0) {
-				yield stack.slice(i);
-				return;
+		function* backtrack(v, out = {}) {
+			pointStack.push(v);
+			mark.add(v);
+			markedStack.push(v);
+			for (let [w] of [..._this.verticesFrom(v)]) {
+				if (w < pointStack[0]) { continue }
+				if (w === pointStack[0]) {
+					yield [...pointStack];
+					out.found = true;
+				} else if (!mark.has(w)) {
+					let o = {};
+					yield* backtrack(w, o);
+					out.found = out.found || o.found;
+				}
 			}
-
-			/* recursively visit successors to check for cycles */
-			stack.push(a);
-			for (let [b] of _this.verticesFrom(a)) {
-				yield* visit(b);
+			if (out.found) { // if a simple cycle continuing the partial path on the pointStack has been found
+				let u;
+				do {
+					u = markedStack.pop();
+					mark.delete(u);
+				} while (u !== v);
 			}
-			stack.pop();
+			pointStack.pop();
 		}
 
-		for (let [a] of this.vertices()) {
-			/* if this vertex was already handled, no cycle can be found here */
-			if (visited.has(a)) { continue }
-
-			yield* visit(a);
+		/* start backtracking from each vertex in the graph, in alphabetical order of keys */
+		let sortedKeys = [...this.vertices()].map(([k])=>k).sort();
+		for (let a of sortedKeys) {
+			markedStack = [];
+			mark = new Set();
+			yield* backtrack(a);
 		}
 	}
 
 
 	/**
 	 * Find any directed cycle in this graph.
-	 * @returns {?Array} an array with the keys of a cycle in order;
-	 *                   `null`, if there is no cycle
+	 * @returns {?Array} an array containing the vertex keys describing the cycle; `null`, if there is no cycle;
+	 *                   The array will contain each vertex key only once — even the first/last one.
 	 */
 	cycle() {
 		let result = this.cycles().next();
@@ -829,7 +849,7 @@ export default class Graph {
 
 	/**
 	 * Test whether this graph contains a directed cycle.
-	 * @returns {boolean} whether this graph contains a directed cycle
+	 * @returns {boolean} whether this graph contains any directed cycle
 	 */
 	hasCycle() { return !this.cycles().next().done }
 
@@ -843,7 +863,7 @@ export default class Graph {
 	 * @throws {Graph.VertexNotExistsError} if the `from` and/or `to` vertices do not yet exist in the graph
 	 * @returns { Iterator.< Array.<string> > }
 	 *          an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}.
-	 *          Each iterated value is an array containing the vertex-keys of the path, in order.
+	 *          Each iterated value is an array containing the vertex-keys describing the path.
 	 * @example
 	 * for (var it = graph.paths(), kv; !(kv = it.next()).done;) {
 	 *     var path = kv.value;

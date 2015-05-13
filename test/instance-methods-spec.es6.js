@@ -757,44 +757,19 @@ describeMethod('cycles', () => {
 			[['n2', 'n3']],
 			[['n3', 'n4']],
 			[['n4', 'n5']],
-			[['n3', 'n23']],
-			[['n23', 'n2']]
+			[['n3', 'n6']],
+			[['n6', 'n2']]
 		);
 
-		// n1 ──▶ n2 ──▶ n3 ──▶ n4 ──▶ n5
-		//        ▲      ╷
-		//        │      │
-		//        ╵      │
-		//       n23 ◀───╯
+		// n1 ──▶ n2 ───▶ n3 ──▶ n4 ──▶ n5
+		//        ▲       ╷
+		//        ╰─ n6 ◀─╯
 
 		getCycles();
 
 		expect(cycleCount).toEqual(1);
 
-		expect(cyclesByLength[3]).toEqualOneOf(...cycleArrays('n23', 'n2', 'n3'));
-	});
-
-	it("iterates over all cycles in the graph in no particular order (cycles sharing one edge)", () => {
-		graph = new Graph(
-			[['n1', 'n2']],
-			[['n2', 'n5']],
-			[['n5', 'n4']],
-			[['n4', 'n1']],
-			[['n5', 'n3']],
-			[['n3', 'n2']]
-		);
-
-		// n1 ──▶ n2 ◀── n3
-		// ▲      ╷      ▲
-		// │      │      │
-		// ╵      ▼      │
-		// n4 ◀── n5 ────╯
-
-		getCycles();
-
-		expect(cycleCount).toEqual(2);
-		expect(cyclesByLength[4]).toEqualOneOf(...cycleArrays('n4', 'n1', 'n2', 'n5'));
-		expect(cyclesByLength[3]).toEqualOneOf(...cycleArrays('n2', 'n5', 'n3'));
+		expect(cyclesByLength[3]).toEqualOneOf(...cycleArrays('n6', 'n2', 'n3'));
 	});
 
 	it("iterates over all cycles in the graph in no particular order (cycles sharing one vertex)", () => {
@@ -818,28 +793,73 @@ describeMethod('cycles', () => {
 		expect(cyclesByLength[2]).toEqualOneOf(...cycleArrays('n2', 'n3'));
 	});
 
+	it("iterates over all cycles in the graph in no particular order (cycles sharing one edge, 1)", () => {
+		graph = new Graph(
+			[['n1', 'n2']],
+			[['n2', 'n5']],
+			[['n5', 'n4']],
+			[['n4', 'n1']],
+			[['n5', 'n3']],
+			[['n3', 'n2']]
+		);
+
+		// n1 ──▶ n2 ◀── n3
+		// ▲      ╷      ▲
+		// │      │      │
+		// ╵      ▼      │
+		// n4 ◀── n5 ────╯
+
+		getCycles();
+
+		expect(cycleCount).toEqual(2);
+		expect(cyclesByLength[4]).toEqualOneOf(...cycleArrays('n4', 'n1', 'n2', 'n5'));
+		expect(cyclesByLength[3]).toEqualOneOf(...cycleArrays('n2', 'n5', 'n3'));
+	});
+
+	it("iterates over all cycles in the graph in no particular order (cycles sharing one edge, 2)", () => {
+		graph = new Graph(
+			[['n1', 'n2']],
+			[['n2', 'n3']],
+			[['n3', 'n4']],
+			[['n4', 'n5']],
+			[['n3', 'n2']],
+			[['n4', 'n2']]
+		);
+
+		// n1 ──▶ n2 ──▶ n3 ──▶ n4 ──▶ n5
+		//        ▲      ╷      ╷
+		//        ├──────╯      │
+		//        ╰─────────────╯
+
+		getCycles();
+
+		expect(cycleCount).toEqual(2);
+		expect(cyclesByLength[2]).toEqualOneOf(...cycleArrays('n2', 'n3'));
+		expect(cyclesByLength[3]).toEqualOneOf(...cycleArrays('n2', 'n3', 'n4'));
+	});
+
 	it("iterates over all cycles in the graph in no particular order (cycles sharing two edges)", () => {
 		graph = new Graph(
 			[['n1', 'n2']],
 			[['n2', 'n3']],
 			[['n3', 'n4']],
 			[['n4', 'n5']],
-			[['n3', 'n23']],
-			[['n4', 'n23']],
-			[['n23', 'n2']]
+			[['n3', 'n6']],
+			[['n4', 'n6']],
+			[['n6', 'n2']]
 		);
 
-		// n1 ──▶ n2 ──▶ n3 ──▶ n4 ──▶ n5
-		//        ▲      ╷      ╷
-		//        │      │      │
-		//        ╵      │      │
-		//       n23 ◀───┴──────╯
+		// n1 ──▶ n2 ──▶ n3 ────▶ n4 ──▶ n5
+		//        ▲      ╷        ╷
+		//        │      ╰─▶ n6 ◀─╯
+		//        │          ╷
+		//        ╰──────────╯
 
 		getCycles();
 
 		expect(cycleCount).toEqual(2);
-		expect(cyclesByLength[3]).toEqualOneOf(...cycleArrays('n23', 'n2', 'n3'));
-		expect(cyclesByLength[4]).toEqualOneOf(...cycleArrays('n23', 'n2', 'n3', 'n4'));
+		expect(cyclesByLength[3]).toEqualOneOf(...cycleArrays('n2', 'n3', 'n6'));
+		expect(cyclesByLength[4]).toEqualOneOf(...cycleArrays('n2', 'n3', 'n4', 'n6'));
 	});
 
 	it("iterates over all cycles in the graph in no particular order (three cycles sharing edges)", () => {
@@ -848,52 +868,121 @@ describeMethod('cycles', () => {
 			[['n2', 'n3']],
 			[['n3', 'n4']],
 			[['n4', 'n5']],
-			[['n3', 'n23']],
-			[['n4', 'n45']],
-			[['n5', 'n45']],
-			[['n45', 'n23']],
-			[['n23', 'n2']]
+			[['n3', 'n6']],
+			[['n4', 'n7']],
+			[['n5', 'n7']],
+			[['n7', 'n6']],
+			[['n6', 'n2']]
 		);
 
 		// n1 ──▶ n2 ──▶ n3 ──▶ n4 ──▶ n5
 		//        ▲      ╷      ╷      ╷
 		//        │      │      │      │
 		//        ╵      │      ▼      │
-		//       n23 ◀───┴──── n45 ◀───╯
+		//        n6 ◀───┴───── n7 ◀───╯
 
 		getCycles();
 
 		expect(cycleCount).toEqual(3);
-		expect(cyclesByLength[3]).toEqualOneOf(...cycleArrays('n23', 'n2', 'n3'));
-		expect(cyclesByLength[5]).toEqualOneOf(...cycleArrays('n23', 'n2', 'n3', 'n4', 'n45'));
-		expect(cyclesByLength[6]).toEqualOneOf(...cycleArrays('n23', 'n2', 'n3', 'n4', 'n5', 'n45'));
+		expect(cyclesByLength[3]).toEqualOneOf(...cycleArrays('n6', 'n2', 'n3'));
+		expect(cyclesByLength[5]).toEqualOneOf(...cycleArrays('n6', 'n2', 'n3', 'n4', 'n7'));
+		expect(cyclesByLength[6]).toEqualOneOf(...cycleArrays('n6', 'n2', 'n3', 'n4', 'n5', 'n7'));
 	});
 
 	it("iterates over all cycles in the graph in no particular order (disconnected graphs + single-vertex cycle)", () => {
 		graph = new Graph(
 			[['n1', 'n2']],
 			[['n2', 'n3']],
-			[['n3', 'n23']],
-			[['n23', 'n2']],
+			[['n3', 'n7']],
+			[['n7', 'n2']],
 			[['n4', 'n5']],
-			[['n5', 'n54']],
-			[['n54', 'n45']],
-			[['n45', 'n4']],
+			[['n5', 'n9']],
+			[['n9', 'n8']],
+			[['n8', 'n4']],
 			[['n6', 'n6']]
 		);
 
-		// n1 ──▶ n2 ──▶ n3     n4 ──▶ n5     n6 ─╮
-		//        ▲      ╷      ▲      ╷      ▲   │
-		//        │      │      │      │      ╰───╯
-		//        ╵      │      ╵      ▼
-		//       n23 ◀───╯     n45 ◀─╴n54
+		// n1 ──▶ n2 ───▶ n3     n4 ──▶ n5     n6 ─╮
+		//        ▲       ╷      ▲      ╷      ▲   │
+		//        ╰─╴n7 ◀─╯      │      │      ╰───╯
+		//                       ╵      ▼
+		//                       n8 ◀── n9
 
 		getCycles();
 
 		expect(cycleCount).toEqual(3);
-		expect(cyclesByLength[3]).toEqualOneOf(...cycleArrays('n23', 'n2', 'n3'));
-		expect(cyclesByLength[4]).toEqualOneOf(...cycleArrays('n45', 'n4', 'n5', 'n54'));
+		expect(cyclesByLength[3]).toEqualOneOf(...cycleArrays('n7', 'n2', 'n3'));
+		expect(cyclesByLength[4]).toEqualOneOf(...cycleArrays('n8', 'n4', 'n5', 'n9'));
 		expect(cyclesByLength[1]).toEqual(['n6']);
+	});
+
+	it("iterates over all cycles in the graph in no particular order (multiple paths to the same cycle)", () => {
+		graph = new Graph(
+			[['n1', 'n2']],
+			[['n2', 'n3']],
+			[['n2', 'n6']],
+			[['n6', 'n3']],
+			[['n3', 'n4']],
+			[['n4', 'n5']],
+			[['n5', 'n4']]
+		);
+
+		// n1 ──▶ n2 ───▶ n3 ──▶ n4 ──▶ n5
+		//        ╷       ▲      ▲      ╷
+		//        ╰─▶ n6 ─╯      ╰──────╯
+
+		getCycles();
+
+		expect(cycleCount).toEqual(1);
+		expect(cyclesByLength[2]).toEqualOneOf(...cycleArrays('n4', 'n5'));
+	});
+
+	it("iterates over all cycles in the graph in no particular order (multiple paths to the same cycle in a strongly connected graph)", () => {
+		graph = new Graph(
+			[['n1', 'n2']],
+			[['n2', 'n3']],
+			[['n2', 'n6']],
+			[['n6', 'n3']],
+			[['n3', 'n4']],
+			[['n4', 'n5']],
+			[['n5', 'n4']],
+			[['n4', 'n1']]
+		);
+
+		// ╭─────────────────────╮
+		// ▼                     ╵
+		// n1 ──▶ n2 ───▶ n3 ──▶ n4 ──▶ n5
+		//        ╷       ▲      ▲      ╷
+		//        ╰─▶ n6 ─╯      ╰──────╯
+
+		getCycles();
+
+		expect(cycleCount).toEqual(3);
+		expect(cyclesByLength[2]).toEqualOneOf(...cycleArrays('n4', 'n5'));
+		expect(cyclesByLength[4]).toEqualOneOf(...cycleArrays('n1', 'n2', 'n3', 'n4'));
+		expect(cyclesByLength[5]).toEqualOneOf(...cycleArrays('n1', 'n2', 'n6', 'n3', 'n4'));
+	});
+
+	it("iterates over all cycles in the graph in no particular order (multiple paths to different parts of the same cycle)", () => {
+		graph = new Graph(
+			[['n1', 'n2']],
+			[['n2', 'n3']],
+			[['n2', 'n4']],
+			[['n4', 'n5']],
+			[['n3', 'n5']],
+			[['n5', 'n3']]
+		);
+
+		// n1 ──▶ n2 ──▶ n3 ──╮
+		//        ╷      ▲    │
+		//        │      │    │
+		//        ▼      ╵    │
+		//        n4 ──▶ n5 ◀─╯
+
+		getCycles();
+
+		expect(cycleCount).toEqual(1);
+		expect(cyclesByLength[2]).toEqualOneOf(...cycleArrays('n3', 'n5'));
 	});
 
 });

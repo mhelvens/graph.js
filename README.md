@@ -848,12 +848,13 @@ Two graphs are equal if they have the same vertices and the same edges.
 
 <a name="Graph#cycles"></a>
 #### *graph*.cycles() ⇒ <code>Iterator.&lt;Array.&lt;string&gt;&gt;</code>
-Iterate over all directed cycles in this graph, in no particular order.
+Iterate over all simple directed cycles in this graph, in no particular order.
 If you mutate the graph in between iterations, behavior of the iterator
 becomes unspecified. (So, don't.)
 
 **Returns**: <code>Iterator.&lt;Array.&lt;string&gt;&gt;</code> - an object conforming to the [ES6 iterator protocol](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol).
-         Each iterated value is an array containing the vertex-keys of the cycle, in order.  
+         Each iterated value is an array containing the vertex keys describing the cycle.
+         These arrays will contain each vertex key only once — even the first/last one.  
 **Example**  
 ```JavaScript
 for (var it = graph.cycles(), kv; !(kv = it.next()).done;) {
@@ -875,8 +876,8 @@ for (let cycle of graph.cycles()) {
 #### *graph*.cycle() ⇒ <code>Array</code>
 Find any directed cycle in this graph.
 
-**Returns**: <code>Array</code> - an array with the keys of a cycle in order;
-                  `null`, if there is no cycle  
+**Returns**: <code>Array</code> - an array containing the vertex keys describing the cycle; `null`, if there is no cycle;
+                  The array will contain each vertex key only once — even the first/last one.  
 
 -----
 
@@ -884,7 +885,7 @@ Find any directed cycle in this graph.
 #### *graph*.hasCycle() ⇒ <code>boolean</code>
 Test whether this graph contains a directed cycle.
 
-**Returns**: <code>boolean</code> - whether this graph contains a directed cycle  
+**Returns**: <code>boolean</code> - whether this graph contains any directed cycle  
 
 -----
 
@@ -905,7 +906,7 @@ becomes unspecified. (So, don't.)
 - <code>[VertexNotExistsError](#Graph.VertexNotExistsError)</code> if the `from` and/or `to` vertices do not yet exist in the graph
 
 **Returns**: <code>Iterator.&lt;Array.&lt;string&gt;&gt;</code> - an object conforming to the [ES6 iterator protocol](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol).
-         Each iterated value is an array containing the vertex-keys of the path, in order.  
+         Each iterated value is an array containing the vertex-keys describing the path.  
 **Example**  
 ```JavaScript
 for (var it = graph.paths(), kv; !(kv = it.next()).done;) {
