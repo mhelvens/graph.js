@@ -56,7 +56,7 @@ beforeEach(() => {
 		},
 		toThrowSpecific(util, customEqualityTesters) {
 			return {
-				compare(actual, expectedType, expectedContent) {
+				compare(actual, ExpectedType, expectedContent) {
 					var result = {};
 					result.message = "";
 
@@ -68,18 +68,18 @@ beforeEach(() => {
 						actual();
 						result.pass = false;
 					} catch (exception) {
-						result.pass = exception instanceof expectedType;
+						result.pass = exception instanceof ExpectedType;
 						if (result.pass) {
 							for (let prop of Object.keys(expectedContent)) {
 								result.pass = result.pass && util.equals(expectedContent[prop], exception[prop], customEqualityTesters);
 							}
-							result.message = `However, the thrown ${expectedType.prototype.name} had the following properties: ${JSON.stringify(exception, undefined, 4)}`;
+							result.message = `However, the thrown ${exception.constructor.name} only had the following properties: ${JSON.stringify(exception, undefined, 4)}`;
 						} else {
-							result.message = `However, the thrown exception was not a subclass of ${expectedType.prototype.name}.`;
+							result.message = `However, the thrown exception was not a subclass of ${ExpectedType.name}.`;
 						}
 					}
 
-					result.message = `Expected the function to throw a new ${expectedType.prototype.name} with the following properties: ` +
+					result.message = `Expected the function to throw a new ${ExpectedType.name} with the following properties: ` +
 						`${JSON.stringify(expectedContent, undefined, 4)}. ${result.message}`;
 
 					return result;

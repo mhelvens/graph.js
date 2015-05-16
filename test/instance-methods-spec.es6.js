@@ -226,15 +226,38 @@ function it_throwsErrorIfEdgesAreConnected() {
 		expectItWhenBoundWith('k2').toThrow();
 		expectItWhenBoundWith('k3').toThrow();
 		expectItWhenBoundWith('k4').toThrow();
-		expectItWhenBoundWith('k2').toThrowSpecific(Graph.HasConnectedEdgesError, { key: 'k2' });
-		expectItWhenBoundWith('k3').toThrowSpecific(Graph.HasConnectedEdgesError, { key: 'k3' });
-		expectItWhenBoundWith('k4').toThrowSpecific(Graph.HasConnectedEdgesError, { key: 'k4' });
+		expectItWhenBoundWith('k2').toThrowSpecific(Graph.EdgeExistsError, {
+			edges: new Set([
+				[['k2', 'k3'], 'oldValue23'],
+				[['k2', 'k5'],  undefined  ]
+			])
+		});
+		expectItWhenBoundWith('k3').toThrowSpecific(Graph.EdgeExistsError, {
+			edges: new Set([
+				[['k2', 'k3'], 'oldValue23'],
+				[['k5', 'k3'],  undefined  ],
+				[['k3', 'k4'],  undefined  ]
+			])
+		});
+		expectItWhenBoundWith('k4').toThrowSpecific(Graph.EdgeExistsError, {
+			edges: new Set([
+				[['k3', 'k4'],  undefined  ]
+			])
+		});
 	});
 }
 function it_throwsErrorIfEdgeExists() {
 	it("throws an error if an edge with the given keys already exists", () => {
-		expectItWhenBoundWith('k2', 'k3').toThrowSpecific(Graph.EdgeExistsError, { edges: new Set([ [['k2', 'k3'], 'oldValue23'] ]) });
-		expectItWhenBoundWith('k3', 'k4').toThrowSpecific(Graph.EdgeExistsError, { edges: new Set([ [['k3', 'k4'],  undefined  ] ]) });
+		expectItWhenBoundWith('k2', 'k3').toThrowSpecific(Graph.EdgeExistsError, {
+			edges: new Set([
+				[['k2', 'k3'], 'oldValue23']
+			])
+		});
+		expectItWhenBoundWith('k3', 'k4').toThrowSpecific(Graph.EdgeExistsError, {
+			edges: new Set([
+				[['k3', 'k4'],  undefined  ]
+			])
+		});
 	});
 }
 function it_throwsErrorIfEdgeDoesNotExist() {
@@ -998,20 +1021,20 @@ describeMethod('cycle', () => {
 			[['n2', 'n3']],
 			[['n3', 'n4']],
 			[['n4', 'n5']],
-			[['n3', 'n23']],
-			[['n23', 'n2']]
+			[['n3', 'n6']],
+			[['n6', 'n2']]
 		);
 
 		// n1 ──▶ n2 ──▶ n3 ──▶ n4 ──▶ n5
 		//        ▲      ╷
 		//        │      │
 		//        ╵      │
-		//       n23 ◀───╯
+		//        n6 ◀───╯
 
 		expectItWhenCalledWith().toEqualOneOf(
-			['n23', 'n2', 'n3'],
-			['n3', 'n23', 'n2'],
-			['n2', 'n3', 'n23']
+			['n6', 'n2', 'n3'],
+			['n3', 'n6', 'n2'],
+			['n2', 'n3', 'n6']
 		);
 	});
 
@@ -1042,15 +1065,15 @@ describeMethod('hasCycle', () => {
 			[['n2', 'n3']],
 			[['n3', 'n4']],
 			[['n4', 'n5']],
-			[['n3', 'n23']],
-			[['n23', 'n2']]
+			[['n3', 'n6']],
+			[['n6', 'n2']]
 		);
 
 		//  n1 ──▶ n2 ──▶ n3 ──▶ n4 ──▶ n5
 		//         ▲      ╷
 		//         │      │
 		//         ╵      │
-		//        n23 ◀───╯
+		//         n6 ◀───╯
 
 		expectItWhenCalledWith().toBe(true);
 	});
@@ -1136,15 +1159,15 @@ describeMethod('paths', () => {
 			[['n2', 'n3']],
 			[['n3', 'n4']],
 			[['n4', 'n5']],
-			[['n3', 'n23']],
-			[['n23', 'n2']]
+			[['n3', 'n6']],
+			[['n6', 'n2']]
 		);
 
 		//  n1 ──▶ n2 ──▶ n3 ──▶ n4 ──▶ n5
 		//         ▲      ╷
 		//         │      │
 		//         ╵      │
-		//        n23 ◀───╯
+		//         n6 ◀───╯
 
 		expect(new Set(callItWith('n1', 'n5'))).toEqual(new Set([
 			['n1', 'n2', 'n3', 'n4', 'n5']
@@ -1153,8 +1176,8 @@ describeMethod('paths', () => {
 
 	it("iterates over all paths between the given keys, in no particular order (including part of a cycle, part 2)", () => {
 		graph = new Graph( // reordered edge insertions compared to test above
-			[['n3', 'n23']],
-			[['n23', 'n2']],
+			[['n3', 'n6']],
+			[['n6', 'n2']],
 			[['n1', 'n2' ]],
 			[['n2', 'n3' ]],
 			[['n3', 'n4' ]],
@@ -1165,7 +1188,7 @@ describeMethod('paths', () => {
 		//         ▲      ╷
 		//         │      │
 		//         ╵      │
-		//        n23 ◀───╯
+		//         n6 ◀───╯
 
 		expect(new Set(callItWith('n1', 'n5'))).toEqual(new Set([
 			['n1', 'n2', 'n3', 'n4', 'n5']
@@ -1239,23 +1262,23 @@ describeMethod('path', () => {
 			[['n2', 'n3']],
 			[['n3', 'n4']],
 			[['n4', 'n5']],
-			[['n3', 'n23']],
-			[['n23', 'n2']]
+			[['n3', 'n6']],
+			[['n6', 'n2']]
 		);
 
 		//  n1 ──▶ n2 ──▶ n3 ──▶ n4 ──▶ n5
 		//         ▲      ╷
 		//         │      │
 		//         ╵      │
-		//        n23 ◀───╯
+		//         n6 ◀───╯
 
 		expectItWhenCalledWith('n1', 'n5').toEqual(['n1', 'n2', 'n3', 'n4', 'n5']);
 	});
 
 	it("returns a descriptive array if the path exists (7: including part of a cycle, part 2)", () => {
 		graph = new Graph(
-			[['n3', 'n23']],
-			[['n23', 'n2']],
+			[['n3', 'n6']],
+			[['n6', 'n2']],
 			[['n1', 'n2' ]],
 			[['n2', 'n3' ]],
 			[['n3', 'n4' ]],
@@ -1266,7 +1289,7 @@ describeMethod('path', () => {
 		//         ▲      ╷
 		//         │      │
 		//         ╵      │
-		//        n23 ◀───╯
+		//         n6 ◀───╯
 
 		expectItWhenCalledWith('n1', 'n5').toEqual(['n1', 'n2', 'n3', 'n4', 'n5']);
 	});
@@ -1329,23 +1352,23 @@ describeMethod('hasPath', () => {
 			[['n2', 'n3']],
 			[['n3', 'n4']],
 			[['n4', 'n5']],
-			[['n3', 'n23']],
-			[['n23', 'n2']]
+			[['n3', 'n6']],
+			[['n6', 'n2']]
 		);
 
 		//  n1 ──▶ n2 ──▶ n3 ──▶ n4 ──▶ n5
 		//         ▲      ╷
 		//         │      │
 		//         ╵      │
-		//        n23 ◀───╯
+		//         n6 ◀───╯
 
 		expectItWhenCalledWith('n1', 'n5').toBe(true);
 	});
 
 	it("returns true if the path exists (7: including part of a cycle, part 2)", () => {
 		graph = new Graph(
-			[['n3', 'n23']],
-			[['n23', 'n2']],
+			[['n3', 'n6']],
+			[['n6', 'n2']],
 			[['n1', 'n2' ]],
 			[['n2', 'n3' ]],
 			[['n3', 'n4' ]],
@@ -1356,7 +1379,7 @@ describeMethod('hasPath', () => {
 		//         ▲      ╷
 		//         │      │
 		//         ╵      │
-		//        n23 ◀───╯
+		//         n6 ◀───╯
 
 		expectItWhenCalledWith('n1', 'n5').toBe(true);
 	});
@@ -2317,15 +2340,15 @@ describeMethod('vertices_topologically', () => {
 			[['n2', 'n3']],
 			[['n3', 'n4']],
 			[['n4', 'n5']],
-			[['n3', 'n23']],
-			[['n23', 'n2']]
+			[['n3', 'n6']],
+			[['n6', 'n2']]
 		);
 
 		//  n1 ──▶ n2 ──▶ n3 ──▶ n4 ──▶ n5
 		//         ▲      ╷
 		//         │      │
 		//         ╵      │
-		//        n23 ◀───╯
+		//         n6 ◀───╯
 
 		expect(() => [...callItWith()]).toThrowSpecific(Graph.CycleError, {}); // TODO: specify cycle property
 
@@ -2334,15 +2357,15 @@ describeMethod('vertices_topologically', () => {
 			let x = [...callItWith()];
 		} catch (err) {
 			expect(err.cycle).toEqualOneOf(
-				['n23', 'n2', 'n3'],
-				['n3', 'n23', 'n2'],
-				['n2', 'n3', 'n23']
+				['n6', 'n2', 'n3'],
+				['n3', 'n6', 'n2'],
+				['n2', 'n3', 'n6']
 			);
 			let cycleInMessage = err.message.substring(err.message.indexOf(':') + 1).trim();
 			expect(cycleInMessage).toEqualOneOf(
-				'n23,n2,n3',
-				'n3,n23,n2',
-				'n2,n3,n23'
+				'n6,n2,n3',
+				'n3,n6,n2',
+				'n2,n3,n6'
 			);
 		}
 	});
@@ -2388,8 +2411,8 @@ describeMethod('vertices_topologically', () => {
 
 	it("visits vertices only when their predecessors have already been visited", () => {
 		graph = new Graph(
-			[['n3', 'n23']],
-			[['n2', 'n23']],
+			[['n3', 'n6']],
+			[['n2', 'n6']],
 			[['n1', 'n2']],
 			[['n2', 'n3']],
 			[['n3', 'n4']],
@@ -2400,7 +2423,7 @@ describeMethod('vertices_topologically', () => {
 		//         ╷      ╷
 		//         │      │
 		//         ▼      │
-		//        n23 ◀───╯
+		//         n6 ◀───╯
 
 		let visited = {};
 
@@ -2409,7 +2432,7 @@ describeMethod('vertices_topologically', () => {
 			if (key === 'n3') { expect(visited['n2']).toBeDefined(); }
 			if (key === 'n4') { expect(visited['n3']).toBeDefined(); }
 			if (key === 'n5') { expect(visited['n4']).toBeDefined(); }
-			if (key === 'n23') {
+			if (key === 'n6') {
 				expect(visited['n2']).toBeDefined();
 				expect(visited['n3']).toBeDefined();
 			}
@@ -2422,14 +2445,19 @@ describeMethod('vertices_topologically', () => {
 describe("Graph.VertexExistsError", () => {
 
 	it("can specify one existing vertex", () => {
-		let err = new Graph.VertexExistsError('x', 1);
+		let err = new Graph.VertexExistsError([
+			['x', 1]
+		]);
 		expect(err.vertices).toEqual(new Set([
 			['x', 1]
 		]));
 	});
 
 	it("can specify multiple existing vertices", () => {
-		let err = new Graph.VertexExistsError('x', 1).v('y', 2);
+		let err = new Graph.VertexExistsError([
+			['x', 1],
+			['y', 2]
+		]);
 		expect(err.vertices).toEqual(new Set([
 			['x', 1],
 			['y', 2]
@@ -2441,14 +2469,19 @@ describe("Graph.VertexExistsError", () => {
 describe("Graph.VertexNotExistsError", () => {
 
 	it("can specify one missing vertex", () => {
-		let err = new Graph.VertexNotExistsError('x');
+		let err = new Graph.VertexNotExistsError([
+			'x'
+		]);
 		expect(err.vertices).toEqual(new Set([
 			'x'
 		]));
 	});
 
 	it("can specify multiple missing vertices", () => {
-		let err = new Graph.VertexNotExistsError('x').v('y');
+		let err = new Graph.VertexNotExistsError([
+			'x',
+			'y'
+		]);
 		expect(err.vertices).toEqual(new Set([
 			'x',
 			'y'
@@ -2460,14 +2493,19 @@ describe("Graph.VertexNotExistsError", () => {
 describe("Graph.EdgeExistsError", () => {
 
 	it("can specify one existing edge", () => {
-		let err = new Graph.EdgeExistsError('x', 'y', 1);
+		let err = new Graph.EdgeExistsError([
+			[['x', 'y'], 1]
+		]);
 		expect(err.edges).toEqual(new Set([
 			[['x', 'y'], 1]
 		]));
 	});
 
 	it("can specify multiple existing edges", () => {
-		let err = new Graph.EdgeExistsError('x', 'y', 1).e('y', 'z', 2);
+		let err = new Graph.EdgeExistsError([
+			[['x', 'y'], 1],
+			[['y', 'z'], 2]
+		]);
 		expect(err.edges).toEqual(new Set([
 			[['x', 'y'], 1],
 			[['y', 'z'], 2]
@@ -2479,14 +2517,19 @@ describe("Graph.EdgeExistsError", () => {
 describe("Graph.EdgeNotExistsError", () => {
 
 	it("can specify one missing edge", () => {
-		let err = new Graph.EdgeNotExistsError('x', 'y');
+		let err = new Graph.EdgeNotExistsError([
+			['x', 'y']
+		]);
 		expect(err.edges).toEqual(new Set([
 			['x', 'y']
 		]));
 	});
 
 	it("can specify multiple missing edges", () => {
-		let err = new Graph.EdgeNotExistsError('x', 'y').e('y', 'z');
+		let err = new Graph.EdgeNotExistsError([
+			['x', 'y'],
+			['y', 'z']
+		]);
 		expect(err.edges).toEqual(new Set([
 			['x', 'y'],
 			['y', 'z']
@@ -2498,8 +2541,15 @@ describe("Graph.EdgeNotExistsError", () => {
 describe("Graph.HasConnectedEdgesError", () => {
 
 	it("can specify that a vertex has connected edges", () => {
-		let err = new Graph.HasConnectedEdgesError('x');
-		expect(err.key).toEqual('x');
+		let err = new Graph.HasConnectedEdgesError('x', [
+			[['x', 'y'], 1],
+			[['z', 'x'], 2]
+		]);
+		expect(err.vertex).toEqual('x');
+		expect(err.edges).toEqual(new Set([
+			[['x', 'y'], 1],
+			[['z', 'x'], 2]
+		]));
 	});
 
 });
@@ -2507,12 +2557,10 @@ describe("Graph.HasConnectedEdgesError", () => {
 describe("Graph.CycleError", () => {
 
 	it("can specify that a graph contains a cycle", () => {
-		let err = new Graph.CycleError(['x', 'y', 'z']);
-		expect(err.cycle).toEqualOneOf(
-			['x', 'y', 'z'],
-			['z', 'x', 'y'],
-			['y', 'z', 'x']
+		let err = new Graph.CycleError(
+			['x', 'y', 'z']
 		);
+		expect(err.cycle).toEqualOneOf(...cycleArrays('x', 'y', 'z'));
 	});
 
 });
@@ -2521,11 +2569,7 @@ describe("Graph.BranchlessCycleError", () => {
 
 	it("can specify that a graph contains a branchless cycle", () => {
 		let err = new Graph.BranchlessCycleError(['x', 'y', 'z']);
-		expect(err.cycle).toEqualOneOf(
-			['x', 'y', 'z'],
-			['z', 'x', 'y'],
-			['y', 'z', 'x']
-		);
+		expect(err.cycle).toEqualOneOf(...cycleArrays('x', 'y', 'z'));
 	});
 
 });

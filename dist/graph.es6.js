@@ -1,6 +1,29 @@
 'use strict';
 
 //  ////////////////////////////////////////////////////////////////////////////////////////////////
+//  // Symbols for private members /////////////////////////////////////////////////////////////////
+//  ////////////////////////////////////////////////////////////////////////////////////////////////
+
+const _vertices     = Symbol("vertices");
+const _edges        = Symbol("edges");
+const _reverseEdges = Symbol("reverse edges");
+const _sources      = Symbol("sources");
+const _sinks        = Symbol("sinks");
+const _vertexCount  = Symbol("vertex count");
+const _edgeCount    = Symbol("edge count");
+
+const _verticesFrom = Symbol("vertices from");
+const _verticesTo   = Symbol("vertices to");
+const _paths        = Symbol("paths");
+
+const _expectVertices         = Symbol("expect vertices");
+const _expectVertexAbsent     = Symbol("expect vertex absent");
+const _expectEdge             = Symbol("expect edge");
+const _expectEdgeAbsent       = Symbol("expect edge absent");
+const _expectNoConnectedEdges = Symbol("expect no connected edges");
+
+
+//  ////////////////////////////////////////////////////////////////////////////////////////////////
 //  // Graph class /////////////////////////////////////////////////////////////////////////////////
 //  ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -27,15 +50,15 @@ export default class Graph {
 
 	constructor(...parts) {
 		/* storage */
-		this._vertices     = new Map(); // Map.< string, * >
-		this._edges        = new Map(); // Map.< string, Map.<string, *> >
+		this[_vertices]     = new Map(); // Map.< string, * >
+		this[_edges]        = new Map(); // Map.< string, Map.<string, *> >
 
 		/* bookkeeping */
-		this._reverseEdges = new Map(); // Map.< string, Set.<*> >
-		this._sources      = new Set(); // Set.< string >
-		this._sinks        = new Set(); // Set.< string >
-		this._vertexCount  = 0;
-		this._edgeCount    = 0;
+		this[_reverseEdges] = new Map(); // Map.< string, Set.<*> >
+		this[_sources]      = new Set(); // Set.< string >
+		this[_sinks]        = new Set(); // Set.< string >
+		this[_vertexCount]  = 0;
+		this[_edgeCount]    = 0;
 
 		/* add vertices and values from constructor arguments */
 		for (let [key, value] of parts) {
@@ -62,15 +85,13 @@ export default class Graph {
 	 * @param [value] {*}      the value to store in this new vertex
 	 */
 	addNewVertex(key, value) {
-		if (this.hasVertex(key)) {
-			throw new Graph.VertexExistsError(key, this._vertices.get(key));
-		}
-		this._vertices.set(key, value);
-		this._edges.set(key, new Map());
-		this._reverseEdges.set(key, new Set());
-		this._vertexCount += 1;
-		this._sources.add(key);
-		this._sinks.add(key);
+		this[_expectVertexAbsent](key);
+		this[_vertices].set(key, value);
+		this[_edges].set(key, new Map());
+		this[_reverseEdges].set(key, new Set());
+		this[_vertexCount] += 1;
+		this[_sources].add(key);
+		this[_sinks].add(key);
 	}
 
 	/**
@@ -80,10 +101,8 @@ export default class Graph {
 	 * @param [value] {*}      the value to store in this vertex
 	 */
 	setVertex(key, value) {
-		if (!this.hasVertex(key)) {
-			throw new Graph.VertexNotExistsError(key);
-		}
-		this._vertices.set(key, value);
+		this[_expectVertices](key);
+		this[_vertices].set(key, value);
 	}
 
 	/**
@@ -122,16 +141,12 @@ export default class Graph {
 	 * @param key {string} the key of the vertex to remove
 	 */
 	removeExistingVertex(key) {
-		if (!this.hasVertex(key)) {
-			throw new Graph.VertexNotExistsError(key);
-		}
-		if (this._edges.get(key).size > 0 || this._reverseEdges.get(key).size > 0) {
-			throw new Graph.HasConnectedEdgesError(key);
-		}
-		this._vertices.delete(key);
-		this._vertexCount -= 1;
-		this._sources.delete(key);
-		this._sinks.delete(key);
+		this[_expectVertices](key);
+		this[_expectNoConnectedEdges](key);
+		this[_vertices].delete(key);
+		this[_vertexCount] -= 1;
+		this[_sources].delete(key);
+		this[_sinks].delete(key);
 	}
 
 	/**
@@ -140,9 +155,7 @@ export default class Graph {
 	 * @param key {string} the key of the vertex to remove
 	 */
 	destroyExistingVertex(key) {
-		if (!this.hasVertex(key)) {
-			throw new Graph.VertexNotExistsError(key);
-		}
+		this[_expectVertices](key);
 		for (let [to] of this.verticesFrom(key)) {
 			this.removeEdge(key, to);
 		}
@@ -181,14 +194,14 @@ export default class Graph {
 	/**
 	 * @returns {number} the number of vertices in the whole graph
 	 */
-	vertexCount() { return this._vertexCount }
+	vertexCount() { return this[_vertexCount] }
 
 	/**
 	 * Ask whether a vertex with a given key exists.
 	 * @param key {string} the key to query
 	 * @returns {boolean} whether there is a vertex with the given key
 	 */
-	hasVertex(key) { return this._vertices.has(key) }
+	hasVertex(key) { return this[_vertices].has(key) }
 
 	/**
 	 * Get the value associated with the vertex of a given key.
@@ -201,7 +214,7 @@ export default class Graph {
 	 *
 	 * Use {@link Graph#hasVertex} to distinguish these cases.
 	 */
-	vertexValue(key) { return this._vertices.get(key) }
+	vertexValue(key) { return this[_vertices].get(key) }
 
 
 	///////////////////////////
@@ -219,23 +232,13 @@ export default class Graph {
 	 * @param [value] {*}      the value to store in this new edge
 	 */
 	addNewEdge(from, to, value) {
-		if (this.hasEdge(from, to)) {
-			throw new Graph.EdgeExistsError(from, to, this.edgeValue(from, to));
-		}
-		if (!this.hasVertex(from)) {
-			if (this.hasVertex(to)) {
-				throw new Graph.VertexNotExistsError(from);
-			} else {
-				throw new Graph.VertexNotExistsError(from).v(to);
-			}
-		} else if (!this.hasVertex(to)) {
-			throw new Graph.VertexNotExistsError(to);
-		}
-		this._edges.get(from).set(to, value);
-		this._reverseEdges.get(to).add(from);
-		this._edgeCount += 1;
-		this._sources.delete(to);
-		this._sinks.delete(from);
+		this[_expectEdgeAbsent]([from, to]);
+		this[_expectVertices](from, to);
+		this[_edges].get(from).set(to, value);
+		this[_reverseEdges].get(to).add(from);
+		this[_edgeCount] += 1;
+		this[_sources].delete(to);
+		this[_sinks].delete(from);
 	}
 
 	/**
@@ -247,9 +250,7 @@ export default class Graph {
 	 * @param [value] {*}      the value to store in this new edge
 	 */
 	createNewEdge(from, to, value) {
-		if (this.hasEdge(from, to)) {
-			throw new Graph.EdgeExistsError(from, to, this.edgeValue(from, to));
-		}
+		this[_expectEdgeAbsent]([from, to]);
 		this.ensureVertex(from);
 		this.ensureVertex(to);
 		this.addNewEdge(from, to, value);
@@ -263,10 +264,8 @@ export default class Graph {
 	 * @param [value] {*}      the value to store in this edge
 	 */
 	setEdge(from, to, value) {
-		if (!this.hasEdge(from, to)) {
-			throw new Graph.EdgeNotExistsError(from, to);
-		}
-		this._edges.get(from).set(to, value);
+		this[_expectEdge]([from, to]);
+		this[_edges].get(from).set(to, value);
 	}
 
 	/**
@@ -279,15 +278,7 @@ export default class Graph {
 	 * @param [value] {*}      the value to store if a new edge is added
 	 */
 	spanEdge(from, to, value) {
-		if (!this.hasVertex(from)) {
-			if (this.hasVertex(to)) {
-				throw new Graph.VertexNotExistsError(from);
-			} else {
-				throw new Graph.VertexNotExistsError(from).v(to);
-			}
-		} else if (!this.hasVertex(to)) {
-			throw new Graph.VertexNotExistsError(to);
-		}
+		this[_expectVertices](from, to);
 		if (!this.hasEdge(from, to)) {
 			this.addNewEdge(from, to, value);
 		}
@@ -352,14 +343,12 @@ export default class Graph {
 	 * @param to   {string} the key for the terminating vertex
 	 */
 	removeExistingEdge(from, to) {
-		if (!this.hasEdge(from, to)) {
-			throw new Graph.EdgeNotExistsError(from, to);
-		}
-		this._edges.get(from).delete(to);
-		this._reverseEdges.get(to).delete(from);
-		this._edgeCount -= 1;
-		if (this. inDegree(to)   === 0) { this._sources.add(to) }
-		if (this.outDegree(from) === 0) { this._sinks.add(from) }
+		this[_expectEdge]([from, to]);
+		this[_edges].get(from).delete(to);
+		this[_reverseEdges].get(to).delete(from);
+		this[_edgeCount] -= 1;
+		if (this. inDegree(to)   === 0) { this[_sources].add(to) }
+		if (this.outDegree(from) === 0) { this[_sinks].add(from) }
 	}
 
 	/**
@@ -380,7 +369,7 @@ export default class Graph {
 	/**
 	 * @returns {number} the number of edges in the whole graph
 	 */
-	edgeCount() { return this._edgeCount }
+	edgeCount() { return this[_edgeCount] }
 
 	/**
 	 * Ask whether an edge between given `from` and `to` vertices exist.
@@ -391,8 +380,8 @@ export default class Graph {
 	hasEdge(from, to) {
 		return this.hasVertex(from) &&
 			this.hasVertex(to) &&
-			this._edges.has(from) &&
-			this._edges.get(from).has(to);
+			this[_edges].has(from) &&
+			this[_edges].get(from).has(to);
 	}
 
 	/**
@@ -408,7 +397,7 @@ export default class Graph {
 	 * Use {@link Graph#hasEdge} to distinguish these cases.
 	 */
 	edgeValue(from, to) {
-		return this.hasEdge(from, to) ? this._edges.get(from).get(to) : undefined;
+		return this.hasEdge(from, to) ? this[_edges].get(from).get(to) : undefined;
 	}
 
 
@@ -434,7 +423,7 @@ export default class Graph {
 	 */
 	*vertices() {
 		let done = new Set();
-		for (let [key, value] of this._vertices) {
+		for (let [key, value] of this[_vertices]) {
 			if (this.hasVertex(key) && !done.has(key)) {
 				done.add(key);
 				yield [key, value];
@@ -473,12 +462,12 @@ export default class Graph {
 	 */
 	*edges() {
 		let done = new Map();
-		for (let from of this._edges.keys()) {
+		for (let from of this[_edges].keys()) {
 			done.set(from, new Set());
-			for (let to of this._edges.get(from).keys()) {
+			for (let to of this[_edges].get(from).keys()) {
 				if (this.hasEdge(from, to) && !done.get(from).has(to)) {
 					done.get(from).add(to);
-					yield [from, to, this._edges.get(from).get(to)];
+					yield [from, to, this[_edges].get(from).get(to)];
 				}
 			}
 		}
@@ -503,15 +492,15 @@ export default class Graph {
 	 * }
 	 */
 	verticesFrom(from) {
-		if (!this.hasVertex(from)) { throw new Graph.VertexNotExistsError(from) }
-		return this._verticesFrom(from);
+		this[_expectVertices](from);
+		return this[_verticesFrom](from);
 	}
-	*_verticesFrom(from) {
+	*[_verticesFrom](from) {
 		let done = new Set();
-		for (let to of this._edges.get(from).keys()) {
+		for (let to of this[_edges].get(from).keys()) {
 			if (this.hasEdge(from, to) && !done.has(to)) {
 				done.add(to);
-				yield [to, this._vertices.get(to), this._edges.get(from).get(to)];
+				yield [to, this[_vertices].get(to), this[_edges].get(from).get(to)];
 			}
 		}
 	}
@@ -536,15 +525,15 @@ export default class Graph {
 	 * }
 	 */
 	verticesTo(to) {
-		if (!this.hasVertex(to)) { throw new Graph.VertexNotExistsError(to) }
-		return this._verticesTo(to);
+		this[_expectVertices](to);
+		return this[_verticesTo](to);
 	}
-	*_verticesTo(to) {
+	*[_verticesTo](to) {
 		let done = new Set();
-		for (let from of this._reverseEdges.get(to)) {
+		for (let from of this[_reverseEdges].get(to)) {
 			if (this.hasEdge(from, to) && !done.has(from)) {
 				done.add(from);
-				yield [from, this._vertices.get(from), this._edges.get(from).get(to)];
+				yield [from, this[_vertices].get(from), this[_edges].get(from).get(to)];
 			}
 		}
 	}
@@ -567,14 +556,14 @@ export default class Graph {
 	 * }
 	 */
 	verticesWithPathFrom(from) {
-		if (!this.hasVertex(from)) { throw new Graph.VertexNotExistsError(from) }
+		this[_expectVertices](from);
 		return this._verticesWithPathFrom(from, new Set());
 	}
 	*_verticesWithPathFrom(from, done) {
-		for (let to of this._edges.get(from).keys()) {
+		for (let to of this[_edges].get(from).keys()) {
 			if (this.hasEdge(from, to) && !done.has(to)) {
 				done.add(to);
-				yield [to, this._vertices.get(to)];
+				yield [to, this[_vertices].get(to)];
 				yield* this._verticesWithPathFrom(to, done);
 			}
 		}
@@ -598,14 +587,14 @@ export default class Graph {
 	 * }
 	 */
 	verticesWithPathTo(to) {
-		if (!this.hasVertex(to)) { throw new Graph.VertexNotExistsError(to) }
+		this[_expectVertices](to);
 		return this._verticesWithPathTo(to, new Set());
 	}
 	*_verticesWithPathTo(to, done) {
-		for (let from of this._reverseEdges.get(to)) {
+		for (let from of this[_reverseEdges].get(to)) {
 			if (this.hasEdge(from, to) && !done.has(from)) {
 				done.add(from);
-				yield [from, this._vertices.get(from)];
+				yield [from, this[_vertices].get(from)];
 				yield* this._verticesWithPathTo(from, done);
 			}
 		}
@@ -629,7 +618,7 @@ export default class Graph {
 	 */
 	*sources() {
 		let done = new Set();
-		for (let key of this._sources) {
+		for (let key of this[_sources]) {
 			if (this.hasVertex(key) && !done.has(key)) {
 				done.add(key);
 				yield [key, this.vertexValue(key)];
@@ -655,7 +644,7 @@ export default class Graph {
 	 */
 	*sinks() {
 		let done = new Set();
-		for (let key of this._sinks) {
+		for (let key of this[_sinks]) {
 			if (this.hasVertex(key) && !done.has(key)) {
 				done.add(key);
 				yield [key, this.vertexValue(key)];
@@ -696,7 +685,7 @@ export default class Graph {
 					yield* visit(b);
 				}
 				if (_this.hasVertex(a)) {
-					yield [a, _this._vertices.get(a)];
+					yield [a, _this[_vertices].get(a)];
 				}
 				handled.add(a);
 			}
@@ -826,9 +815,8 @@ export default class Graph {
 			pointStack.pop();
 		}
 
-		/* start backtracking from each vertex in the graph, in alphabetical order of keys */
-		let sortedKeys = [...this.vertices()].map(([k])=>k).sort();
-		for (let a of sortedKeys) {
+		/* start backtracking from each vertex in the graph */
+		for (let [a] of this.vertices()) {
 			markedStack = [];
 			mark = new Set();
 			yield* backtrack(a);
@@ -876,18 +864,10 @@ export default class Graph {
 	 * }
 	 */
 	paths(from, to) {
-		if (!this.hasVertex(from)) {
-			if (this.hasVertex(to)) {
-				throw new Graph.VertexNotExistsError(from);
-			} else {
-				throw new Graph.VertexNotExistsError(from).v(to);
-			}
-		} else if (!this.hasVertex(to)) {
-			throw new Graph.VertexNotExistsError(to);
-		}
-		return this._paths(from, to);
+		this[_expectVertices](from, to);
+		return this[_paths](from, to);
 	}
-	*_paths(from, to) {
+	*[_paths](from, to) {
 		let stack = [];
 
 		let _this = this;
@@ -938,8 +918,8 @@ export default class Graph {
 	 * @returns {number} the number of edges going out of the `key` vertex
 	 */
 	outDegree(key) {
-		if (!this.hasVertex(key)) { throw new Graph.VertexNotExistsError(key) }
-		return this._edges.get(key).size;
+		this[_expectVertices](key);
+		return this[_edges].get(key).size;
 	}
 
 
@@ -950,8 +930,8 @@ export default class Graph {
 	 * @returns {number} the number of edges coming into the `key` vertex
 	 */
 	inDegree(key) {
-		if (!this.hasVertex(key)) { throw new Graph.VertexNotExistsError(key) }
-		return this._reverseEdges.get(key).size;
+		this[_expectVertices](key);
+		return this[_reverseEdges].get(key).size;
 	}
 
 
@@ -1142,6 +1122,47 @@ export default class Graph {
 	}
 
 
+	////////////////////////////////
+	////////// Assertions //////////
+	////////////////////////////////
+	
+	[_expectVertices](key1, key2) {
+		if (key2 && !this.hasVertex(key2)) {
+			if (!this.hasVertex(key1)) {
+				throw new Graph.VertexNotExistsError([key1, key2]);
+			} else {
+				throw new Graph.VertexNotExistsError([key2]);
+			}
+		} else if (!this.hasVertex(key1)) {
+			throw new Graph.VertexNotExistsError([key1]);
+		}
+	}
+
+	[_expectVertexAbsent](key) {
+		if (this.hasVertex(key)) {
+			throw new Graph.VertexExistsError([[key, this.vertexValue(key)]]);
+		}
+	}
+
+	[_expectEdge]([from, to]) {
+		if (!this.hasEdge(from, to)) {
+			throw new Graph.EdgeNotExistsError([[from, to]]);
+		}
+	}
+
+	[_expectEdgeAbsent]([from, to]) {
+		if (this.hasEdge(from, to)) {
+			throw new Graph.EdgeExistsError([[[from, to], this.edgeValue(from, to)]]);
+		}
+	}
+
+	[_expectNoConnectedEdges](key) {
+		let edges = [];
+		for (let [to]   of this.verticesFrom(key)) { edges.push([[key,  to ], this.edgeValue(key,  to )]) }
+		for (let [from] of this.verticesTo  (key)) { edges.push([[from, key], this.edgeValue(from, key)]) }
+		if (edges.length) { throw new Graph.HasConnectedEdgesError(key, edges) }
+	}
+
 }
 
 
@@ -1155,7 +1176,7 @@ export default class Graph {
  * @extends Error
  */
 Graph.VertexExistsError = class VertexExistsError extends Error {
-	constructor(key, value) {
+	constructor(vertices) {
 		super();
 		/**
 		 * the set of relevant vertices as `[key, value]` shaped arrays
@@ -1165,15 +1186,7 @@ Graph.VertexExistsError = class VertexExistsError extends Error {
 		 * @instance
 		 * @type {Set.<Array>}
 		 */
-		this.vertices = new Set();
-		this.v(key, value);
-	}
-	v(key, value) {
-		this.vertices.add([key, value]);
-		this._refreshMessage();
-		return this;
-	}
-	_refreshMessage() {
+		this.vertices = new Set(vertices);
 		this.message = `This graph has ${
 			this.vertices.size === 1 ? "a vertex" : "vertices"
 		} '${
@@ -1188,7 +1201,7 @@ Graph.VertexExistsError = class VertexExistsError extends Error {
  * @extends Error
  */
 Graph.VertexNotExistsError = class VertexNotExistError extends Error {
-	constructor(key) {
+	constructor(keys) {
 		super();
 		/**
 		 * the set of relevant vertex keys
@@ -1198,15 +1211,7 @@ Graph.VertexNotExistsError = class VertexNotExistError extends Error {
 		 * @instance
 		 * @type {Set.<string>}
 		 */
-		this.vertices = new Set();
-		this.v(key);
-	}
-	v(key) {
-		this.vertices.add(key);
-		this._refreshMessage();
-		return this;
-	}
-	_refreshMessage() {
+		this.vertices = new Set(keys);
 		this.message = `This graph does not have ${
 			this.vertices.size === 1 ? "a vertex" : "vertices"
 		} '${
@@ -1221,7 +1226,7 @@ Graph.VertexNotExistsError = class VertexNotExistError extends Error {
  * @extends Error
  */
 Graph.EdgeExistsError = class EdgeExistsError extends Error {
-	constructor(from, to, value) {
+	constructor(edges) {
 		super();
 		/**
 		 * the set of relevant edges as `[[from, to], value]` shaped arrays
@@ -1231,19 +1236,11 @@ Graph.EdgeExistsError = class EdgeExistsError extends Error {
 		 * @instance
 		 * @type {Set.<Array>}
 		 */
-		this.edges = new Set();
-		this.e(from, to, value);
-	}
-	e(from, to, value) {
-		this.edges.add([[from, to], value]);
-		this._refreshMessage();
-		return this;
-	}
-	_refreshMessage() {
+		this.edges = new Set(edges);
 		this.message = `This graph has ${
 			this.edges.size === 1 ? "an edge" : "edges"
 		} ${
-			[...this.edges].map(([[from, to]])=>`('${from}', '${to}')`).join(`, `)
+			[...this.edges].map(([[from, to]]) => `['${from}', '${to}']`).join(`, `)
 		}`;
 	}
 };
@@ -1254,7 +1251,7 @@ Graph.EdgeExistsError = class EdgeExistsError extends Error {
  * @extends Error
  */
 Graph.EdgeNotExistsError = class EdgeNotExistsError extends Error {
-	constructor(from, to) {
+	constructor(edges) {
 		super();
 		/**
 		 * the set of relevant edge keys as `[from, to]` shaped arrays
@@ -1264,41 +1261,37 @@ Graph.EdgeNotExistsError = class EdgeNotExistsError extends Error {
 		 * @instance
 		 * @type {Set.<Array.<string>>}
 		 */
-		this.edges = new Set();
-		this.e(from, to);
-	}
-	e(from, to) {
-		this.edges.add([from, to]);
-		this._refreshMessage();
-		return this;
-	}
-	_refreshMessage() {
+		this.edges = new Set(edges);
 		this.message = `This graph does not have ${
 			this.edges.size === 1 ? "an edge" : "edges"
 		} ${
-			[...this.edges].map(([from, to])=>`('${from}', '${to}')`).join(`, `)
+			[...this.edges].map(([from, to]) => `['${from}', '${to}']`).join(`, `)
 		}`;
 	}
 };
 
 /**
  * @class
- * @classdesc This type of error is thrown when a vertex is expected not to have connected edges, but does.
- * @extends Error
+ * @classdesc This type of error is thrown when a vertex is expected not to have any connected edges, but does.
+ * @extends Graph.EdgeExistsError
  */
-Graph.HasConnectedEdgesError = class HasConnectedEdgesError extends Error {
-	constructor(key) {
-		super();
+Graph.HasConnectedEdgesError = class HasConnectedEdgesError extends Graph.EdgeExistsError {
+	constructor(key, edges) {
+		super(edges);
 		/**
-		 * the key of the relevant vertex
+		 * the key of the vertex that has connected edges
 		 * @public
-		 * @constant key
+		 * @constant vertex
 		 * @memberof Graph.HasConnectedEdgesError
 		 * @instance
 		 * @type {string}
 		 */
-		this.key = key;
-		this.message = `The '${key}' vertex has connected edges`;
+		this.vertex = key;
+		this.message = `The '${key}' vertex has connected ${
+			this.edges.size === 1 ? "an edge" : "edges"
+		} ${
+			[...this.edges].map(([[from, to]]) => `['${from}', '${to}']`).join(`, `)
+		}`;
 	}
 };
 
@@ -1326,20 +1319,11 @@ Graph.CycleError = class CycleError extends Error {
 /**
  * @class
  * @classdesc This type of error is thrown when a graph is expected not to have a branch-less directed cycle, but does.
- * @extends Error
+ * @extends Graph.CycleError
  */
-Graph.BranchlessCycleError = class BranchlessCycleError extends Error {
+Graph.BranchlessCycleError = class BranchlessCycleError extends Graph.CycleError {
 	constructor(cycle) {
-		super();
-		/**
-		 * the vertices involved in the branch-less cycle, in order but with an unspecified starting point
-		 * @public
-		 * @constant cycle
-		 * @memberof Graph.BranchlessCycleError
-		 * @instance
-		 * @type {Array.<string>}
-		 */
-		this.cycle = cycle;
+		super(cycle);
 		this.message = `This graph contains a branch-less cycle: ${cycle}`;
 	}
 };

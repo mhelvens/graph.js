@@ -152,12 +152,13 @@ API Documentation
         * [.edges](#Graph.EdgeExistsError#edges) : <code>Set.&lt;Array&gt;</code>
     * [.EdgeNotExistsError](#Graph.EdgeNotExistsError) ⇐ <code>Error</code>
         * [.edges](#Graph.EdgeNotExistsError#edges) : <code>Set.&lt;Array.&lt;string&gt;&gt;</code>
-    * [.HasConnectedEdgesError](#Graph.HasConnectedEdgesError) ⇐ <code>Error</code>
-        * [.key](#Graph.HasConnectedEdgesError#key) : <code>string</code>
+    * [.HasConnectedEdgesError](#Graph.HasConnectedEdgesError) ⇐ <code>[EdgeExistsError](#Graph.EdgeExistsError)</code>
+        * [.vertex](#Graph.HasConnectedEdgesError#vertex) : <code>string</code>
+        * [.edges](#Graph.EdgeExistsError#edges) : <code>Set.&lt;Array&gt;</code>
     * [.CycleError](#Graph.CycleError) ⇐ <code>Error</code>
         * [.cycle](#Graph.CycleError#cycle) : <code>Array.&lt;string&gt;</code>
-    * [.BranchlessCycleError](#Graph.BranchlessCycleError) ⇐ <code>Error</code>
-        * [.cycle](#Graph.BranchlessCycleError#cycle) : <code>Array.&lt;string&gt;</code>
+    * [.BranchlessCycleError](#Graph.BranchlessCycleError) ⇐ <code>[CycleError](#Graph.CycleError)</code>
+        * [.cycle](#Graph.CycleError#cycle) : <code>Array.&lt;string&gt;</code>
 
 
 -----
@@ -1138,16 +1139,23 @@ the set of relevant edge keys as `[from, to]` shaped arrays
 -----
 
 <a name="Graph.HasConnectedEdgesError"></a>
-#### *Graph*.HasConnectedEdgesError ⇐ <code>Error</code>
-This type of error is thrown when a vertex is expected not to have connected edges, but does.
+#### *Graph*.HasConnectedEdgesError ⇐ <code>[EdgeExistsError](#Graph.EdgeExistsError)</code>
+This type of error is thrown when a vertex is expected not to have any connected edges, but does.
 
-**Extends:** <code>Error</code>  
+**Extends:** <code>[EdgeExistsError](#Graph.EdgeExistsError)</code>  
 
 -----
 
-<a name="Graph.HasConnectedEdgesError#key"></a>
-##### *hasConnectedEdgesError*.key : <code>string</code>
-the key of the relevant vertex
+<a name="Graph.HasConnectedEdgesError#vertex"></a>
+##### *hasConnectedEdgesError*.vertex : <code>string</code>
+the key of the vertex that has connected edges
+
+
+-----
+
+<a name="Graph.EdgeExistsError#edges"></a>
+##### *hasConnectedEdgesError*.edges : <code>Set.&lt;Array&gt;</code>
+the set of relevant edges as `[[from, to], value]` shaped arrays
 
 
 -----
@@ -1168,16 +1176,16 @@ the vertices involved in the cycle, in order but with an unspecified starting po
 -----
 
 <a name="Graph.BranchlessCycleError"></a>
-#### *Graph*.BranchlessCycleError ⇐ <code>Error</code>
+#### *Graph*.BranchlessCycleError ⇐ <code>[CycleError](#Graph.CycleError)</code>
 This type of error is thrown when a graph is expected not to have a branch-less directed cycle, but does.
 
-**Extends:** <code>Error</code>  
+**Extends:** <code>[CycleError](#Graph.CycleError)</code>  
 
 -----
 
-<a name="Graph.BranchlessCycleError#cycle"></a>
+<a name="Graph.CycleError#cycle"></a>
 ##### *branchlessCycleError*.cycle : <code>Array.&lt;string&gt;</code>
-the vertices involved in the branch-less cycle, in order but with an unspecified starting point
+the vertices involved in the cycle, in order but with an unspecified starting point
 
 
 -----
