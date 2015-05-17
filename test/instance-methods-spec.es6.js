@@ -2469,19 +2469,14 @@ describe("Graph.VertexExistsError", () => {
 describe("Graph.VertexNotExistsError", () => {
 
 	it("can specify one missing vertex", () => {
-		let err = new Graph.VertexNotExistsError([
-			'x'
-		]);
+		let err = new Graph.VertexNotExistsError('x');
 		expect(err.vertices).toEqual(new Set([
 			'x'
 		]));
 	});
 
 	it("can specify multiple missing vertices", () => {
-		let err = new Graph.VertexNotExistsError([
-			'x',
-			'y'
-		]);
+		let err = new Graph.VertexNotExistsError('x', 'y');
 		expect(err.vertices).toEqual(new Set([
 			'x',
 			'y'

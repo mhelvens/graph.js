@@ -1129,12 +1129,30 @@ export default class Graph {
 	[_expectVertices](key1, key2) {
 		if (key2 && !this.hasVertex(key2)) {
 			if (!this.hasVertex(key1)) {
-				throw new Graph.VertexNotExistsError([key1, key2]);
+
+
+				///////////////////////////////////////////////////////////////
+
+				// Illustrating a bug in Wallaby.js
+
+				//// the following line fails for Wallaby (6 tests fail, exception is altered?), works for Karma (all tests pass)
+				//
+				throw new Graph.VertexNotExistsError(...[key1, key2]);
+
+				//// the following line works fine for both
+				//
+				//throw new Graph.VertexNotExistsError(key1, key2);
+
+				// Those two lines should be equivalent, no?
+
+				///////////////////////////////////////////////////////////////
+
+
 			} else {
-				throw new Graph.VertexNotExistsError([key2]);
+				throw new Graph.VertexNotExistsError(key2);
 			}
 		} else if (!this.hasVertex(key1)) {
-			throw new Graph.VertexNotExistsError([key1]);
+			throw new Graph.VertexNotExistsError(key1);
 		}
 	}
 
@@ -1201,7 +1219,7 @@ Graph.VertexExistsError = class VertexExistsError extends Error {
  * @extends Error
  */
 Graph.VertexNotExistsError = class VertexNotExistError extends Error {
-	constructor(keys) {
+	constructor(...keys) {
 		super();
 		/**
 		 * the set of relevant vertex keys
