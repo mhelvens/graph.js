@@ -94,6 +94,8 @@ API Documentation
 * [Graph](#Graph)
     * [new Graph(...parts)](#new_Graph_new)
     * <ins><b>instance</b></ins>
+    * [.on(event, handler)](#Graph#on)
+    * [.off(event, handler)](#Graph#off)
     * [.addNewVertex(key, [value])](#Graph#addNewVertex)
     * [.setVertex(key, [value])](#Graph#setVertex)
     * [.ensureVertex(key, [value])](#Graph#ensureVertex)
@@ -143,6 +145,12 @@ API Documentation
     * [.clone([trV], [trE])](#Graph#clone) ⇒ <code>[Graph](#Graph)</code>
     * [.transitiveReduction([trV], [trE])](#Graph#transitiveReduction) ⇒ <code>[Graph](#Graph)</code>
     * [.contractPaths([isNexus])](#Graph#contractPaths)
+    * ["vertex-added"](#Graph#event_vertex-added)
+    * ["vertex-removed"](#Graph#event_vertex-removed)
+    * ["vertex-modified"](#Graph#event_vertex-modified)
+    * ["edge-added"](#Graph#event_edge-added)
+    * ["edge-removed"](#Graph#event_edge-removed)
+    * ["edge-modified"](#Graph#event_edge-modified)
     * <ins><b>static</b></ins>
     * [.VertexExistsError](#Graph.VertexExistsError) ⇐ <code>Error</code>
         * [.vertices](#Graph.VertexExistsError#vertices) : <code>Set.&lt;Array&gt;</code>
@@ -187,6 +195,32 @@ var map = new Graph(
     [['Amsterdam', 'Leiden'], { distance:   "40km" }]  // edge
 );
 ```
+
+-----
+
+<a name="Graph#on"></a>
+#### *graph*.on(event, handler)
+Register an event handler.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| event | <code>string</code> | the event to listen for |
+| handler | <code>function</code> | the function to call for each such event fired, receiving its corresponding value |
+
+
+-----
+
+<a name="Graph#off"></a>
+#### *graph*.off(event, handler)
+Deregister a previously registered event handler.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| event | <code>string</code> | the event used to originally register a handler |
+| handler | <code>function</code> | the handler originally registered |
+
 
 -----
 
@@ -1075,6 +1109,62 @@ that should be preserved as nexus.
 
 - <code>[BranchlessCycleError](#Graph.BranchlessCycleError)</code> if the graph contains a cycle with no branches or nexuses
 
+
+-----
+
+<a name="Graph#event_vertex-added"></a>
+#### "vertex-added"
+An event that is triggered just after a vertex is added to this graph.
+Handlers receive the new vertex `[key, value]` as an argument.
+
+**See**: [on](#Graph#on), [off](#Graph#off)
+
+-----
+
+<a name="Graph#event_vertex-removed"></a>
+#### "vertex-removed"
+An event that is triggered just after a vertex is removed from this graph.
+Handlers receive the vertex key as an argument.
+
+**See**: [on](#Graph#on), [off](#Graph#off)
+
+-----
+
+<a name="Graph#event_vertex-modified"></a>
+#### "vertex-modified"
+An event that is triggered after a vertex in this graph is modified.
+It is also triggered after any `"vertex-added"` event.
+Handlers receive the vertex `[key, value]` as an argument.
+
+**See**: [on](#Graph#on), [off](#Graph#off)
+
+-----
+
+<a name="Graph#event_edge-added"></a>
+#### "edge-added"
+An event that is triggered just after an edge is added to this graph.
+Handlers receive the new edge `[[from, to], value]` as an argument.
+
+**See**: [on](#Graph#on), [off](#Graph#off)
+
+-----
+
+<a name="Graph#event_edge-removed"></a>
+#### "edge-removed"
+An event that is triggered just after an edge is removed from this graph.
+Handlers receive the edge key `[from, to]` as an argument.
+
+**See**: [on](#Graph#on), [off](#Graph#off)
+
+-----
+
+<a name="Graph#event_edge-modified"></a>
+#### "edge-modified"
+An event that is triggered after an edge in this graph is modified.
+It is also triggered after any `"edge-added"` event.
+Handlers receive the edge `[[from, to], value]` as an argument.
+
+**See**: [on](#Graph#on), [off](#Graph#off)
 
 -----
 

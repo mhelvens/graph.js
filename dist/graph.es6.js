@@ -11,6 +11,9 @@ const _sources      = Symbol("sources");
 const _sinks        = Symbol("sinks");
 const _edgeCount    = Symbol("edge count");
 
+const _listeners = Symbol("listeners");
+const _trigger   = Symbol("trigger");
+
 const _verticesFrom         = Symbol("vertices from");
 const _verticesTo           = Symbol("vertices to");
 const _verticesWithPathTo   = Symbol("vertices with path to");
@@ -60,6 +63,9 @@ export default class Graph {
 		this[_sinks]        = new Set(); // Set.< string >
 		this[_edgeCount]    = 0;
 
+		/* listeners */
+		this[_listeners] = new Map();
+
 		/* add vertices and values from constructor arguments */
 		for (let [key, value] of parts) {
 			if (Array.isArray(key)) {/////////////// an edge
@@ -70,6 +76,97 @@ export default class Graph {
 			}
 		}
 	}
+
+
+	/////////////////////////////////////
+	////////// Event Handling //////////
+	/////////////////////////////////////
+
+	/**
+	 * Register an event handler.
+	 * @param event   {string}   the event to listen for
+	 * @param handler {Function} the function to call for each such event fired, receiving its corresponding value
+	 */
+	on(event, handler) {
+		if (!this[_listeners].has(event)) {
+			this[_listeners].set(event, new Set());
+		}
+		this[_listeners].get(event).add(handler);
+	}
+
+	/**
+	 * Deregister a previously registered event handler.
+	 * @param event   {string}   the event used to originally register a handler
+	 * @param handler {Function} the handler originally registered
+	 */
+	off(event, handler) {
+		if (this[_listeners].has(event)) {
+			this[_listeners].get(event).delete(handler);
+		}
+	}
+
+	[_trigger](event, value) {
+		for (let handler of this[_listeners].get(event) || []) {
+			handler(value);
+		}
+	}
+
+	/**
+	 * An event that is triggered just after a vertex is added to this graph.
+	 * Handlers receive the new vertex `[key, value]` as an argument.
+	 * @event vertex-added
+	 * @memberof Graph
+	 * @instance
+	 * @see {@link Graph#on}
+	 * @see {@link Graph#off}
+	 */
+	/**
+	 * An event that is triggered just after a vertex is removed from this graph.
+	 * Handlers receive the vertex key as an argument.
+	 * @event vertex-removed
+	 * @memberof Graph
+	 * @instance
+	 * @see {@link Graph#on}
+	 * @see {@link Graph#off}
+	 */
+	/**
+	 * An event that is triggered after a vertex in this graph is modified.
+	 * It is also triggered after any `"vertex-added"` event.
+	 * Handlers receive the vertex `[key, value]` as an argument.
+	 * @event vertex-modified
+	 * @memberof Graph
+	 * @instance
+	 * @see {@link Graph#on}
+	 * @see {@link Graph#off}
+	 */
+	/**
+	 * An event that is triggered just after an edge is added to this graph.
+	 * Handlers receive the new edge `[[from, to], value]` as an argument.
+	 * @event edge-added
+	 * @memberof Graph
+	 * @instance
+	 * @see {@link Graph#on}
+	 * @see {@link Graph#off}
+	 */
+	/**
+	 * An event that is triggered just after an edge is removed from this graph.
+	 * Handlers receive the edge key `[from, to]` as an argument.
+	 * @event edge-removed
+	 * @memberof Graph
+	 * @instance
+	 * @see {@link Graph#on}
+	 * @see {@link Graph#off}
+	 */
+	/**
+	 * An event that is triggered after an edge in this graph is modified.
+	 * It is also triggered after any `"edge-added"` event.
+	 * Handlers receive the edge `[[from, to], value]` as an argument.
+	 * @event edge-modified
+	 * @memberof Graph
+	 * @instance
+	 * @see {@link Graph#on}
+	 * @see {@link Graph#off}
+	 */
 
 
 	//////////////////////////////
@@ -91,6 +188,8 @@ export default class Graph {
 		this[_reverseEdges].set(key, new Set());
 		this[_sources].add(key);
 		this[_sinks].add(key);
+		this[_trigger]('vertex-added',    [key, value]);
+		this[_trigger]('vertex-modified', [key, value]);
 	}
 
 	/**
@@ -102,6 +201,7 @@ export default class Graph {
 	setVertex(key, value) {
 		this[_expectVertices](key);
 		this[_vertices].set(key, value);
+		this[_trigger]('vertex-modified', [key, value]);
 	}
 
 	/**
@@ -145,6 +245,7 @@ export default class Graph {
 		this[_vertices].delete(key);
 		this[_sources].delete(key);
 		this[_sinks].delete(key);
+		this[_trigger]('vertex-removed', key);
 	}
 
 	/**
@@ -154,12 +255,8 @@ export default class Graph {
 	 */
 	destroyExistingVertex(key) {
 		this[_expectVertices](key);
-		for (let [to] of this.verticesFrom(key)) {
-			this.removeEdge(key, to);
-		}
-		for (let [from] of this.verticesTo(key)) {
-			this.removeEdge(from, key);
-		}
+		for (let [to] of this.verticesFrom(key)) { this.removeEdge(key,  to ) }
+		for (let [from] of this.verticesTo(key)) { this.removeEdge(from, key) }
 		this.removeExistingVertex(key);
 	}
 
@@ -237,6 +334,8 @@ export default class Graph {
 		this[_edgeCount] += 1;
 		this[_sources].delete(to);
 		this[_sinks].delete(from);
+		this[_trigger]('edge-added',    [[from, to], value]);
+		this[_trigger]('edge-modified', [[from, to], value]);
 	}
 
 	/**
@@ -264,6 +363,7 @@ export default class Graph {
 	setEdge(from, to, value) {
 		this[_expectEdge]([from, to]);
 		this[_edges].get(from).set(to, value);
+		this[_trigger]('edge-modified', [[from, to], value]);
 	}
 
 	/**
@@ -347,6 +447,7 @@ export default class Graph {
 		this[_edgeCount] -= 1;
 		if (this. inDegree(to)   === 0) { this[_sources].add(to) }
 		if (this.outDegree(from) === 0) { this[_sinks].add(from) }
+		this[_trigger]('edge-removed', [from, to]);
 	}
 
 	/**
