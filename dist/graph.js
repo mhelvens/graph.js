@@ -94,7 +94,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _reverseEdges = Symbol("reverse edges");
 	var _sources = Symbol("sources");
 	var _sinks = Symbol("sinks");
-	var _vertexCount = Symbol("vertex count");
 	var _edgeCount = Symbol("edge count");
 	
 	var _verticesFrom = Symbol("vertices from");
@@ -147,7 +146,6 @@ return /******/ (function(modules) { // webpackBootstrap
 			this[_reverseEdges] = new Map(); // Map.< string, Set.<*> >
 			this[_sources] = new Set(); // Set.< string >
 			this[_sinks] = new Set(); // Set.< string >
-			this[_vertexCount] = 0;
 			this[_edgeCount] = 0;
 	
 			/* add vertices and values from constructor arguments */
@@ -212,7 +210,6 @@ return /******/ (function(modules) { // webpackBootstrap
 				this[_vertices].set(key, value);
 				this[_edges].set(key, new Map());
 				this[_reverseEdges].set(key, new Set());
-				this[_vertexCount] += 1;
 				this[_sources].add(key);
 				this[_sinks].add(key);
 			}
@@ -274,7 +271,6 @@ return /******/ (function(modules) { // webpackBootstrap
 				this[_expectVertices](key);
 				this[_expectNoConnectedEdges](key);
 				this[_vertices]["delete"](key);
-				this[_vertexCount] -= 1;
 				this[_sources]["delete"](key);
 				this[_sinks]["delete"](key);
 			}
@@ -380,7 +376,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @returns {number} the number of vertices in the whole graph
 	   */
 			value: function vertexCount() {
-				return this[_vertexCount];
+				return this[_vertices].size;
 			}
 		}, {
 			key: "hasVertex",
