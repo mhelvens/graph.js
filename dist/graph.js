@@ -98,6 +98,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _verticesFrom = Symbol("vertices from");
 	var _verticesTo = Symbol("vertices to");
+	var _verticesWithPathTo = Symbol("vertices with path to");
+	var _verticesWithPathFrom = Symbol("vertices with path from");
 	var _paths = Symbol("paths");
 	
 	var _expectVertices = Symbol("expect vertices");
@@ -1105,14 +1107,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	   */
 			value: function verticesWithPathFrom(from) {
 				this[_expectVertices](from);
-				return this._verticesWithPathFrom(from, new Set());
+				return this[_verticesWithPathFrom](from, new Set());
 			}
 		}, {
-			key: "_verticesWithPathFrom",
-			value: regeneratorRuntime.mark(function _verticesWithPathFrom(from, done) {
+			key: _verticesWithPathFrom,
+			value: regeneratorRuntime.mark(function callee$1$2(from, done) {
 				var _iteratorNormalCompletion9, _didIteratorError9, _iteratorError9, _iterator9, _step9, to;
 	
-				return regeneratorRuntime.wrap(function _verticesWithPathFrom$(context$2$0) {
+				return regeneratorRuntime.wrap(function callee$1$2$(context$2$0) {
 					while (1) switch (context$2$0.prev = context$2$0.next) {
 						case 0:
 							_iteratorNormalCompletion9 = true;
@@ -1139,7 +1141,7 @@ return /******/ (function(modules) { // webpackBootstrap
 							return [to, this[_vertices].get(to)];
 	
 						case 11:
-							return context$2$0.delegateYield(this._verticesWithPathFrom(to, done), "t5", 12);
+							return context$2$0.delegateYield(this[_verticesWithPathFrom](to, done), "t5", 12);
 	
 						case 12:
 							_iteratorNormalCompletion9 = true;
@@ -1184,7 +1186,7 @@ return /******/ (function(modules) { // webpackBootstrap
 						case "end":
 							return context$2$0.stop();
 					}
-				}, _verticesWithPathFrom, this, [[3, 17, 21, 29], [22,, 24, 28]]);
+				}, callee$1$2, this, [[3, 17, 21, 29], [22,, 24, 28]]);
 			})
 		}, {
 			key: "verticesWithPathTo",
@@ -1208,14 +1210,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	   */
 			value: function verticesWithPathTo(to) {
 				this[_expectVertices](to);
-				return this._verticesWithPathTo(to, new Set());
+				return this[_verticesWithPathTo](to, new Set());
 			}
 		}, {
-			key: "_verticesWithPathTo",
-			value: regeneratorRuntime.mark(function _verticesWithPathTo(to, done) {
+			key: _verticesWithPathTo,
+			value: regeneratorRuntime.mark(function callee$1$3(to, done) {
 				var _iteratorNormalCompletion10, _didIteratorError10, _iteratorError10, _iterator10, _step10, from;
 	
-				return regeneratorRuntime.wrap(function _verticesWithPathTo$(context$2$0) {
+				return regeneratorRuntime.wrap(function callee$1$3$(context$2$0) {
 					while (1) switch (context$2$0.prev = context$2$0.next) {
 						case 0:
 							_iteratorNormalCompletion10 = true;
@@ -1242,7 +1244,7 @@ return /******/ (function(modules) { // webpackBootstrap
 							return [from, this[_vertices].get(from)];
 	
 						case 11:
-							return context$2$0.delegateYield(this._verticesWithPathTo(from, done), "t7", 12);
+							return context$2$0.delegateYield(this[_verticesWithPathTo](from, done), "t7", 12);
 	
 						case 12:
 							_iteratorNormalCompletion10 = true;
@@ -1287,7 +1289,7 @@ return /******/ (function(modules) { // webpackBootstrap
 						case "end":
 							return context$2$0.stop();
 					}
-				}, _verticesWithPathTo, this, [[3, 17, 21, 29], [22,, 24, 28]]);
+				}, callee$1$3, this, [[3, 17, 21, 29], [22,, 24, 28]]);
 			})
 		}, {
 			key: "sources",
@@ -2075,10 +2077,10 @@ return /******/ (function(modules) { // webpackBootstrap
 			}
 		}, {
 			key: _paths,
-			value: regeneratorRuntime.mark(function callee$1$2(from, to) {
+			value: regeneratorRuntime.mark(function callee$1$4(from, to) {
 				var marked2$0, stack, _this, pathsFromPrefix;
 	
-				return regeneratorRuntime.wrap(function callee$1$2$(context$2$0) {
+				return regeneratorRuntime.wrap(function callee$1$4$(context$2$0) {
 					while (1) switch (context$2$0.prev = context$2$0.next) {
 						case 0:
 							pathsFromPrefix = function pathsFromPrefix(current) {
@@ -2181,7 +2183,7 @@ return /******/ (function(modules) { // webpackBootstrap
 						case "end":
 							return context$2$0.stop();
 					}
-				}, callee$1$2, this);
+				}, callee$1$4, this);
 			})
 		}, {
 			key: "path",

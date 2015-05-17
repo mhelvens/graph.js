@@ -14,11 +14,13 @@ const _edgeCount    = Symbol("edge count");
 const _extractTwoArgs   = Symbol("extract ([a, b]) or (a, b) arguments");
 const _extractThreeArgs = Symbol("extract ([[a, b], c]), ([a, b], c) or (a, b, c) arguments");
 
-const _verticesFrom       = Symbol("vertices from");
-const _verticesTo         = Symbol("vertices to");
-const _edgesFrom          = Symbol("edges from");
-const _edgesTo            = Symbol("edges to");
-const _paths              = Symbol("paths");
+const _verticesFrom         = Symbol("vertices from");
+const _verticesTo           = Symbol("vertices to");
+const _edgesFrom            = Symbol("edges from");
+const _edgesTo              = Symbol("edges to");
+const _verticesWithPathTo   = Symbol("vertices with path to");
+const _verticesWithPathFrom = Symbol("vertices with path from");
+const _paths                = Symbol("paths");
 
 const _expectVertices         = Symbol("expect vertices");
 const _expectVertexAbsent     = Symbol("expect vertex absent");
@@ -675,14 +677,14 @@ export default class Graph {
 	 */
 	verticesWithPathFrom(from) {
 		this[_expectVertices](from);
-		return this._verticesWithPathFrom(from, new Set());
+		return this[_verticesWithPathFrom](from, new Set());
 	}
-	*_verticesWithPathFrom(from, done) {
+	*[_verticesWithPathFrom](from, done) {
 		for (let to of this[_edges].get(from).keys()) {
 			if (this.hasEdge(from, to) && !done.has(to)) {
 				done.add(to);
 				yield [to, this[_vertices].get(to)];
-				yield* this._verticesWithPathFrom(to, done);
+				yield* this[_verticesWithPathFrom](to, done);
 			}
 		}
 	}
@@ -706,14 +708,14 @@ export default class Graph {
 	 */
 	verticesWithPathTo(to) {
 		this[_expectVertices](to);
-		return this._verticesWithPathTo(to, new Set());
+		return this[_verticesWithPathTo](to, new Set());
 	}
-	*_verticesWithPathTo(to, done) {
+	*[_verticesWithPathTo](to, done) {
 		for (let from of this[_reverseEdges].get(to)) {
 			if (this.hasEdge(from, to) && !done.has(from)) {
 				done.add(from);
 				yield [from, this[_vertices].get(from)];
-				yield* this._verticesWithPathTo(from, done);
+				yield* this[_verticesWithPathTo](from, done);
 			}
 		}
 	}
