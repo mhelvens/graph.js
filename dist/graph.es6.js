@@ -131,7 +131,7 @@ export default class Graph {
 	 */
 	/**
 	 * An event that is triggered after a vertex in this graph is modified.
-	 * It is also triggered after any `"vertex-added"` event.
+	 * It is also triggered after any {@link #Graph#event_vertex-added|"vertex-added"} event.
 	 * Handlers receive the vertex `[key, value]` as an argument.
 	 * @event vertex-modified
 	 * @memberof Graph
@@ -159,7 +159,7 @@ export default class Graph {
 	 */
 	/**
 	 * An event that is triggered after an edge in this graph is modified.
-	 * It is also triggered after any `"edge-added"` event.
+	 * It is also triggered after any {@link #Graph#event_edge-added|"edge-added"} event.
 	 * Handlers receive the edge `[[from, to], value]` as an argument.
 	 * @event edge-modified
 	 * @memberof Graph

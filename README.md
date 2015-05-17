@@ -1133,7 +1133,7 @@ Handlers receive the vertex key as an argument.
 <a name="Graph#event_vertex-modified"></a>
 #### "vertex-modified"
 An event that is triggered after a vertex in this graph is modified.
-It is also triggered after any `"vertex-added"` event.
+It is also triggered after any ["vertex-added"](#Graph#event_vertex-added) event.
 Handlers receive the vertex `[key, value]` as an argument.
 
 **See**: [on](#Graph#on), [off](#Graph#off)
@@ -1161,7 +1161,7 @@ Handlers receive the edge key `[from, to]` as an argument.
 <a name="Graph#event_edge-modified"></a>
 #### "edge-modified"
 An event that is triggered after an edge in this graph is modified.
-It is also triggered after any `"edge-added"` event.
+It is also triggered after any ["edge-added"](#Graph#event_edge-added) event.
 Handlers receive the edge `[[from, to], value]` as an argument.
 
 **See**: [on](#Graph#on), [off](#Graph#off)
