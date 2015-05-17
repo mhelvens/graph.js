@@ -94,6 +94,7 @@ API Documentation
 * [Graph](#Graph)
     * [new Graph(...parts)](#new_Graph_new)
     * <ins><b>instance</b></ins>
+    * [.addNewVertex(vertex)](#Graph#addNewVertex)
     * [.addNewVertex(key, [value])](#Graph#addNewVertex)
     * [.setVertex(key, [value])](#Graph#setVertex)
     * [.ensureVertex(key, [value])](#Graph#ensureVertex)
@@ -104,6 +105,7 @@ API Documentation
     * [.destroyVertex(key)](#Graph#destroyVertex)
     * [.vertexCount()](#Graph#vertexCount) ⇒ <code>number</code>
     * [.hasVertex(key)](#Graph#hasVertex) ⇒ <code>boolean</code>
+    * [.vertex(key)](#Graph#vertex) ⇒ <code>Array</code>
     * [.vertexValue(key)](#Graph#vertexValue) ⇒ <code>\*</code>
     * [.addNewEdge(from, to, [value])](#Graph#addNewEdge)
     * [.createNewEdge(from, to, [value])](#Graph#createNewEdge)
@@ -116,6 +118,7 @@ API Documentation
     * [.removeEdge(from, to)](#Graph#removeEdge)
     * [.edgeCount()](#Graph#edgeCount) ⇒ <code>number</code>
     * [.hasEdge(from, to)](#Graph#hasEdge) ⇒ <code>boolean</code>
+    * [.edge(from, to)](#Graph#edge) ⇒ <code>Array</code>
     * [.edgeValue(from, to)](#Graph#edgeValue) ⇒ <code>\*</code>
     * [.vertices()](#Graph#vertices) ⇒ <code>Iterator.&lt;string, \*&gt;</code>
     * [.@@iterator()](#Graph#@@iterator) ⇒ <code>Iterator.&lt;string, \*&gt;</code>
@@ -187,6 +190,22 @@ var map = new Graph(
     [['Amsterdam', 'Leiden'], { distance:   "40km" }]  // edge
 );
 ```
+
+-----
+
+<a name="Graph#addNewVertex"></a>
+#### *graph*.addNewVertex(vertex)
+Add a new vertex to this graph.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| vertex | <code>Array</code> | description of the vertex |
+
+**Throws**:
+
+- <code>[VertexExistsError](#Graph.VertexExistsError)</code> if a vertex with this key already exists
+
 
 -----
 
@@ -334,9 +353,26 @@ Ask whether a vertex with a given key exists.
 
 -----
 
+<a name="Graph#vertex"></a>
+#### *graph*.vertex(key) ⇒ <code>Array</code>
+Get the key/value pair representing the vertex with the given `key`.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| key | <code>string</code> | the key to query |
+
+**Throws**:
+
+- <code>[VertexNotExistsError](#Graph.VertexNotExistsError)</code> if the `key` vertex does not exist in the graph
+
+**Returns**: <code>Array</code> - a `[key, value]` shaped array representing the vertex  
+
+-----
+
 <a name="Graph#vertexValue"></a>
 #### *graph*.vertexValue(key) ⇒ <code>\*</code>
-Get the value associated with the vertex of a given key.
+Get the value associated with the vertex of a given `key`.
 
 
 | Param | Type | Description |
@@ -534,6 +570,20 @@ Ask whether an edge between given `from` and `to` vertices exist.
 
 -----
 
+<a name="Graph#edge"></a>
+#### *graph*.edge(from, to) ⇒ <code>Array</code>
+Get the key/value pair representing the edge between the given `from` and `to`.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| from | <code>string</code> | the key for the originating vertex |
+| to | <code>string</code> | the key for the terminating vertex |
+
+**Returns**: <code>Array</code> - a `[[from, to], value]` shaped array representing the edge  
+
+-----
+
 <a name="Graph#edgeValue"></a>
 #### *graph*.edgeValue(from, to) ⇒ <code>\*</code>
 Get the value associated with the edge between given `from` and `to` vertices.
@@ -602,16 +652,16 @@ Iterate over all edges of the graph, in no particular order.
 **Example**  
 ```JavaScript
 for (var it = graph.edges(), kv; !(kv = it.next()).done;) {
-    var from  = kv.value[0],
-        to    = kv.value[1],
-        value = kv.value[2];
+    var from  = kv.value[0][0],
+        to    = kv.value[0][1],
+        value = kv.value[1];
     // iterates over all edges of the graph
 }
 ```
 **Example**  
 ```JavaScript
 // in ECMAScript 6, you can use a for..of loop
-for (let [from, to, value] of graph.edges()) {
+for (let [[from, to], value] of graph.edges()) {
     // iterates over all vertices of the graph
 }
 ```

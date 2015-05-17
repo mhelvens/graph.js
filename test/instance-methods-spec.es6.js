@@ -77,8 +77,8 @@ function expectTheGraphNotToHaveChanged() {
 	expect(vertices).toEqual(originalVertices);
 
 	let edges = {};
-	for (let [from, to, value] of graph.edges()) {
-		edges[from + ", " + to] = value;
+	for (let [[from, to], value] of graph.edges()) {
+		edges[from + "," + to] = value;
 	}
 	expect(edges).toEqual(originalEdges);
 }
@@ -111,10 +111,10 @@ beforeEach(() => {
 		'k5': "oldValue5"
 	};
 	originalEdges = {
-		'k2, k3': "oldValue23",
-		'k3, k4': undefined,
-		'k2, k5': undefined,
-		'k5, k3': undefined
+		'k2,k3': "oldValue23",
+		'k3,k4': undefined,
+		'k2,k5': undefined,
+		'k5,k3': undefined
 	};
 	originalVertexCount = Object.keys(originalVertices).length;
 	originalEdgeCount   = Object.keys(originalEdges)   .length;
@@ -154,36 +154,51 @@ function it_throwsNothingIfUnconnectedVertexExists() {
 function it_throwsNothingWhenPassedAKey() {
 	it("throws no exceptions when it is passed a single key argument", () => {
 		expectItWhenBoundWith('k1').not.toThrow();
+		expectItWhenBoundWith('k2').not.toThrow();
 		expectItWhenBoundWith('newKey').not.toThrow();
 	});
 }
 function it_throwsNothingWhenPassedAKeyAndValue() {
-	it("throws no exceptions when it is passed a key and a value argument", () => {
+	it("throws no exceptions when it is passed a key and a value argument (1)", () => {
 		expectItWhenBoundWith('k1', 'newValue').not.toThrow();
 		expectItWhenBoundWith('newKey', 'newValue').not.toThrow();
+	});
+	it("throws no exceptions when it is passed a key and a value argument (2)", () => {
+		expectItWhenBoundWith(['k1', 'newValue']).not.toThrow();
+		expectItWhenBoundWith(['newKey', 'newValue']).not.toThrow();
 	});
 }
 function it_throwsNothingWhenPassedAnotherGraph() {
 	it("throws no exceptions when it is passed another graph as an argument", () => {
-		let g = new Graph();
-		expectItWhenBoundWith(g).not.toThrow();
+		expectItWhenBoundWith(new Graph()).not.toThrow();
 	});
 }
 function it_throwsNothingIfEdgeDoesNotExist() {
-	it("throws nothing if the edge does not exist", () => {
+	it("throws nothing if the edge does not exist (1)", () => {
 		expectItWhenBoundWith('k1', 'k2').not.toThrow();
 		expectItWhenBoundWith('newKey1', 'newKey2').not.toThrow();
 	});
+	it("throws nothing if the edge does not exist (2)", () => {
+		expectItWhenBoundWith(['k1', 'k2']).not.toThrow();
+		expectItWhenBoundWith(['newKey1', 'newKey2']).not.toThrow();
+	});
 }
 function it_throwsNothingIfEdgeExists() {
-	it("throws nothing if the edge exists", () => {
+	it("throws nothing if the edge exists (1)", () => {
 		expectItWhenBoundWith('k2', 'k3').not.toThrow();
 		expectItWhenBoundWith('k3', 'k4').not.toThrow();
 	});
+	it("throws nothing if the edge exists (2)", () => {
+		expectItWhenBoundWith(['k2', 'k3']).not.toThrow();
+		expectItWhenBoundWith(['k3', 'k4']).not.toThrow();
+	});
 }
 function it_throwsNothingIfVerticesExistAndEdgeDoesNot() {
-	it("throws nothing if the required vertices exist but the edge does not", () => {
+	it("throws nothing if the required vertices exist but the edge does not (1)", () => {
 		expectItWhenBoundWith('k1', 'k2').not.toThrow();
+	});
+	it("throws nothing if the required vertices exist but the edge does not (2)", () => {
+		expectItWhenBoundWith(['k1', 'k2']).not.toThrow();
 	});
 }
 function it_throwsNothingIfVerticesExist() {
@@ -194,19 +209,37 @@ function it_throwsNothingIfVerticesExist() {
 	});
 }
 function it_throwsNothingWhenPassedTwoKeys() {
-	it("throws no exceptions when it is passed two key arguments", () => {
+	it("throws no exceptions when it is passed two key arguments (1)", () => {
 		expectItWhenBoundWith('k1', 'k2').not.toThrow();
 		expectItWhenBoundWith('k2', 'k3').not.toThrow();
 		expectItWhenBoundWith('k3', 'k4').not.toThrow();
 		expectItWhenBoundWith('newKey1', 'newKey2').not.toThrow();
 	});
+	it("throws no exceptions when it is passed two key arguments (2)", () => {
+		expectItWhenBoundWith(['k1', 'k2']).not.toThrow();
+		expectItWhenBoundWith(['k2', 'k3']).not.toThrow();
+		expectItWhenBoundWith(['k3', 'k4']).not.toThrow();
+		expectItWhenBoundWith(['newKey1', 'newKey2']).not.toThrow();
+	});
 }
 function it_throwsNothingWhenPassedTwoKeysAndValue() {
-	it("throws no exceptions when it is passed two keys and a value argument", () => {
+	it("throws no exceptions when it is passed two keys and a value argument (1)", () => {
 		expectItWhenBoundWith('k1', 'k2', 'newValue').not.toThrow();
 		expectItWhenBoundWith('k2', 'k3', 'newValue').not.toThrow();
 		expectItWhenBoundWith('k3', 'k4', 'newValue').not.toThrow();
 		expectItWhenBoundWith('newKey1', 'newKey2', 'newValue').not.toThrow();
+	});
+	it("throws no exceptions when it is passed two keys and a value argument (2)", () => {
+		expectItWhenBoundWith(['k1', 'k2'], 'newValue').not.toThrow();
+		expectItWhenBoundWith(['k2', 'k3'], 'newValue').not.toThrow();
+		expectItWhenBoundWith(['k3', 'k4'], 'newValue').not.toThrow();
+		expectItWhenBoundWith(['newKey1', 'newKey2'], 'newValue').not.toThrow();
+	});
+	it("throws no exceptions when it is passed two keys and a value argument (3)", () => {
+		expectItWhenBoundWith([['k1', 'k2'], 'newValue']).not.toThrow();
+		expectItWhenBoundWith([['k2', 'k3'], 'newValue']).not.toThrow();
+		expectItWhenBoundWith([['k3', 'k4'], 'newValue']).not.toThrow();
+		expectItWhenBoundWith([['newKey1', 'newKey2'], 'newValue']).not.toThrow();
 	});
 }
 function it_throwsErrorIfVertexExists() {
@@ -247,7 +280,7 @@ function it_throwsErrorIfEdgesAreConnected() {
 	});
 }
 function it_throwsErrorIfEdgeExists() {
-	it("throws an error if an edge with the given keys already exists", () => {
+	it("throws an error if an edge with the given keys already exists (1)", () => {
 		expectItWhenBoundWith('k2', 'k3').toThrowSpecific(Graph.EdgeExistsError, {
 			edges: new Set([
 				[['k2', 'k3'], 'oldValue23']
@@ -259,54 +292,99 @@ function it_throwsErrorIfEdgeExists() {
 			])
 		});
 	});
+	it("throws an error if an edge with the given keys already exists (2)", () => {
+		expectItWhenBoundWith(['k2', 'k3']).toThrowSpecific(Graph.EdgeExistsError, {
+			edges: new Set([
+				[['k2', 'k3'], 'oldValue23']
+			])
+		});
+		expectItWhenBoundWith(['k3', 'k4']).toThrowSpecific(Graph.EdgeExistsError, {
+			edges: new Set([
+				[['k3', 'k4'],  undefined  ]
+			])
+		});
+	});
 }
 function it_throwsErrorIfEdgeDoesNotExist() {
-	it("throws an error if an edge with the given keys does not exist", () => {
+	it("throws an error if an edge with the given keys does not exist (1)", () => {
 		expectItWhenBoundWith('k1', 'k2').toThrow();
 		expectItWhenBoundWith('k1', 'k2').toThrowSpecific(Graph.EdgeNotExistsError, { edges: new Set([ ['k1', 'k2'] ]) });
 	});
+	it("throws an error if an edge with the given keys does not exist (2)", () => {
+		expectItWhenBoundWith(['k1', 'k2']).toThrow();
+		expectItWhenBoundWith(['k1', 'k2']).toThrowSpecific(Graph.EdgeNotExistsError, { edges: new Set([ ['k1', 'k2'] ]) });
+	});
 }
 function it_throwsErrorIfVerticesDoNotExist() {
-	it("throws an error if the required vertices do not exist", () => {
+	it("throws an error if the required vertices do not exist (1)", () => {
 		expectItWhenBoundWith('newKey1', 'newKey2').toThrowSpecific(Graph.VertexNotExistsError, { vertices: new Set([ 'newKey1', 'newKey2' ]) });
 		expectItWhenBoundWith('k1',      'newKey3').toThrowSpecific(Graph.VertexNotExistsError, { vertices: new Set([ 'newKey3'            ]) });
 		expectItWhenBoundWith('newKey4', 'k2'     ).toThrowSpecific(Graph.VertexNotExistsError, { vertices: new Set([ 'newKey4'            ]) });
 	});
+	it("throws an error if the required vertices do not exist (2)", () => {
+		expectItWhenBoundWith(['newKey1', 'newKey2']).toThrowSpecific(Graph.VertexNotExistsError, { vertices: new Set([ 'newKey1', 'newKey2' ]) });
+		expectItWhenBoundWith(['k1',      'newKey3']).toThrowSpecific(Graph.VertexNotExistsError, { vertices: new Set([ 'newKey3'            ]) });
+		expectItWhenBoundWith(['newKey4', 'k2']     ).toThrowSpecific(Graph.VertexNotExistsError, { vertices: new Set([ 'newKey4'            ]) });
+	});
 }
 function it_leavesNewVertexWithNewValue() {
-	it("leaves a new vertex in the graph with a new value", () => {
+	it("leaves a new vertex in the graph with a new value (1)", () => {
 		callItWith('newKey', 'newValue');
+		expect(graph.hasVertex('newKey')).toBeTruthy();
+		expect(graph.vertexValue('newKey')).toBe('newValue');
+		expect(graph.vertexCount()).toBe(originalVertexCount + 1);
+	});
+	it("leaves a new vertex in the graph with a new value (2)", () => {
+		callItWith(['newKey', 'newValue']);
 		expect(graph.hasVertex('newKey')).toBeTruthy();
 		expect(graph.vertexValue('newKey')).toBe('newValue');
 		expect(graph.vertexCount()).toBe(originalVertexCount + 1);
 	});
 }
 function it_leavesNewVertexWithNewUndefinedValue() {
-	it("leaves a new vertex in the graph with a new 'undefined' value", () => {
+	it("leaves a new vertex in the graph with a new 'undefined' value (1)", () => {
 		callItWith('newKey');
+		expect(graph.hasVertex('newKey')).toBeTruthy();
+		expect(graph.vertexValue('newKey')).toBeUndefined();
+		expect(graph.vertexCount()).toBe(originalVertexCount + 1);
+	});
+	it("leaves a new vertex in the graph with a new 'undefined' value (2)", () => {
+		callItWith(['newKey']);
 		expect(graph.hasVertex('newKey')).toBeTruthy();
 		expect(graph.vertexValue('newKey')).toBeUndefined();
 		expect(graph.vertexCount()).toBe(originalVertexCount + 1);
 	});
 }
 function it_leavesExistingVertexWithNewValue() {
-	it("leaves an existing vertex in the graph with a new value", () => {
+	it("leaves an existing vertex in the graph with a new value (1)", () => {
 		callItWith('k1', 'newValue');
+		expect(graph.hasVertex('k1')).toBeTruthy();
+		expect(graph.vertexValue('k1')).toBe('newValue');
+		expect(graph.vertexCount()).toBe(originalVertexCount);
+	});
+	it("leaves an existing vertex in the graph with a new value (2)", () => {
+		callItWith(['k1', 'newValue']);
 		expect(graph.hasVertex('k1')).toBeTruthy();
 		expect(graph.vertexValue('k1')).toBe('newValue');
 		expect(graph.vertexCount()).toBe(originalVertexCount);
 	});
 }
 function it_leavesExistingVertexWithNewUndefinedValue() {
-	it("leaves an existing vertex in the graph with a new 'undefined' value", () => {
+	it("leaves an existing vertex in the graph with a new 'undefined' value (1)", () => {
 		callItWith('k1');
+		expect(graph.hasVertex('k1')).toBeTruthy();
+		expect(graph.vertexValue('k1')).toBeUndefined();
+		expect(graph.vertexCount()).toBe(originalVertexCount);
+	});
+	it("leaves an existing vertex in the graph with a new 'undefined' value (2)", () => {
+		callItWith(['k1']);
 		expect(graph.hasVertex('k1')).toBeTruthy();
 		expect(graph.vertexValue('k1')).toBeUndefined();
 		expect(graph.vertexCount()).toBe(originalVertexCount);
 	});
 }
 function it_leavesExistingVertexWithOldValue() {
-	it("leaves an existing vertex in the graph with its old value", () => {
+	it("leaves an existing vertex in the graph with its old value (1)", () => {
 		callItWith('k1', 'newValue');
 		expect(graph.hasVertex('k1')).toBeTruthy();
 		expect(graph.vertexValue('k1')).toBe('oldValue1');
@@ -316,10 +394,26 @@ function it_leavesExistingVertexWithOldValue() {
 		expect(graph.vertexValue('k1')).toBe('oldValue1');
 		expect(graph.vertexCount()).toBe(originalVertexCount);
 	});
+	it("leaves an existing vertex in the graph with its old value (2)", () => {
+		callItWith(['k1', 'newValue']);
+		expect(graph.hasVertex('k1')).toBeTruthy();
+		expect(graph.vertexValue('k1')).toBe('oldValue1');
+		expect(graph.vertexCount()).toBe(originalVertexCount);
+		callItWith(['k1', undefined]);
+		expect(graph.hasVertex('k1')).toBeTruthy();
+		expect(graph.vertexValue('k1')).toBe('oldValue1');
+		expect(graph.vertexCount()).toBe(originalVertexCount);
+	});
 }
 function it_leavesExistingVertexWithOldUndefinedValue() {
-	it("leaves an existing vertex in the graph with its old 'undefined' value", () => {
+	it("leaves an existing vertex in the graph with its old 'undefined' value (1)", () => {
 		callItWith('k2', 'newValue');
+		expect(graph.hasVertex('k2')).toBeTruthy();
+		expect(graph.vertexValue('k2')).toBeUndefined();
+		expect(graph.vertexCount()).toBe(originalVertexCount);
+	});
+	it("leaves an existing vertex in the graph with its old 'undefined' value (2)", () => {
+		callItWith(['k2', 'newValue']);
 		expect(graph.hasVertex('k2')).toBeTruthy();
 		expect(graph.vertexValue('k2')).toBeUndefined();
 		expect(graph.vertexCount()).toBe(originalVertexCount);
@@ -349,39 +443,87 @@ function it_leavesAbsentVertexAbsent() {
 	});
 }
 function it_leavesNewEdgeWithNewValue() {
-	it("leaves a new edge in the graph with a new value", () => {
+	it("leaves a new edge in the graph with a new value (1)", () => {
 		callItWith('k1', 'k2', 'newValue');
+		expect(graph.hasEdge('k1', 'k2')).toBeTruthy();
+		expect(graph.edgeValue('k1', 'k2')).toBe('newValue');
+		expect(graph.edgeCount()).toBe(originalEdgeCount + 1);
+	});
+	it("leaves a new edge in the graph with a new value (2)", () => {
+		callItWith(['k1', 'k2'], 'newValue');
+		expect(graph.hasEdge('k1', 'k2')).toBeTruthy();
+		expect(graph.edgeValue('k1', 'k2')).toBe('newValue');
+		expect(graph.edgeCount()).toBe(originalEdgeCount + 1);
+	});
+	it("leaves a new edge in the graph with a new value (3)", () => {
+		callItWith([['k1', 'k2'], 'newValue']);
 		expect(graph.hasEdge('k1', 'k2')).toBeTruthy();
 		expect(graph.edgeValue('k1', 'k2')).toBe('newValue');
 		expect(graph.edgeCount()).toBe(originalEdgeCount + 1);
 	});
 }
 function it_leavesNewEdgeWithNewUndefinedValue() {
-	it("leaves a new edge in the graph with a new 'undefined' value", () => {
+	it("leaves a new edge in the graph with a new 'undefined' value (1)", () => {
 		callItWith('k1', 'k2');
+		expect(graph.hasEdge('k1', 'k2')).toBeTruthy();
+		expect(graph.edgeValue('k1', 'k2')).toBeUndefined();
+		expect(graph.edgeCount()).toBe(originalEdgeCount + 1);
+	});
+	it("leaves a new edge in the graph with a new 'undefined' value (2)", () => {
+		callItWith(['k1', 'k2']);
+		expect(graph.hasEdge('k1', 'k2')).toBeTruthy();
+		expect(graph.edgeValue('k1', 'k2')).toBeUndefined();
+		expect(graph.edgeCount()).toBe(originalEdgeCount + 1);
+	});
+	it("leaves a new edge in the graph with a new 'undefined' value (3)", () => {
+		callItWith([['k1', 'k2']]);
 		expect(graph.hasEdge('k1', 'k2')).toBeTruthy();
 		expect(graph.edgeValue('k1', 'k2')).toBeUndefined();
 		expect(graph.edgeCount()).toBe(originalEdgeCount + 1);
 	});
 }
 function it_leavesExistingEdgeWithNewValue() {
-	it("leaves an existing edge in the graph with a new value", () => {
+	it("leaves an existing edge in the graph with a new value (1)", () => {
 		callItWith('k2', 'k3', 'newValue');
+		expect(graph.hasEdge('k2', 'k3')).toBeTruthy();
+		expect(graph.edgeValue('k2', 'k3')).toBe('newValue');
+		expect(graph.edgeCount()).toBe(originalEdgeCount);
+	});
+	it("leaves an existing edge in the graph with a new value (2)", () => {
+		callItWith(['k2', 'k3'], 'newValue');
+		expect(graph.hasEdge('k2', 'k3')).toBeTruthy();
+		expect(graph.edgeValue('k2', 'k3')).toBe('newValue');
+		expect(graph.edgeCount()).toBe(originalEdgeCount);
+	});
+	it("leaves an existing edge in the graph with a new value (3)", () => {
+		callItWith([['k2', 'k3'], 'newValue']);
 		expect(graph.hasEdge('k2', 'k3')).toBeTruthy();
 		expect(graph.edgeValue('k2', 'k3')).toBe('newValue');
 		expect(graph.edgeCount()).toBe(originalEdgeCount);
 	});
 }
 function it_leavesExistingEdgeWithNewUndefinedValue() {
-	it("leaves an existing edge in the graph with a new 'undefined' value", () => {
+	it("leaves an existing edge in the graph with a new 'undefined' value (1)", () => {
 		callItWith('k2', 'k3');
+		expect(graph.hasEdge('k2', 'k3')).toBeTruthy();
+		expect(graph.edgeValue('k2', 'k3')).toBeUndefined();
+		expect(graph.edgeCount()).toBe(originalEdgeCount);
+	});
+	it("leaves an existing edge in the graph with a new 'undefined' value (2)", () => {
+		callItWith(['k2', 'k3']);
+		expect(graph.hasEdge('k2', 'k3')).toBeTruthy();
+		expect(graph.edgeValue('k2', 'k3')).toBeUndefined();
+		expect(graph.edgeCount()).toBe(originalEdgeCount);
+	});
+	it("leaves an existing edge in the graph with a new 'undefined' value (3)", () => {
+		callItWith([['k2', 'k3']]);
 		expect(graph.hasEdge('k2', 'k3')).toBeTruthy();
 		expect(graph.edgeValue('k2', 'k3')).toBeUndefined();
 		expect(graph.edgeCount()).toBe(originalEdgeCount);
 	});
 }
 function it_leavesExistingEdgeWithOldValue() {
-	it("leaves an existing edge in the graph with its old value", () => {
+	it("leaves an existing edge in the graph with its old value (1)", () => {
 		callItWith('k2', 'k3', 'newValue');
 		expect(graph.hasEdge('k2', 'k3')).toBeTruthy();
 		expect(graph.edgeValue('k2', 'k3')).toBe('oldValue23');
@@ -391,17 +533,49 @@ function it_leavesExistingEdgeWithOldValue() {
 		expect(graph.edgeValue('k2', 'k3')).toBe('oldValue23');
 		expect(graph.edgeCount()).toBe(originalEdgeCount);
 	});
+	it("leaves an existing edge in the graph with its old value (2)", () => {
+		callItWith(['k2', 'k3'], 'newValue');
+		expect(graph.hasEdge('k2', 'k3')).toBeTruthy();
+		expect(graph.edgeValue('k2', 'k3')).toBe('oldValue23');
+		expect(graph.edgeCount()).toBe(originalEdgeCount);
+		callItWith(['k2', 'k3'], undefined);
+		expect(graph.hasEdge('k2', 'k3')).toBeTruthy();
+		expect(graph.edgeValue('k2', 'k3')).toBe('oldValue23');
+		expect(graph.edgeCount()).toBe(originalEdgeCount);
+	});
+	it("leaves an existing edge in the graph with its old value (3)", () => {
+		callItWith([['k2', 'k3'], 'newValue']);
+		expect(graph.hasEdge('k2', 'k3')).toBeTruthy();
+		expect(graph.edgeValue('k2', 'k3')).toBe('oldValue23');
+		expect(graph.edgeCount()).toBe(originalEdgeCount);
+		callItWith([['k2', 'k3'], undefined]);
+		expect(graph.hasEdge('k2', 'k3')).toBeTruthy();
+		expect(graph.edgeValue('k2', 'k3')).toBe('oldValue23');
+		expect(graph.edgeCount()).toBe(originalEdgeCount);
+	});
 }
 function it_leavesExistingEdgeWithOldUndefinedValue() {
-	it("leaves an existing edge in the graph with its old 'undefined' value", () => {
+	it("leaves an existing edge in the graph with its old 'undefined' value (1)", () => {
 		callItWith('k3', 'k4', 'newValue');
+		expect(graph.hasEdge('k3', 'k4')).toBeTruthy();
+		expect(graph.edgeValue('k3', 'k4')).toBeUndefined();
+		expect(graph.edgeCount()).toBe(originalEdgeCount);
+	});
+	it("leaves an existing edge in the graph with its old 'undefined' value (2)", () => {
+		callItWith(['k3', 'k4'], 'newValue');
+		expect(graph.hasEdge('k3', 'k4')).toBeTruthy();
+		expect(graph.edgeValue('k3', 'k4')).toBeUndefined();
+		expect(graph.edgeCount()).toBe(originalEdgeCount);
+	});
+	it("leaves an existing edge in the graph with its old 'undefined' value (3)", () => {
+		callItWith([['k3', 'k4'], 'newValue']);
 		expect(graph.hasEdge('k3', 'k4')).toBeTruthy();
 		expect(graph.edgeValue('k3', 'k4')).toBeUndefined();
 		expect(graph.edgeCount()).toBe(originalEdgeCount);
 	});
 }
 function it_leavesExistingEdgeAbsent() {
-	it("leaves an existing edge absent from the graph", () => {
+	it("leaves an existing edge absent from the graph (1)", () => {
 		callItWith('k2', 'k3');
 		expect(graph.hasEdge('k2', 'k3')).toBeFalsy();
 		expect(graph.edgeCount()).toBe(originalEdgeCount - 1);
@@ -409,16 +583,29 @@ function it_leavesExistingEdgeAbsent() {
 		expect(graph.hasEdge('k3', 'k4')).toBeFalsy();
 		expect(graph.edgeCount()).toBe(originalEdgeCount - 2);
 	});
+	it("leaves an existing edge absent from the graph (2)", () => {
+		callItWith(['k2', 'k3']);
+		expect(graph.hasEdge('k2', 'k3')).toBeFalsy();
+		expect(graph.edgeCount()).toBe(originalEdgeCount - 1);
+		callItWith(['k3', 'k4']);
+		expect(graph.hasEdge('k3', 'k4')).toBeFalsy();
+		expect(graph.edgeCount()).toBe(originalEdgeCount - 2);
+	});
 }
 function it_leavesAbsentEdgeAbsent() {
-	it("leaves an absent edge absent from the graph", () => {
+	it("leaves an absent edge absent from the graph (1)", () => {
 		callItWith('k1', 'k2');
+		expect(graph.hasEdge('k1', 'k2')).toBeFalsy();
+		expect(graph.edgeCount()).toBe(originalEdgeCount);
+	});
+	it("leaves an absent edge absent from the graph (2)", () => {
+		callItWith(['k1', 'k2']);
 		expect(graph.hasEdge('k1', 'k2')).toBeFalsy();
 		expect(graph.edgeCount()).toBe(originalEdgeCount);
 	});
 }
 function it_leavesAbsentVerticesPresent() {
-	it("leaves absent vertices present in the graph", () => {
+	it("leaves absent vertices present in the graph (1)", () => {
 		callItWith('newKey1', 'k1');
 		expect(graph.hasVertex('newKey1')).toBeTruthy();
 		expect(graph.vertexCount()).toBe(originalVertexCount + 1);
@@ -426,6 +613,18 @@ function it_leavesAbsentVerticesPresent() {
 		expect(graph.hasVertex('newKey2')).toBeTruthy();
 		expect(graph.vertexCount()).toBe(originalVertexCount + 2);
 		callItWith('newKey3', 'newKey4');
+		expect(graph.hasVertex('newKey3')).toBeTruthy();
+		expect(graph.hasVertex('newKey4')).toBeTruthy();
+		expect(graph.vertexCount()).toBe(originalVertexCount + 4);
+	});
+	it("leaves absent vertices present in the graph (2)", () => {
+		callItWith(['newKey1', 'k1']);
+		expect(graph.hasVertex('newKey1')).toBeTruthy();
+		expect(graph.vertexCount()).toBe(originalVertexCount + 1);
+		callItWith(['k1', 'newKey2']);
+		expect(graph.hasVertex('newKey2')).toBeTruthy();
+		expect(graph.vertexCount()).toBe(originalVertexCount + 2);
+		callItWith(['newKey3', 'newKey4']);
 		expect(graph.hasVertex('newKey3')).toBeTruthy();
 		expect(graph.hasVertex('newKey4')).toBeTruthy();
 		expect(graph.vertexCount()).toBe(originalVertexCount + 4);
@@ -486,10 +685,7 @@ describeMethod('edgeCount', () => {
 
 describeMethod('hasVertex', () => {
 
-	it("throws nothing when passed a key argument", () => {
-		expectItWhenBoundWith('k1').not.toThrow();
-		expectItWhenBoundWith('newKey').not.toThrow();
-	});
+	it_throwsNothingWhenPassedAKey();
 
 	it("returns a truthy value for an existing vertex", () => {
 		expectItWhenCalledWith('k1').toBeTruthy();
@@ -505,23 +701,47 @@ describeMethod('hasVertex', () => {
 
 describeMethod('hasEdge', () => {
 
-	it("throws nothing when passed two key arguments", () => {
-		expectItWhenBoundWith('k1', 'k2').not.toThrow();
-		expectItWhenBoundWith('k2', 'k3').not.toThrow();
-		expectItWhenBoundWith('newKey', 'k2').not.toThrow();
-		expectItWhenBoundWith('newKey1', 'newKey2').not.toThrow();
-	});
+	it_throwsNothingWhenPassedTwoKeys();
 
-	it("returns a truthy value for an existing edge", () => {
+	it("returns a truthy value for an existing edge (1)", () => {
 		expectItWhenCalledWith('k2', 'k3').toBeTruthy();
 		expectItWhenCalledWith('k3', 'k4').toBeTruthy();
 	});
 
-	it("returns a falsy value for an absent edge", () => {
+	it("returns a truthy value for an existing edge (2)", () => {
+		expectItWhenCalledWith(['k2', 'k3']).toBeTruthy();
+		expectItWhenCalledWith(['k3', 'k4']).toBeTruthy();
+	});
+
+	it("returns a falsy value for an absent edge (1)", () => {
 		expectItWhenCalledWith('k1', 'k2').toBeFalsy();
 		expectItWhenCalledWith('k3', 'k2').toBeFalsy();
 		expectItWhenCalledWith('newKey', 'k2').toBeFalsy();
 		expectItWhenCalledWith('newKey1', 'newKey2').toBeFalsy();
+	});
+
+	it("returns a falsy value for an absent edge (2)", () => {
+		expectItWhenCalledWith(['k1', 'k2']).toBeFalsy();
+		expectItWhenCalledWith(['k3', 'k2']).toBeFalsy();
+		expectItWhenCalledWith(['newKey', 'k2']).toBeFalsy();
+		expectItWhenCalledWith(['newKey1', 'newKey2']).toBeFalsy();
+	});
+
+});
+
+
+describeMethod('vertex', () => {
+
+	it_throwsNothingIfVertexExists();
+
+	it_throwsErrorIfVertexDoesNotExist();
+
+	it("returns the proper key/value pair belonging to a vertex", () => {
+		expectItWhenCalledWith('k1').toEqual(['k1', 'oldValue1']);
+	});
+
+	it("returns a key/value pair with an 'undefined' value for vertices with no value", () => {
+		expectItWhenCalledWith('k2').toEqual(['k2',  undefined ]);
 	});
 
 });
@@ -529,11 +749,7 @@ describeMethod('hasEdge', () => {
 
 describeMethod('vertexValue', () => {
 
-	it("throws nothing when passed a key argument", () => {
-		expectItWhenBoundWith('k1').not.toThrow();
-		expectItWhenBoundWith('k2').not.toThrow();
-		expectItWhenBoundWith('newKey').not.toThrow();
-	});
+	it_throwsNothingWhenPassedAKey();
 
 	it("returns the proper value belonging to a vertex", () => {
 		expectItWhenCalledWith('k1').toBe('oldValue1');
@@ -550,14 +766,26 @@ describeMethod('vertexValue', () => {
 });
 
 
+describeMethod('edge', () => {
+
+	it_throwsNothingIfEdgeExists();
+
+	it_throwsErrorIfEdgeDoesNotExist();
+
+	it("returns the proper key/value pair belonging to an edge", () => {
+		expectItWhenCalledWith('k2', 'k3').toEqual([['k2', 'k3'], 'oldValue23']);
+	});
+
+	it("returns a key/value pair with an 'undefined' value for edges with no value", () => {
+		expectItWhenCalledWith('k3', 'k4').toEqual([['k3', 'k4'],  undefined  ]);
+	});
+
+});
+
+
 describeMethod('edgeValue', () => {
 
-	it("throws nothing when passed two key arguments", () => {
-		expectItWhenBoundWith('k1', 'k2').not.toThrow();
-		expectItWhenBoundWith('k2', 'k3').not.toThrow();
-		expectItWhenBoundWith('newKey', 'k2').not.toThrow();
-		expectItWhenBoundWith('newKey1', 'newKey2').not.toThrow();
-	});
+	it_throwsNothingWhenPassedTwoKeys();
 
 	it("returns the proper value belonging to an edge", () => {
 		expectItWhenCalledWith('k2', 'k3').toBe('oldValue23');
@@ -1106,54 +1334,47 @@ describeMethod('paths', () => {
 	//         k5 ────╯
 
 	it("iterates over all paths between the given keys, in no particular order (no path)", () => {
-		expect(new Set(callItWith('k1', 'k2'))).toEqual(new Set([]));
+		expect(new Set(callItWith( 'k1', 'k2' ))).toEqual(new Set([]));
+		expect(new Set(callItWith(['k1', 'k2']))).toEqual(new Set([]));
 	});
 
 	it("iterates over all paths between the given keys, in no particular order (no implicit self-loop)", () => {
-		expect(new Set(callItWith('k3', 'k3'))).toEqual(new Set([]));
+		expect(new Set(callItWith( 'k3', 'k3' ))).toEqual(new Set([]));
+		expect(new Set(callItWith(['k3', 'k3']))).toEqual(new Set([]));
 	});
 
 	it("iterates over all paths between the given keys, in no particular order (single edge)", () => {
-		expect(new Set(callItWith('k2', 'k5'))).toEqual(new Set([
-			['k2', 'k5']
-		]));
+		expect(new Set(callItWith( 'k2', 'k5' ))).toEqual(new Set([ ['k2', 'k5'] ]));
+		expect(new Set(callItWith(['k2', 'k5']))).toEqual(new Set([ ['k2', 'k5'] ]));
 	});
 
 	it("iterates over all paths between the given keys, in no particular order (transitive)", () => {
-		expect(new Set(callItWith('k2', 'k3'))).toEqual(new Set([
-			['k2', 'k3'],
-			['k2', 'k5', 'k3']
-		]));
-		expect(new Set(callItWith('k2', 'k4'))).toEqual(new Set([
-			['k2', 'k3', 'k4'],
-			['k2', 'k5', 'k3', 'k4']
-		]));
+		expect(new Set(callItWith( 'k2', 'k3' ))).toEqual(new Set([ ['k2', 'k3'], ['k2', 'k5', 'k3'] ]));
+		expect(new Set(callItWith(['k2', 'k3']))).toEqual(new Set([ ['k2', 'k3'], ['k2', 'k5', 'k3'] ]));
+		expect(new Set(callItWith( 'k2', 'k4' ))).toEqual(new Set([ ['k2', 'k3', 'k4'], ['k2', 'k5', 'k3', 'k4'] ]));
+		expect(new Set(callItWith(['k2', 'k4']))).toEqual(new Set([ ['k2', 'k3', 'k4'], ['k2', 'k5', 'k3', 'k4'] ]));
 	});
 
 	it("iterates over all paths between the given keys, in no particular order (reflexive cycle)", () => {
 		graph.addNewEdge('k1', 'k1');
-		expect(new Set(callItWith('k1', 'k1'))).toEqual(new Set([
-			['k1', 'k1']
-		]));
+		expect(new Set(callItWith( 'k1', 'k1' ))).toEqual(new Set([ ['k1', 'k1'] ]));
+		expect(new Set(callItWith(['k1', 'k1']))).toEqual(new Set([ ['k1', 'k1'] ]));
 	});
 
 	it("iterates over all paths between the given keys, in no particular order (symmetric cycle)", () => {
 		graph.addNewEdge('k4', 'k3');
-		expect(new Set(callItWith('k3', 'k3'))).toEqual(new Set([
-			['k3', 'k4', 'k3']
-		]));
+		expect(new Set(callItWith( 'k3', 'k3' ))).toEqual(new Set([ ['k3', 'k4', 'k3'] ]));
+		expect(new Set(callItWith(['k3', 'k3']))).toEqual(new Set([ ['k3', 'k4', 'k3'] ]));
 	});
 
 	it("iterates over all paths between the given keys, in no particular order (larger cycle)", () => {
 		graph.addNewEdge('k4', 'k1');
 		graph.addNewEdge('k1', 'k2');
-		expect(new Set(callItWith('k3', 'k3'))).toEqual(new Set([
-			['k3', 'k4', 'k1', 'k2', 'k3'],
-			['k3', 'k4', 'k1', 'k2', 'k5', 'k3']
-		]));
+		expect(new Set(callItWith( 'k3', 'k3' ))).toEqual(new Set([ ['k3', 'k4', 'k1', 'k2', 'k3'], ['k3', 'k4', 'k1', 'k2', 'k5', 'k3'] ]));
+		expect(new Set(callItWith(['k3', 'k3']))).toEqual(new Set([ ['k3', 'k4', 'k1', 'k2', 'k3'], ['k3', 'k4', 'k1', 'k2', 'k5', 'k3'] ]));
 	});
 
-	it("iterates over all paths between the given keys, in no particular order (including part of a cycle, part 1)", () => {
+	it("iterates over all paths between the given keys, in no particular order (including part of a cycle)", () => {
 		graph = new Graph(
 			[['n1', 'n2']],
 			[['n2', 'n3']],
@@ -1169,30 +1390,8 @@ describeMethod('paths', () => {
 		//         ╵      │
 		//         n6 ◀───╯
 
-		expect(new Set(callItWith('n1', 'n5'))).toEqual(new Set([
-			['n1', 'n2', 'n3', 'n4', 'n5']
-		]));
-	});
-
-	it("iterates over all paths between the given keys, in no particular order (including part of a cycle, part 2)", () => {
-		graph = new Graph( // reordered edge insertions compared to test above
-			[['n3', 'n6']],
-			[['n6', 'n2']],
-			[['n1', 'n2' ]],
-			[['n2', 'n3' ]],
-			[['n3', 'n4' ]],
-			[['n4', 'n5' ]]
-		);
-
-		//  n1 ──▶ n2 ──▶ n3 ──▶ n4 ──▶ n5
-		//         ▲      ╷
-		//         │      │
-		//         ╵      │
-		//         n6 ◀───╯
-
-		expect(new Set(callItWith('n1', 'n5'))).toEqual(new Set([
-			['n1', 'n2', 'n3', 'n4', 'n5']
-		]));
+		expect(new Set(callItWith( 'n1', 'n5' ))).toEqual(new Set([ ['n1', 'n2', 'n3', 'n4', 'n5'] ]));
+		expect(new Set(callItWith(['n1', 'n5']))).toEqual(new Set([ ['n1', 'n2', 'n3', 'n4', 'n5'] ]));
 	});
 
 });
@@ -1202,61 +1401,68 @@ describeMethod('path', () => {
 
 	it_throwsErrorIfVerticesDoNotExist();
 
-	it("returns null if the path doesn't exist (1)", () => {
-		expectItWhenCalledWith('k1', 'k2').toBeNull();
-		expectItWhenCalledWith('k1', 'k3').toBeNull();
-		expectItWhenCalledWith('k2', 'k1').toBeNull();
+	it("returns null if the path doesn't exist (simple)", () => {
+		expectItWhenCalledWith( 'k1', 'k2' ).toBeNull();
+		expectItWhenCalledWith(['k1', 'k2']).toBeNull();
+		expectItWhenCalledWith( 'k1', 'k3' ).toBeNull();
+		expectItWhenCalledWith(['k1', 'k3']).toBeNull();
+		expectItWhenCalledWith( 'k2', 'k1' ).toBeNull();
+		expectItWhenCalledWith(['k2', 'k1']).toBeNull();
 	});
 
-	it("returns null if the path doesn't exist (2: implicit self-loop)", () => {
-		expectItWhenCalledWith('k2', 'k2').toBeNull();
+	it("returns null if the path doesn't exist (implicit self-loop)", () => {
+		expectItWhenCalledWith( 'k2', 'k2').toBeNull();
+		expectItWhenCalledWith(['k2', 'k2']).toBeNull();
 	});
 
-	it("returns null if the path doesn't exist (3: edge backwards)", () => {
-		expectItWhenCalledWith('k3', 'k2').toBeNull();
-		expectItWhenCalledWith('k4', 'k2').toBeNull();
+	it("returns null if the path doesn't exist (edge backwards)", () => {
+		expectItWhenCalledWith( 'k3', 'k2' ).toBeNull();
+		expectItWhenCalledWith(['k3', 'k2']).toBeNull();
+		expectItWhenCalledWith( 'k4', 'k2' ).toBeNull();
+		expectItWhenCalledWith(['k4', 'k2']).toBeNull();
 	});
 
-	it("returns a descriptive array if the path exists (1: single edge)", () => {
-		expectItWhenCalledWith('k2', 'k3').toEqual(['k2', 'k3']);
-		expectItWhenCalledWith('k3', 'k4').toEqual(['k3', 'k4']);
-		expectItWhenCalledWith('k2', 'k5').toEqual(['k2', 'k5']);
-		expectItWhenCalledWith('k5', 'k3').toEqual(['k5', 'k3']);
+	it("returns a descriptive array if the path exists (single edge)", () => {
+		expectItWhenCalledWith( 'k2', 'k3' ).toEqual(['k2', 'k3']);
+		expectItWhenCalledWith(['k2', 'k3']).toEqual(['k2', 'k3']);
+		expectItWhenCalledWith( 'k3', 'k4' ).toEqual(['k3', 'k4']);
+		expectItWhenCalledWith(['k3', 'k4']).toEqual(['k3', 'k4']);
+		expectItWhenCalledWith( 'k2', 'k5' ).toEqual(['k2', 'k5']);
+		expectItWhenCalledWith(['k2', 'k5']).toEqual(['k2', 'k5']);
+		expectItWhenCalledWith( 'k5', 'k3' ).toEqual(['k5', 'k3']);
+		expectItWhenCalledWith(['k5', 'k3']).toEqual(['k5', 'k3']);
 	});
 
-	it("returns a descriptive array if the path exists (2: transitive)", () => {
-		expectItWhenCalledWith('k2', 'k4').toEqualOneOf(
-			['k2', 'k3', 'k4'],
-			['k2', 'k5', 'k3', 'k4']
-		);
-		expectItWhenCalledWith('k5', 'k4').toEqual(['k5', 'k3', 'k4']);
+	it("returns a descriptive array if the path exists (transitive)", () => {
+		expectItWhenCalledWith( 'k2', 'k4' ).toEqualOneOf( ['k2', 'k3', 'k4'], ['k2', 'k5', 'k3', 'k4'] );
+		expectItWhenCalledWith(['k2', 'k4']).toEqualOneOf( ['k2', 'k3', 'k4'], ['k2', 'k5', 'k3', 'k4'] );
+		expectItWhenCalledWith( 'k5', 'k4' ).toEqual(['k5', 'k3', 'k4']);
+		expectItWhenCalledWith(['k5', 'k4']).toEqual(['k5', 'k3', 'k4']);
 		graph.addNewEdge('k4', 'k1');
-		expectItWhenCalledWith('k2', 'k1').toEqualOneOf(
-			['k2', 'k3', 'k4', 'k1'],
-			['k2', 'k5', 'k3', 'k4', 'k1']
-		);
+		expectItWhenCalledWith( 'k2', 'k1' ).toEqualOneOf( ['k2', 'k3', 'k4', 'k1'], ['k2', 'k5', 'k3', 'k4', 'k1'] );
+		expectItWhenCalledWith(['k2', 'k1']).toEqualOneOf( ['k2', 'k3', 'k4', 'k1'], ['k2', 'k5', 'k3', 'k4', 'k1'] );
 	});
 
-	it("returns a descriptive array if the path exists (3: reflexive cycle)", () => {
+	it("returns a descriptive array if the path exists (reflexive cycle)", () => {
 		graph.addNewEdge('k1', 'k1');
-		expectItWhenCalledWith('k1', 'k1').toEqual(['k1', 'k1']);
+		expectItWhenCalledWith( 'k1', 'k1' ).toEqual(['k1', 'k1']);
+		expectItWhenCalledWith(['k1', 'k1']).toEqual(['k1', 'k1']);
 	});
 
-	it("returns a descriptive array if the path exists (4: symmetric cycle)", () => {
+	it("returns a descriptive array if the path exists (symmetric cycle)", () => {
 		graph.addNewEdge('k4', 'k3');
-		expectItWhenCalledWith('k3', 'k3').toEqual(['k3', 'k4', 'k3']);
+		expectItWhenCalledWith( 'k3', 'k3' ).toEqual(['k3', 'k4', 'k3']);
+		expectItWhenCalledWith(['k3', 'k3']).toEqual(['k3', 'k4', 'k3']);
 	});
 
-	it("returns a descriptive array if the path exists (5: larger cycle)", () => {
+	it("returns a descriptive array if the path exists (larger cycle)", () => {
 		graph.addNewEdge('k4', 'k1');
 		graph.addNewEdge('k1', 'k2');
-		expectItWhenCalledWith('k3', 'k3').toEqualOneOf(
-			['k3', 'k4', 'k1', 'k2', 'k3'],
-			['k3', 'k4', 'k1', 'k2', 'k5', 'k3']
-		);
+		expectItWhenCalledWith( 'k3', 'k3' ).toEqualOneOf( ['k3', 'k4', 'k1', 'k2', 'k3'], ['k3', 'k4', 'k1', 'k2', 'k5', 'k3'] );
+		expectItWhenCalledWith(['k3', 'k3']).toEqualOneOf( ['k3', 'k4', 'k1', 'k2', 'k3'], ['k3', 'k4', 'k1', 'k2', 'k5', 'k3'] );
 	});
 
-	it("returns a descriptive array if the path exists (6: including part of a cycle, part 1)", () => {
+	it("returns a descriptive array if the path exists (including part of a cycle, part 1)", () => {
 		graph = new Graph(
 			[['n1', 'n2']],
 			[['n2', 'n3']],
@@ -1272,10 +1478,11 @@ describeMethod('path', () => {
 		//         ╵      │
 		//         n6 ◀───╯
 
-		expectItWhenCalledWith('n1', 'n5').toEqual(['n1', 'n2', 'n3', 'n4', 'n5']);
+		expectItWhenCalledWith( 'n1', 'n5' ).toEqual(['n1', 'n2', 'n3', 'n4', 'n5']);
+		expectItWhenCalledWith(['n1', 'n5']).toEqual(['n1', 'n2', 'n3', 'n4', 'n5']);
 	});
 
-	it("returns a descriptive array if the path exists (7: including part of a cycle, part 2)", () => {
+	it("returns a descriptive array if the path exists (including part of a cycle, part 2)", () => {
 		graph = new Graph(
 			[['n3', 'n6']],
 			[['n6', 'n2']],
@@ -1291,7 +1498,8 @@ describeMethod('path', () => {
 		//         ╵      │
 		//         n6 ◀───╯
 
-		expectItWhenCalledWith('n1', 'n5').toEqual(['n1', 'n2', 'n3', 'n4', 'n5']);
+		expectItWhenCalledWith( 'n1', 'n5' ).toEqual(['n1', 'n2', 'n3', 'n4', 'n5']);
+		expectItWhenCalledWith(['n1', 'n5']).toEqual(['n1', 'n2', 'n3', 'n4', 'n5']);
 	});
 
 });
@@ -1301,52 +1509,68 @@ describeMethod('hasPath', () => {
 
 	it_throwsErrorIfVerticesDoNotExist();
 
-	it("returns false if the path doesn't exist (1)", () => {
-		expectItWhenCalledWith('k1', 'k2').toBe(false);
-		expectItWhenCalledWith('k1', 'k3').toBe(false);
-		expectItWhenCalledWith('k2', 'k1').toBe(false);
+	it("returns false if the path doesn't exist (simple)", () => {
+		expectItWhenCalledWith( 'k1', 'k2' ).toBe(false);
+		expectItWhenCalledWith(['k1', 'k2']).toBe(false);
+		expectItWhenCalledWith( 'k1', 'k3' ).toBe(false);
+		expectItWhenCalledWith(['k1', 'k3']).toBe(false);
+		expectItWhenCalledWith( 'k2', 'k1' ).toBe(false);
+		expectItWhenCalledWith(['k2', 'k1']).toBe(false);
 	});
 
-	it("returns false if the path doesn't exist (2: self-loop)", () => {
-		expectItWhenCalledWith('k2', 'k2').toBe(false);
+	it("returns false if the path doesn't exist (self-loop)", () => {
+		expectItWhenCalledWith( 'k2', 'k2' ).toBe(false);
+		expectItWhenCalledWith(['k2', 'k2']).toBe(false);
 	});
 
-	it("returns false if the path doesn't exist (3: edge backwards)", () => {
-		expectItWhenCalledWith('k3', 'k2').toBe(false);
-		expectItWhenCalledWith('k4', 'k2').toBe(false);
+	it("returns false if the path doesn't exist (edge backwards)", () => {
+		expectItWhenCalledWith( 'k3', 'k2' ).toBe(false);
+		expectItWhenCalledWith(['k3', 'k2']).toBe(false);
+		expectItWhenCalledWith( 'k4', 'k2' ).toBe(false);
+		expectItWhenCalledWith(['k4', 'k2']).toBe(false);
 	});
 
-	it("returns true if the path exists (1: single edge)", () => {
-		expectItWhenCalledWith('k2', 'k3').toBe(true);
-		expectItWhenCalledWith('k3', 'k4').toBe(true);
-		expectItWhenCalledWith('k2', 'k5').toBe(true);
-		expectItWhenCalledWith('k5', 'k3').toBe(true);
+	it("returns true if the path exists (single edge)", () => {
+		expectItWhenCalledWith( 'k2', 'k3' ).toBe(true);
+		expectItWhenCalledWith(['k2', 'k3']).toBe(true);
+		expectItWhenCalledWith( 'k3', 'k4' ).toBe(true);
+		expectItWhenCalledWith(['k3', 'k4']).toBe(true);
+		expectItWhenCalledWith( 'k2', 'k5' ).toBe(true);
+		expectItWhenCalledWith(['k2', 'k5']).toBe(true);
+		expectItWhenCalledWith( 'k5', 'k3' ).toBe(true);
+		expectItWhenCalledWith(['k5', 'k3']).toBe(true);
 	});
 
-	it("returns true if the path exists (2: transitive)", () => {
-		expectItWhenCalledWith('k2', 'k4').toBe(true);
-		expectItWhenCalledWith('k5', 'k4').toBe(true);
+	it("returns true if the path exists (transitive)", () => {
+		expectItWhenCalledWith( 'k2', 'k4' ).toBe(true);
+		expectItWhenCalledWith(['k2', 'k4']).toBe(true);
+		expectItWhenCalledWith( 'k5', 'k4' ).toBe(true);
+		expectItWhenCalledWith(['k5', 'k4']).toBe(true);
 		graph.addEdge('k4', 'k1');
-		expectItWhenCalledWith('k2', 'k1').toBe(true);
+		expectItWhenCalledWith( 'k2', 'k1' ).toBe(true);
+		expectItWhenCalledWith(['k2', 'k1']).toBe(true);
 	});
 
-	it("returns true if the path exists (3: reflexive cycle)", () => {
+	it("returns true if the path exists (reflexive cycle)", () => {
 		graph.addEdge('k1', 'k1');
-		expectItWhenCalledWith('k1', 'k1').toBe(true);
+		expectItWhenCalledWith( 'k1', 'k1' ).toBe(true);
+		expectItWhenCalledWith(['k1', 'k1']).toBe(true);
 	});
 
-	it("returns true if the path exists (4: symmetric cycle)", () => {
+	it("returns true if the path exists (symmetric cycle)", () => {
 		graph.addEdge('k4', 'k3');
-		expectItWhenCalledWith('k3', 'k3').toBe(true);
+		expectItWhenCalledWith( 'k3', 'k3' ).toBe(true);
+		expectItWhenCalledWith(['k3', 'k3']).toBe(true);
 	});
 
-	it("returns true if the path exists (5: larger cycle)", () => {
+	it("returns true if the path exists (larger cycle)", () => {
 		graph.addEdge('k4', 'k1');
 		graph.addEdge('k1', 'k2');
-		expectItWhenCalledWith('k3', 'k3').toBe(true);
+		expectItWhenCalledWith( 'k3', 'k3' ).toBe(true);
+		expectItWhenCalledWith(['k3', 'k3']).toBe(true);
 	});
 
-	it("returns true if the path exists (6: including part of a cycle, part 1)", () => {
+	it("returns true if the path exists (including part of a cycle, part 1)", () => {
 		graph = new Graph(
 			[['n1', 'n2']],
 			[['n2', 'n3']],
@@ -1362,10 +1586,11 @@ describeMethod('hasPath', () => {
 		//         ╵      │
 		//         n6 ◀───╯
 
-		expectItWhenCalledWith('n1', 'n5').toBe(true);
+		expectItWhenCalledWith( 'n1', 'n5' ).toBe(true);
+		expectItWhenCalledWith(['n1', 'n5']).toBe(true);
 	});
 
-	it("returns true if the path exists (7: including part of a cycle, part 2)", () => {
+	it("returns true if the path exists (including part of a cycle, part 2)", () => {
 		graph = new Graph(
 			[['n3', 'n6']],
 			[['n6', 'n2']],
@@ -1381,7 +1606,8 @@ describeMethod('hasPath', () => {
 		//         ╵      │
 		//         n6 ◀───╯
 
-		expectItWhenCalledWith('n1', 'n5').toBe(true);
+		expectItWhenCalledWith( 'n1', 'n5' ).toBe(true);
+		expectItWhenCalledWith(['n1', 'n5']).toBe(true);
 	});
 
 });
@@ -1614,11 +1840,11 @@ describeMethod('clone', () => {
 
 	it("returns a new graph with the same edges as the original", () => {
 		let newGraph = callItWith();
-		for (let [from, to, val] of newGraph.edges()) {
+		for (let [[from, to], val] of newGraph.edges()) {
 			expect(graph.hasEdge(from, to)).toBeTruthy();
 			expect(val).toBe(graph.edgeValue(from, to));
 		}
-		for (let [from, to, val] of graph.edges()) {
+		for (let [[from, to], val] of graph.edges()) {
 			expect(newGraph.hasEdge(from, to)).toBeTruthy();
 			expect(val).toBe(newGraph.edgeValue(from, to));
 		}
@@ -1634,11 +1860,11 @@ describeMethod('clone', () => {
 			expect(newGraph.hasVertex(key)).toBeTruthy();
 			expect(`value:${val}`).toBe(newGraph.vertexValue(key));
 		}
-		for (let [from, to, val] of newGraph.edges()) {
+		for (let [[from, to], val] of newGraph.edges()) {
 			expect(graph.hasEdge(from, to)).toBeTruthy();
 			expect(val).toBe(graph.edgeValue(from, to));
 		}
-		for (let [from, to, val] of graph.edges()) {
+		for (let [[from, to], val] of graph.edges()) {
 			expect(newGraph.hasEdge(from, to)).toBeTruthy();
 			expect(val).toBe(newGraph.edgeValue(from, to));
 		}
@@ -1654,11 +1880,11 @@ describeMethod('clone', () => {
 			expect(newGraph.hasVertex(key)).toBeTruthy();
 			expect(val).toBe(newGraph.vertexValue(key));
 		}
-		for (let [from, to, val] of newGraph.edges()) {
+		for (let [[from, to], val] of newGraph.edges()) {
 			expect(graph.hasEdge(from, to)).toBeTruthy();
 			expect(val).toBe(`value:${graph.edgeValue(from, to)}`);
 		}
-		for (let [from, to, val] of graph.edges()) {
+		for (let [[from, to], val] of graph.edges()) {
 			expect(newGraph.hasEdge(from, to)).toBeTruthy();
 			expect(`value:${val}`).toBe(newGraph.edgeValue(from, to));
 		}
@@ -1699,7 +1925,7 @@ describeMethod('transitiveReduction', () => {
 	});
 
 	it("returns a new graph with no transitive edges", () => {
-		for (let [from, to] of newGraph.edges()) {
+		for (let [[from, to]] of newGraph.edges()) {
 			newGraph.removeEdge(from, to);
 			expect(newGraph.hasPath(from, to)).toBeFalsy();
 			newGraph.addNewEdge(from, to);
@@ -1707,7 +1933,7 @@ describeMethod('transitiveReduction', () => {
 	});
 
 	it("returns a new graph with edges that have the same values as in the original", () => {
-		for (let [from, to, val] of newGraph.edges()) {
+		for (let [[from, to], val] of newGraph.edges()) {
 			expect(graph.edgeValue(from, to)).toBe(val);
 		}
 	});
@@ -2044,8 +2270,8 @@ describeMethod('edges', () => {
 
 	it("iterates over each edge in the graph", () => {
 		let edgesFound = {};
-		for (let [from, to, value] of callItWith()) {
-			let key = from + ", " + to;
+		for (let [[from, to], value] of callItWith()) {
+			let key = from + "," + to;
 			expect(edgesFound[key]).toBeUndefined();
 			edgesFound[key] = value;
 		}
@@ -2055,10 +2281,10 @@ describeMethod('edges', () => {
 	it("iterates over each edge in the graph (ES5 style)", () => {
 		let edgesFound = {};
 		for (var it = callItWith(), kv; !(kv = it.next()).done;) {
-			var from  = kv.value[0],
-				to    = kv.value[1],
-				value = kv.value[2];
-			let key = from + ", " + to;
+			var from  = kv.value[0][0],
+				to    = kv.value[0][1],
+				value = kv.value[1];
+			let key = from + "," + to;
 			expect(edgesFound[key]).toBeUndefined();
 			edgesFound[key] = value;
 		}
