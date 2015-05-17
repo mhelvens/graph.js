@@ -96,16 +96,10 @@ export default class Graph {
 
 	/**
 	 * Add a new vertex to this graph.
-	 * @method Graph#addNewVertex
-	 * @throws {Graph.VertexExistsError} if a vertex with this key already exists
-	 * @param  vertex {Array} a `[key, value]` shaped array representing this new vertex
-	 */
-	/**
-	 * Add a new vertex to this graph.
 	 * @throws {Graph.VertexExistsError} if a vertex with this key already exists
 	 * @param  key    {string} the key with which to refer to this new vertex
 	 * @param [value] {*}      the value to store in this new vertex
-	 */ // TODO: allow [key, value] array to be given as argument
+	 */ // TODO: allow [key, value] array to be given as argument in docs
 	addNewVertex(key, value) {
 		[key, value] = Graph[_extractTwoArgs](key, value);
 		this[_expectVertexAbsent](key);
@@ -122,7 +116,7 @@ export default class Graph {
 	 * @throws {Graph.VertexNotExistsError} if a vertex with this key does not exist
 	 * @param  key    {string} the key belonging to the vertex
 	 * @param [value] {*}      the value to store in this vertex
-	 */ // TODO: allow [key, value] array to be given as argument
+	 */ // TODO: allow [key, value] array to be given as argument in docs
 	setVertex(key, value) {
 		[key, value] = Graph[_extractTwoArgs](key, value);
 		this[_expectVertices](key);
@@ -132,9 +126,14 @@ export default class Graph {
 	/**
 	 * Make sure a vertex with a specific key exists in this graph. If it already exists,
 	 * do nothing. If it does not yet exist, add a new vertex with the given value.
+	 * @param vertex {Array} a `[key, value]` shaped array representing this new vertex
+	 */
+	/**
+	 * Make sure a vertex with a specific key exists in this graph. If it already exists,
+	 * do nothing. If it does not yet exist, add a new vertex with the given value.
 	 * @param  key    {string} the key for the vertex
 	 * @param [value] {*}      the value to store if a new vertex is added
-	 */ // TODO: allow [key, value] array to be given as argument
+	 */ // TODO: allow [key, value] array to be given as argument in docs
 	ensureVertex(key, value) {
 		[key, value] = Graph[_extractTwoArgs](key, value);
 		if (!this.hasVertex(key)) {
@@ -147,7 +146,7 @@ export default class Graph {
 	 * the value of that vertex is overwritten.
 	 * @param  key    {string} the key with which to refer to this new vertex
 	 * @param [value] {*}      the value to store in this new vertex
-	 */ // TODO: allow [key, value] array to be given as argument
+	 */ // TODO: allow [key, value] array to be given as argument in docs
 	addVertex(key, value) {
 		[key, value] = Graph[_extractTwoArgs](key, value);
 		if (this.hasVertex(key)) {
@@ -267,7 +266,7 @@ export default class Graph {
 	 * @param  from   {string} the key for the originating vertex
 	 * @param  to     {string} the key for the terminating vertex
 	 * @param [value] {*}      the value to store in this new edge
-	 */ // TODO: allow [from, to], value array to be given as arguments; or [[from, to], value] as single argument
+	 */ // TODO: allow [from, to], value array to be given as argument in docss; or [[from, to], value] as single argument
 	addNewEdge(from, to, value) {
 		[from, to, value] = Graph[_extractThreeArgs](from, to, value);
 		this[_expectEdgeAbsent]([from, to]);
@@ -286,7 +285,7 @@ export default class Graph {
 	 * @param  from   {string} the key for the originating vertex
 	 * @param  to     {string} the key for the terminating vertex
 	 * @param [value] {*}      the value to store in this new edge
-	 */ // TODO: allow [from, to], value array to be given as arguments; or [[from, to], value] as single argument
+	 */ // TODO: allow [from, to], value array to be given as argument in docss; or [[from, to], value] as single argument
 	createNewEdge(from, to, value) {
 		[from, to, value] = Graph[_extractThreeArgs](from, to, value);
 		this[_expectEdgeAbsent]([from, to]);
@@ -301,7 +300,7 @@ export default class Graph {
 	 * @param  from   {string} the key for the originating vertex
 	 * @param  to     {string} the key for the terminating vertex
 	 * @param [value] {*}      the value to store in this edge
-	 */ // TODO: allow [from, to], value array to be given as arguments; or [[from, to], value] as single argument
+	 */ // TODO: allow [from, to], value array to be given as argument in docss; or [[from, to], value] as single argument
 	setEdge(from, to, value) {
 		[from, to, value] = Graph[_extractThreeArgs](from, to, value);
 		this[_expectEdge]([from, to]);
@@ -316,7 +315,7 @@ export default class Graph {
 	 * @param  from   {string} the key for the originating vertex
 	 * @param  to     {string} the key for the terminating vertex
 	 * @param [value] {*}      the value to store if a new edge is added
-	 */ // TODO: allow [from, to], value array to be given as arguments; or [[from, to], value] as single argument
+	 */ // TODO: allow [from, to], value array to be given as argument in docss; or [[from, to], value] as single argument
 	spanEdge(from, to, value) {
 		[from, to, value] = Graph[_extractThreeArgs](from, to, value);
 		this[_expectVertices](from, to);
@@ -332,7 +331,7 @@ export default class Graph {
 	 * @param  from   {string} the key for the originating vertex
 	 * @param  to     {string} the key for the terminating vertex
 	 * @param [value] {*}      the value to store in this new edge
-	 */ // TODO: allow [from, to], value array to be given as arguments; or [[from, to], value] as single argument
+	 */ // TODO: allow [from, to], value array to be given as argument in docss; or [[from, to], value] as single argument
 	addEdge(from, to, value) {
 		[from, to, value] = Graph[_extractThreeArgs](from, to, value);
 		if (this.hasEdge(from, to)) {
@@ -351,7 +350,7 @@ export default class Graph {
 	 * @param  from   {string} the key for the originating vertex
 	 * @param  to     {string} the key for the terminating vertex
 	 * @param [value] {*}      the value to store if a new edge is added
-	 */ // TODO: allow [from, to], value array to be given as arguments; or [[from, to], value] as single argument
+	 */ // TODO: allow [from, to], value array to be given as argument in docss; or [[from, to], value] as single argument
 	ensureEdge(from, to, value) {
 		[from, to, value] = Graph[_extractThreeArgs](from, to, value);
 		if (!this.hasEdge(from, to)) {
@@ -367,7 +366,7 @@ export default class Graph {
 	 * @param  from   {string} the key for the originating vertex
 	 * @param  to     {string} the key for the terminating vertex
 	 * @param [value] {*}      the value to store if a new edge is added
-	 */ // TODO: allow [from, to], value array to be given as arguments; or [[from, to], value] as single argument
+	 */ // TODO: allow [from, to], value array to be given as argument in docss; or [[from, to], value] as single argument
 	createEdge(from, to, value) {
 		[from, to, value] = Graph[_extractThreeArgs](from, to, value);
 		if (this.hasEdge(from, to)) {
@@ -385,7 +384,7 @@ export default class Graph {
 	 * @throws {Graph.EdgeNotExistsError} if an edge between the `from` and `to` vertices doesn't exist
 	 * @param from {string} the key for the originating vertex
 	 * @param to   {string} the key for the terminating vertex
-	 */ // TODO: allow [from, to] array to be given as argument
+	 */ // TODO: allow [from, to] array to be given as argument in docs
 	removeExistingEdge(from, to) {
 		[from, to] = Graph[_extractTwoArgs](from, to);
 		this[_expectEdge]([from, to]);
@@ -401,7 +400,7 @@ export default class Graph {
 	 * If an edge between the `from` and `to` vertices doesn't exist, nothing happens.
 	 * @param from {string} the key for the originating vertex
 	 * @param to   {string} the key for the terminating vertex
-	 */ // TODO: allow [from, to] array to be given as argument
+	 */ // TODO: allow [from, to] array to be given as argument in docs
 	removeEdge(from, to) {
 		[from, to] = Graph[_extractTwoArgs](from, to);
 		if (this.hasEdge(from, to)) {
@@ -422,7 +421,7 @@ export default class Graph {
 	 * @param from {string} the key for the originating vertex
 	 * @param to   {string} the key for the terminating vertex
 	 * @returns {boolean} whether there is an edge between the given `from` and `to` vertices
-	 */ // TODO: allow [from, to] array to be given as argument
+	 */ // TODO: allow [from, to] array to be given as argument in docs
 	hasEdge(from, to) {
 		[from, to] = Graph[_extractTwoArgs](from, to);
 		return this.hasVertex(from) &&
@@ -436,7 +435,7 @@ export default class Graph {
 	 * @param from {string} the key for the originating vertex
 	 * @param to   {string} the key for the terminating vertex
 	 * @returns {Array} a `[[from, to], value]` shaped array representing the edge
-	 */ // TODO: allow [from, to] array to be given as argument
+	 */ // TODO: allow [from, to] array to be given as argument in docs
 	edge(from, to) {
 		[from, to] = Graph[_extractTwoArgs](from, to);
 		this[_expectEdge]([from, to]);
@@ -454,7 +453,7 @@ export default class Graph {
 	 * 2. that the stored value is actually `undefined`.
 	 *
 	 * Use {@link Graph#hasEdge} to distinguish these cases.
-	 */ // TODO: allow [from, to] array to be given as argument
+	 */ // TODO: allow [from, to] array to be given as argument in docs
 	edgeValue(from, to) {
 		[from, to] = Graph[_extractTwoArgs](from, to);
 		return this.hasEdge(from, to) ? this[_edges].get(from).get(to) : undefined;
