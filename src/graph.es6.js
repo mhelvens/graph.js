@@ -14,9 +14,11 @@ const _edgeCount    = Symbol("edge count");
 const _extractTwoArgs   = Symbol("extract ([a, b]) or (a, b) arguments");
 const _extractThreeArgs = Symbol("extract ([[a, b], c]), ([a, b], c) or (a, b, c) arguments");
 
-const _verticesFrom = Symbol("vertices from");
-const _verticesTo   = Symbol("vertices to");
-const _paths        = Symbol("paths");
+const _verticesFrom       = Symbol("vertices from");
+const _verticesTo         = Symbol("vertices to");
+const _edgesFrom          = Symbol("edges from");
+const _edgesTo            = Symbol("edges to");
+const _paths              = Symbol("paths");
 
 const _expectVertices         = Symbol("expect vertices");
 const _expectVertexAbsent     = Symbol("expect vertex absent");
@@ -520,10 +522,72 @@ export default class Graph {
 		for (let from of this[_edges].keys()) {
 			done.set(from, new Set());
 			for (let to of this[_edges].get(from).keys()) {
-				if (this.hasEdge(from, to) && !done.get(from).has(to)) {
+				if (!done.get(from).has(to) && this.hasEdge(from, to)) {
 					done.get(from).add(to);
-					yield [[from, to], this[_edges].get(from).get(to)];
+					yield this.edge(from, to);
 				}
+			}
+		}
+	}
+
+	/**
+	 * Iterate over the vertices directly reachable from a given vertex in the graph, in no particular order.
+	 * @throws {Graph.VertexNotExistsError} if a vertex with the given `from` key does not exist
+	 * @param key {string} the key of the vertex to take the outgoing edges from
+	 * @returns { Iterator.<string, *> } an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}
+	 * @example
+	 * for (var it = graph.verticesFrom(from), kv; !(kv = it.next()).done;) {
+	 *     var to    = kv.value[0],
+	 *         value = kv.value[1];
+	 *     // iterates over all outgoing vertices of the `from` vertex
+	 * }
+	 * @example
+	 * // in ECMAScript 6, you can use a for..of loop
+	 * for (let [to, value] of graph.verticesFrom(from)) {
+	 *     // iterates over all outgoing vertices of the `from` vertex
+	 * }
+	 */
+	verticesFrom(key) {
+		this[_expectVertices](key);
+		return this[_verticesFrom](key);
+	}
+	*[_verticesFrom](from) {
+		let done = new Set();
+		for (let to of this[_edges].get(from).keys()) {
+			if (!done.has(to) && this.hasEdge(from, to)) {
+				done.add(to);
+				yield this.vertex(to);
+			}
+		}
+	}
+
+	/**
+	 * Iterate over the vertices from which a given vertex in the graph is directly reachable, in no particular order.
+	 * @throws {Graph.VertexNotExistsError} if a vertex with the given `to` key does not exist
+	 * @param key {string} the key of the vertex to take the incoming edges from
+	 * @returns { Iterator.<string, *> } an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}
+	 * @example
+	 * for (var it = graph.verticesTo(to), kv; !(kv = it.next()).done;) {
+	 *     var from  = kv.value[0],
+	 *         value = kv.value[1];
+	 *     // iterates over all outgoing vertices of the `to` vertex
+	 * }
+	 * @example
+	 * // in ECMAScript 6, you can use a for..of loop
+	 * for (let [from, value] of graph.verticesTo(to)) {
+	 *     // iterates over all incoming vertices of the `to` vertex
+	 * }
+	 */
+	verticesTo(key) {
+		this[_expectVertices](key);
+		return this[_verticesTo](key);
+	}
+	*[_verticesTo](to) {
+		let done = new Set();
+		for (let from of this[_reverseEdges].get(to)) {
+			if (!done.has(from) && this.hasEdge(from, to)) {
+				done.add(from);
+				yield this.vertex(from);
 			}
 		}
 	}
@@ -531,64 +595,63 @@ export default class Graph {
 	/**
 	 * Iterate over the outgoing edges of a given vertex in the graph, in no particular order.
 	 * @throws {Graph.VertexNotExistsError} if a vertex with the given `from` key does not exist
-	 * @param from {string} the key of the vertex to take the outgoing edges from
-	 * @returns { Iterator.<string, *, *> } an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}
+	 * @param key {string} the key of the vertex to take the outgoing edges from
+	 * @returns { Iterator.<string, string, *> } an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}
 	 * @example
-	 * for (var it = graph.verticesFrom(from), kv; !(kv = it.next()).done;) {
-	 *     var to          = kv.value[0],
-	 *         vertexValue = kv.value[1],
-	 *         edgeValue   = kv.value[2];
-	 *     // iterates over all outgoing vertices of the `from` vertex
+	 * for (var it = graph.edgesFrom(from), kv; !(kv = it.next()).done;) {
+	 *     var from  = kv.value[0][0],
+	 *         to    = kv.value[0][1],
+	 *         value = kv.value[1];
+	 *     // iterates over all outgoing edges of the `from` vertex
 	 * }
 	 * @example
 	 * // in ECMAScript 6, you can use a for..of loop
-	 * for (let [to, vertexValue, edgeValue] of graph.verticesFrom(from)) {
+	 * for (let [[from, to], value] of graph.edgesFrom(from)) {
 	 *     // iterates over all outgoing edges of the `from` vertex
 	 * }
 	 */
-	verticesFrom(from) {
-		this[_expectVertices](from);
-		return this[_verticesFrom](from);
+	edgesFrom(key) {
+		this[_expectVertices](key);
+		return this[_edgesFrom](key);
 	}
-	*[_verticesFrom](from) {
+	*[_edgesFrom](from) {
 		let done = new Set();
 		for (let to of this[_edges].get(from).keys()) {
-			if (this.hasEdge(from, to) && !done.has(to)) {
+			if (!done.has(to) && this.hasEdge(from, to)) {
 				done.add(to);
-				yield [to, this[_vertices].get(to), this[_edges].get(from).get(to)];
+				yield this.edge(from, to);
 			}
 		}
 	}
 
-
 	/**
 	 * Iterate over the incoming edges of a given vertex in the graph, in no particular order.
 	 * @throws {Graph.VertexNotExistsError} if a vertex with the given `to` key does not exist
-	 * @param to {string} the key of the vertex to take the incoming edges from
-	 * @returns { Iterator.<string, *, *> } an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}
+	 * @param key {string} the key of the vertex to take the incoming edges from
+	 * @returns { Iterator.<string, string, *> } an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}
 	 * @example
-	 * for (var it = graph.verticesTo(to), kv; !(kv = it.next()).done;) {
-	 *     var from        = kv.value[0],
-	 *         vertexValue = kv.value[1],
-	 *         edgeValue   = kv.value[2];
-	 *     // iterates over all outgoing vertices of the `from` vertex
+	 * for (var it = graph.edgesTo(to), kv; !(kv = it.next()).done;) {
+	 *     var from  = kv.value[0][0],
+	 *         to    = kv.value[0][1],
+	 *         value = kv.value[1];
+	 *     // iterates over all incoming edges of the `to` vertex
 	 * }
 	 * @example
 	 * // in ECMAScript 6, you can use a for..of loop
-	 * for (let [from, vertexValue, edgeValue] of graph.verticesTo(to)) {
+	 * for (let [[from, to], value] of graph.edgesTo(to)) {
 	 *     // iterates over all incoming edges of the `to` vertex
 	 * }
 	 */
-	verticesTo(to) {
-		this[_expectVertices](to);
-		return this[_verticesTo](to);
+	edgesTo(key) {
+		this[_expectVertices](key);
+		return this[_edgesTo](key);
 	}
-	*[_verticesTo](to) {
+	*[_edgesTo](to) {
 		let done = new Set();
 		for (let from of this[_reverseEdges].get(to)) {
-			if (this.hasEdge(from, to) && !done.has(from)) {
+			if (!done.has(from) && this.hasEdge(from, to)) {
 				done.add(from);
-				yield [from, this[_vertices].get(from), this[_edges].get(from).get(to)];
+				yield this.edge(from, to);
 			}
 		}
 	}

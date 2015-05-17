@@ -2296,38 +2296,33 @@ describeMethod('edges', () => {
 
 describeMethod('verticesFrom', () => {
 
-	it("throws an error if the given vertex does not exist", () => {
-		expectItWhenBoundWith('newKey').toThrowSpecific(Graph.VertexNotExistsError, new Set(['newKey']));
-	});
+	it_throwsErrorIfVertexDoesNotExist();
 
-	it("throws nothing if the given vertex exists", () => {
-		expectItWhenBoundWith('k1').not.toThrow();
-	});
+	it_throwsNothingIfVertexExists();
 
-	it("iterates over each outgoing edge, providing the connected vertex key/value and edge value", () => {
+	it("iterates over each outgoing edge, providing the connected vertex", () => {
 		let valuesFound = {};
-		for (let [key, value, edgeValue] of callItWith('k2')) {
+		for (let [key, value] of callItWith('k2')) {
 			expect(valuesFound[key]).toBeUndefined();
-			valuesFound[key] = [value, edgeValue];
+			valuesFound[key] = value;
 		}
 		expect(valuesFound).toEqual({
-			'k3': [ undefined, 'oldValue23'],
-			'k5': ['oldValue5', undefined  ]
+			'k3':  undefined,
+			'k5': "oldValue5"
 		});
 	});
 
-	it("iterates over each outgoing edge, providing the connected vertex key/value and edge value (ES5 style)", () => {
+	it("iterates over each outgoing edge, providing the connected vertex (ES5 style)", () => {
 		let valuesFound = {};
 		for (var it = callItWith('k2'), kv; !(kv = it.next()).done;) {
-			var key       = kv.value[0],
-				value     = kv.value[1],
-				edgeValue = kv.value[2];
+			var key   = kv.value[0],
+				value = kv.value[1];
 			expect(valuesFound[key]).toBeUndefined();
-			valuesFound[key] = [value, edgeValue];
+			valuesFound[key] = value;
 		}
 		expect(valuesFound).toEqual({
-			'k3': [ undefined, 'oldValue23'],
-			'k5': ['oldValue5', undefined  ]
+			'k3':  undefined,
+			'k5': "oldValue5"
 		});
 	});
 
@@ -2336,42 +2331,119 @@ describeMethod('verticesFrom', () => {
 
 describeMethod('verticesTo', () => {
 
-	it("throws an error if the given vertex does not exist", () => {
-		expectItWhenBoundWith('newKey').toThrowSpecific(Graph.VertexNotExistsError, new Set(['newKey']));
+	it_throwsErrorIfVertexDoesNotExist();
+
+	it_throwsNothingIfVertexExists();
+
+	it("iterates over each incoming edge, providing the connected vertex", () => {
+		let valuesFound = {};
+		for (let [key, value] of callItWith('k3')) {
+			expect(valuesFound[key]).toBeUndefined();
+			valuesFound[key] = value;
+		}
+		expect(valuesFound).toEqual({
+			'k2':  undefined,
+			'k5': 'oldValue5'
+		});
 	});
 
-	it("throws nothing if the given vertex exists", () => {
-		expectItWhenBoundWith('k1').not.toThrow();
+	it("iterates over each incoming edge, providing the connected vertex (ES5 style)", () => {
+		let valuesFound = {};
+		for (var it = callItWith('k3'), kv; !(kv = it.next()).done;) {
+			var key       = kv.value[0],
+				value     = kv.value[1];
+			expect(valuesFound[key]).toBeUndefined();
+			valuesFound[key] = value;
+		}
+		expect(valuesFound).toEqual({
+			'k2':  undefined,
+			'k5': 'oldValue5'
+		});
 	});
+
+});
+
+
+
+
+
+
+describeMethod('edgesFrom', () => {
+
+	it_throwsErrorIfVertexDoesNotExist();
+
+	it_throwsNothingIfVertexExists();
+
+	it("iterates over each outgoing edge, providing the connected vertex key/value and edge value", () => {
+		let valuesFound = {};
+		for (let [[from, to], value] of callItWith('k2')) {
+			expect(valuesFound[`${from},${to}`]).toBeUndefined();
+			valuesFound[`${from},${to}`] = value;
+		}
+		expect(valuesFound).toEqual({
+			'k2,k3': "oldValue23",
+			'k2,k5':  undefined
+		});
+	});
+
+	it("iterates over each outgoing edge, providing the connected vertex key/value and edge value (ES5 style)", () => {
+		let valuesFound = {};
+		for (var it = callItWith('k2'), kv; !(kv = it.next()).done;) {
+			var from  = kv.value[0][0],
+				to    = kv.value[0][1],
+				value = kv.value[1];
+			expect(valuesFound[`${from},${to}`]).toBeUndefined();
+			valuesFound[`${from},${to}`] = value;
+		}
+		expect(valuesFound).toEqual({
+			'k2,k3': "oldValue23",
+			'k2,k5':  undefined
+		});
+	});
+
+});
+
+
+describeMethod('edgesTo', () => {
+
+	it_throwsErrorIfVertexDoesNotExist();
+
+	it_throwsNothingIfVertexExists();
 
 	it("iterates over each incoming edge, providing the connected vertex key/value and edge value", () => {
 		let valuesFound = {};
-		for (let [key, value, edgeValue] of callItWith('k3')) {
-			expect(valuesFound[key]).toBeUndefined();
-			valuesFound[key] = [value, edgeValue];
+		for (let [[from, to], value] of callItWith('k3')) {
+			expect(valuesFound[`${from},${to}`]).toBeUndefined();
+			valuesFound[`${from},${to}`] = value;
 		}
 		expect(valuesFound).toEqual({
-			'k2': [undefined, 'oldValue23'],
-			'k5': ['oldValue5', undefined]
+			'k2,k3': "oldValue23",
+			'k5,k3':  undefined
 		});
 	});
 
 	it("iterates over each incoming edge, providing the connected vertex key/value and edge value (ES5 style)", () => {
 		let valuesFound = {};
 		for (var it = callItWith('k3'), kv; !(kv = it.next()).done;) {
-			var key       = kv.value[0],
-				value     = kv.value[1],
-				edgeValue = kv.value[2];
-			expect(valuesFound[key]).toBeUndefined();
-			valuesFound[key] = [value, edgeValue];
+			var from  = kv.value[0][0],
+				to    = kv.value[0][1],
+				value = kv.value[1];
+			expect(valuesFound[`${from},${to}`]).toBeUndefined();
+			valuesFound[`${from},${to}`] = value;
 		}
 		expect(valuesFound).toEqual({
-			'k2': [undefined, 'oldValue23'],
-			'k5': ['oldValue5', undefined]
+			'k2,k3': "oldValue23",
+			'k5,k3':  undefined
 		});
 	});
 
 });
+
+
+
+
+
+
 
 
 describeMethod('verticesWithPathFrom', () => {
