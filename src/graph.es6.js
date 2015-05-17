@@ -9,7 +9,6 @@ const _edges        = Symbol("edges");
 const _reverseEdges = Symbol("reverse edges");
 const _sources      = Symbol("sources");
 const _sinks        = Symbol("sinks");
-const _vertexCount  = Symbol("vertex count");
 const _edgeCount    = Symbol("edge count");
 
 const _extractTwoArgs   = Symbol("extract ([a, b]) or (a, b) arguments");
@@ -60,7 +59,6 @@ export default class Graph {
 		this[_reverseEdges] = new Map(); // Map.< string, Set.<*> >
 		this[_sources]      = new Set(); // Set.< string >
 		this[_sinks]        = new Set(); // Set.< string >
-		this[_vertexCount]  = 0;
 		this[_edgeCount]    = 0;
 
 		/* add vertices and values from constructor arguments */
@@ -106,7 +104,6 @@ export default class Graph {
 		this[_vertices].set(key, value);
 		this[_edges].set(key, new Map());
 		this[_reverseEdges].set(key, new Set());
-		this[_vertexCount] += 1;
 		this[_sources].add(key);
 		this[_sinks].add(key);
 	}
@@ -169,7 +166,6 @@ export default class Graph {
 		this[_expectVertices](key);
 		this[_expectNoConnectedEdges](key);
 		this[_vertices].delete(key);
-		this[_vertexCount] -= 1;
 		this[_sources].delete(key);
 		this[_sinks].delete(key);
 	}
@@ -219,7 +215,7 @@ export default class Graph {
 	/**
 	 * @returns {number} the number of vertices in the whole graph
 	 */
-	vertexCount() { return this[_vertexCount] }
+	vertexCount() { return this[_vertices].size }
 
 	/**
 	 * Ask whether a vertex with a given key exists.
