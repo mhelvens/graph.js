@@ -17,9 +17,9 @@ const _verticesTo   = Symbol("vertices to");
 const _paths        = Symbol("paths");
 
 const _expectVertices         = Symbol("expect vertices");
-const _expectVertexAbsent     = Symbol("expect vertex absent");
-const _expectEdge             = Symbol("expect edge");
-const _expectEdgeAbsent       = Symbol("expect edge absent");
+const _expectVerticesAbsent   = Symbol("expect vertex absent");
+const _expectEdges            = Symbol("expect edge");
+const _expectEdgesAbsent      = Symbol("expect edge absent");
 const _expectNoConnectedEdges = Symbol("expect no connected edges");
 
 
@@ -85,7 +85,7 @@ export default class Graph {
 	 * @param [value] {*}      the value to store in this new vertex
 	 */
 	addNewVertex(key, value) {
-		this[_expectVertexAbsent](key);
+		this[_expectVerticesAbsent](key);
 		this[_vertices].set(key, value);
 		this[_edges].set(key, new Map());
 		this[_reverseEdges].set(key, new Set());
@@ -232,7 +232,7 @@ export default class Graph {
 	 * @param [value] {*}      the value to store in this new edge
 	 */
 	addNewEdge(from, to, value) {
-		this[_expectEdgeAbsent]([from, to]);
+		this[_expectEdgesAbsent]([from, to]);
 		this[_expectVertices](from, to);
 		this[_edges].get(from).set(to, value);
 		this[_reverseEdges].get(to).add(from);
@@ -250,7 +250,7 @@ export default class Graph {
 	 * @param [value] {*}      the value to store in this new edge
 	 */
 	createNewEdge(from, to, value) {
-		this[_expectEdgeAbsent]([from, to]);
+		this[_expectEdgesAbsent]([from, to]);
 		this.ensureVertex(from);
 		this.ensureVertex(to);
 		this.addNewEdge(from, to, value);
@@ -264,7 +264,7 @@ export default class Graph {
 	 * @param [value] {*}      the value to store in this edge
 	 */
 	setEdge(from, to, value) {
-		this[_expectEdge]([from, to]);
+		this[_expectEdges]([from, to]);
 		this[_edges].get(from).set(to, value);
 	}
 
@@ -343,7 +343,7 @@ export default class Graph {
 	 * @param to   {string} the key for the terminating vertex
 	 */
 	removeExistingEdge(from, to) {
-		this[_expectEdge]([from, to]);
+		this[_expectEdges]([from, to]);
 		this[_edges].get(from).delete(to);
 		this[_reverseEdges].get(to).delete(from);
 		this[_edgeCount] -= 1;
@@ -1126,51 +1126,29 @@ export default class Graph {
 	////////// Assertions //////////
 	////////////////////////////////
 	
-	[_expectVertices](key1, key2) {
-		if (key2 && !this.hasVertex(key2)) {
-			if (!this.hasVertex(key1)) {
+	[_expectVertices](...keys) {
+		let missingVertices = keys.filter(k => !this.hasVertex(k));
+		if (missingVertices.length) { throw new Graph.VertexNotExistsError(...missingVertices) }
+	}
 
-
-				///////////////////////////////////////////////////////////////
-
-				// Illustrating a bug in Wallaby.js
-
-				//// the following line fails for Wallaby (6 tests fail, exception is altered?), works for Karma (all tests pass)
-				//
-				throw new Graph.VertexNotExistsError(...[key1, key2]);
-
-				//// the following line works fine for both
-				//
-				//throw new Graph.VertexNotExistsError(key1, key2);
-
-				// Those two lines should be equivalent, no?
-
-				///////////////////////////////////////////////////////////////
-
-
-			} else {
-				throw new Graph.VertexNotExistsError(key2);
-			}
-		} else if (!this.hasVertex(key1)) {
-			throw new Graph.VertexNotExistsError(key1);
+	[_expectVerticesAbsent](...keys) {
+		let presentVertices = keys.filter(k => this.hasVertex(k));
+		if (presentVertices.length) {
+			throw new Graph.VertexExistsError(...presentVertices.map(k => [k, this.vertexValue(k)]));
 		}
 	}
 
-	[_expectVertexAbsent](key) {
-		if (this.hasVertex(key)) {
-			throw new Graph.VertexExistsError([[key, this.vertexValue(key)]]);
+	[_expectEdges](...keys) {
+		let absentEdges = keys.filter(k => !this.hasEdge(...k));
+		if (absentEdges.length) {
+			throw new Graph.EdgeNotExistsError(...absentEdges);
 		}
 	}
 
-	[_expectEdge]([from, to]) {
-		if (!this.hasEdge(from, to)) {
-			throw new Graph.EdgeNotExistsError([[from, to]]);
-		}
-	}
-
-	[_expectEdgeAbsent]([from, to]) {
-		if (this.hasEdge(from, to)) {
-			throw new Graph.EdgeExistsError([[[from, to], this.edgeValue(from, to)]]);
+	[_expectEdgesAbsent](...keys) {
+		let presentEdges = keys.filter(k => this.hasEdge(...k));
+		if (presentEdges.length) {
+			throw new Graph.EdgeExistsError(...presentEdges.map(k => [k, this.edgeValue(...k)]));
 		}
 	}
 
@@ -1178,7 +1156,7 @@ export default class Graph {
 		let edges = [];
 		for (let [to]   of this.verticesFrom(key)) { edges.push([[key,  to ], this.edgeValue(key,  to )]) }
 		for (let [from] of this.verticesTo  (key)) { edges.push([[from, key], this.edgeValue(from, key)]) }
-		if (edges.length) { throw new Graph.HasConnectedEdgesError(key, edges) }
+		if (edges.length) { throw new Graph.HasConnectedEdgesError(key, ...edges) }
 	}
 
 }
@@ -1194,7 +1172,7 @@ export default class Graph {
  * @extends Error
  */
 Graph.VertexExistsError = class VertexExistsError extends Error {
-	constructor(vertices) {
+	constructor(...vertices) {
 		super();
 		/**
 		 * the set of relevant vertices as `[key, value]` shaped arrays
@@ -1244,7 +1222,7 @@ Graph.VertexNotExistsError = class VertexNotExistError extends Error {
  * @extends Error
  */
 Graph.EdgeExistsError = class EdgeExistsError extends Error {
-	constructor(edges) {
+	constructor(...edges) {
 		super();
 		/**
 		 * the set of relevant edges as `[[from, to], value]` shaped arrays
@@ -1269,7 +1247,7 @@ Graph.EdgeExistsError = class EdgeExistsError extends Error {
  * @extends Error
  */
 Graph.EdgeNotExistsError = class EdgeNotExistsError extends Error {
-	constructor(edges) {
+	constructor(...edges) {
 		super();
 		/**
 		 * the set of relevant edge keys as `[from, to]` shaped arrays
@@ -1294,8 +1272,8 @@ Graph.EdgeNotExistsError = class EdgeNotExistsError extends Error {
  * @extends Graph.EdgeExistsError
  */
 Graph.HasConnectedEdgesError = class HasConnectedEdgesError extends Graph.EdgeExistsError {
-	constructor(key, edges) {
-		super(edges);
+	constructor(key, ...edges) {
+		super(...edges);
 		/**
 		 * the key of the vertex that has connected edges
 		 * @public
