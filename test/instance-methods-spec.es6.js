@@ -2876,19 +2876,24 @@ describeMethod('vertices_topologically', () => {
 describe("Graph.VertexExistsError", () => {
 
 	it("can specify one existing vertex", () => {
-		let err = new Graph.VertexExistsError([
+		let err = new Graph.VertexExistsError(
 			['x', 1]
-		]);
+		);
 		expect(err.vertices).toEqual(new Set([
 			['x', 1]
 		]));
 	});
 
 	it("can specify multiple existing vertices", () => {
-		let err = new Graph.VertexExistsError([
+		let err = new Graph.VertexExistsError(
 			['x', 1],
 			['y', 2]
-		]);
+		);
+
+		for (let v of err.vertices) {
+			console.log(v);
+		}
+
 		expect(err.vertices).toEqual(new Set([
 			['x', 1],
 			['y', 2]
@@ -2900,19 +2905,14 @@ describe("Graph.VertexExistsError", () => {
 describe("Graph.VertexNotExistsError", () => {
 
 	it("can specify one missing vertex", () => {
-		let err = new Graph.VertexNotExistsError([
-			'x'
-		]);
+		let err = new Graph.VertexNotExistsError('x');
 		expect(err.vertices).toEqual(new Set([
 			'x'
 		]));
 	});
 
 	it("can specify multiple missing vertices", () => {
-		let err = new Graph.VertexNotExistsError([
-			'x',
-			'y'
-		]);
+		let err = new Graph.VertexNotExistsError('x', 'y');
 		expect(err.vertices).toEqual(new Set([
 			'x',
 			'y'
@@ -2924,19 +2924,19 @@ describe("Graph.VertexNotExistsError", () => {
 describe("Graph.EdgeExistsError", () => {
 
 	it("can specify one existing edge", () => {
-		let err = new Graph.EdgeExistsError([
+		let err = new Graph.EdgeExistsError(
 			[['x', 'y'], 1]
-		]);
+		);
 		expect(err.edges).toEqual(new Set([
 			[['x', 'y'], 1]
 		]));
 	});
 
 	it("can specify multiple existing edges", () => {
-		let err = new Graph.EdgeExistsError([
+		let err = new Graph.EdgeExistsError(
 			[['x', 'y'], 1],
 			[['y', 'z'], 2]
-		]);
+		);
 		expect(err.edges).toEqual(new Set([
 			[['x', 'y'], 1],
 			[['y', 'z'], 2]
@@ -2948,19 +2948,19 @@ describe("Graph.EdgeExistsError", () => {
 describe("Graph.EdgeNotExistsError", () => {
 
 	it("can specify one missing edge", () => {
-		let err = new Graph.EdgeNotExistsError([
+		let err = new Graph.EdgeNotExistsError(
 			['x', 'y']
-		]);
+		);
 		expect(err.edges).toEqual(new Set([
 			['x', 'y']
 		]));
 	});
 
 	it("can specify multiple missing edges", () => {
-		let err = new Graph.EdgeNotExistsError([
+		let err = new Graph.EdgeNotExistsError(
 			['x', 'y'],
 			['y', 'z']
-		]);
+		);
 		expect(err.edges).toEqual(new Set([
 			['x', 'y'],
 			['y', 'z']
@@ -2972,10 +2972,10 @@ describe("Graph.EdgeNotExistsError", () => {
 describe("Graph.HasConnectedEdgesError", () => {
 
 	it("can specify that a vertex has connected edges", () => {
-		let err = new Graph.HasConnectedEdgesError('x', [
+		let err = new Graph.HasConnectedEdgesError('x',
 			[['x', 'y'], 1],
 			[['z', 'x'], 2]
-		]);
+		);
 		expect(err.vertex).toEqual('x');
 		expect(err.edges).toEqual(new Set([
 			[['x', 'y'], 1],
