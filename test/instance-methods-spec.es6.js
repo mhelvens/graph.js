@@ -3187,11 +3187,6 @@ describe("Graph.VertexExistsError", () => {
 			['x', 1],
 			['y', 2]
 		);
-
-		for (let v of err.vertices) {
-			console.log(v);
-		}
-
 		expect(err.vertices).toEqual(new Set([
 			['x', 1],
 			['y', 2]

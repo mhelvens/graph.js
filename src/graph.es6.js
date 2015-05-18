@@ -534,7 +534,7 @@ export default class Graph {
 	 */ // TODO: allow [from, to] array to be given as argument in docs
 	edge(from, to) {
 		[from, to] = Graph[_extractTwoArgs](from, to);
-		this[_expectEdge]([from, to]);
+		this[_expectEdges]([from, to]);
 		return [[from, to], this.edgeValue(from, to)];
 	}
 

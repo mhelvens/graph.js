@@ -11,11 +11,16 @@ const _sources      = Symbol("sources");
 const _sinks        = Symbol("sinks");
 const _edgeCount    = Symbol("edge count");
 
+const _extractTwoArgs   = Symbol("extract ([a, b]) or (a, b) arguments");
+const _extractThreeArgs = Symbol("extract ([[a, b], c]), ([a, b], c) or (a, b, c) arguments");
+
 const _listeners = Symbol("listeners");
 const _trigger   = Symbol("trigger");
 
 const _verticesFrom         = Symbol("vertices from");
 const _verticesTo           = Symbol("vertices to");
+const _edgesFrom            = Symbol("edges from");
+const _edgesTo              = Symbol("edges to");
 const _verticesWithPathTo   = Symbol("vertices with path to");
 const _verticesWithPathFrom = Symbol("vertices with path from");
 const _paths                = Symbol("paths");
@@ -77,6 +82,19 @@ export default class Graph {
 		}
 	}
 
+	////////////////////////////////////////////////////////
+	////////// Static private convenience methods //////////
+	////////////////////////////////////////////////////////
+
+	static [_extractTwoArgs](a, b) {
+		return Array.isArray(a) ? a : [a, b];
+	}
+
+	static [_extractThreeArgs](a, b, c) {
+		if (Array.isArray(a)) { [a, b, c] = [...a, b] }
+		if (Array.isArray(a)) { [a, b, c] = [...a, b] }
+		return [a, b, c];
+	}
 
 	/////////////////////////////////////
 	////////// Event Handling //////////
@@ -180,8 +198,9 @@ export default class Graph {
 	 * @throws {Graph.VertexExistsError} if a vertex with this key already exists
 	 * @param  key    {string} the key with which to refer to this new vertex
 	 * @param [value] {*}      the value to store in this new vertex
-	 */
+	 */ // TODO: allow [key, value] array to be given as argument in docs
 	addNewVertex(key, value) {
+		[key, value] = Graph[_extractTwoArgs](key, value);
 		this[_expectVerticesAbsent](key);
 		this[_vertices].set(key, value);
 		this[_edges].set(key, new Map());
@@ -197,8 +216,9 @@ export default class Graph {
 	 * @throws {Graph.VertexNotExistsError} if a vertex with this key does not exist
 	 * @param  key    {string} the key belonging to the vertex
 	 * @param [value] {*}      the value to store in this vertex
-	 */
+	 */ // TODO: allow [key, value] array to be given as argument in docs
 	setVertex(key, value) {
+		[key, value] = Graph[_extractTwoArgs](key, value);
 		this[_expectVertices](key);
 		this[_vertices].set(key, value);
 		this[_trigger]('vertex-modified', [key, value]);
@@ -209,8 +229,9 @@ export default class Graph {
 	 * do nothing. If it does not yet exist, add a new vertex with the given value.
 	 * @param  key    {string} the key for the vertex
 	 * @param [value] {*}      the value to store if a new vertex is added
-	 */
+	 */ // TODO: allow [key, value] array to be given as argument in docs
 	ensureVertex(key, value) {
+		[key, value] = Graph[_extractTwoArgs](key, value);
 		if (!this.hasVertex(key)) {
 			this.addNewVertex(key, value);
 		}
@@ -221,8 +242,9 @@ export default class Graph {
 	 * the value of that vertex is overwritten.
 	 * @param  key    {string} the key with which to refer to this new vertex
 	 * @param [value] {*}      the value to store in this new vertex
-	 */
+	 */ // TODO: allow [key, value] array to be given as argument in docs
 	addVertex(key, value) {
+		[key, value] = Graph[_extractTwoArgs](key, value);
 		if (this.hasVertex(key)) {
 			this.setVertex(key, value);
 		} else {
@@ -299,7 +321,18 @@ export default class Graph {
 	hasVertex(key) { return this[_vertices].has(key) }
 
 	/**
-	 * Get the value associated with the vertex of a given key.
+	 * Get the key/value pair representing the vertex with the given `key`.
+	 * @param key {string} the key to query
+	 * @throws {Graph.VertexNotExistsError} if the `key` vertex does not exist in the graph
+	 * @returns {Array} a `[key, value]` shaped array representing the vertex
+	 */
+	vertex(key) {
+		this[_expectVertices](key);
+		return [key, this.vertexValue(key)];
+	}
+
+	/**
+	 * Get the value associated with the vertex of a given `key`.
 	 * @param key {string} the key to query
 	 * @returns {*} the value associated with the vertex of the given key.
 	 * Note that a return value of `undefined` can mean
@@ -325,8 +358,9 @@ export default class Graph {
 	 * @param  from   {string} the key for the originating vertex
 	 * @param  to     {string} the key for the terminating vertex
 	 * @param [value] {*}      the value to store in this new edge
-	 */
+	 */ // TODO: allow [from, to], value array to be given as argument in docss; or [[from, to], value] as single argument
 	addNewEdge(from, to, value) {
+		[from, to, value] = Graph[_extractThreeArgs](from, to, value);
 		this[_expectEdgesAbsent]([from, to]);
 		this[_expectVertices](from, to);
 		this[_edges].get(from).set(to, value);
@@ -345,8 +379,9 @@ export default class Graph {
 	 * @param  from   {string} the key for the originating vertex
 	 * @param  to     {string} the key for the terminating vertex
 	 * @param [value] {*}      the value to store in this new edge
-	 */
+	 */ // TODO: allow [from, to], value array to be given as argument in docss; or [[from, to], value] as single argument
 	createNewEdge(from, to, value) {
+		[from, to, value] = Graph[_extractThreeArgs](from, to, value);
 		this[_expectEdgesAbsent]([from, to]);
 		this.ensureVertex(from);
 		this.ensureVertex(to);
@@ -359,8 +394,9 @@ export default class Graph {
 	 * @param  from   {string} the key for the originating vertex
 	 * @param  to     {string} the key for the terminating vertex
 	 * @param [value] {*}      the value to store in this edge
-	 */
+	 */ // TODO: allow [from, to], value array to be given as argument in docss; or [[from, to], value] as single argument
 	setEdge(from, to, value) {
+		[from, to, value] = Graph[_extractThreeArgs](from, to, value);
 		this[_expectEdges]([from, to]);
 		this[_edges].get(from).set(to, value);
 		this[_trigger]('edge-modified', [[from, to], value]);
@@ -374,8 +410,9 @@ export default class Graph {
 	 * @param  from   {string} the key for the originating vertex
 	 * @param  to     {string} the key for the terminating vertex
 	 * @param [value] {*}      the value to store if a new edge is added
-	 */
+	 */ // TODO: allow [from, to], value array to be given as argument in docss; or [[from, to], value] as single argument
 	spanEdge(from, to, value) {
+		[from, to, value] = Graph[_extractThreeArgs](from, to, value);
 		this[_expectVertices](from, to);
 		if (!this.hasEdge(from, to)) {
 			this.addNewEdge(from, to, value);
@@ -389,8 +426,9 @@ export default class Graph {
 	 * @param  from   {string} the key for the originating vertex
 	 * @param  to     {string} the key for the terminating vertex
 	 * @param [value] {*}      the value to store in this new edge
-	 */
+	 */ // TODO: allow [from, to], value array to be given as argument in docss; or [[from, to], value] as single argument
 	addEdge(from, to, value) {
+		[from, to, value] = Graph[_extractThreeArgs](from, to, value);
 		if (this.hasEdge(from, to)) {
 			this.setEdge(from, to, value);
 		} else {
@@ -407,8 +445,9 @@ export default class Graph {
 	 * @param  from   {string} the key for the originating vertex
 	 * @param  to     {string} the key for the terminating vertex
 	 * @param [value] {*}      the value to store if a new edge is added
-	 */
+	 */ // TODO: allow [from, to], value array to be given as argument in docss; or [[from, to], value] as single argument
 	ensureEdge(from, to, value) {
+		[from, to, value] = Graph[_extractThreeArgs](from, to, value);
 		if (!this.hasEdge(from, to)) {
 			this.createNewEdge(from, to, value);
 		}
@@ -422,8 +461,9 @@ export default class Graph {
 	 * @param  from   {string} the key for the originating vertex
 	 * @param  to     {string} the key for the terminating vertex
 	 * @param [value] {*}      the value to store if a new edge is added
-	 */
+	 */ // TODO: allow [from, to], value array to be given as argument in docss; or [[from, to], value] as single argument
 	createEdge(from, to, value) {
+		[from, to, value] = Graph[_extractThreeArgs](from, to, value);
 		if (this.hasEdge(from, to)) {
 			this.setEdge(from, to, value);
 		} else {
@@ -439,8 +479,9 @@ export default class Graph {
 	 * @throws {Graph.EdgeNotExistsError} if an edge between the `from` and `to` vertices doesn't exist
 	 * @param from {string} the key for the originating vertex
 	 * @param to   {string} the key for the terminating vertex
-	 */
+	 */ // TODO: allow [from, to] array to be given as argument in docs
 	removeExistingEdge(from, to) {
+		[from, to] = Graph[_extractTwoArgs](from, to);
 		this[_expectEdges]([from, to]);
 		this[_edges].get(from).delete(to);
 		this[_reverseEdges].get(to).delete(from);
@@ -455,8 +496,9 @@ export default class Graph {
 	 * If an edge between the `from` and `to` vertices doesn't exist, nothing happens.
 	 * @param from {string} the key for the originating vertex
 	 * @param to   {string} the key for the terminating vertex
-	 */
+	 */ // TODO: allow [from, to] array to be given as argument in docs
 	removeEdge(from, to) {
+		[from, to] = Graph[_extractTwoArgs](from, to);
 		if (this.hasEdge(from, to)) {
 			this.removeExistingEdge(from, to);
 		}
@@ -475,12 +517,25 @@ export default class Graph {
 	 * @param from {string} the key for the originating vertex
 	 * @param to   {string} the key for the terminating vertex
 	 * @returns {boolean} whether there is an edge between the given `from` and `to` vertices
-	 */
+	 */ // TODO: allow [from, to] array to be given as argument in docs
 	hasEdge(from, to) {
+		[from, to] = Graph[_extractTwoArgs](from, to);
 		return this.hasVertex(from) &&
 			this.hasVertex(to) &&
 			this[_edges].has(from) &&
 			this[_edges].get(from).has(to);
+	}
+
+	/**
+	 * Get the key/value pair representing the edge between the given `from` and `to`.
+	 * @param from {string} the key for the originating vertex
+	 * @param to   {string} the key for the terminating vertex
+	 * @returns {Array} a `[[from, to], value]` shaped array representing the edge
+	 */ // TODO: allow [from, to] array to be given as argument in docs
+	edge(from, to) {
+		[from, to] = Graph[_extractTwoArgs](from, to);
+		this[_expectEdges]([from, to]);
+		return [[from, to], this.edgeValue(from, to)];
 	}
 
 	/**
@@ -494,8 +549,9 @@ export default class Graph {
 	 * 2. that the stored value is actually `undefined`.
 	 *
 	 * Use {@link Graph#hasEdge} to distinguish these cases.
-	 */
+	 */ // TODO: allow [from, to] array to be given as argument in docs
 	edgeValue(from, to) {
+		[from, to] = Graph[_extractTwoArgs](from, to);
 		return this.hasEdge(from, to) ? this[_edges].get(from).get(to) : undefined;
 	}
 
@@ -548,14 +604,14 @@ export default class Graph {
 	 * @returns { Iterator.<string, string, *> } an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}
 	 * @example
 	 * for (var it = graph.edges(), kv; !(kv = it.next()).done;) {
-	 *     var from  = kv.value[0],
-	 *         to    = kv.value[1],
-	 *         value = kv.value[2];
+	 *     var from  = kv.value[0][0],
+	 *         to    = kv.value[0][1],
+	 *         value = kv.value[1];
 	 *     // iterates over all edges of the graph
 	 * }
 	 * @example
 	 * // in ECMAScript 6, you can use a for..of loop
-	 * for (let [from, to, value] of graph.edges()) {
+	 * for (let [[from, to], value] of graph.edges()) {
 	 *     // iterates over all vertices of the graph
 	 * }
 	 */
@@ -564,10 +620,72 @@ export default class Graph {
 		for (let from of this[_edges].keys()) {
 			done.set(from, new Set());
 			for (let to of this[_edges].get(from).keys()) {
-				if (this.hasEdge(from, to) && !done.get(from).has(to)) {
+				if (!done.get(from).has(to) && this.hasEdge(from, to)) {
 					done.get(from).add(to);
-					yield [from, to, this[_edges].get(from).get(to)];
+					yield this.edge(from, to);
 				}
+			}
+		}
+	}
+
+	/**
+	 * Iterate over the vertices directly reachable from a given vertex in the graph, in no particular order.
+	 * @throws {Graph.VertexNotExistsError} if a vertex with the given `from` key does not exist
+	 * @param key {string} the key of the vertex to take the outgoing edges from
+	 * @returns { Iterator.<string, *> } an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}
+	 * @example
+	 * for (var it = graph.verticesFrom(from), kv; !(kv = it.next()).done;) {
+	 *     var to    = kv.value[0],
+	 *         value = kv.value[1];
+	 *     // iterates over all outgoing vertices of the `from` vertex
+	 * }
+	 * @example
+	 * // in ECMAScript 6, you can use a for..of loop
+	 * for (let [to, value] of graph.verticesFrom(from)) {
+	 *     // iterates over all outgoing vertices of the `from` vertex
+	 * }
+	 */
+	verticesFrom(key) {
+		this[_expectVertices](key);
+		return this[_verticesFrom](key);
+	}
+	*[_verticesFrom](from) {
+		let done = new Set();
+		for (let to of this[_edges].get(from).keys()) {
+			if (!done.has(to) && this.hasEdge(from, to)) {
+				done.add(to);
+				yield this.vertex(to);
+			}
+		}
+	}
+
+	/**
+	 * Iterate over the vertices from which a given vertex in the graph is directly reachable, in no particular order.
+	 * @throws {Graph.VertexNotExistsError} if a vertex with the given `to` key does not exist
+	 * @param key {string} the key of the vertex to take the incoming edges from
+	 * @returns { Iterator.<string, *> } an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}
+	 * @example
+	 * for (var it = graph.verticesTo(to), kv; !(kv = it.next()).done;) {
+	 *     var from  = kv.value[0],
+	 *         value = kv.value[1];
+	 *     // iterates over all outgoing vertices of the `to` vertex
+	 * }
+	 * @example
+	 * // in ECMAScript 6, you can use a for..of loop
+	 * for (let [from, value] of graph.verticesTo(to)) {
+	 *     // iterates over all incoming vertices of the `to` vertex
+	 * }
+	 */
+	verticesTo(key) {
+		this[_expectVertices](key);
+		return this[_verticesTo](key);
+	}
+	*[_verticesTo](to) {
+		let done = new Set();
+		for (let from of this[_reverseEdges].get(to)) {
+			if (!done.has(from) && this.hasEdge(from, to)) {
+				done.add(from);
+				yield this.vertex(from);
 			}
 		}
 	}
@@ -575,64 +693,63 @@ export default class Graph {
 	/**
 	 * Iterate over the outgoing edges of a given vertex in the graph, in no particular order.
 	 * @throws {Graph.VertexNotExistsError} if a vertex with the given `from` key does not exist
-	 * @param from {string} the key of the vertex to take the outgoing edges from
-	 * @returns { Iterator.<string, *, *> } an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}
+	 * @param key {string} the key of the vertex to take the outgoing edges from
+	 * @returns { Iterator.<string, string, *> } an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}
 	 * @example
-	 * for (var it = graph.verticesFrom(from), kv; !(kv = it.next()).done;) {
-	 *     var to          = kv.value[0],
-	 *         vertexValue = kv.value[1],
-	 *         edgeValue   = kv.value[2];
-	 *     // iterates over all outgoing vertices of the `from` vertex
+	 * for (var it = graph.edgesFrom(from), kv; !(kv = it.next()).done;) {
+	 *     var from  = kv.value[0][0],
+	 *         to    = kv.value[0][1],
+	 *         value = kv.value[1];
+	 *     // iterates over all outgoing edges of the `from` vertex
 	 * }
 	 * @example
 	 * // in ECMAScript 6, you can use a for..of loop
-	 * for (let [to, vertexValue, edgeValue] of graph.verticesFrom(from)) {
+	 * for (let [[from, to], value] of graph.edgesFrom(from)) {
 	 *     // iterates over all outgoing edges of the `from` vertex
 	 * }
 	 */
-	verticesFrom(from) {
-		this[_expectVertices](from);
-		return this[_verticesFrom](from);
+	edgesFrom(key) {
+		this[_expectVertices](key);
+		return this[_edgesFrom](key);
 	}
-	*[_verticesFrom](from) {
+	*[_edgesFrom](from) {
 		let done = new Set();
 		for (let to of this[_edges].get(from).keys()) {
-			if (this.hasEdge(from, to) && !done.has(to)) {
+			if (!done.has(to) && this.hasEdge(from, to)) {
 				done.add(to);
-				yield [to, this[_vertices].get(to), this[_edges].get(from).get(to)];
+				yield this.edge(from, to);
 			}
 		}
 	}
 
-
 	/**
 	 * Iterate over the incoming edges of a given vertex in the graph, in no particular order.
 	 * @throws {Graph.VertexNotExistsError} if a vertex with the given `to` key does not exist
-	 * @param to {string} the key of the vertex to take the incoming edges from
-	 * @returns { Iterator.<string, *, *> } an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}
+	 * @param key {string} the key of the vertex to take the incoming edges from
+	 * @returns { Iterator.<string, string, *> } an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}
 	 * @example
-	 * for (var it = graph.verticesTo(to), kv; !(kv = it.next()).done;) {
-	 *     var from        = kv.value[0],
-	 *         vertexValue = kv.value[1],
-	 *         edgeValue   = kv.value[2];
-	 *     // iterates over all outgoing vertices of the `from` vertex
+	 * for (var it = graph.edgesTo(to), kv; !(kv = it.next()).done;) {
+	 *     var from  = kv.value[0][0],
+	 *         to    = kv.value[0][1],
+	 *         value = kv.value[1];
+	 *     // iterates over all incoming edges of the `to` vertex
 	 * }
 	 * @example
 	 * // in ECMAScript 6, you can use a for..of loop
-	 * for (let [from, vertexValue, edgeValue] of graph.verticesTo(to)) {
+	 * for (let [[from, to], value] of graph.edgesTo(to)) {
 	 *     // iterates over all incoming edges of the `to` vertex
 	 * }
 	 */
-	verticesTo(to) {
-		this[_expectVertices](to);
-		return this[_verticesTo](to);
+	edgesTo(key) {
+		this[_expectVertices](key);
+		return this[_edgesTo](key);
 	}
-	*[_verticesTo](to) {
+	*[_edgesTo](to) {
 		let done = new Set();
 		for (let from of this[_reverseEdges].get(to)) {
-			if (this.hasEdge(from, to) && !done.has(from)) {
+			if (!done.has(from) && this.hasEdge(from, to)) {
 				done.add(from);
-				yield [from, this[_vertices].get(from), this[_edges].get(from).get(to)];
+				yield this.edge(from, to);
 			}
 		}
 	}
@@ -806,7 +923,7 @@ export default class Graph {
 	 * Remove all edges from the graph, but leave the vertices intact.
 	 */
 	clearEdges() {
-		for (let [from, to] of this.edges()) { this.removeEdge(from, to) }
+		for (let [[from, to]] of this.edges()) { this.removeEdge(from, to) }
 	}
 
 	/**
@@ -845,7 +962,7 @@ export default class Graph {
 			if (!other.hasVertex(key))                    { return false }
 			if (!eqV(value, other.vertexValue(key), key)) { return false }
 		}
-		for (let [from, to, value] of this.edges()) {
+		for (let [[from, to], value] of this.edges()) {
 			if (!other.hasEdge(from, to))                         { return false }
 			if (!eqE(value, other.edgeValue(from, to), from, to)) { return false }
 		}
@@ -952,17 +1069,18 @@ export default class Graph {
 	 *          an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}.
 	 *          Each iterated value is an array containing the vertex-keys describing the path.
 	 * @example
-	 * for (var it = graph.paths(), kv; !(kv = it.next()).done;) {
+	 * for (var it = graph.paths(from, to), kv; !(kv = it.next()).done;) {
 	 *     var path = kv.value;
 	 *     // iterates over all paths between `from` and `to` in the graph
 	 * }
 	 * @example
 	 * // in ECMAScript 6, you can use a for..of loop
-	 * for (let path of graph.paths()) {
+	 * for (let path of graph.paths(from, to)) {
 	 *     // iterates over all paths between `from` and `to` in the graph
 	 * }
 	 */
 	paths(from, to) {
+		[from, to] = Graph[_extractTwoArgs](from, to);
 		this[_expectVertices](from, to);
 		return this[_paths](from, to);
 	}
@@ -1071,7 +1189,7 @@ export default class Graph {
 		for (let [key] of other.vertices()) {
 			this.addVertex(key, mV(this.vertexValue(key), other.vertexValue(key)));
 		}
-		for (let [from, to] of other.edges()) {
+		for (let [[from, to]] of other.edges()) {
 			this.addEdge(from, to, mE(this.edgeValue(from, to), other.edgeValue(from, to), from, to));
 		}
 	}
