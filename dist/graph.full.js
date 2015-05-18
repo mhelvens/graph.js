@@ -696,6 +696,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
+	var _bind = Function.prototype.bind;
 	
 	var _get = function get(_x9, _x10, _x11) { var _again = true; _function: while (_again) { desc = parent = getter = undefined; _again = false; var object = _x9,
 	    property = _x10,
@@ -734,9 +735,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _paths = Symbol("paths");
 	
 	var _expectVertices = Symbol("expect vertices");
-	var _expectVertexAbsent = Symbol("expect vertex absent");
-	var _expectEdge = Symbol("expect edge");
-	var _expectEdgeAbsent = Symbol("expect edge absent");
+	var _expectVerticesAbsent = Symbol("expect vertex absent");
+	var _expectEdges = Symbol("expect edge");
+	var _expectEdgesAbsent = Symbol("expect edge absent");
 	var _expectNoConnectedEdges = Symbol("expect no connected edges");
 	
 	//  ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -799,10 +800,10 @@ return /******/ (function(modules) { // webpackBootstrap
 					if (Array.isArray(key)) {
 						/////////////// an edge
 	
-						var _key2 = _slicedToArray(key, 2);
+						var _key11 = _slicedToArray(key, 2);
 	
-						var from = _key2[0];
-						var to = _key2[1];
+						var from = _key11[0];
+						var to = _key11[1];
 	
 						this.createEdge(from, to, value);
 					} else {
@@ -958,7 +959,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @param [value] {*}      the value to store in this new vertex
 	   */
 			value: function addNewVertex(key, value) {
-				this[_expectVertexAbsent](key);
+				this[_expectVerticesAbsent](key);
 				this[_vertices].set(key, value);
 				this[_edges].set(key, new Map());
 				this[_reverseEdges].set(key, new Set());
@@ -1178,7 +1179,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @param [value] {*}      the value to store in this new edge
 	   */
 			value: function addNewEdge(from, to, value) {
-				this[_expectEdgeAbsent]([from, to]);
+				this[_expectEdgesAbsent]([from, to]);
 				this[_expectVertices](from, to);
 				this[_edges].get(from).set(to, value);
 				this[_reverseEdges].get(to).add(from);
@@ -1200,7 +1201,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @param [value] {*}      the value to store in this new edge
 	   */
 			value: function createNewEdge(from, to, value) {
-				this[_expectEdgeAbsent]([from, to]);
+				this[_expectEdgesAbsent]([from, to]);
 				this.ensureVertex(from);
 				this.ensureVertex(to);
 				this.addNewEdge(from, to, value);
@@ -1216,7 +1217,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @param [value] {*}      the value to store in this edge
 	   */
 			value: function setEdge(from, to, value) {
-				this[_expectEdge]([from, to]);
+				this[_expectEdges]([from, to]);
 				this[_edges].get(from).set(to, value);
 				this[_trigger]("edge-modified", [[from, to], value]);
 			}
@@ -1305,7 +1306,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @param to   {string} the key for the terminating vertex
 	   */
 			value: function removeExistingEdge(from, to) {
-				this[_expectEdge]([from, to]);
+				this[_expectEdges]([from, to]);
 				this[_edges].get(from)["delete"](to);
 				this[_reverseEdges].get(to)["delete"](from);
 				this[_edgeCount] -= 1;
@@ -3609,46 +3610,70 @@ return /******/ (function(modules) { // webpackBootstrap
 			////////// Assertions //////////
 			////////////////////////////////
 	
-			value: function (key1, key2) {
-				if (key2 && !this.hasVertex(key2)) {
-					if (!this.hasVertex(key1)) {
-						throw new Graph.VertexNotExistsError([key1, key2]);
-					} else {
-						throw new Graph.VertexNotExistsError([key2]);
-					}
-				} else if (!this.hasVertex(key1)) {
-					throw new Graph.VertexNotExistsError([key1]);
+			value: function () {
+				var _this3 = this;
+	
+				for (var _len2 = arguments.length, keys = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+					keys[_key2] = arguments[_key2];
+				}
+	
+				var missingVertices = keys.filter(function (k) {
+					return !_this3.hasVertex(k);
+				});
+				if (missingVertices.length) {
+					throw new (_bind.apply(Graph.VertexNotExistsError, [null].concat(_toConsumableArray(missingVertices))))();
 				}
 			}
 		}, {
-			key: _expectVertexAbsent,
-			value: function (key) {
-				if (this.hasVertex(key)) {
-					throw new Graph.VertexExistsError([[key, this.vertexValue(key)]]);
+			key: _expectVerticesAbsent,
+			value: function () {
+				var _this4 = this;
+	
+				for (var _len3 = arguments.length, keys = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+					keys[_key3] = arguments[_key3];
+				}
+	
+				var presentVertices = keys.filter(function (k) {
+					return _this4.hasVertex(k);
+				});
+				if (presentVertices.length) {
+					throw new (_bind.apply(Graph.VertexExistsError, [null].concat(_toConsumableArray(presentVertices.map(function (k) {
+						return [k, _this4.vertexValue(k)];
+					})))))();
 				}
 			}
 		}, {
-			key: _expectEdge,
-			value: function (_ref6) {
-				var _ref62 = _slicedToArray(_ref6, 2);
+			key: _expectEdges,
+			value: function () {
+				var _this5 = this;
 	
-				var from = _ref62[0];
-				var to = _ref62[1];
+				for (var _len4 = arguments.length, keys = Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
+					keys[_key4] = arguments[_key4];
+				}
 	
-				if (!this.hasEdge(from, to)) {
-					throw new Graph.EdgeNotExistsError([[from, to]]);
+				var absentEdges = keys.filter(function (k) {
+					return !_this5.hasEdge.apply(_this5, _toConsumableArray(k));
+				});
+				if (absentEdges.length) {
+					throw new (_bind.apply(Graph.EdgeNotExistsError, [null].concat(_toConsumableArray(absentEdges))))();
 				}
 			}
 		}, {
-			key: _expectEdgeAbsent,
-			value: function (_ref7) {
-				var _ref72 = _slicedToArray(_ref7, 2);
+			key: _expectEdgesAbsent,
+			value: function () {
+				var _this6 = this;
 	
-				var from = _ref72[0];
-				var to = _ref72[1];
+				for (var _len5 = arguments.length, keys = Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
+					keys[_key5] = arguments[_key5];
+				}
 	
-				if (this.hasEdge(from, to)) {
-					throw new Graph.EdgeExistsError([[[from, to], this.edgeValue(from, to)]]);
+				var presentEdges = keys.filter(function (k) {
+					return _this6.hasEdge.apply(_this6, _toConsumableArray(k));
+				});
+				if (presentEdges.length) {
+					throw new (_bind.apply(Graph.EdgeExistsError, [null].concat(_toConsumableArray(presentEdges.map(function (k) {
+						return [k, _this6.edgeValue.apply(_this6, _toConsumableArray(k))];
+					})))))();
 				}
 			}
 		}, {
@@ -3708,7 +3733,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				}
 	
 				if (edges.length) {
-					throw new Graph.HasConnectedEdgesError(key, edges);
+					throw new (_bind.apply(Graph.HasConnectedEdgesError, [null].concat([key], edges)))();
 				}
 			}
 		}]);
@@ -3728,7 +3753,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @extends Error
 	 */
 	Graph.VertexExistsError = (function (_Error) {
-		function VertexExistsError(vertices) {
+		function VertexExistsError() {
+			for (var _len6 = arguments.length, vertices = Array(_len6), _key6 = 0; _key6 < _len6; _key6++) {
+				vertices[_key6] = arguments[_key6];
+			}
+	
 			_classCallCheck(this, VertexExistsError);
 	
 			_get(Object.getPrototypeOf(VertexExistsError.prototype), "constructor", this).call(this);
@@ -3741,10 +3770,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @type {Set.<Array>}
 	   */
 			this.vertices = new Set(vertices);
-			this.message = "This graph has " + (this.vertices.size === 1 ? "a vertex" : "vertices") + " '" + [].concat(_toConsumableArray(this.vertices)).map(function (_ref8) {
-				var _ref82 = _slicedToArray(_ref8, 1);
+			this.message = "This graph has " + (this.vertices.size === 1 ? "a vertex" : "vertices") + " '" + [].concat(_toConsumableArray(this.vertices)).map(function (_ref6) {
+				var _ref62 = _slicedToArray(_ref6, 1);
 	
-				var key = _ref82[0];
+				var key = _ref62[0];
 				return key;
 			}).join("', '") + "'";
 		}
@@ -3760,7 +3789,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @extends Error
 	 */
 	Graph.VertexNotExistsError = (function (_Error2) {
-		function VertexNotExistError(keys) {
+		function VertexNotExistError() {
+			for (var _len7 = arguments.length, keys = Array(_len7), _key7 = 0; _key7 < _len7; _key7++) {
+				keys[_key7] = arguments[_key7];
+			}
+	
 			_classCallCheck(this, VertexNotExistError);
 	
 			_get(Object.getPrototypeOf(VertexNotExistError.prototype), "constructor", this).call(this);
@@ -3787,7 +3820,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @extends Error
 	 */
 	Graph.EdgeExistsError = (function (_Error3) {
-		function EdgeExistsError(edges) {
+		function EdgeExistsError() {
+			for (var _len8 = arguments.length, edges = Array(_len8), _key8 = 0; _key8 < _len8; _key8++) {
+				edges[_key8] = arguments[_key8];
+			}
+	
 			_classCallCheck(this, EdgeExistsError);
 	
 			_get(Object.getPrototypeOf(EdgeExistsError.prototype), "constructor", this).call(this);
@@ -3800,13 +3837,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @type {Set.<Array>}
 	   */
 			this.edges = new Set(edges);
-			this.message = "This graph has " + (this.edges.size === 1 ? "an edge" : "edges") + " " + [].concat(_toConsumableArray(this.edges)).map(function (_ref9) {
-				var _ref92 = _slicedToArray(_ref9, 1);
+			this.message = "This graph has " + (this.edges.size === 1 ? "an edge" : "edges") + " " + [].concat(_toConsumableArray(this.edges)).map(function (_ref7) {
+				var _ref72 = _slicedToArray(_ref7, 1);
 	
-				var _ref92$0 = _slicedToArray(_ref92[0], 2);
+				var _ref72$0 = _slicedToArray(_ref72[0], 2);
 	
-				var from = _ref92$0[0];
-				var to = _ref92$0[1];
+				var from = _ref72$0[0];
+				var to = _ref72$0[1];
 				return "['" + from + "', '" + to + "']";
 			}).join(", ");
 		}
@@ -3822,7 +3859,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @extends Error
 	 */
 	Graph.EdgeNotExistsError = (function (_Error4) {
-		function EdgeNotExistsError(edges) {
+		function EdgeNotExistsError() {
+			for (var _len9 = arguments.length, edges = Array(_len9), _key9 = 0; _key9 < _len9; _key9++) {
+				edges[_key9] = arguments[_key9];
+			}
+	
 			_classCallCheck(this, EdgeNotExistsError);
 	
 			_get(Object.getPrototypeOf(EdgeNotExistsError.prototype), "constructor", this).call(this);
@@ -3835,11 +3876,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @type {Set.<Array.<string>>}
 	   */
 			this.edges = new Set(edges);
-			this.message = "This graph does not have " + (this.edges.size === 1 ? "an edge" : "edges") + " " + [].concat(_toConsumableArray(this.edges)).map(function (_ref10) {
-				var _ref102 = _slicedToArray(_ref10, 2);
+			this.message = "This graph does not have " + (this.edges.size === 1 ? "an edge" : "edges") + " " + [].concat(_toConsumableArray(this.edges)).map(function (_ref8) {
+				var _ref82 = _slicedToArray(_ref8, 2);
 	
-				var from = _ref102[0];
-				var to = _ref102[1];
+				var from = _ref82[0];
+				var to = _ref82[1];
 				return "['" + from + "', '" + to + "']";
 			}).join(", ");
 		}
@@ -3855,10 +3896,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @extends Graph.EdgeExistsError
 	 */
 	Graph.HasConnectedEdgesError = (function (_Graph$EdgeExistsError) {
-		function HasConnectedEdgesError(key, edges) {
+		function HasConnectedEdgesError(key) {
+			for (var _len10 = arguments.length, edges = Array(_len10 > 1 ? _len10 - 1 : 0), _key10 = 1; _key10 < _len10; _key10++) {
+				edges[_key10 - 1] = arguments[_key10];
+			}
+	
 			_classCallCheck(this, HasConnectedEdgesError);
 	
-			_get(Object.getPrototypeOf(HasConnectedEdgesError.prototype), "constructor", this).call(this, edges);
+			_get(Object.getPrototypeOf(HasConnectedEdgesError.prototype), "constructor", this).apply(this, edges);
 			/**
 	   * the key of the vertex that has connected edges
 	   * @public
@@ -3868,13 +3913,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @type {string}
 	   */
 			this.vertex = key;
-			this.message = "The '" + key + "' vertex has connected " + (this.edges.size === 1 ? "an edge" : "edges") + " " + [].concat(_toConsumableArray(this.edges)).map(function (_ref11) {
-				var _ref112 = _slicedToArray(_ref11, 1);
+			this.message = "The '" + key + "' vertex has connected " + (this.edges.size === 1 ? "an edge" : "edges") + " " + [].concat(_toConsumableArray(this.edges)).map(function (_ref9) {
+				var _ref92 = _slicedToArray(_ref9, 1);
 	
-				var _ref112$0 = _slicedToArray(_ref112[0], 2);
+				var _ref92$0 = _slicedToArray(_ref92[0], 2);
 	
-				var from = _ref112$0[0];
-				var to = _ref112$0[1];
+				var from = _ref92$0[0];
+				var to = _ref92$0[1];
 				return "['" + from + "', '" + to + "']";
 			}).join(", ");
 		}
