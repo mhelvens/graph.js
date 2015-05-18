@@ -2109,7 +2109,7 @@ describeMethod('equals', () => {
 	});
 
 	it("can be influenced by a custom comparison function", () => {
-		let sillyComparison = (v1, v2, from, to) => {
+		let sillyComparison = (v1, v2, [from, to]) => {
 			if (from === 'k2' && to === 'k3') { return true }
 			return v1 === v2;
 		};
@@ -2214,7 +2214,7 @@ describeMethod('mergeIn', () => {
 			['k2', "newValue2"],
 			['k3'             ],
 			['k4'             ],
-			['k5', "oldValue5"],
+			['k5'             ],
 			[['k2', 'k1'], "newValue21"],
 			[['k2', 'k3'], "oldValue23"],
 			[['k2', 'k5']              ],

@@ -776,10 +776,10 @@ export default class Graph {
 		return this[_verticesWithPathFrom](from, new Set());
 	}
 	*[_verticesWithPathFrom](from, done) {
-		for (let to of this[_edges].get(from).keys()) {
-			if (this.hasEdge(from, to) && !done.has(to)) {
+		for (let [to] of this.verticesFrom(from)) {
+			if (!done.has(to) && this.hasEdge(from, to)) {
 				done.add(to);
-				yield [to, this[_vertices].get(to)];
+				yield this.vertex(to);
 				yield* this[_verticesWithPathFrom](to, done);
 			}
 		}
@@ -807,10 +807,10 @@ export default class Graph {
 		return this[_verticesWithPathTo](to, new Set());
 	}
 	*[_verticesWithPathTo](to, done) {
-		for (let from of this[_reverseEdges].get(to)) {
-			if (this.hasEdge(from, to) && !done.has(from)) {
+		for (let [from] of this.verticesTo(to)) {
+			if (!done.has(from) && this.hasEdge(from, to)) {
 				done.add(from);
-				yield [from, this[_vertices].get(from)];
+				yield this.vertex(from);
 				yield* this[_verticesWithPathTo](from, done);
 			}
 		}
@@ -837,7 +837,7 @@ export default class Graph {
 		for (let key of this[_sources]) {
 			if (this.hasVertex(key) && !done.has(key)) {
 				done.add(key);
-				yield [key, this.vertexValue(key)];
+				yield this.vertex(key);
 			}
 		}
 	}
@@ -863,7 +863,7 @@ export default class Graph {
 		for (let key of this[_sinks]) {
 			if (this.hasVertex(key) && !done.has(key)) {
 				done.add(key);
-				yield [key, this.vertexValue(key)];
+				yield this.vertex(key);
 			}
 		}
 	}
@@ -889,21 +889,21 @@ export default class Graph {
 		let handled = new Set();
 
 		let _this = this;
-		function *visit(a) {
-			visited.push(a);
-			let i = visited.indexOf(a);
+		function *visit(key) {
+			visited.push(key);
+			let i = visited.indexOf(key);
 			if (i !== visited.length - 1) {
 				let cycle = visited.slice(i + 1).reverse();
 				throw new Graph.CycleError(cycle);
 			}
-			if (!handled.has(a)) {
-				for (let [b] of _this.verticesTo(a)) {
-					yield* visit(b);
+			if (!handled.has(key)) {
+				for (let [nextKey] of _this.verticesTo(key)) {
+					yield* visit(nextKey);
 				}
-				if (_this.hasVertex(a)) {
-					yield [a, _this[_vertices].get(a)];
+				if (_this.hasVertex(key)) {
+					yield _this.vertex(key);
 				}
-				handled.add(a);
+				handled.add(key);
 			}
 			visited.pop();
 		}
@@ -923,14 +923,14 @@ export default class Graph {
 	 * Remove all edges from the graph, but leave the vertices intact.
 	 */
 	clearEdges() {
-		for (let [[from, to]] of this.edges()) { this.removeEdge(from, to) }
+		for (let [key] of this.edges()) { this.removeEdge(key) }
 	}
 
 	/**
 	 * Remove all edges and vertices from the graph, putting it back in its initial state.
 	 */
 	clear() {
-		for (let [v] of this.vertices()) { this.destroyVertex(v) }
+		for (let [key] of this.vertices()) { this.destroyVertex(key) }
 	}
 
 
@@ -947,11 +947,11 @@ export default class Graph {
 	 *     a custom equality function for values stored in vertices;
 	 *     defaults to `===` comparison; The first two arguments are the
 	 *     values to compare. The third is the corresponding `key`.
-	 * @param [eqE] {function(*, *, string, string): boolean}
+	 * @param [eqE] {function(*, *, Array): boolean}
 	 *     a custom equality function for values stored in edges;
-	 *     defaults to the function given for `trV`; The first two arguments
-	 *     are the values to compare. The third and fourth are the `from`
-	 *     and `to` keys respectively.
+	 *     defaults to the function given for `eqV`; The first two arguments
+	 *     are the values to compare. The third is the corresponding
+	 *     `[from, to]` key.
 	 * @returns {boolean} `true` if the two graphs are equal; `false` otherwise
 	 */
 	equals(other, eqV=(x,y)=>(x===y), eqE=eqV) {
@@ -962,9 +962,9 @@ export default class Graph {
 			if (!other.hasVertex(key))                    { return false }
 			if (!eqV(value, other.vertexValue(key), key)) { return false }
 		}
-		for (let [[from, to], value] of this.edges()) {
-			if (!other.hasEdge(from, to))                         { return false }
-			if (!eqE(value, other.edgeValue(from, to), from, to)) { return false }
+		for (let [key, value] of this.edges()) {
+			if (!other.hasEdge(key))                    { return false }
+			if (!eqE(value, other.edgeValue(key), key)) { return false }
 		}
 		return true;
 	}
@@ -1078,7 +1078,7 @@ export default class Graph {
 	 * for (let path of graph.paths(from, to)) {
 	 *     // iterates over all paths between `from` and `to` in the graph
 	 * }
-	 */
+	 */ // TODO: allow [from, to] array to be given as argument in docs
 	paths(from, to) {
 		[from, to] = Graph[_extractTwoArgs](from, to);
 		this[_expectVertices](from, to);
@@ -1111,7 +1111,7 @@ export default class Graph {
 	 * @throws {Graph.VertexNotExistsError} if the `from` and/or `to` vertices do not yet exist in the graph
 	 * @returns {?Array} an array with the keys of the path found between the two vertices,
 	 *                   including those two vertices themselves; `null` if no such path exists
-	 */
+	 */ // TODO: allow [from, to] array to be given as argument in docs
 	path(from, to) {
 		let result = this.paths(from, to).next();
 		return result.done ? null : result.value;
@@ -1124,7 +1124,7 @@ export default class Graph {
 	 * @param to   {string} the terminating vertex
 	 * @throws {Graph.VertexNotExistsError} if the `from` and/or `to` vertices do not yet exist in the graph
 	 * @returns {boolean} whether such a path exists
-	 */
+	 */ // TODO: allow [from, to] array to be given as argument in docs
 	hasPath(from, to) { return !this.paths(from, to).next().done }
 
 
@@ -1171,26 +1171,23 @@ export default class Graph {
 	 * @param other {Graph} the other graph to merge into this one
 	 * @param [mV] {function(*, *, string): *}
 	 *     a custom merge function for values stored in vertices;
-	 *     defaults to whichever of the two values is not `undefined`,
-	 *     giving preference to that of the other graph; The first and
+	 *     defaults to choosing the second value over the first; The first and
 	 *     second arguments are the vertex values of `this` graph and the
 	 *     `other` graph respectively. The third is the corresponding `key`.
-	 * @param [mE] {function(*, *, string, string): *}
+	 * @param [mE] {function(*, *, Array): *}
 	 *     a custom merge function for values stored in edges;
 	 *     defaults to whichever of the two values is not `undefined`,
 	 *     giving preference to that of the other graph; The first and
 	 *     second arguments are the edge values of `this` graph and the
-	 *     `other` graph respectively. The third and fourth are the
-	 *     corresponding `from` and `to` keys.
+	 *     `other` graph respectively. The third is the
+	 *     corresponding `[from, to]` key.
 	 */
-	mergeIn(other, mV, mE) {
-		if (!mV) { mV = (v1,v2)=>(typeof v2 === 'undefined' ? v1 : v2) }
-		if (!mE) { mE = mV }
-		for (let [key] of other.vertices()) {
-			this.addVertex(key, mV(this.vertexValue(key), other.vertexValue(key)));
+	mergeIn(other, mV=((v1,v2)=>v2), mE=mV) {
+		for (let [key, value] of other.vertices()) {
+			this.addVertex(key, mV(this.vertexValue(key), value, key));
 		}
-		for (let [[from, to]] of other.edges()) {
-			this.addEdge(from, to, mE(this.edgeValue(from, to), other.edgeValue(from, to), from, to));
+		for (let [key, value] of other.edges()) {
+			this.addEdge(key, mE(this.edgeValue(key), value, key));
 		}
 	}
 
@@ -1201,11 +1198,11 @@ export default class Graph {
 	 *     a custom transformation function for values stored in vertices;
 	 *     defaults to the identity function; The first argument is the
 	 *     value to clone. The second is the corresponding `key`.
-	 * @param [trE] {function(*, string, string): *}
+	 * @param [trE] {function(*, Array): *}
 	 *     a custom transformation function for values stored in edges;
 	 *     defaults to the function given for `trV`; The first argument
-	 *     is the value to clone. The second and third are the `from`
-	 *     and `to` keys respectively.
+	 *     is the value to clone. The second is the corresponding
+	 *     `[from, to]` key.
 	 * @returns {Graph} a clone of this graph
 	 */
 	clone(trV=(v=>v), trE=trV) {
@@ -1221,11 +1218,11 @@ export default class Graph {
 	 *     a custom transformation function for values stored in vertices;
 	 *     defaults to the identity function; The first argument is the
 	 *     value to clone. The second is the corresponding `key`.
-	 * @param [trE] {function(*, string, string): *}
+	 * @param [trE] {function(*, Array): *}
 	 *     a custom transformation function for values stored in edges;
 	 *     defaults to the function given for `trV`; The first argument
-	 *     is the value to clone. The second and third are the `from`
-	 *     and `to` keys respectively.
+	 *     is the value to clone. The second is the corresponding
+	 *     `[from, to]` key.
 	 * @returns {Graph} a clone of this graph with all transitive edges removed
 	 */
 	transitiveReduction(trV, trE) {
