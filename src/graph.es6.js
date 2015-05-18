@@ -14,6 +14,9 @@ const _edgeCount    = Symbol("edge count");
 const _extractTwoArgs   = Symbol("extract ([a, b]) or (a, b) arguments");
 const _extractThreeArgs = Symbol("extract ([[a, b], c]), ([a, b], c) or (a, b, c) arguments");
 
+const _listeners = Symbol("listeners");
+const _trigger   = Symbol("trigger");
+
 const _verticesFrom         = Symbol("vertices from");
 const _verticesTo           = Symbol("vertices to");
 const _edgesFrom            = Symbol("edges from");
@@ -23,9 +26,9 @@ const _verticesWithPathFrom = Symbol("vertices with path from");
 const _paths                = Symbol("paths");
 
 const _expectVertices         = Symbol("expect vertices");
-const _expectVertexAbsent     = Symbol("expect vertex absent");
-const _expectEdge             = Symbol("expect edge");
-const _expectEdgeAbsent       = Symbol("expect edge absent");
+const _expectVerticesAbsent   = Symbol("expect vertex absent");
+const _expectEdges            = Symbol("expect edge");
+const _expectEdgesAbsent      = Symbol("expect edge absent");
 const _expectNoConnectedEdges = Symbol("expect no connected edges");
 
 
@@ -65,6 +68,9 @@ export default class Graph {
 		this[_sinks]        = new Set(); // Set.< string >
 		this[_edgeCount]    = 0;
 
+		/* listeners */
+		this[_listeners] = new Map();
+
 		/* add vertices and values from constructor arguments */
 		for (let [key, value] of parts) {
 			if (Array.isArray(key)) {/////////////// an edge
@@ -90,6 +96,97 @@ export default class Graph {
 		return [a, b, c];
 	}
 
+	/////////////////////////////////////
+	////////// Event Handling //////////
+	/////////////////////////////////////
+
+	/**
+	 * Register an event handler.
+	 * @param event   {string}   the event to listen for
+	 * @param handler {Function} the function to call for each such event fired, receiving its corresponding value
+	 */
+	on(event, handler) {
+		if (!this[_listeners].has(event)) {
+			this[_listeners].set(event, new Set());
+		}
+		this[_listeners].get(event).add(handler);
+	}
+
+	/**
+	 * Deregister a previously registered event handler.
+	 * @param event   {string}   the event used to originally register a handler
+	 * @param handler {Function} the handler originally registered
+	 */
+	off(event, handler) {
+		if (this[_listeners].has(event)) {
+			this[_listeners].get(event).delete(handler);
+		}
+	}
+
+	[_trigger](event, value) {
+		for (let handler of this[_listeners].get(event) || []) {
+			handler(value);
+		}
+	}
+
+	/**
+	 * An event that is triggered just after a vertex is added to this graph.
+	 * Handlers receive the new vertex `[key, value]` as an argument.
+	 * @event vertex-added
+	 * @memberof Graph
+	 * @instance
+	 * @see {@link Graph#on}
+	 * @see {@link Graph#off}
+	 */
+	/**
+	 * An event that is triggered just after a vertex is removed from this graph.
+	 * Handlers receive the vertex key as an argument.
+	 * @event vertex-removed
+	 * @memberof Graph
+	 * @instance
+	 * @see {@link Graph#on}
+	 * @see {@link Graph#off}
+	 */
+	/**
+	 * An event that is triggered after a vertex in this graph is modified.
+	 * It is also triggered after any {@link #Graph#event_vertex-added|"vertex-added"} event.
+	 * Handlers receive the vertex `[key, value]` as an argument.
+	 * @event vertex-modified
+	 * @memberof Graph
+	 * @instance
+	 * @see {@link Graph#on}
+	 * @see {@link Graph#off}
+	 */
+	/**
+	 * An event that is triggered just after an edge is added to this graph.
+	 * Handlers receive the new edge `[[from, to], value]` as an argument.
+	 * @event edge-added
+	 * @memberof Graph
+	 * @instance
+	 * @see {@link Graph#on}
+	 * @see {@link Graph#off}
+	 */
+	/**
+	 * An event that is triggered just after an edge is removed from this graph.
+	 * Handlers receive the edge key `[from, to]` as an argument.
+	 * @event edge-removed
+	 * @memberof Graph
+	 * @instance
+	 * @see {@link Graph#on}
+	 * @see {@link Graph#off}
+	 */
+	/**
+	 * An event that is triggered after an edge in this graph is modified.
+	 * It is also triggered after any {@link #Graph#event_edge-added|"edge-added"} event.
+	 * Handlers receive the edge `[[from, to], value]` as an argument.
+	 * @event edge-modified
+	 * @memberof Graph
+	 * @instance
+	 * @see {@link Graph#on}
+	 * @see {@link Graph#off}
+	 */
+
+
 	//////////////////////////////
 	////////// Vertices //////////
 	//////////////////////////////
@@ -104,12 +201,14 @@ export default class Graph {
 	 */ // TODO: allow [key, value] array to be given as argument in docs
 	addNewVertex(key, value) {
 		[key, value] = Graph[_extractTwoArgs](key, value);
-		this[_expectVertexAbsent](key);
+		this[_expectVerticesAbsent](key);
 		this[_vertices].set(key, value);
 		this[_edges].set(key, new Map());
 		this[_reverseEdges].set(key, new Set());
 		this[_sources].add(key);
 		this[_sinks].add(key);
+		this[_trigger]('vertex-added',    [key, value]);
+		this[_trigger]('vertex-modified', [key, value]);
 	}
 
 	/**
@@ -122,13 +221,9 @@ export default class Graph {
 		[key, value] = Graph[_extractTwoArgs](key, value);
 		this[_expectVertices](key);
 		this[_vertices].set(key, value);
+		this[_trigger]('vertex-modified', [key, value]);
 	}
 
-	/**
-	 * Make sure a vertex with a specific key exists in this graph. If it already exists,
-	 * do nothing. If it does not yet exist, add a new vertex with the given value.
-	 * @param vertex {Array} a `[key, value]` shaped array representing this new vertex
-	 */
 	/**
 	 * Make sure a vertex with a specific key exists in this graph. If it already exists,
 	 * do nothing. If it does not yet exist, add a new vertex with the given value.
@@ -172,6 +267,7 @@ export default class Graph {
 		this[_vertices].delete(key);
 		this[_sources].delete(key);
 		this[_sinks].delete(key);
+		this[_trigger]('vertex-removed', key);
 	}
 
 	/**
@@ -181,12 +277,8 @@ export default class Graph {
 	 */
 	destroyExistingVertex(key) {
 		this[_expectVertices](key);
-		for (let [to] of this.verticesFrom(key)) {
-			this.removeEdge(key, to);
-		}
-		for (let [from] of this.verticesTo(key)) {
-			this.removeEdge(from, key);
-		}
+		for (let [to] of this.verticesFrom(key)) { this.removeEdge(key,  to ) }
+		for (let [from] of this.verticesTo(key)) { this.removeEdge(from, key) }
 		this.removeExistingVertex(key);
 	}
 
@@ -269,13 +361,15 @@ export default class Graph {
 	 */ // TODO: allow [from, to], value array to be given as argument in docss; or [[from, to], value] as single argument
 	addNewEdge(from, to, value) {
 		[from, to, value] = Graph[_extractThreeArgs](from, to, value);
-		this[_expectEdgeAbsent]([from, to]);
+		this[_expectEdgesAbsent]([from, to]);
 		this[_expectVertices](from, to);
 		this[_edges].get(from).set(to, value);
 		this[_reverseEdges].get(to).add(from);
 		this[_edgeCount] += 1;
 		this[_sources].delete(to);
 		this[_sinks].delete(from);
+		this[_trigger]('edge-added',    [[from, to], value]);
+		this[_trigger]('edge-modified', [[from, to], value]);
 	}
 
 	/**
@@ -288,7 +382,7 @@ export default class Graph {
 	 */ // TODO: allow [from, to], value array to be given as argument in docss; or [[from, to], value] as single argument
 	createNewEdge(from, to, value) {
 		[from, to, value] = Graph[_extractThreeArgs](from, to, value);
-		this[_expectEdgeAbsent]([from, to]);
+		this[_expectEdgesAbsent]([from, to]);
 		this.ensureVertex(from);
 		this.ensureVertex(to);
 		this.addNewEdge(from, to, value);
@@ -303,8 +397,9 @@ export default class Graph {
 	 */ // TODO: allow [from, to], value array to be given as argument in docss; or [[from, to], value] as single argument
 	setEdge(from, to, value) {
 		[from, to, value] = Graph[_extractThreeArgs](from, to, value);
-		this[_expectEdge]([from, to]);
+		this[_expectEdges]([from, to]);
 		this[_edges].get(from).set(to, value);
+		this[_trigger]('edge-modified', [[from, to], value]);
 	}
 
 	/**
@@ -387,12 +482,13 @@ export default class Graph {
 	 */ // TODO: allow [from, to] array to be given as argument in docs
 	removeExistingEdge(from, to) {
 		[from, to] = Graph[_extractTwoArgs](from, to);
-		this[_expectEdge]([from, to]);
+		this[_expectEdges]([from, to]);
 		this[_edges].get(from).delete(to);
 		this[_reverseEdges].get(to).delete(from);
 		this[_edgeCount] -= 1;
 		if (this. inDegree(to)   === 0) { this[_sources].add(to) }
 		if (this.outDegree(from) === 0) { this[_sinks].add(from) }
+		this[_trigger]('edge-removed', [from, to]);
 	}
 
 	/**
@@ -1247,33 +1343,29 @@ export default class Graph {
 	////////// Assertions //////////
 	////////////////////////////////
 	
-	[_expectVertices](key1, key2) {
-		if (key2 && !this.hasVertex(key2)) {
-			if (!this.hasVertex(key1)) {
-				throw new Graph.VertexNotExistsError([key1, key2]);
-			} else {
-				throw new Graph.VertexNotExistsError([key2]);
-			}
-		} else if (!this.hasVertex(key1)) {
-			throw new Graph.VertexNotExistsError([key1]);
+	[_expectVertices](...keys) {
+		let missingVertices = keys.filter(k => !this.hasVertex(k));
+		if (missingVertices.length) { throw new Graph.VertexNotExistsError(...missingVertices) }
+	}
+
+	[_expectVerticesAbsent](...keys) {
+		let presentVertices = keys.filter(k => this.hasVertex(k));
+		if (presentVertices.length) {
+			throw new Graph.VertexExistsError(...presentVertices.map(k => [k, this.vertexValue(k)]));
 		}
 	}
 
-	[_expectVertexAbsent](key) {
-		if (this.hasVertex(key)) {
-			throw new Graph.VertexExistsError([[key, this.vertexValue(key)]]);
+	[_expectEdges](...keys) {
+		let absentEdges = keys.filter(k => !this.hasEdge(...k));
+		if (absentEdges.length) {
+			throw new Graph.EdgeNotExistsError(...absentEdges);
 		}
 	}
 
-	[_expectEdge]([from, to]) {
-		if (!this.hasEdge(from, to)) {
-			throw new Graph.EdgeNotExistsError([[from, to]]);
-		}
-	}
-
-	[_expectEdgeAbsent]([from, to]) {
-		if (this.hasEdge(from, to)) {
-			throw new Graph.EdgeExistsError([[[from, to], this.edgeValue(from, to)]]);
+	[_expectEdgesAbsent](...keys) {
+		let presentEdges = keys.filter(k => this.hasEdge(...k));
+		if (presentEdges.length) {
+			throw new Graph.EdgeExistsError(...presentEdges.map(k => [k, this.edgeValue(...k)]));
 		}
 	}
 
@@ -1281,7 +1373,7 @@ export default class Graph {
 		let edges = [];
 		for (let [to]   of this.verticesFrom(key)) { edges.push([[key,  to ], this.edgeValue(key,  to )]) }
 		for (let [from] of this.verticesTo  (key)) { edges.push([[from, key], this.edgeValue(from, key)]) }
-		if (edges.length) { throw new Graph.HasConnectedEdgesError(key, edges) }
+		if (edges.length) { throw new Graph.HasConnectedEdgesError(key, ...edges) }
 	}
 
 }
@@ -1297,7 +1389,7 @@ export default class Graph {
  * @extends Error
  */
 Graph.VertexExistsError = class VertexExistsError extends Error {
-	constructor(vertices) {
+	constructor(...vertices) {
 		super();
 		/**
 		 * the set of relevant vertices as `[key, value]` shaped arrays
@@ -1322,7 +1414,7 @@ Graph.VertexExistsError = class VertexExistsError extends Error {
  * @extends Error
  */
 Graph.VertexNotExistsError = class VertexNotExistError extends Error {
-	constructor(keys) {
+	constructor(...keys) {
 		super();
 		/**
 		 * the set of relevant vertex keys
@@ -1347,7 +1439,7 @@ Graph.VertexNotExistsError = class VertexNotExistError extends Error {
  * @extends Error
  */
 Graph.EdgeExistsError = class EdgeExistsError extends Error {
-	constructor(edges) {
+	constructor(...edges) {
 		super();
 		/**
 		 * the set of relevant edges as `[[from, to], value]` shaped arrays
@@ -1372,7 +1464,7 @@ Graph.EdgeExistsError = class EdgeExistsError extends Error {
  * @extends Error
  */
 Graph.EdgeNotExistsError = class EdgeNotExistsError extends Error {
-	constructor(edges) {
+	constructor(...edges) {
 		super();
 		/**
 		 * the set of relevant edge keys as `[from, to]` shaped arrays
@@ -1397,8 +1489,8 @@ Graph.EdgeNotExistsError = class EdgeNotExistsError extends Error {
  * @extends Graph.EdgeExistsError
  */
 Graph.HasConnectedEdgesError = class HasConnectedEdgesError extends Graph.EdgeExistsError {
-	constructor(key, edges) {
-		super(edges);
+	constructor(key, ...edges) {
+		super(...edges);
 		/**
 		 * the key of the vertex that has connected edges
 		 * @public

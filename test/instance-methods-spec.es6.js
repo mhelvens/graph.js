@@ -808,6 +808,437 @@ describeMethod('edgeValue', () => {
 // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
 
 
+describeMethod('on', () => {
+
+	describe("— 'vertex-added' —", () => {
+
+		it("throws no exceptions when passed a function", () => {
+			expectItWhenBoundWith('vertex-added', () => {
+				throw new Error("should not be thrown");
+			}).not.toThrow();
+		});
+
+		it("does not modify the graph", () => {
+			callItWith('vertex-added', () => {
+				graph = null;
+			});
+			expectTheGraphNotToHaveChanged();
+		});
+
+		it("causes the handler to be called after a new vertex is added", () => {
+			let registeredAddedVertices = {};
+			callItWith('vertex-added', ([key, value]) => {
+				expect(graph.hasVertex(key)).toBeTruthy();
+				registeredAddedVertices[key] = value;
+			});
+			graph.addNewVertex('newKey', "newValue");
+			expect(registeredAddedVertices).toEqual({ 'newKey': "newValue" });
+		});
+
+		it("does not cause the handler to be called when an existing vertex is modified", () => {
+			callItWith('vertex-added', () => {
+				expect().not.toBeReachable();
+			});
+			graph.setVertex('k1', 'newValue');
+			graph.setVertex('k2', 'newValue');
+		});
+
+		it("does not cause the handler to be called when an existing vertex is removed", () => {
+			callItWith('vertex-added', () => {
+				expect().not.toBeReachable();
+			});
+			graph.removeExistingVertex('k1');
+		});
+
+		it("causes the handler to be called after a previously removed vertex is added again", () => {
+			let registeredAddedVertices = {};
+			callItWith('vertex-added', ([key, value]) => {
+				expect(graph.hasVertex(key)).toBeTruthy();
+				registeredAddedVertices[key] = value;
+			});
+			graph.removeExistingVertex('k1');
+			expect(registeredAddedVertices).toEqual({});
+			graph.addNewVertex('k1', 'oldValue1');
+			expect(registeredAddedVertices).toEqual({ 'k1': 'oldValue1' });
+		});
+
+		it("does not cause the handler to be called after the handler is removed", () => {
+			let registeredAddedVertices = {};
+			const handler = ([key, value]) => { registeredAddedVertices[key] = value };
+			callItWith('vertex-added', handler);
+			graph.addNewVertex('newKey', 'newValue');
+			expect(registeredAddedVertices).toEqual({ 'newKey': 'newValue' });
+			graph.off('vertex-added', handler);
+			graph.addNewVertex('newKey2', 'newValue2');
+			expect(registeredAddedVertices).toEqual({ 'newKey': 'newValue' });
+		});
+
+	});
+
+	describe("— 'vertex-removed' —", () => {
+
+		it("throws no exceptions when passed a function", () => {
+			expectItWhenBoundWith('vertex-removed', () => {
+				throw new Error("should not be thrown");
+			}).not.toThrow();
+		});
+
+		it("does not modify the graph", () => {
+			callItWith('vertex-removed', () => {
+				graph = null;
+			});
+			expectTheGraphNotToHaveChanged();
+		});
+
+		it("causes the handler to be called after an existing vertex is removed", () => {
+			let registeredRemovedVertices = {};
+			callItWith('vertex-removed', (key) => {
+				expect(graph.hasVertex(key)).toBeFalsy();
+				registeredRemovedVertices[key] = true;
+			});
+			graph.removeExistingVertex('k1');
+			expect(registeredRemovedVertices).toEqual({ 'k1': true });
+		});
+
+		it("does not cause the handler to be called when an existing vertex is modified", () => {
+			callItWith('vertex-removed', () => {
+				expect().not.toBeReachable();
+			});
+			graph.setVertex('k1', 'newValue');
+			graph.setVertex('k2', 'newValue');
+		});
+
+		it("does not cause the handler to be called when an absent vertex is left absent", () => {
+			callItWith('vertex-removed', () => {
+				expect().not.toBeReachable();
+			});
+			graph.removeVertex('newKey');
+		});
+
+		it("does not cause the handler to be called when an absent vertex is added", () => {
+			callItWith('vertex-removed', () => {
+				expect().not.toBeReachable();
+			});
+			graph.addNewVertex('newKey');
+		});
+
+		it("does not cause the handler to be called after the handler is removed", () => {
+			let registeredRemovedVertices = new Set();
+			const handler = (key) => { registeredRemovedVertices.add(key) };
+			callItWith('vertex-removed', handler);
+			graph.addNewVertex('k99', 'newValue');
+			graph.removeExistingVertex('k99');
+			expect(registeredRemovedVertices).toEqual(new Set(['k99']));
+			graph.off('vertex-removed', handler);
+			graph.removeExistingVertex('k1');
+			expect(registeredRemovedVertices).toEqual(new Set(['k99']));
+		});
+
+	});
+
+	describe("— 'vertex-modified' —", () => {
+
+		it("throws no exceptions when passed a function", () => {
+			expectItWhenBoundWith('vertex-modified', () => {
+				throw new Error("should not be thrown");
+			}).not.toThrow();
+		});
+
+		it("does not modify the graph", () => {
+			callItWith('vertex-modified', () => {
+				graph = null;
+			});
+			expectTheGraphNotToHaveChanged();
+		});
+
+		it("causes the handler to be called after a new vertex is added, after the 'vertex-added' event is handled", () => {
+			let registeredAddedVertices = {};
+			let order = { 'newKey': 0 };
+			callItWith('vertex-added', ([key]) => {
+				expect(order[key]).toBe(0);
+				order[key] += 1;
+			});
+			callItWith('vertex-modified', ([key, value]) => {
+				expect(graph.hasVertex(key)).toBeTruthy();
+				registeredAddedVertices[key] = value;
+				expect(order[key]).toBe(1);
+			});
+			graph.addNewVertex('newKey', "newValue");
+			expect(registeredAddedVertices).toEqual({ 'newKey': "newValue" });
+		});
+
+		it("causes the handler to be called when an existing vertex is modified", () => {
+			let registeredModifiedVertices = {};
+			callItWith('vertex-modified', ([key, value]) => {
+				expect(graph.hasVertex(key)).toBeTruthy();
+				registeredModifiedVertices[key] = value;
+			});
+			graph.setVertex('k1', "newValue");
+			expect(registeredModifiedVertices).toEqual({ 'k1': "newValue" });
+		});
+
+		it("does not cause the handler to be called when an existing vertex is removed", () => {
+			callItWith('vertex-modified', () => {
+				expect().not.toBeReachable();
+			});
+			graph.removeExistingVertex('k1');
+		});
+
+		it("causes the handler to be called after a previously removed vertex is added again", () => {
+			let registeredAddedVertices = {};
+			callItWith('vertex-modified', ([key, value]) => {
+				expect(graph.hasVertex(key)).toBeTruthy();
+				registeredAddedVertices[key] = value;
+			});
+			graph.removeExistingVertex('k1');
+			expect(registeredAddedVertices).toEqual({});
+			graph.addNewVertex('k1', 'oldValue1');
+			expect(registeredAddedVertices).toEqual({ 'k1': 'oldValue1' });
+		});
+
+		it("does not cause the handler to be called after the handler is removed", () => {
+			let registeredModifiedVertices = {};
+			const handler = ([key, value]) => { registeredModifiedVertices[key] = value };
+			callItWith('vertex-modified', handler);
+			graph.setVertex('k1', 'newValue');
+			expect(registeredModifiedVertices).toEqual({ 'k1': 'newValue' });
+			graph.off('vertex-modified', handler);
+			graph.setVertex('k2', 'newValue2');
+			expect(registeredModifiedVertices).toEqual({ 'k1': 'newValue' });
+		});
+
+	});
+
+	describe("— 'edge-added' —", () => {
+
+		it("throws no exceptions when passed a function", () => {
+			expectItWhenBoundWith('edge-added', () => {
+				throw new Error("should not be thrown");
+			}).not.toThrow();
+		});
+
+		it("does not modify the graph", () => {
+			callItWith('edge-added', () => {
+				graph = null;
+			});
+			expectTheGraphNotToHaveChanged();
+		});
+
+		it("causes the handler to be called after a new edge is added", () => {
+			let registeredAddedEdges = {};
+			callItWith('edge-added', ([[from, to], value]) => {
+				expect(graph.hasEdge(from, to)).toBeTruthy();
+				registeredAddedEdges[`${from},${to}`] = value;
+			});
+			graph.addNewEdge('k1', 'k2', "newValue");
+			expect(registeredAddedEdges).toEqual({ 'k1,k2': "newValue" });
+		});
+
+		it("does not cause the handler to be called when an existing edge is modified", () => {
+			callItWith('edge-added', () => {
+				expect().not.toBeReachable();
+			});
+			graph.setEdge('k2', 'k3', "newValue1");
+			graph.setEdge('k3', 'k4', "newValue2");
+		});
+
+		it("does not cause the handler to be called when an existing edge is removed", () => {
+			callItWith('edge-added', () => {
+				expect().not.toBeReachable();
+			});
+			graph.removeExistingEdge('k2', 'k3');
+		});
+
+		it("causes the handler to be called after a previously removed edge is added again", () => {
+			let registeredAddedEdges = {};
+			callItWith('edge-added', ([[from, to], value]) => {
+				expect(graph.hasEdge(from, to)).toBeTruthy();
+				registeredAddedEdges[`${from},${to}`] = value;
+			});
+			graph.removeExistingEdge('k2', 'k3');
+			expect(registeredAddedEdges).toEqual({});
+			graph.addNewEdge('k2', 'k3', 'newValue');
+			expect(registeredAddedEdges).toEqual({ 'k2,k3': 'newValue' });
+		});
+
+		it("does not cause the handler to be called after the handler is removed", () => {
+			let registeredAddedEdges = {};
+			const handler = ([[from, to], value]) => { registeredAddedEdges[`${from},${to}`] = value };
+			callItWith('edge-added', handler);
+			graph.addNewEdge('k1', 'k2', 'newValue');
+			expect(registeredAddedEdges).toEqual({ 'k1,k2': 'newValue' });
+			graph.off('edge-added', handler);
+			graph.addNewEdge('k5', 'k4', 'newValue2');
+			expect(registeredAddedEdges).toEqual({ 'k1,k2': 'newValue' });
+		});
+
+	});
+
+	describe("— 'edge-removed' —", () => {
+
+		it("throws no exceptions when passed a function", () => {
+			expectItWhenBoundWith('edge-removed', () => {
+				throw new Error("should not be thrown");
+			}).not.toThrow();
+		});
+
+		it("does not modify the graph", () => {
+			callItWith('edge-removed', () => {
+				graph = null;
+			});
+			expectTheGraphNotToHaveChanged();
+		});
+
+		it("causes the handler to be called after an existing edge is removed", () => {
+			let registeredRemovedEdges = new Set();
+			callItWith('edge-removed', ([from, to]) => {
+				expect(graph.hasEdge(from, to)).toBeFalsy();
+				registeredRemovedEdges.add(`${from},${to}`);
+			});
+			graph.removeExistingEdge('k2', 'k3');
+			expect(registeredRemovedEdges).toEqual(new Set(['k2,k3']));
+		});
+
+		it("does not cause the handler to be called when an existing edge is modified", () => {
+			callItWith('edge-removed', () => {
+				expect().not.toBeReachable();
+			});
+			graph.setEdge('k2', 'k3', 'newValue1');
+			graph.setEdge('k3', 'k4', 'newValue2');
+		});
+
+		it("does not cause the handler to be called when an absent edge is left absent", () => {
+			callItWith('edge-removed', () => {
+				expect().not.toBeReachable();
+			});
+			graph.removeEdge('k1', 'k2');
+		});
+
+		it("does not cause the handler to be called when an absent edge is added", () => {
+			callItWith('edge-removed', () => {
+				expect().not.toBeReachable();
+			});
+			graph.addNewEdge('k1', 'k2', 'newValue');
+		});
+
+		it("does not cause the handler to be called after the handler is removed", () => {
+			let registeredRemovedEdges = new Set();
+			const handler = ([from, to]) => { registeredRemovedEdges.add(`${from},${to}`) };
+			callItWith('edge-removed', handler);
+			graph.removeExistingEdge('k2', 'k3');
+			expect(registeredRemovedEdges).toEqual(new Set(['k2,k3']));
+			graph.off('edge-removed', handler);
+			graph.removeExistingEdge('k3', 'k4');
+			expect(registeredRemovedEdges).toEqual(new Set(['k2,k3']));
+		});
+
+	});
+
+	describe("— 'edge-modified' —", () => {
+
+		it("throws no exceptions when passed a function", () => {
+			expectItWhenBoundWith('edge-modified', () => {
+				throw new Error("should not be thrown");
+			}).not.toThrow();
+		});
+
+		it("does not modify the graph", () => {
+			callItWith('edge-modified', () => {
+				graph = null;
+			});
+			expectTheGraphNotToHaveChanged();
+		});
+
+		it("causes the handler to be called after a new edge is added, after the 'edge-added' event is handled", () => {
+			let registeredAddedEdges = {};
+			let order = { 'k1,k2': 0 };
+			callItWith('edge-added', ([[from, to]]) => {
+				expect(order[`${from},${to}`]).toBe(0);
+				order[`${from},${to}`] += 1;
+			});
+			callItWith('edge-modified', ([[from, to], value]) => {
+				expect(graph.hasEdge(from, to)).toBeTruthy();
+				registeredAddedEdges[`${from},${to}`] = value;
+				expect(order[`${from},${to}`]).toBe(1);
+			});
+			graph.addNewEdge('k1', 'k2', "newValue");
+			expect(registeredAddedEdges).toEqual({ 'k1,k2': "newValue" });
+		});
+
+		it("causes the handler to be called when an existing edge is modified", () => {
+			let registeredModifiedEdges = {};
+			callItWith('edge-modified', ([[from, to], value]) => {
+				expect(graph.hasEdge(from, to)).toBeTruthy();
+				registeredModifiedEdges[`${from},${to}`] = value;
+			});
+			graph.setEdge('k2', 'k3', "newValue");
+			expect(registeredModifiedEdges).toEqual({ 'k2,k3': "newValue" });
+		});
+
+		it("does not cause the handler to be called when an existing edge is removed", () => {
+			callItWith('edge-modified', () => {
+				expect().not.toBeReachable();
+			});
+			graph.removeExistingEdge('k2', 'k3');
+		});
+
+		it("causes the handler to be called after a previously removed edge is added again", () => {
+			let registeredAddedEdges = {};
+			callItWith('edge-modified', ([[from, to], value]) => {
+				expect(graph.hasEdge(from, to)).toBeTruthy();
+				registeredAddedEdges[`${from},${to}`] = value;
+			});
+			graph.removeExistingEdge('k2', 'k3');
+			expect(registeredAddedEdges).toEqual({});
+			graph.addNewEdge('k2', 'k3', "newValue");
+			expect(registeredAddedEdges).toEqual({ 'k2,k3': "newValue" });
+		});
+
+		it("does not cause the handler to be called after the handler is removed", () => {
+			let registeredModifiedEdges = {};
+			const handler = ([[from, to], value]) => { registeredModifiedEdges[`${from},${to}`] = value };
+			callItWith('edge-modified', handler);
+			graph.setEdge('k2', 'k3', "newValue");
+			expect(registeredModifiedEdges).toEqual({ 'k2,k3': "newValue" });
+			graph.off('edge-modified', handler);
+			graph.setEdge('k2', 'k3', "newValue2");
+			expect(registeredModifiedEdges).toEqual({ 'k2,k3': "newValue" });
+		});
+
+	});
+
+	it("can call multiple registered handlers per event", () => {
+		let counter = 0;
+		callItWith('vertex-added', () => { counter += 1 });
+		callItWith('vertex-added', () => { counter += 1 });
+		expect(counter).toBe(0);
+		graph.addNewVertex('k99');
+		expect(counter).toBe(2);
+	});
+
+});
+
+describeMethod('off', () => {
+
+	it("deregisters a registered handler", () => {
+		const handler = () => { expect().not.toBeReachable() };
+		graph.on ('vertex-added', handler);
+		graph.off('vertex-added', handler);
+		graph.addNewVertex('k99');
+	});
+
+	it("does nothing if the given handler is not registered", () => {
+		const handler = () => { expect().not.toBeReachable() };
+		graph.off('vertex-added', handler);
+		graph.addNewVertex('k99');
+	});
+
+});
+
+
+// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
+
+
 describeMethod('addNewVertex', () => {
 	it_throwsErrorIfVertexExists();
 	it_throwsNothingIfVertexDoesNotExist();
@@ -2743,19 +3174,24 @@ describeMethod('vertices_topologically', () => {
 describe("Graph.VertexExistsError", () => {
 
 	it("can specify one existing vertex", () => {
-		let err = new Graph.VertexExistsError([
+		let err = new Graph.VertexExistsError(
 			['x', 1]
-		]);
+		);
 		expect(err.vertices).toEqual(new Set([
 			['x', 1]
 		]));
 	});
 
 	it("can specify multiple existing vertices", () => {
-		let err = new Graph.VertexExistsError([
+		let err = new Graph.VertexExistsError(
 			['x', 1],
 			['y', 2]
-		]);
+		);
+
+		for (let v of err.vertices) {
+			console.log(v);
+		}
+
 		expect(err.vertices).toEqual(new Set([
 			['x', 1],
 			['y', 2]
@@ -2767,19 +3203,14 @@ describe("Graph.VertexExistsError", () => {
 describe("Graph.VertexNotExistsError", () => {
 
 	it("can specify one missing vertex", () => {
-		let err = new Graph.VertexNotExistsError([
-			'x'
-		]);
+		let err = new Graph.VertexNotExistsError('x');
 		expect(err.vertices).toEqual(new Set([
 			'x'
 		]));
 	});
 
 	it("can specify multiple missing vertices", () => {
-		let err = new Graph.VertexNotExistsError([
-			'x',
-			'y'
-		]);
+		let err = new Graph.VertexNotExistsError('x', 'y');
 		expect(err.vertices).toEqual(new Set([
 			'x',
 			'y'
@@ -2791,19 +3222,19 @@ describe("Graph.VertexNotExistsError", () => {
 describe("Graph.EdgeExistsError", () => {
 
 	it("can specify one existing edge", () => {
-		let err = new Graph.EdgeExistsError([
+		let err = new Graph.EdgeExistsError(
 			[['x', 'y'], 1]
-		]);
+		);
 		expect(err.edges).toEqual(new Set([
 			[['x', 'y'], 1]
 		]));
 	});
 
 	it("can specify multiple existing edges", () => {
-		let err = new Graph.EdgeExistsError([
+		let err = new Graph.EdgeExistsError(
 			[['x', 'y'], 1],
 			[['y', 'z'], 2]
-		]);
+		);
 		expect(err.edges).toEqual(new Set([
 			[['x', 'y'], 1],
 			[['y', 'z'], 2]
@@ -2815,19 +3246,19 @@ describe("Graph.EdgeExistsError", () => {
 describe("Graph.EdgeNotExistsError", () => {
 
 	it("can specify one missing edge", () => {
-		let err = new Graph.EdgeNotExistsError([
+		let err = new Graph.EdgeNotExistsError(
 			['x', 'y']
-		]);
+		);
 		expect(err.edges).toEqual(new Set([
 			['x', 'y']
 		]));
 	});
 
 	it("can specify multiple missing edges", () => {
-		let err = new Graph.EdgeNotExistsError([
+		let err = new Graph.EdgeNotExistsError(
 			['x', 'y'],
 			['y', 'z']
-		]);
+		);
 		expect(err.edges).toEqual(new Set([
 			['x', 'y'],
 			['y', 'z']
@@ -2839,10 +3270,10 @@ describe("Graph.EdgeNotExistsError", () => {
 describe("Graph.HasConnectedEdgesError", () => {
 
 	it("can specify that a vertex has connected edges", () => {
-		let err = new Graph.HasConnectedEdgesError('x', [
+		let err = new Graph.HasConnectedEdgesError('x',
 			[['x', 'y'], 1],
 			[['z', 'x'], 2]
-		]);
+		);
 		expect(err.vertex).toEqual('x');
 		expect(err.edges).toEqual(new Set([
 			[['x', 'y'], 1],
