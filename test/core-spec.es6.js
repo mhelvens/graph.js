@@ -1138,7 +1138,7 @@ describeMethod('on', () => {
 			let registeredRemovedEdges = set( );
 			callItWith('edge-removed', (key) => {
 				expect(graph.hasEdge(key)).toBeFalsy();
-				registeredRemovedEdges.add(key);
+				registeredRemovedEdges.add(key.toString());
 			});
 			graph.removeExistingEdge('k2', 'k3');
 			expect(registeredRemovedEdges).toEqual(set( 'k2,k3' ));
@@ -3123,30 +3123,23 @@ describeMethod('vertices_topologically', () => {
 		//         ╵      │
 		//         n6 ◀───╯
 
-		expect(() => [...callItWith()]).toThrowSpecific(Graph.CycleError, {}); // TODO: specify cycle property
+		expect(() => [...callItWith()]).toThrowSpecific(Graph.CycleError);
 
 		try {
 			//noinspection JSUnusedLocalSymbols
 			let x = [...callItWith()];
 		} catch (err) {
-			expect(err.cycle).toEqualOneOf(
-				['n6', 'n2', 'n3'],
-				['n3', 'n6', 'n2'],
-				['n2', 'n3', 'n6']
-			);
+			let expectedCycle = cycleArrays('n2', 'n3', 'n6');
+			expect(err.cycle).toEqualOneOf(...expectedCycle);
 			let cycleInMessage = err.message.substring(err.message.indexOf(':') + 1).trim();
-			expect(cycleInMessage).toEqualOneOf(
-				'n6,n2,n3',
-				'n3,n6,n2',
-				'n2,n3,n6'
-			);
+			expect(cycleInMessage).toEqualOneOf(...expectedCycle.map(a=>a.toString()));
 		}
 	});
 
 	it("throws an error if the graph contains a cycle (2)", () => {
 		graph = new Graph([['n1', 'n1']]);
 
-		expect(() => [...callItWith()]).toThrowSpecific(Graph.CycleError, {}); // TODO: specify cycle property
+		expect(() => [...callItWith()]).toThrowSpecific(Graph.CycleError);
 
 		try {
 			//noinspection JSUnusedLocalSymbols

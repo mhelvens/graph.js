@@ -74,8 +74,7 @@ export default class Graph {
 		/* add vertices and values from constructor arguments */
 		for (let [key, value] of parts) {
 			if (Array.isArray(key)) {/////////////// an edge
-				let [from, to] = key;
-				this.createEdge(from, to, value);
+				this.createEdge(key, value);
 			} else {//////////////////////////////// a vertex
 				this.addVertex(key, value);
 			}
@@ -1450,7 +1449,7 @@ Graph.EdgeExistsError = class EdgeExistsError extends Error {
 		this.message = `This graph has ${
 			this.edges.size === 1 ? "an edge" : "edges"
 		} ${
-			[...this.edges].map(([[from, to]]) => `['${from}', '${to}']`).join(`, `)
+			[...this.edges].map(([key]) => `[${key}]`).join(`, `)
 		}`;
 	}
 };
@@ -1475,7 +1474,7 @@ Graph.EdgeNotExistsError = class EdgeNotExistsError extends Error {
 		this.message = `This graph does not have ${
 			this.edges.size === 1 ? "an edge" : "edges"
 		} ${
-			[...this.edges].map(([from, to]) => `['${from}', '${to}']`).join(`, `)
+			[...this.edges].map(([key]) => `[${key}]`).join(`, `)
 		}`;
 	}
 };
@@ -1500,7 +1499,7 @@ Graph.HasConnectedEdgesError = class HasConnectedEdgesError extends Graph.EdgeEx
 		this.message = `The '${key}' vertex has connected ${
 			this.edges.size === 1 ? "an edge" : "edges"
 		} ${
-			[...this.edges].map(([[from, to]]) => `['${from}', '${to}']`).join(`, `)
+			[...this.edges].map(([key]) => `[${key}]`).join(`, `)
 		}`;
 	}
 };
