@@ -1,5 +1,6 @@
 'use strict';
 
+
 /* export utility stuff */
 export var any = jasmine.any;
 
@@ -11,6 +12,9 @@ export function cycleArrays(...vertices) {
 	}
 	return result;
 }
+
+export function set(...elements) { return new Set(elements) }
+
 
 /* add matchers */
 beforeEach(() => {
