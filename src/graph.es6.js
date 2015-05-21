@@ -1,36 +1,10 @@
-'use strict';
-
-//  ////////////////////////////////////////////////////////////////////////////////////////////////
-//  // Symbols for private members /////////////////////////////////////////////////////////////////
-//  ////////////////////////////////////////////////////////////////////////////////////////////////
-
-const _vertices     = Symbol("vertices");
-const _edges        = Symbol("edges");
-const _reverseEdges = Symbol("reverse edges");
-const _sources      = Symbol("sources");
-const _sinks        = Symbol("sinks");
-const _edgeCount    = Symbol("edge count");
-
-const _extractTwoArgs   = Symbol("extract ([a, b]) or (a, b) arguments");
-const _extractThreeArgs = Symbol("extract ([[a, b], c]), ([a, b], c) or (a, b, c) arguments");
-
-const _listeners = Symbol("listeners");
-const _trigger   = Symbol("trigger");
-
-const _verticesFrom         = Symbol("vertices from");
-const _verticesTo           = Symbol("vertices to");
-const _edgesFrom            = Symbol("edges from");
-const _edgesTo              = Symbol("edges to");
-const _verticesWithPathTo   = Symbol("vertices with path to");
-const _verticesWithPathFrom = Symbol("vertices with path from");
-const _paths                = Symbol("paths");
-
-const _expectVertices         = Symbol("expect vertices");
-const _expectVerticesAbsent   = Symbol("expect vertex absent");
-const _expectEdges            = Symbol("expect edge");
-const _expectEdgesAbsent      = Symbol("expect edge absent");
-const _expectNoConnectedEdges = Symbol("expect no connected edges");
-
+import {
+	_vertices, _edges, _reverseEdges, _sources, _sinks, _edgeCount, _listeners,
+	_extractTwoArgs, _extractThreeArgs, _trigger,
+	_verticesFrom, _verticesTo, _edgesFrom, _edgesTo,
+	_verticesWithPathTo, _verticesWithPathFrom, _paths,
+	_expectVertices, _expectVerticesAbsent, _expectEdges, _expectEdgesAbsent,_expectNoConnectedEdges
+} from './private.es6.js';
 
 //  ////////////////////////////////////////////////////////////////////////////////////////////////
 //  // Graph class /////////////////////////////////////////////////////////////////////////////////
@@ -954,17 +928,26 @@ export default class Graph {
 	 * @returns {boolean} `true` if the two graphs are equal; `false` otherwise
 	 */
 	equals(other, eqV=(x,y)=>(x===y), eqE=eqV) {
+		console.log('(1)');
 		if (!(other instanceof Graph))                  { return false }
+		console.log('(2)');
 		if (this.vertexCount() !== other.vertexCount()) { return false }
+		console.log('(3)');
 		if (this.edgeCount()   !== other.edgeCount()  ) { return false }
+		console.log('(4)');
 		for (let [key, value] of this.vertices()) {
 			if (!other.hasVertex(key))                    { return false }
 			if (!eqV(value, other.vertexValue(key), key)) { return false }
 		}
+		console.log('(5)');
 		for (let [key, value] of this.edges()) {
-			if (!other.hasEdge(key))                    { return false }
-			if (!eqE(value, other.edgeValue(key), key)) { return false }
+			console.log('(5a)');
+			if (!other.hasEdge(key))                      { return false }
+			console.log('(5b)', key, value, other.edgeValue(key));
+			if (!eqE(value, other.edgeValue(key), key))   { return false }
+			console.log('(5c)');
 		}
+		console.log('(6)');
 		return true;
 	}
 
@@ -1272,8 +1255,8 @@ export default class Graph {
 			for (let key of nexuses) { checkForBlCycle(key) }
 			if (unhandledVertices.size > 0) {
 				let startingKey = unhandledVertices.values().next().value,
-				    cycle       = [],
-				    current     = startingKey;
+					cycle       = [],
+					current     = startingKey;
 				do {
 					cycle.push(current);
 					current = this.verticesFrom(current).next().value[0];
@@ -1294,7 +1277,7 @@ export default class Graph {
 			/* bookkeeping */
 			let verticesToRemove = new Set();
 			let edgesToRemove    = new Set();
-			let path = new Graph();
+			let path = new (this.constructor)();
 
 			/* process the start of the path */
 			path.addVertex(start, this.vertexValue(start));
@@ -1313,8 +1296,8 @@ export default class Graph {
 			}
 
 			/* register new path contraction */
-			if (!contractionsToAdd.get(fromTo()[0]))                  { contractionsToAdd.set(fromTo()[0], new Map())                    }
-			if (!contractionsToAdd.get(fromTo()[0]).get(fromTo()[1])) { contractionsToAdd.get(fromTo()[0]).set(fromTo()[1], new Graph()) }
+			if (!contractionsToAdd.get(fromTo()[0]))                  { contractionsToAdd.set(fromTo()[0], new Map())                                 }
+			if (!contractionsToAdd.get(fromTo()[0]).get(fromTo()[1])) { contractionsToAdd.get(fromTo()[0]).set(fromTo()[1], new (this.constructor)()) }
 			contractionsToAdd.get(fromTo()[0]).get(fromTo()[1]).mergeIn(path);
 
 			/* remove old edges and vertices */
@@ -1338,7 +1321,7 @@ export default class Graph {
 	////////////////////////////////
 	////////// Assertions //////////
 	////////////////////////////////
-	
+
 	[_expectVertices](...keys) {
 		let missingVertices = keys.filter(k => !this.hasVertex(k));
 		if (missingVertices.length) { throw new Graph.VertexNotExistsError(...missingVertices) }
@@ -1398,9 +1381,9 @@ Graph.VertexExistsError = class VertexExistsError extends Error {
 		this.vertices = new Set(vertices);
 		this.message = `This graph has ${
 			this.vertices.size === 1 ? "a vertex" : "vertices"
-		} '${
+			} '${
 			[...this.vertices].map(([key]) => key).join(`', '`)
-		}'`;
+			}'`;
 	}
 };
 
@@ -1423,9 +1406,9 @@ Graph.VertexNotExistsError = class VertexNotExistError extends Error {
 		this.vertices = new Set(keys);
 		this.message = `This graph does not have ${
 			this.vertices.size === 1 ? "a vertex" : "vertices"
-		} '${
+			} '${
 			[...this.vertices].join(`', '`)
-		}'`;
+			}'`;
 	}
 };
 
@@ -1448,9 +1431,9 @@ Graph.EdgeExistsError = class EdgeExistsError extends Error {
 		this.edges = new Set(edges);
 		this.message = `This graph has ${
 			this.edges.size === 1 ? "an edge" : "edges"
-		} ${
+			} ${
 			[...this.edges].map(([key]) => `[${key}]`).join(`, `)
-		}`;
+			}`;
 	}
 };
 
@@ -1473,9 +1456,9 @@ Graph.EdgeNotExistsError = class EdgeNotExistsError extends Error {
 		this.edges = new Set(edges);
 		this.message = `This graph does not have ${
 			this.edges.size === 1 ? "an edge" : "edges"
-		} ${
+			} ${
 			[...this.edges].map(([key]) => `[${key}]`).join(`, `)
-		}`;
+			}`;
 	}
 };
 
@@ -1498,9 +1481,9 @@ Graph.HasConnectedEdgesError = class HasConnectedEdgesError extends Graph.EdgeEx
 		this.vertex = key;
 		this.message = `The '${key}' vertex has connected ${
 			this.edges.size === 1 ? "an edge" : "edges"
-		} ${
+			} ${
 			[...this.edges].map(([key]) => `[${key}]`).join(`, `)
-		}`;
+			}`;
 	}
 };
 
