@@ -16,7 +16,8 @@ module.exports = function (wallaby) {
 			{ pattern: 'node_modules/babel-core/browser-polyfill.js',      instrument: false },
 			{ pattern: 'src/**/*.es6.js',           load: false },
 			{ pattern: 'test/spec-template.es6.js', load: false },
-			{ pattern: 'test/helpers.es6.js',       load: false }
+			{ pattern: 'test/helpers.es6.js',       load: false },
+			{ pattern: 'test/graph-helpers.es6.js', load: false }
 		],
 		tests: [
 			{ pattern: 'test/**/*-spec.es6.js', load: false }

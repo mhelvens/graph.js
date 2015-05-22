@@ -1,6 +1,3 @@
-'use strict';
-
-
 /* export utility stuff */
 export var any = jasmine.any;
 
@@ -15,10 +12,59 @@ export function cycleArrays(...vertices) {
 
 export function set(...elements) { return new Set(elements) }
 
+/* convenience notation for testing methods */
+let _describeClassStack = [];
+window.describeMethod = (...args) => _describeClassStack[0].describeMethod(...args);
+export function describeClass(className, varName, newClassInstance, tests) {
+	describe(`'${className}' class`, () => {
+
+		beforeEach(() => { window[varName] = newClassInstance() });
+		afterEach (() => { delete window[varName]               });
+
+		_describeClassStack.unshift({
+			describeMethod(method, fn) {
+				describe(`'${method}' method`, () => {
+					it("is present", () => {
+						expect(window[varName][method]).toEqual(any(Function));
+					});
+					beforeEach(() => {
+						Object.assign(window, {
+							callItWith(...args) {
+								return window[varName][method].apply(window[varName], args);
+							},
+							expectItWhenBoundWith(...args) {
+								return expect(() => {
+									window[varName][method].apply(window[varName], args);
+								});
+							},
+							expectItWhenCalledWith(...args) {
+								return expect(window[varName][method].apply(window[varName], args));
+							}
+						});
+					});
+					afterEach(() => {
+						Object.assign(window, {
+							callItWith:             null,
+							expectItWhenBoundWith:  null,
+							expectItWhenCalledWith: null
+						});
+					});
+					fn();
+				});
+			}
+		});
+
+		tests();
+
+		_describeClassStack.shift();
+
+	});
+}
 
 /* add matchers */
 beforeEach(() => {
 
+	/* proper equality testing for Sets and Maps */
 	jasmine.addCustomEqualityTester(function setEquals(a, b) {
 		if (a instanceof Set && b instanceof Set) {
 			if (a.size !== b.size) { return false }
@@ -35,13 +81,25 @@ beforeEach(() => {
 			return true;
 		}
 	});
-
 	jasmine.addCustomEqualityTester(function mapEquals(a, b) {
 		if (a instanceof Map && b instanceof Map) {
 			if (a.size !== b.size) { return false }
 			for (let [key] of a) {
 				if (!b.has(key))                                                { return false }
 				if (!jasmine.matchersUtil.equals(a.get(key), b.get(key), this)) { return false }
+			}
+			return true;
+		}
+	});
+
+	/* loosen the equality tester for arrays to allow array subclasses */
+	jasmine.addCustomEqualityTester(function setEquals(a, b) {
+		if (a instanceof Array && b instanceof Array) {
+			if (a.length !== b.length) { return false }
+			for (let i = 0; i < a.length; ++i) {
+				if (!jasmine.matchersUtil.equals(a[i], b[i], this)) {
+					return false;
+				}
 			}
 			return true;
 		}

@@ -928,26 +928,17 @@ export default class Graph {
 	 * @returns {boolean} `true` if the two graphs are equal; `false` otherwise
 	 */
 	equals(other, eqV=(x,y)=>(x===y), eqE=eqV) {
-		console.log('(1)');
 		if (!(other instanceof Graph))                  { return false }
-		console.log('(2)');
 		if (this.vertexCount() !== other.vertexCount()) { return false }
-		console.log('(3)');
 		if (this.edgeCount()   !== other.edgeCount()  ) { return false }
-		console.log('(4)');
 		for (let [key, value] of this.vertices()) {
 			if (!other.hasVertex(key))                    { return false }
 			if (!eqV(value, other.vertexValue(key), key)) { return false }
 		}
-		console.log('(5)');
 		for (let [key, value] of this.edges()) {
-			console.log('(5a)');
 			if (!other.hasEdge(key))                      { return false }
-			console.log('(5b)', key, value, other.edgeValue(key));
 			if (!eqE(value, other.edgeValue(key), key))   { return false }
-			console.log('(5c)');
 		}
-		console.log('(6)');
 		return true;
 	}
 

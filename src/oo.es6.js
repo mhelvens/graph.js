@@ -24,25 +24,33 @@ export default function oo(Graph) {
 
 				let thisGraph = this;
 				this.Vertex = class Vertex extends Array {
-					constructor(key, value) { super(2); this.push(key, value); }
-					get graph()            { return thisGraph                                }
-					get key()              { return this[0]                                  }
-					get value()            { return this[1]                                  }
-					set value(v)           { return this.set(v)                              }
-					set(value)             { return thisGraph.setVertex    (this.key, value) }
-					remove()               { return thisGraph.removeExistingVertex(this.key) }
-					verticesFrom()         { return thisGraph.verticesFrom        (this.key) }
-					verticesTo()           { return thisGraph.verticesTo          (this.key) }
-					edgesFrom()            { return thisGraph.edgesFrom           (this.key) }
-					edgesTo()              { return thisGraph.edgesTo             (this.key) }
-					verticesWithPathFrom() { return thisGraph.verticesWithPathFrom(this.key) }
-					verticesWithPathTo()   { return thisGraph.verticesWithPathTo  (this.key) }
-					pathTo(to)             { return thisGraph.path   (this.key, to)          }
-					pathFrom(from)         { return thisGraph.path   (from, this.key)        }
-					pathsTo(to)            { return thisGraph.paths  (this.key, to)          }
-					pathsFrom(from)        { return thisGraph.paths  (from, this.key)        }
-					hasPathTo(to)          { return thisGraph.hasPath(this.key, to)          }
-					hasPathFrom(from)      { return thisGraph.hasPath(from, this.key)        }
+					constructor(key, value) {
+						super(2);
+						this.push(key, value);
+						if (!thisGraph[_vertexObjects].has(key)) {
+							thisGraph[_vertexObjects].set(key, this);
+							thisGraph.addNewVertex(key, value);
+						}
+					}
+					get graph()            { return thisGraph                                 }
+					get key()              { return this[0]                                   }
+					get value()            { return this[1]                                   }
+					set value(value)       { return this.set(value)                           }
+					set(value)             { return thisGraph.setVertex     (this.key, value) }
+					remove()               { return thisGraph.removeExistingVertex (this.key) }
+					destroy()              { return thisGraph.destroyExistingVertex(this.key) }
+					verticesFrom()         { return thisGraph.verticesFrom         (this.key) }
+					verticesTo()           { return thisGraph.verticesTo           (this.key) }
+					edgesFrom()            { return thisGraph.edgesFrom            (this.key) }
+					edgesTo()              { return thisGraph.edgesTo              (this.key) }
+					verticesWithPathFrom() { return thisGraph.verticesWithPathFrom (this.key) }
+					verticesWithPathTo()   { return thisGraph.verticesWithPathTo   (this.key) }
+					pathTo(to)             { return thisGraph.path   (this.key, to)           }
+					pathFrom(from)         { return thisGraph.path   (from, this.key)         }
+					pathsTo(to)            { return thisGraph.paths  (this.key, to)           }
+					pathsFrom(from)        { return thisGraph.paths  (from, this.key)         }
+					hasPathTo(to)          { return thisGraph.hasPath(this.key, to)           }
+					hasPathFrom(from)      { return thisGraph.hasPath(from, this.key)         }
 					outDegree() { return thisGraph.outDegree(this.key) }
 					inDegree () { return thisGraph.inDegree (this.key) }
 					degree   () { return thisGraph.degree   (this.key) }
@@ -72,7 +80,10 @@ export default function oo(Graph) {
 			this[_init]();
 			[key, value] = Graph[_extractTwoArgs](key, value);
 			this[_expectVerticesAbsent](key);
-			this[_vertexObjects].set(key, new this.Vertex(key, value));
+			if (!this[_vertexObjects].has(key)) {
+				this[_vertexObjects].set(key, null);
+				this[_vertexObjects].set(key, new this.Vertex(key, value));
+			}
 			this[_edgeObjects].set(key, new Map());
 			return super.addNewVertex(key, value);
 		}
