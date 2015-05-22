@@ -7,7 +7,7 @@ import {
 //  // Graph.GraphOO ///////////////////////////////////////////////////////////////////////////////
 //  ////////////////////////////////////////////////////////////////////////////////////////////////
 
-export default function oo(Graph) {
+export default function addGraphOO(Graph) {
 
 	const _vertexObjects = Symbol("vertex objects");
 	const _edgeObjects   = Symbol("edge objects");
@@ -51,21 +51,29 @@ export default function oo(Graph) {
 					pathsFrom(from)        { return thisGraph.paths  (from, this.key)         }
 					hasPathTo(to)          { return thisGraph.hasPath(this.key, to)           }
 					hasPathFrom(from)      { return thisGraph.hasPath(from, this.key)         }
-					outDegree() { return thisGraph.outDegree(this.key) }
-					inDegree () { return thisGraph.inDegree (this.key) }
-					degree   () { return thisGraph.degree   (this.key) }
+					outDegree()            { return thisGraph.outDegree(this.key)             }
+					inDegree ()            { return thisGraph.inDegree (this.key)             }
+					degree   ()            { return thisGraph.degree   (this.key)             }
 				};
 				this.Edge = class Edge extends Array {
-					constructor(from, to, value) { super(2); this.push([from, to], value); }
+					constructor(from, to, value) {
+						super(2);
+						this.push([from, to], value);
+						if (!thisGraph[_edgeObjects].has(from)) { thisGraph[_edgeObjects].set(from, new Map()) }
+						if (!thisGraph[_edgeObjects].get(from).has(to)) {
+							thisGraph[_edgeObjects].get(from).set(to, this);
+							thisGraph.addNewEdge(from, to, value);
+						}
+					}
 					get graph()      { return thisGraph                              }
 					get key()        { return this[0]                                }
 					get from()       { return this[0][0]                             }
 					get to()         { return this[0][1]                             }
 					get value()      { return this[1]                                }
 					set value(value) { return this.set(value)                        }
+					set(value)       { return thisGraph.setEdge(this.key, value)     }
 					get source()     { return thisGraph.vertex(this.from)            }
 					get target()     { return thisGraph.vertex(this.to)              }
-					set(value)       { return thisGraph.setEdge(this.key, value)     }
 					remove()         { return thisGraph.removeExistingEdge(this.key) }
 				};
 			}
@@ -115,7 +123,10 @@ export default function oo(Graph) {
 			[from, to, value] = Graph[_extractThreeArgs](from, to, value);
 			this[_expectEdgesAbsent]([from, to]);
 			this[_expectVertices](from, to);
-			this[_edgeObjects].get(from).set(to, new this.Edge(from, to, value));
+			if (!this[_edgeObjects].get(from).has(to)) {
+				this[_edgeObjects].get(from).set(to, null);
+				this[_edgeObjects].get(from).set(to, new this.Edge(from, to, value));
+			}
 			return super.addNewEdge(from, to, value);
 		}
 

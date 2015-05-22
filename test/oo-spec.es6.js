@@ -1,9 +1,9 @@
 import {any, set, describeClass} from './helpers.es6.js';
 import Graph                     from '../src/graph.es6.js';
-import oo                        from '../src/oo.es6.js';
+import addGraphOO                from '../src/addGraphOO.es6.js';
 import specs                     from './spec-template.es6.js';
 
-let GraphOO = oo(Graph);
+let GraphOO = addGraphOO(Graph);
 
 /* perform the 'Graph' tests also on GraphOO, since GraphOO is a behavioral subtype */
 specs(GraphOO, () => {
@@ -29,11 +29,11 @@ specs(GraphOO, () => {
 
 
 		describe("instance", () => {
-			beforeEach(() => { graph.setVertex('k3', 'newK3Value') });
+			beforeEach(() => { graph.setVertex('k3', "newK3Value") });
 
 			it("knows its own key and value", () => {
 				expect(vertex.key  ).toEqual('k3');
-				expect(vertex.value).toEqual('newK3Value');
+				expect(vertex.value).toEqual("newK3Value");
 			});
 
 			it("knows its graph", () => {
@@ -41,12 +41,12 @@ specs(GraphOO, () => {
 			});
 
 			it("can (almost) stand in for the [key, value] vertex representation", () => {
-				expect(vertex instanceof Array).toBeTruthy();
+				expect(vertex).toEqual(any(Array));
 				expect(vertex[0]).toEqual('k3');
-				expect(vertex[1]).toEqual('newK3Value');
+				expect(vertex[1]).toEqual("newK3Value");
 				let [key, value] = vertex;
 				expect(key).toEqual('k3');
-				expect(value).toEqual('newK3Value');
+				expect(value).toEqual("newK3Value");
 				// expect(Array.isArray(vertex)).toBeTruthy(); // nope, sorry...
 			});
 		});
@@ -54,21 +54,21 @@ specs(GraphOO, () => {
 
 		describe("new instance", () => {
 			it("gets registered in its graph", () => {
-				let n1 = new graph.Vertex('n1', 'newValue');
+				let n1 = new graph.Vertex('n1', "newValue");
 				expect(graph.hasVertex  ('n1')).toBeTruthy();
 				expect(graph.vertex     ('n1')).toBe(n1);
-				expect(graph.vertexValue('n1')).toEqual('newValue');
+				expect(graph.vertexValue('n1')).toEqual("newValue");
 			});
 		});
 
 
 		describe("existing instance from a graph", () => {
 			it("can be used to set its own value", () => {
-				k3.set(42);
-				expect(k3.value).toEqual(42);
+				vertex.set(42);
+				expect(vertex.value).toEqual(42);
 				expect(graph.vertexValue('k3')).toEqual(42);
-				k3.value = 43;
-				expect(k3.value).toEqual(43);
+				vertex.value = 43;
+				expect(vertex.value).toEqual(43);
 				expect(graph.vertexValue('k3')).toEqual(43);
 			});
 		});
@@ -661,15 +661,160 @@ specs(GraphOO, () => {
 
 	});
 
-	describe("graph.Edge", () => {
+
+	describeClass("graph.Edge", 'edge', () => graph.edge('k2', 'k3'), () => {
+
 		it("is present", () => {
 			expect(graph.Edge).toEqual(any(Function));
 		});
 
-		// TODO: more
+		it("throws an error if either vertex does not exist", () => {
+			expect(() => new graph.Edge('n1', 'n2')).toThrowSpecific(GraphOO.VertexNotExistsError, {
+				vertices: set( 'n1', 'n2' )
+			});
+		});
+
+		it("throws nothing if both vertices exist", () => {
+			expect(() => new graph.Edge('k1', 'k2')).not.toThrow();
+		});
+
+		it("creates a new object of type graph.Edge", () => {
+			expect(new graph.Edge('k1', 'k2')).toEqual(any(graph.Edge));
+		});
+
+		it("is a different type for each graph", () => {
+			let other = new GraphOO();
+			expect(graph.Edge).not.toEqual(other.Edge);
+		});
+
+
+		describe("instance", () => {
+			it("knows its own key and value", () => {
+				expect(edge.key  ).toEqual(['k2', 'k3']);
+				expect(edge.from ).toEqual('k2');
+				expect(edge.to   ).toEqual('k3');
+				expect(edge.value).toEqual("oldValue23");
+			});
+
+			it("knows its graph", () => {
+				expect(edge.graph).toEqual(graph);
+			});
+
+			it("can (almost) stand in for the [[from, to], value] vertex representation", () => {
+				expect(edge).toEqual(any(Array));
+				expect(edge[0]).toEqual(['k2', 'k3']);
+				expect(edge[0][0]).toEqual('k2');
+				expect(edge[0][1]).toEqual('k3');
+				expect(edge[1]).toEqual("oldValue23");
+				let [[from, to], value] = edge;
+				expect(from).toEqual('k2');
+				expect(to).toEqual('k3');
+				expect(value).toEqual("oldValue23");
+				// expect(Array.isArray(vertex)).toBeTruthy(); // nope, sorry...
+			});
+		});
+
+
+		describe("new instance", () => {
+			it("gets registered in its graph", () => {
+				let k1k2 = new graph.Edge('k1', 'k2', "newValue");
+				expect(graph.hasEdge  ('k1', 'k2')).toBeTruthy();
+				expect(graph.edge     ('k1', 'k2')).toBe(k1k2);
+				expect(graph.edgeValue('k1', 'k2')).toEqual("newValue");
+			});
+		});
+
+
+		describe("existing instance from a graph", () => {
+			it("can be used to set its own value", () => {
+				edge.set(42);
+				expect(edge.value).toEqual(42);
+				expect(graph.edgeValue('k2', 'k3')).toEqual(42);
+				edge.value = 43;
+				expect(edge.value).toEqual(43);
+				expect(graph.edgeValue('k2', 'k3')).toEqual(43);
+			});
+		});
+
+
+		describe("'source' property", () => {
+			it("contains the proper graph.Vertex instance", () => {
+				expect(edge.source).toBe(graph.vertex('k2'));
+			});
+		});
+
+
+		describe("'target' property", () => {
+			it("contains the proper graph.Vertex instance", () => {
+				expect(edge.target).toBe(graph.vertex('k3'));
+			});
+		});
+
+
+		describeMethod('remove', () => {
+			it("removes this edge", () => {
+				callItWith();
+				expect(graph.hasEdge('k2', 'k3')).toBeFalsy();
+			});
+		});
 
 	});
 
-	// TODO: more
+
+	describeMethod('vertex', () => {
+		it("returns a graph.Vertex instance", () => {
+			let vertex = callItWith('k1');
+			expect(vertex).toEqual(any(Array));
+			expect(vertex.key)  .toEqual('k1');
+			expect(vertex.value).toEqual("oldValue1");
+		});
+	});
+
+
+	describeMethod('edge', () => {
+		it("returns a graph.Edge instance", () => {
+			let edge = callItWith('k2', 'k3');
+			expect(edge).toEqual(any(Array));
+			expect(edge.key)  .toEqual(['k2', 'k3']);
+			expect(edge.value).toEqual("oldValue23");
+		});
+	});
+
+
+	/* expect vertex iterators to yield graph.Vertex instances */
+	for (let [method, args] of [
+		['vertices',               []    ],
+		['verticesFrom',           ['k2']],
+		['verticesTo',             ['k3']],
+		['verticesWithPathFrom',   ['k2']],
+		['verticesWithPathTo',     ['k4']],
+		['sources',                []    ],
+		['sinks',                  []    ],
+		//['vertices_topologically', []    ]
+	]) {
+		describeMethod(method, () => {
+			it("yields graph.Vertex instances", () => {
+				for (let vertex of callItWith(...args)) {
+					expect(vertex).toEqual(any(graph.Vertex));
+				}
+			});
+		});
+	}
+
+
+	/* expect edge iterators to yield graph.Edge instances */
+	for (let [method, args] of [
+		['edges',     []    ],
+		['edgesFrom', ['k2']],
+		['edgesTo',   ['k3']]
+	]) {
+		describeMethod(method, () => {
+			it("yields graph.Edge instances", () => {
+				for (let edge of callItWith(...args)) {
+					expect(edge).toEqual(any(graph.Edge));
+				}
+			});
+		});
+	}
 
 });

@@ -554,7 +554,7 @@ export default class Graph {
 		for (let [key, value] of this[_vertices]) {
 			if (this.hasVertex(key) && !done.has(key)) {
 				done.add(key);
-				yield [key, value];
+				yield this.vertex(key);
 			}
 		}
 	}
@@ -837,52 +837,6 @@ export default class Graph {
 			if (this.hasVertex(key) && !done.has(key)) {
 				done.add(key);
 				yield this.vertex(key);
-			}
-		}
-	}
-
-
-	/**
-	 * Iterate over all vertices of the graph in topological order.
-	 * @returns { Iterator.<string, *> } an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}
-	 * @example
-	 * for (var it = graph.vertices_topologically(), kv; !(kv = it.next()).done;) {
-	 *     var key   = kv.value[0],
-	 *         value = kv.value[1];
-	 *     // iterates over all vertices of the graph in topological order
-	 * }
-	 * @example
-	 * // in ECMAScript 6, you can use a for..of loop
-	 * for (let [key, value] of graph.vertices_topologically()) {
-	 *     // iterates over all vertices of the graph in topological order
-	 * }
-	 */
-	*vertices_topologically() {
-		let visited = []; // stack
-		let handled = new Set();
-
-		let _this = this;
-		function *visit(key) {
-			visited.push(key);
-			let i = visited.indexOf(key);
-			if (i !== visited.length - 1) {
-				let cycle = visited.slice(i + 1).reverse();
-				throw new Graph.CycleError(cycle);
-			}
-			if (!handled.has(key)) {
-				for (let [nextKey] of _this.verticesTo(key)) {
-					yield* visit(nextKey);
-				}
-				if (_this.hasVertex(key)) {
-					yield _this.vertex(key);
-				}
-				handled.add(key);
-			}
-			visited.pop();
-		}
-		for (let [a] of this.vertices()) {
-			if (!handled.has(a)) {
-				yield* visit(a);
 			}
 		}
 	}
@@ -1372,9 +1326,9 @@ Graph.VertexExistsError = class VertexExistsError extends Error {
 		this.vertices = new Set(vertices);
 		this.message = `This graph has ${
 			this.vertices.size === 1 ? "a vertex" : "vertices"
-			} '${
+		} '${
 			[...this.vertices].map(([key]) => key).join(`', '`)
-			}'`;
+		}'`;
 	}
 };
 
@@ -1383,7 +1337,7 @@ Graph.VertexExistsError = class VertexExistsError extends Error {
  * @classdesc This type of error is thrown when specific vertices are expected to exist, but don't.
  * @extends Error
  */
-Graph.VertexNotExistsError = class VertexNotExistError extends Error {
+Graph.VertexNotExistsError = class VertexNotExistsError extends Error {
 	constructor(...keys) {
 		super();
 		/**
@@ -1397,9 +1351,9 @@ Graph.VertexNotExistsError = class VertexNotExistError extends Error {
 		this.vertices = new Set(keys);
 		this.message = `This graph does not have ${
 			this.vertices.size === 1 ? "a vertex" : "vertices"
-			} '${
+		} '${
 			[...this.vertices].join(`', '`)
-			}'`;
+		}'`;
 	}
 };
 
@@ -1422,9 +1376,9 @@ Graph.EdgeExistsError = class EdgeExistsError extends Error {
 		this.edges = new Set(edges);
 		this.message = `This graph has ${
 			this.edges.size === 1 ? "an edge" : "edges"
-			} ${
+		} ${
 			[...this.edges].map(([key]) => `[${key}]`).join(`, `)
-			}`;
+		}`;
 	}
 };
 
@@ -1447,9 +1401,9 @@ Graph.EdgeNotExistsError = class EdgeNotExistsError extends Error {
 		this.edges = new Set(edges);
 		this.message = `This graph does not have ${
 			this.edges.size === 1 ? "an edge" : "edges"
-			} ${
+		} ${
 			[...this.edges].map(([key]) => `[${key}]`).join(`, `)
-			}`;
+		}`;
 	}
 };
 
@@ -1472,9 +1426,9 @@ Graph.HasConnectedEdgesError = class HasConnectedEdgesError extends Graph.EdgeEx
 		this.vertex = key;
 		this.message = `The '${key}' vertex has connected ${
 			this.edges.size === 1 ? "an edge" : "edges"
-			} ${
+		} ${
 			[...this.edges].map(([key]) => `[${key}]`).join(`, `)
-			}`;
+		}`;
 	}
 };
 
