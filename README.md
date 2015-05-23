@@ -94,6 +94,7 @@ API Documentation
 * [Graph](#Graph)
     * [new Graph(...parts)](#new_Graph_new)
     * <ins><b>instance</b></ins>
+    * [.vertices_topologically()](#Graph#vertices_topologically) ⇒ <code>[Iterator](#Iterator)</code>
     * [.on(event, handler)](#Graph#on)
     * [.off(event, handler)](#Graph#off)
     * [.addNewVertex(key, [value])](#Graph#addNewVertex)
@@ -121,25 +122,24 @@ API Documentation
     * [.hasEdge(from, to)](#Graph#hasEdge) ⇒ <code>boolean</code>
     * [.edge(from, to)](#Graph#edge) ⇒ <code>Array</code>
     * [.edgeValue(from, to)](#Graph#edgeValue) ⇒ <code>\*</code>
-    * [.vertices()](#Graph#vertices) ⇒ <code>Iterator.&lt;string, \*&gt;</code>
-    * [.@@iterator()](#Graph#@@iterator) ⇒ <code>Iterator.&lt;string, \*&gt;</code>
-    * [.edges()](#Graph#edges) ⇒ <code>Iterator.&lt;string, string, \*&gt;</code>
-    * [.verticesFrom(key)](#Graph#verticesFrom) ⇒ <code>Iterator.&lt;string, \*&gt;</code>
-    * [.verticesTo(key)](#Graph#verticesTo) ⇒ <code>Iterator.&lt;string, \*&gt;</code>
-    * [.edgesFrom(key)](#Graph#edgesFrom) ⇒ <code>Iterator.&lt;string, string, \*&gt;</code>
-    * [.edgesTo(key)](#Graph#edgesTo) ⇒ <code>Iterator.&lt;string, string, \*&gt;</code>
-    * [.verticesWithPathFrom(from)](#Graph#verticesWithPathFrom) ⇒ <code>Iterator.&lt;string, \*&gt;</code>
-    * [.verticesWithPathTo(to)](#Graph#verticesWithPathTo) ⇒ <code>Iterator.&lt;string, \*&gt;</code>
-    * [.sources()](#Graph#sources) ⇒ <code>Iterator.&lt;string, \*&gt;</code>
-    * [.sinks()](#Graph#sinks) ⇒ <code>Iterator.&lt;string, \*&gt;</code>
-    * [.vertices_topologically()](#Graph#vertices_topologically) ⇒ <code>Iterator.&lt;string, \*&gt;</code>
+    * [.vertices()](#Graph#vertices) ⇒ <code>[Iterator](#Iterator)</code>
+    * [.@@iterator()](#Graph#@@iterator) ⇒ <code>[Iterator](#Iterator)</code>
+    * [.edges()](#Graph#edges) ⇒ <code>[Iterator](#Iterator)</code>
+    * [.verticesFrom(key)](#Graph#verticesFrom) ⇒ <code>[Iterator](#Iterator)</code>
+    * [.verticesTo(key)](#Graph#verticesTo) ⇒ <code>[Iterator](#Iterator)</code>
+    * [.edgesFrom(key)](#Graph#edgesFrom) ⇒ <code>[Iterator](#Iterator)</code>
+    * [.edgesTo(key)](#Graph#edgesTo) ⇒ <code>[Iterator](#Iterator)</code>
+    * [.verticesWithPathFrom(from)](#Graph#verticesWithPathFrom) ⇒ <code>[Iterator](#Iterator)</code>
+    * [.verticesWithPathTo(to)](#Graph#verticesWithPathTo) ⇒ <code>[Iterator](#Iterator)</code>
+    * [.sources()](#Graph#sources) ⇒ <code>[Iterator](#Iterator)</code>
+    * [.sinks()](#Graph#sinks) ⇒ <code>[Iterator](#Iterator)</code>
     * [.clearEdges()](#Graph#clearEdges)
     * [.clear()](#Graph#clear)
     * [.equals(other, [eqV], [eqE])](#Graph#equals) ⇒ <code>boolean</code>
-    * [.cycles()](#Graph#cycles) ⇒ <code>Iterator.&lt;Array.&lt;string&gt;&gt;</code>
+    * [.cycles()](#Graph#cycles) ⇒ <code>[Iterator](#Iterator)</code>
     * [.cycle()](#Graph#cycle) ⇒ <code>Array</code>
     * [.hasCycle()](#Graph#hasCycle) ⇒ <code>boolean</code>
-    * [.paths(from, to)](#Graph#paths) ⇒ <code>Iterator.&lt;Array.&lt;string&gt;&gt;</code>
+    * [.paths(from, to)](#Graph#paths) ⇒ <code>[Iterator](#Iterator)</code>
     * [.path(from, to)](#Graph#path) ⇒ <code>Array</code>
     * [.hasPath(from, to)](#Graph#hasPath) ⇒ <code>boolean</code>
     * [.outDegree(key)](#Graph#outDegree) ⇒ <code>number</code>
@@ -156,6 +156,70 @@ API Documentation
     * ["edge-removed"](#Graph#event_edge-removed)
     * ["edge-modified"](#Graph#event_edge-modified)
     * <ins><b>static</b></ins>
+    * [.GraphOO](#Graph.GraphOO) ⇐ <code>[Graph](#Graph)</code>
+        * [.Vertex](#Graph.GraphOO#Vertex)
+        * [.Edge](#Graph.GraphOO#Edge)
+        * [.vertices_topologically()](#Graph#vertices_topologically) ⇒ <code>[Iterator](#Iterator)</code>
+        * [.on(event, handler)](#Graph#on)
+        * [.off(event, handler)](#Graph#off)
+        * [.addNewVertex(key, [value])](#Graph#addNewVertex)
+        * [.setVertex(key, [value])](#Graph#setVertex)
+        * [.ensureVertex(key, [value])](#Graph#ensureVertex)
+        * [.addVertex(key, [value])](#Graph#addVertex)
+        * [.removeExistingVertex(key)](#Graph#removeExistingVertex)
+        * [.destroyExistingVertex(key)](#Graph#destroyExistingVertex)
+        * [.removeVertex(key)](#Graph#removeVertex)
+        * [.destroyVertex(key)](#Graph#destroyVertex)
+        * [.vertexCount()](#Graph#vertexCount) ⇒ <code>number</code>
+        * [.hasVertex(key)](#Graph#hasVertex) ⇒ <code>boolean</code>
+        * [.vertex(key)](#Graph#vertex) ⇒ <code>Array</code>
+        * [.vertexValue(key)](#Graph#vertexValue) ⇒ <code>\*</code>
+        * [.addNewEdge(from, to, [value])](#Graph#addNewEdge)
+        * [.createNewEdge(from, to, [value])](#Graph#createNewEdge)
+        * [.setEdge(from, to, [value])](#Graph#setEdge)
+        * [.spanEdge(from, to, [value])](#Graph#spanEdge)
+        * [.addEdge(from, to, [value])](#Graph#addEdge)
+        * [.ensureEdge(from, to, [value])](#Graph#ensureEdge)
+        * [.createEdge(from, to, [value])](#Graph#createEdge)
+        * [.removeExistingEdge(from, to)](#Graph#removeExistingEdge)
+        * [.removeEdge(from, to)](#Graph#removeEdge)
+        * [.edgeCount()](#Graph#edgeCount) ⇒ <code>number</code>
+        * [.hasEdge(from, to)](#Graph#hasEdge) ⇒ <code>boolean</code>
+        * [.edge(from, to)](#Graph#edge) ⇒ <code>Array</code>
+        * [.edgeValue(from, to)](#Graph#edgeValue) ⇒ <code>\*</code>
+        * [.vertices()](#Graph#vertices) ⇒ <code>[Iterator](#Iterator)</code>
+        * [.@@iterator()](#Graph#@@iterator) ⇒ <code>[Iterator](#Iterator)</code>
+        * [.edges()](#Graph#edges) ⇒ <code>[Iterator](#Iterator)</code>
+        * [.verticesFrom(key)](#Graph#verticesFrom) ⇒ <code>[Iterator](#Iterator)</code>
+        * [.verticesTo(key)](#Graph#verticesTo) ⇒ <code>[Iterator](#Iterator)</code>
+        * [.edgesFrom(key)](#Graph#edgesFrom) ⇒ <code>[Iterator](#Iterator)</code>
+        * [.edgesTo(key)](#Graph#edgesTo) ⇒ <code>[Iterator](#Iterator)</code>
+        * [.verticesWithPathFrom(from)](#Graph#verticesWithPathFrom) ⇒ <code>[Iterator](#Iterator)</code>
+        * [.verticesWithPathTo(to)](#Graph#verticesWithPathTo) ⇒ <code>[Iterator](#Iterator)</code>
+        * [.sources()](#Graph#sources) ⇒ <code>[Iterator](#Iterator)</code>
+        * [.sinks()](#Graph#sinks) ⇒ <code>[Iterator](#Iterator)</code>
+        * [.clearEdges()](#Graph#clearEdges)
+        * [.clear()](#Graph#clear)
+        * [.equals(other, [eqV], [eqE])](#Graph#equals) ⇒ <code>boolean</code>
+        * [.cycles()](#Graph#cycles) ⇒ <code>[Iterator](#Iterator)</code>
+        * [.cycle()](#Graph#cycle) ⇒ <code>Array</code>
+        * [.hasCycle()](#Graph#hasCycle) ⇒ <code>boolean</code>
+        * [.paths(from, to)](#Graph#paths) ⇒ <code>[Iterator](#Iterator)</code>
+        * [.path(from, to)](#Graph#path) ⇒ <code>Array</code>
+        * [.hasPath(from, to)](#Graph#hasPath) ⇒ <code>boolean</code>
+        * [.outDegree(key)](#Graph#outDegree) ⇒ <code>number</code>
+        * [.inDegree(key)](#Graph#inDegree) ⇒ <code>number</code>
+        * [.degree(key)](#Graph#degree) ⇒ <code>number</code>
+        * [.mergeIn(other, [mV], [mE])](#Graph#mergeIn)
+        * [.clone([trV], [trE])](#Graph#clone) ⇒ <code>[Graph](#Graph)</code>
+        * [.transitiveReduction([trV], [trE])](#Graph#transitiveReduction) ⇒ <code>[Graph](#Graph)</code>
+        * [.contractPaths([isNexus])](#Graph#contractPaths)
+        * ["vertex-added"](#Graph#event_vertex-added)
+        * ["vertex-removed"](#Graph#event_vertex-removed)
+        * ["vertex-modified"](#Graph#event_vertex-modified)
+        * ["edge-added"](#Graph#event_edge-added)
+        * ["edge-removed"](#Graph#event_edge-removed)
+        * ["edge-modified"](#Graph#event_edge-modified)
     * [.VertexExistsError](#Graph.VertexExistsError) ⇐ <code>Error</code>
         * [.vertices](#Graph.VertexExistsError#vertices) : <code>Set.&lt;Array&gt;</code>
     * [.VertexNotExistsError](#Graph.VertexNotExistsError) ⇐ <code>Error</code>
@@ -175,6 +239,19 @@ API Documentation
 
 -----
 
+### Classes
+<dl>
+<dt><a href="#Graph">Graph</a></dt>
+<dd><p>The main class of this library, to be used for representing a mathematical (di)graph.</p>
+</dd>
+</dl>
+### Typedefs
+<dl>
+<dt><a href="#Iterator">Iterator</a> : <code>Object</code></dt>
+<dd><p>an object conforming to the <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol">ES6 iterator protocol</a>;
+Note that ES6 offers nice syntax for dealing with iterators.</p>
+</dd>
+</dl>
 <a name="Graph"></a>
 ### Graph
 The main class of this library, to be used for representing a mathematical (di)graph.
@@ -189,7 +266,7 @@ Constructor arguments can be used to supply initial vertices and edges.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| ...parts | <code>Array.&lt;Array&gt;</code> | a short notation for vertices and edges to initially add to the graph;        A vertex should be an array of the form `[key, value]`.        An edge should be an array of the form `[[from, to], value]`.        Later values of vertices or edges in this list will overwrite earlier        values, but vertices need not precede their edges. Vertices that are        connected but store no value need not be listed at all. |
+| ...parts | <code>Array</code> | a short notation for vertices and edges to initially add to the graph;        A vertex should be an array of the form `[key, value]`.        An edge should be an array of the form `[[from, to], value]`.        Later values of vertices or edges in this list will overwrite earlier        values, but vertices need not precede their edges. Vertices that are        connected but store no value need not be listed at all. |
 
 **Example**  
 ```JavaScript
@@ -198,6 +275,29 @@ var map = new Graph(
     ['Leiden',                { population: 122000 }], // vertex
     [['Amsterdam', 'Leiden'], { distance:   "40km" }]  // edge
 );
+```
+
+-----
+
+<a name="Graph#vertices_topologically"></a>
+#### *graph*.vertices_topologically() ⇒ <code>[Iterator](#Iterator)</code>
+Iterate over all vertices of the graph in topological order.
+
+**Returns**: <code>[Iterator](#Iterator)</code> - an ES6 iterator yielding vertices  
+**Example**  
+```JavaScript
+for (var it = graph.vertices_topologically(), kv; !(kv = it.next()).done;) {
+    var key   = kv.value[0],
+        value = kv.value[1];
+    // iterates over all vertices of the graph in topological order
+}
+```
+**Example**  
+```JavaScript
+// in ECMAScript 6, you can use a for..of loop
+for (let [key, value] of graph.vertices_topologically()) {
+    // iterates over all vertices of the graph in topological order
+}
 ```
 
 -----
@@ -624,10 +724,10 @@ Use [hasEdge](#Graph#hasEdge) to distinguish these cases.
 -----
 
 <a name="Graph#vertices"></a>
-#### *graph*.vertices() ⇒ <code>Iterator.&lt;string, \*&gt;</code>
+#### *graph*.vertices() ⇒ <code>[Iterator](#Iterator)</code>
 Iterate over all vertices of the graph, in no particular order.
 
-**Returns**: <code>Iterator.&lt;string, \*&gt;</code> - an object conforming to the [ES6 iterator protocol](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol)  
+**Returns**: <code>[Iterator](#Iterator)</code> - an ES6 iterator yielding vertices  
 **Example**  
 ```JavaScript
 for (var it = graph.vertices(), kv; !(kv = it.next()).done;) {
@@ -648,11 +748,11 @@ for (let [key, value] of graph.vertices()) {
 -----
 
 <a name="Graph#@@iterator"></a>
-#### *graph*.@@iterator() ⇒ <code>Iterator.&lt;string, \*&gt;</code>
+#### *graph*.@@iterator() ⇒ <code>[Iterator](#Iterator)</code>
 A [Graph](#Graph) object is itself [iterable](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterable_protocol),
 and serves as a short notation in ECMAScript 6 to iterate over all vertices in the graph, in no particular order.
 
-**Returns**: <code>Iterator.&lt;string, \*&gt;</code> - an object conforming to the [ES6 iterator protocol](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol)  
+**Returns**: <code>[Iterator](#Iterator)</code> - an ES6 iterator yielding vertices  
 **Example**  
 ```JavaScript
 for (let [key, value] of graph) {
@@ -664,10 +764,10 @@ for (let [key, value] of graph) {
 -----
 
 <a name="Graph#edges"></a>
-#### *graph*.edges() ⇒ <code>Iterator.&lt;string, string, \*&gt;</code>
+#### *graph*.edges() ⇒ <code>[Iterator](#Iterator)</code>
 Iterate over all edges of the graph, in no particular order.
 
-**Returns**: <code>Iterator.&lt;string, string, \*&gt;</code> - an object conforming to the [ES6 iterator protocol](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol)  
+**Returns**: <code>[Iterator](#Iterator)</code> - an ES6 iterator yielding edges  
 **Example**  
 ```JavaScript
 for (var it = graph.edges(), kv; !(kv = it.next()).done;) {
@@ -688,7 +788,7 @@ for (let [[from, to], value] of graph.edges()) {
 -----
 
 <a name="Graph#verticesFrom"></a>
-#### *graph*.verticesFrom(key) ⇒ <code>Iterator.&lt;string, \*&gt;</code>
+#### *graph*.verticesFrom(key) ⇒ <code>[Iterator](#Iterator)</code>
 Iterate over the vertices directly reachable from a given vertex in the graph, in no particular order.
 
 
@@ -700,7 +800,7 @@ Iterate over the vertices directly reachable from a given vertex in the graph, i
 
 - <code>[VertexNotExistsError](#Graph.VertexNotExistsError)</code> if a vertex with the given `from` key does not exist
 
-**Returns**: <code>Iterator.&lt;string, \*&gt;</code> - an object conforming to the [ES6 iterator protocol](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol)  
+**Returns**: <code>[Iterator](#Iterator)</code> - an ES6 iterator yielding vertices  
 **Example**  
 ```JavaScript
 for (var it = graph.verticesFrom(from), kv; !(kv = it.next()).done;) {
@@ -720,7 +820,7 @@ for (let [to, value] of graph.verticesFrom(from)) {
 -----
 
 <a name="Graph#verticesTo"></a>
-#### *graph*.verticesTo(key) ⇒ <code>Iterator.&lt;string, \*&gt;</code>
+#### *graph*.verticesTo(key) ⇒ <code>[Iterator](#Iterator)</code>
 Iterate over the vertices from which a given vertex in the graph is directly reachable, in no particular order.
 
 
@@ -732,7 +832,7 @@ Iterate over the vertices from which a given vertex in the graph is directly rea
 
 - <code>[VertexNotExistsError](#Graph.VertexNotExistsError)</code> if a vertex with the given `to` key does not exist
 
-**Returns**: <code>Iterator.&lt;string, \*&gt;</code> - an object conforming to the [ES6 iterator protocol](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol)  
+**Returns**: <code>[Iterator](#Iterator)</code> - an ES6 iterator yielding vertices  
 **Example**  
 ```JavaScript
 for (var it = graph.verticesTo(to), kv; !(kv = it.next()).done;) {
@@ -752,7 +852,7 @@ for (let [from, value] of graph.verticesTo(to)) {
 -----
 
 <a name="Graph#edgesFrom"></a>
-#### *graph*.edgesFrom(key) ⇒ <code>Iterator.&lt;string, string, \*&gt;</code>
+#### *graph*.edgesFrom(key) ⇒ <code>[Iterator](#Iterator)</code>
 Iterate over the outgoing edges of a given vertex in the graph, in no particular order.
 
 
@@ -764,7 +864,7 @@ Iterate over the outgoing edges of a given vertex in the graph, in no particular
 
 - <code>[VertexNotExistsError](#Graph.VertexNotExistsError)</code> if a vertex with the given `from` key does not exist
 
-**Returns**: <code>Iterator.&lt;string, string, \*&gt;</code> - an object conforming to the [ES6 iterator protocol](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol)  
+**Returns**: <code>[Iterator](#Iterator)</code> - an ES6 iterator yielding edges  
 **Example**  
 ```JavaScript
 for (var it = graph.edgesFrom(from), kv; !(kv = it.next()).done;) {
@@ -785,7 +885,7 @@ for (let [[from, to], value] of graph.edgesFrom(from)) {
 -----
 
 <a name="Graph#edgesTo"></a>
-#### *graph*.edgesTo(key) ⇒ <code>Iterator.&lt;string, string, \*&gt;</code>
+#### *graph*.edgesTo(key) ⇒ <code>[Iterator](#Iterator)</code>
 Iterate over the incoming edges of a given vertex in the graph, in no particular order.
 
 
@@ -797,7 +897,7 @@ Iterate over the incoming edges of a given vertex in the graph, in no particular
 
 - <code>[VertexNotExistsError](#Graph.VertexNotExistsError)</code> if a vertex with the given `to` key does not exist
 
-**Returns**: <code>Iterator.&lt;string, string, \*&gt;</code> - an object conforming to the [ES6 iterator protocol](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol)  
+**Returns**: <code>[Iterator](#Iterator)</code> - an ES6 iterator yielding edges  
 **Example**  
 ```JavaScript
 for (var it = graph.edgesTo(to), kv; !(kv = it.next()).done;) {
@@ -818,7 +918,7 @@ for (let [[from, to], value] of graph.edgesTo(to)) {
 -----
 
 <a name="Graph#verticesWithPathFrom"></a>
-#### *graph*.verticesWithPathFrom(from) ⇒ <code>Iterator.&lt;string, \*&gt;</code>
+#### *graph*.verticesWithPathFrom(from) ⇒ <code>[Iterator](#Iterator)</code>
 Iterate over all vertices reachable from a given vertex in the graph, in no particular order.
 
 
@@ -830,7 +930,7 @@ Iterate over all vertices reachable from a given vertex in the graph, in no part
 
 - <code>[VertexNotExistsError](#Graph.VertexNotExistsError)</code> if a vertex with the given `from` key does not exist
 
-**Returns**: <code>Iterator.&lt;string, \*&gt;</code> - an object conforming to the [ES6 iterator protocol](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol)  
+**Returns**: <code>[Iterator](#Iterator)</code> - an ES6 iterator yielding vertices  
 **Example**  
 ```JavaScript
 for (var it = graph.verticesWithPathFrom(from), kv; !(kv = it.next()).done;) {
@@ -850,7 +950,7 @@ for (let [key, value] of graph.verticesWithPathFrom(from)) {
 -----
 
 <a name="Graph#verticesWithPathTo"></a>
-#### *graph*.verticesWithPathTo(to) ⇒ <code>Iterator.&lt;string, \*&gt;</code>
+#### *graph*.verticesWithPathTo(to) ⇒ <code>[Iterator](#Iterator)</code>
 Iterate over all vertices from which a given vertex in the graph can be reached, in no particular order.
 
 
@@ -862,7 +962,7 @@ Iterate over all vertices from which a given vertex in the graph can be reached,
 
 - <code>[VertexNotExistsError](#Graph.VertexNotExistsError)</code> if a vertex with the given `to` key does not exist
 
-**Returns**: <code>Iterator.&lt;string, \*&gt;</code> - an object conforming to the [ES6 iterator protocol](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol)  
+**Returns**: <code>[Iterator](#Iterator)</code> - an ES6 iterator yielding vertices  
 **Example**  
 ```JavaScript
 for (var it = graph.verticesWithPathTo(to), kv; !(kv = it.next()).done;) {
@@ -882,10 +982,10 @@ for (let [key, value] of graph.verticesWithPathTo(to)) {
 -----
 
 <a name="Graph#sources"></a>
-#### *graph*.sources() ⇒ <code>Iterator.&lt;string, \*&gt;</code>
+#### *graph*.sources() ⇒ <code>[Iterator](#Iterator)</code>
 Iterate over all vertices that have no incoming edges, in no particular order.
 
-**Returns**: <code>Iterator.&lt;string, \*&gt;</code> - an object conforming to the [ES6 iterator protocol](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol)  
+**Returns**: <code>[Iterator](#Iterator)</code> - an ES6 iterator yielding vertices  
 **Example**  
 ```JavaScript
 for (var it = graph.sources(), kv; !(kv = it.next()).done;) {
@@ -905,10 +1005,10 @@ for (let [key, value] of graph.sources()) {
 -----
 
 <a name="Graph#sinks"></a>
-#### *graph*.sinks() ⇒ <code>Iterator.&lt;string, \*&gt;</code>
+#### *graph*.sinks() ⇒ <code>[Iterator](#Iterator)</code>
 Iterate over all vertices that have no outgoing edges, in no particular order.
 
-**Returns**: <code>Iterator.&lt;string, \*&gt;</code> - an object conforming to the [ES6 iterator protocol](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol)  
+**Returns**: <code>[Iterator](#Iterator)</code> - an ES6 iterator yielding vertices  
 **Example**  
 ```JavaScript
 for (var it = graph.sinks(), kv; !(kv = it.next()).done;) {
@@ -922,29 +1022,6 @@ for (var it = graph.sinks(), kv; !(kv = it.next()).done;) {
 // in ECMAScript 6, you can use a for..of loop
 for (let [key, value] of graph.sinks()) {
     // iterates over all vertices with no outgoing edges
-}
-```
-
------
-
-<a name="Graph#vertices_topologically"></a>
-#### *graph*.vertices_topologically() ⇒ <code>Iterator.&lt;string, \*&gt;</code>
-Iterate over all vertices of the graph in topological order.
-
-**Returns**: <code>Iterator.&lt;string, \*&gt;</code> - an object conforming to the [ES6 iterator protocol](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol)  
-**Example**  
-```JavaScript
-for (var it = graph.vertices_topologically(), kv; !(kv = it.next()).done;) {
-    var key   = kv.value[0],
-        value = kv.value[1];
-    // iterates over all vertices of the graph in topological order
-}
-```
-**Example**  
-```JavaScript
-// in ECMAScript 6, you can use a for..of loop
-for (let [key, value] of graph.vertices_topologically()) {
-    // iterates over all vertices of the graph in topological order
 }
 ```
 
@@ -974,21 +1051,20 @@ Two graphs are equal if they have the same vertices and the same edges.
 | --- | --- | --- |
 | other | <code>[Graph](#Graph)</code> | the other graph to compare to `this` one |
 | [eqV] | <code>function</code> | a custom equality function for values stored in vertices;     defaults to `===` comparison; The first two arguments are the     values to compare. The third is the corresponding `key`. |
-| [eqE] | <code>function</code> | a custom equality function for values stored in edges;     defaults to the function given for `trV`; The first two arguments     are the values to compare. The third and fourth are the `from`     and `to` keys respectively. |
+| [eqE] | <code>function</code> | a custom equality function for values stored in edges;     defaults to the function given for `eqV`; The first two arguments     are the values to compare. The third is the corresponding     `[from, to]` key. |
 
 **Returns**: <code>boolean</code> - `true` if the two graphs are equal; `false` otherwise  
 
 -----
 
 <a name="Graph#cycles"></a>
-#### *graph*.cycles() ⇒ <code>Iterator.&lt;Array.&lt;string&gt;&gt;</code>
+#### *graph*.cycles() ⇒ <code>[Iterator](#Iterator)</code>
 Iterate over all simple directed cycles in this graph, in no particular order.
 If you mutate the graph in between iterations, behavior of the iterator
 becomes unspecified. (So, don't.)
 
-**Returns**: <code>Iterator.&lt;Array.&lt;string&gt;&gt;</code> - an object conforming to the [ES6 iterator protocol](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol).
-         Each iterated value is an array containing the vertex keys describing the cycle.
-         These arrays will contain each vertex key only once — even the first/last one.  
+**Returns**: <code>[Iterator](#Iterator)</code> - an ES6 iterator yielding arrays containing the vertex keys describing a cycle;
+                    These arrays will contain each vertex key only once — even the first/last one.  
 **Example**  
 ```JavaScript
 for (var it = graph.cycles(), kv; !(kv = it.next()).done;) {
@@ -1024,7 +1100,7 @@ Test whether this graph contains a directed cycle.
 -----
 
 <a name="Graph#paths"></a>
-#### *graph*.paths(from, to) ⇒ <code>Iterator.&lt;Array.&lt;string&gt;&gt;</code>
+#### *graph*.paths(from, to) ⇒ <code>[Iterator](#Iterator)</code>
 Iterate over all paths between two given keys in this graph, in no particular order.
 If you mutate the graph in between iterations, behavior of the iterator
 becomes unspecified. (So, don't.)
@@ -1039,8 +1115,7 @@ becomes unspecified. (So, don't.)
 
 - <code>[VertexNotExistsError](#Graph.VertexNotExistsError)</code> if the `from` and/or `to` vertices do not yet exist in the graph
 
-**Returns**: <code>Iterator.&lt;Array.&lt;string&gt;&gt;</code> - an object conforming to the [ES6 iterator protocol](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol).
-         Each iterated value is an array containing the vertex-keys describing the path.  
+**Returns**: <code>[Iterator](#Iterator)</code> - an ES6 iterator yielding arrays containing the vertex-keys describing the path  
 **Example**  
 ```JavaScript
 for (var it = graph.paths(from, to), kv; !(kv = it.next()).done;) {
@@ -1154,8 +1229,8 @@ Merge another graph into this graph.
 | Param | Type | Description |
 | --- | --- | --- |
 | other | <code>[Graph](#Graph)</code> | the other graph to merge into this one |
-| [mV] | <code>function</code> | a custom merge function for values stored in vertices;     defaults to whichever of the two values is not `undefined`,     giving preference to that of the other graph; The first and     second arguments are the vertex values of `this` graph and the     `other` graph respectively. The third is the corresponding `key`. |
-| [mE] | <code>function</code> | a custom merge function for values stored in edges;     defaults to whichever of the two values is not `undefined`,     giving preference to that of the other graph; The first and     second arguments are the edge values of `this` graph and the     `other` graph respectively. The third and fourth are the     corresponding `from` and `to` keys. |
+| [mV] | <code>function</code> | a custom merge function for values stored in vertices;     defaults to choosing the second value over the first; The first and     second arguments are the vertex values of `this` graph and the     `other` graph respectively. The third is the corresponding `key`. |
+| [mE] | <code>function</code> | a custom merge function for values stored in edges;     defaults to whichever of the two values is not `undefined`,     giving preference to that of the other graph; The first and     second arguments are the edge values of `this` graph and the     `other` graph respectively. The third is the     corresponding `[from, to]` key. |
 
 
 -----
@@ -1168,7 +1243,7 @@ Create a clone of this graph.
 | Param | Type | Description |
 | --- | --- | --- |
 | [trV] | <code>function</code> | a custom transformation function for values stored in vertices;     defaults to the identity function; The first argument is the     value to clone. The second is the corresponding `key`. |
-| [trE] | <code>function</code> | a custom transformation function for values stored in edges;     defaults to the function given for `trV`; The first argument     is the value to clone. The second and third are the `from`     and `to` keys respectively. |
+| [trE] | <code>function</code> | a custom transformation function for values stored in edges;     defaults to the function given for `trV`; The first argument     is the value to clone. The second is the corresponding     `[from, to]` key. |
 
 **Returns**: <code>[Graph](#Graph)</code> - a clone of this graph  
 
@@ -1182,7 +1257,7 @@ Create a clone of this graph, but without any transitive edges.
 | Param | Type | Description |
 | --- | --- | --- |
 | [trV] | <code>function</code> | a custom transformation function for values stored in vertices;     defaults to the identity function; The first argument is the     value to clone. The second is the corresponding `key`. |
-| [trE] | <code>function</code> | a custom transformation function for values stored in edges;     defaults to the function given for `trV`; The first argument     is the value to clone. The second and third are the `from`     and `to` keys respectively. |
+| [trE] | <code>function</code> | a custom transformation function for values stored in edges;     defaults to the function given for `trV`; The first argument     is the value to clone. The second is the corresponding     `[from, to]` key. |
 
 **Returns**: <code>[Graph](#Graph)</code> - a clone of this graph with all transitive edges removed  
 
@@ -1259,6 +1334,1094 @@ Handlers receive the edge key `[from, to]` as an argument.
 
 <a name="Graph#event_edge-modified"></a>
 #### "edge-modified"
+An event that is triggered after an edge in this graph is modified.
+It is also triggered after any ["edge-added"](#Graph#event_edge-added) event.
+Handlers receive the edge `[[from, to], value]` as an argument.
+
+**See**: [on](#Graph#on), [off](#Graph#off)
+
+-----
+
+<a name="Graph.GraphOO"></a>
+#### *Graph*.GraphOO ⇐ <code>[Graph](#Graph)</code>
+A subclass of Graph, in which vertices and edges are represented by smart objects.
+           `GraphOO` instances are fully backwards-compatible, and can stand in for `Graph`
+           instances in any context.
+
+**Extends:** <code>[Graph](#Graph)</code>  
+**See**: [Graph](#Graph)
+
+-----
+
+<a name="Graph.GraphOO#Vertex"></a>
+##### *graphOO*.Vertex
+A class for representing vertices in a `GraphOO` instance.
+
+
+-----
+
+<a name="Graph.GraphOO#Edge"></a>
+##### *graphOO*.Edge
+A class for representing edges in a `GraphOO` instance.
+
+
+-----
+
+<a name="Graph#vertices_topologically"></a>
+##### *graphOO*.vertices_topologically() ⇒ <code>[Iterator](#Iterator)</code>
+Iterate over all vertices of the graph in topological order.
+
+**Returns**: <code>[Iterator](#Iterator)</code> - an ES6 iterator yielding vertices  
+**Example**  
+```JavaScript
+for (var it = graph.vertices_topologically(), kv; !(kv = it.next()).done;) {
+    var key   = kv.value[0],
+        value = kv.value[1];
+    // iterates over all vertices of the graph in topological order
+}
+```
+**Example**  
+```JavaScript
+// in ECMAScript 6, you can use a for..of loop
+for (let [key, value] of graph.vertices_topologically()) {
+    // iterates over all vertices of the graph in topological order
+}
+```
+
+-----
+
+<a name="Graph#on"></a>
+##### *graphOO*.on(event, handler)
+Register an event handler.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| event | <code>string</code> | the event to listen for |
+| handler | <code>function</code> | the function to call for each such event fired, receiving its corresponding value |
+
+
+-----
+
+<a name="Graph#off"></a>
+##### *graphOO*.off(event, handler)
+Deregister a previously registered event handler.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| event | <code>string</code> | the event used to originally register a handler |
+| handler | <code>function</code> | the handler originally registered |
+
+
+-----
+
+<a name="Graph#addNewVertex"></a>
+##### *graphOO*.addNewVertex(key, [value])
+Add a new vertex to this graph.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| key | <code>string</code> | the key with which to refer to this new vertex |
+| [value] | <code>\*</code> | the value to store in this new vertex |
+
+**Throws**:
+
+- <code>[VertexExistsError](#Graph.VertexExistsError)</code> if a vertex with this key already exists
+
+
+-----
+
+<a name="Graph#setVertex"></a>
+##### *graphOO*.setVertex(key, [value])
+Set the value of an existing vertex in this graph.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| key | <code>string</code> | the key belonging to the vertex |
+| [value] | <code>\*</code> | the value to store in this vertex |
+
+**Throws**:
+
+- <code>[VertexNotExistsError](#Graph.VertexNotExistsError)</code> if a vertex with this key does not exist
+
+
+-----
+
+<a name="Graph#ensureVertex"></a>
+##### *graphOO*.ensureVertex(key, [value])
+Make sure a vertex with a specific key exists in this graph. If it already exists,
+do nothing. If it does not yet exist, add a new vertex with the given value.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| key | <code>string</code> | the key for the vertex |
+| [value] | <code>\*</code> | the value to store if a new vertex is added |
+
+
+-----
+
+<a name="Graph#addVertex"></a>
+##### *graphOO*.addVertex(key, [value])
+Add a new vertex to this graph. If a vertex with this key already exists,
+the value of that vertex is overwritten.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| key | <code>string</code> | the key with which to refer to this new vertex |
+| [value] | <code>\*</code> | the value to store in this new vertex |
+
+
+-----
+
+<a name="Graph#removeExistingVertex"></a>
+##### *graphOO*.removeExistingVertex(key)
+Remove an existing vertex from this graph.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| key | <code>string</code> | the key of the vertex to remove |
+
+**Throws**:
+
+- <code>[VertexNotExistsError](#Graph.VertexNotExistsError)</code> if a vertex with this key does not exist
+- <code>[HasConnectedEdgesError](#Graph.HasConnectedEdgesError)</code> if there are still edges connected to this vertex
+
+
+-----
+
+<a name="Graph#destroyExistingVertex"></a>
+##### *graphOO*.destroyExistingVertex(key)
+Remove an existing vertex from this graph, as well as all edges connected to it.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| key | <code>string</code> | the key of the vertex to remove |
+
+**Throws**:
+
+- <code>[VertexNotExistsError](#Graph.VertexNotExistsError)</code> if a vertex with this key does not exist
+
+
+-----
+
+<a name="Graph#removeVertex"></a>
+##### *graphOO*.removeVertex(key)
+Remove an existing vertex from this graph.
+If a vertex with this key does not exist, nothing happens.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| key | <code>string</code> | the key of the vertex to remove |
+
+**Throws**:
+
+- <code>[HasConnectedEdgesError](#Graph.HasConnectedEdgesError)</code> if there are still edges connected to this vertex
+
+
+-----
+
+<a name="Graph#destroyVertex"></a>
+##### *graphOO*.destroyVertex(key)
+Remove a vertex from this graph, as well as all edges connected to it.
+If a vertex with this key does not exist, nothing happens.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| key | <code>string</code> | the key of the vertex to remove |
+
+
+-----
+
+<a name="Graph#vertexCount"></a>
+##### *graphOO*.vertexCount() ⇒ <code>number</code>
+**Returns**: <code>number</code> - the number of vertices in the whole graph  
+
+-----
+
+<a name="Graph#hasVertex"></a>
+##### *graphOO*.hasVertex(key) ⇒ <code>boolean</code>
+Ask whether a vertex with a given key exists.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| key | <code>string</code> | the key to query |
+
+**Returns**: <code>boolean</code> - whether there is a vertex with the given key  
+
+-----
+
+<a name="Graph#vertex"></a>
+##### *graphOO*.vertex(key) ⇒ <code>Array</code>
+Get the key/value pair representing the vertex with the given `key`.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| key | <code>string</code> | the key to query |
+
+**Throws**:
+
+- <code>[VertexNotExistsError](#Graph.VertexNotExistsError)</code> if the `key` vertex does not exist in the graph
+
+**Returns**: <code>Array</code> - a `[key, value]` shaped array representing the vertex  
+
+-----
+
+<a name="Graph#vertexValue"></a>
+##### *graphOO*.vertexValue(key) ⇒ <code>\*</code>
+Get the value associated with the vertex of a given `key`.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| key | <code>string</code> | the key to query |
+
+**Returns**: <code>\*</code> - the value associated with the vertex of the given key.
+Note that a return value of `undefined` can mean
+
+1. that there is no such vertex, or
+2. that the stored value is actually `undefined`.
+
+Use [hasVertex](#Graph#hasVertex) to distinguish these cases.  
+
+-----
+
+<a name="Graph#addNewEdge"></a>
+##### *graphOO*.addNewEdge(from, to, [value])
+Add a new edge to this graph.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| from | <code>string</code> | the key for the originating vertex |
+| to | <code>string</code> | the key for the terminating vertex |
+| [value] | <code>\*</code> | the value to store in this new edge |
+
+**Throws**:
+
+- <code>[EdgeExistsError](#Graph.EdgeExistsError)</code> if an edge between `from` and `to` already exists
+- <code>[VertexNotExistsError](#Graph.VertexNotExistsError)</code> if the `from` and/or `to` vertices do not yet exist in the graph
+
+
+-----
+
+<a name="Graph#createNewEdge"></a>
+##### *graphOO*.createNewEdge(from, to, [value])
+Add a new edge to this graph. If the `from` and/or `to` vertices do not yet exist
+in the graph, they are implicitly added with an `undefined` value.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| from | <code>string</code> | the key for the originating vertex |
+| to | <code>string</code> | the key for the terminating vertex |
+| [value] | <code>\*</code> | the value to store in this new edge |
+
+**Throws**:
+
+- <code>[EdgeExistsError](#Graph.EdgeExistsError)</code> if an edge between `from` and `to` already exists
+
+
+-----
+
+<a name="Graph#setEdge"></a>
+##### *graphOO*.setEdge(from, to, [value])
+Set the value of an existing edge in this graph.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| from | <code>string</code> | the key for the originating vertex |
+| to | <code>string</code> | the key for the terminating vertex |
+| [value] | <code>\*</code> | the value to store in this edge |
+
+**Throws**:
+
+- <code>[EdgeNotExistsError](#Graph.EdgeNotExistsError)</code> if an edge between `from` and `to` does not yet exist
+
+
+-----
+
+<a name="Graph#spanEdge"></a>
+##### *graphOO*.spanEdge(from, to, [value])
+Make sure an edge between the `from` and `to` vertices in this graph.
+If one already exists, nothing is done.
+If one does not yet exist, a new edge is added with the given value.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| from | <code>string</code> | the key for the originating vertex |
+| to | <code>string</code> | the key for the terminating vertex |
+| [value] | <code>\*</code> | the value to store if a new edge is added |
+
+**Throws**:
+
+- <code>[VertexNotExistsError](#Graph.VertexNotExistsError)</code> if the `from` and/or `to` vertices do not yet exist in the graph
+
+
+-----
+
+<a name="Graph#addEdge"></a>
+##### *graphOO*.addEdge(from, to, [value])
+Add a new edge to this graph. If an edge between `from` and `to` already exists,
+the value of that edge is overwritten.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| from | <code>string</code> | the key for the originating vertex |
+| to | <code>string</code> | the key for the terminating vertex |
+| [value] | <code>\*</code> | the value to store in this new edge |
+
+**Throws**:
+
+- <code>[VertexNotExistsError](#Graph.VertexNotExistsError)</code> if the `from` and/or `to` vertices do not yet exist in the graph
+
+
+-----
+
+<a name="Graph#ensureEdge"></a>
+##### *graphOO*.ensureEdge(from, to, [value])
+Make sure an edge between the `from` and `to` vertices exists in this graph.
+If it already exists, nothing is done.
+If it does not yet exist, a new edge is added with the given value.
+If the `from` and/or `to` vertices do not yet exist
+in the graph, they are implicitly added with an `undefined` value.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| from | <code>string</code> | the key for the originating vertex |
+| to | <code>string</code> | the key for the terminating vertex |
+| [value] | <code>\*</code> | the value to store if a new edge is added |
+
+
+-----
+
+<a name="Graph#createEdge"></a>
+##### *graphOO*.createEdge(from, to, [value])
+Add a new edge to this graph. If an edge between the `from` and `to`
+vertices already exists, the value of that edge is overwritten.
+If the `from` and/or `to` vertices do not yet exist
+in the graph, they are implicitly added with an `undefined` value.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| from | <code>string</code> | the key for the originating vertex |
+| to | <code>string</code> | the key for the terminating vertex |
+| [value] | <code>\*</code> | the value to store if a new edge is added |
+
+
+-----
+
+<a name="Graph#removeExistingEdge"></a>
+##### *graphOO*.removeExistingEdge(from, to)
+Remove an existing edge from this graph.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| from | <code>string</code> | the key for the originating vertex |
+| to | <code>string</code> | the key for the terminating vertex |
+
+**Throws**:
+
+- <code>[EdgeNotExistsError](#Graph.EdgeNotExistsError)</code> if an edge between the `from` and `to` vertices doesn't exist
+
+
+-----
+
+<a name="Graph#removeEdge"></a>
+##### *graphOO*.removeEdge(from, to)
+Remove an edge from this graph.
+If an edge between the `from` and `to` vertices doesn't exist, nothing happens.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| from | <code>string</code> | the key for the originating vertex |
+| to | <code>string</code> | the key for the terminating vertex |
+
+
+-----
+
+<a name="Graph#edgeCount"></a>
+##### *graphOO*.edgeCount() ⇒ <code>number</code>
+**Returns**: <code>number</code> - the number of edges in the whole graph  
+
+-----
+
+<a name="Graph#hasEdge"></a>
+##### *graphOO*.hasEdge(from, to) ⇒ <code>boolean</code>
+Ask whether an edge between given `from` and `to` vertices exist.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| from | <code>string</code> | the key for the originating vertex |
+| to | <code>string</code> | the key for the terminating vertex |
+
+**Returns**: <code>boolean</code> - whether there is an edge between the given `from` and `to` vertices  
+
+-----
+
+<a name="Graph#edge"></a>
+##### *graphOO*.edge(from, to) ⇒ <code>Array</code>
+Get the key/value pair representing the edge between the given `from` and `to`.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| from | <code>string</code> | the key for the originating vertex |
+| to | <code>string</code> | the key for the terminating vertex |
+
+**Returns**: <code>Array</code> - a `[[from, to], value]` shaped array representing the edge  
+
+-----
+
+<a name="Graph#edgeValue"></a>
+##### *graphOO*.edgeValue(from, to) ⇒ <code>\*</code>
+Get the value associated with the edge between given `from` and `to` vertices.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| from | <code>string</code> | the key for the originating vertex |
+| to | <code>string</code> | the key for the terminating vertex |
+
+**Returns**: <code>\*</code> - the value associated with the edge between the given `from` and `to` vertices
+Note that a return value of `undefined` can mean
+
+1. that there is no such edge, or
+2. that the stored value is actually `undefined`.
+
+Use [hasEdge](#Graph#hasEdge) to distinguish these cases.  
+
+-----
+
+<a name="Graph#vertices"></a>
+##### *graphOO*.vertices() ⇒ <code>[Iterator](#Iterator)</code>
+Iterate over all vertices of the graph, in no particular order.
+
+**Returns**: <code>[Iterator](#Iterator)</code> - an ES6 iterator yielding vertices  
+**Example**  
+```JavaScript
+for (var it = graph.vertices(), kv; !(kv = it.next()).done;) {
+    var key   = kv.value[0],
+        value = kv.value[1];
+    // iterates over all vertices of the graph
+}
+```
+**Example**  
+```JavaScript
+// in ECMAScript 6, you can use a for..of loop
+for (let [key, value] of graph.vertices()) {
+    // iterates over all vertices of the graph
+}
+```
+**See**: [@@iterator](#Graph#@@iterator)
+
+-----
+
+<a name="Graph#@@iterator"></a>
+##### *graphOO*.@@iterator() ⇒ <code>[Iterator](#Iterator)</code>
+A [Graph](#Graph) object is itself [iterable](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterable_protocol),
+and serves as a short notation in ECMAScript 6 to iterate over all vertices in the graph, in no particular order.
+
+**Returns**: <code>[Iterator](#Iterator)</code> - an ES6 iterator yielding vertices  
+**Example**  
+```JavaScript
+for (let [key, value] of graph) {
+    // iterates over all vertices of the graph
+}
+```
+**See**: [vertices](#Graph#vertices)
+
+-----
+
+<a name="Graph#edges"></a>
+##### *graphOO*.edges() ⇒ <code>[Iterator](#Iterator)</code>
+Iterate over all edges of the graph, in no particular order.
+
+**Returns**: <code>[Iterator](#Iterator)</code> - an ES6 iterator yielding edges  
+**Example**  
+```JavaScript
+for (var it = graph.edges(), kv; !(kv = it.next()).done;) {
+    var from  = kv.value[0][0],
+        to    = kv.value[0][1],
+        value = kv.value[1];
+    // iterates over all edges of the graph
+}
+```
+**Example**  
+```JavaScript
+// in ECMAScript 6, you can use a for..of loop
+for (let [[from, to], value] of graph.edges()) {
+    // iterates over all vertices of the graph
+}
+```
+
+-----
+
+<a name="Graph#verticesFrom"></a>
+##### *graphOO*.verticesFrom(key) ⇒ <code>[Iterator](#Iterator)</code>
+Iterate over the vertices directly reachable from a given vertex in the graph, in no particular order.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| key | <code>string</code> | the key of the vertex to take the outgoing edges from |
+
+**Throws**:
+
+- <code>[VertexNotExistsError](#Graph.VertexNotExistsError)</code> if a vertex with the given `from` key does not exist
+
+**Returns**: <code>[Iterator](#Iterator)</code> - an ES6 iterator yielding vertices  
+**Example**  
+```JavaScript
+for (var it = graph.verticesFrom(from), kv; !(kv = it.next()).done;) {
+    var to    = kv.value[0],
+        value = kv.value[1];
+    // iterates over all outgoing vertices of the `from` vertex
+}
+```
+**Example**  
+```JavaScript
+// in ECMAScript 6, you can use a for..of loop
+for (let [to, value] of graph.verticesFrom(from)) {
+    // iterates over all outgoing vertices of the `from` vertex
+}
+```
+
+-----
+
+<a name="Graph#verticesTo"></a>
+##### *graphOO*.verticesTo(key) ⇒ <code>[Iterator](#Iterator)</code>
+Iterate over the vertices from which a given vertex in the graph is directly reachable, in no particular order.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| key | <code>string</code> | the key of the vertex to take the incoming edges from |
+
+**Throws**:
+
+- <code>[VertexNotExistsError](#Graph.VertexNotExistsError)</code> if a vertex with the given `to` key does not exist
+
+**Returns**: <code>[Iterator](#Iterator)</code> - an ES6 iterator yielding vertices  
+**Example**  
+```JavaScript
+for (var it = graph.verticesTo(to), kv; !(kv = it.next()).done;) {
+    var from  = kv.value[0],
+        value = kv.value[1];
+    // iterates over all outgoing vertices of the `to` vertex
+}
+```
+**Example**  
+```JavaScript
+// in ECMAScript 6, you can use a for..of loop
+for (let [from, value] of graph.verticesTo(to)) {
+    // iterates over all incoming vertices of the `to` vertex
+}
+```
+
+-----
+
+<a name="Graph#edgesFrom"></a>
+##### *graphOO*.edgesFrom(key) ⇒ <code>[Iterator](#Iterator)</code>
+Iterate over the outgoing edges of a given vertex in the graph, in no particular order.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| key | <code>string</code> | the key of the vertex to take the outgoing edges from |
+
+**Throws**:
+
+- <code>[VertexNotExistsError](#Graph.VertexNotExistsError)</code> if a vertex with the given `from` key does not exist
+
+**Returns**: <code>[Iterator](#Iterator)</code> - an ES6 iterator yielding edges  
+**Example**  
+```JavaScript
+for (var it = graph.edgesFrom(from), kv; !(kv = it.next()).done;) {
+    var from  = kv.value[0][0],
+        to    = kv.value[0][1],
+        value = kv.value[1];
+    // iterates over all outgoing edges of the `from` vertex
+}
+```
+**Example**  
+```JavaScript
+// in ECMAScript 6, you can use a for..of loop
+for (let [[from, to], value] of graph.edgesFrom(from)) {
+    // iterates over all outgoing edges of the `from` vertex
+}
+```
+
+-----
+
+<a name="Graph#edgesTo"></a>
+##### *graphOO*.edgesTo(key) ⇒ <code>[Iterator](#Iterator)</code>
+Iterate over the incoming edges of a given vertex in the graph, in no particular order.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| key | <code>string</code> | the key of the vertex to take the incoming edges from |
+
+**Throws**:
+
+- <code>[VertexNotExistsError](#Graph.VertexNotExistsError)</code> if a vertex with the given `to` key does not exist
+
+**Returns**: <code>[Iterator](#Iterator)</code> - an ES6 iterator yielding edges  
+**Example**  
+```JavaScript
+for (var it = graph.edgesTo(to), kv; !(kv = it.next()).done;) {
+    var from  = kv.value[0][0],
+        to    = kv.value[0][1],
+        value = kv.value[1];
+    // iterates over all incoming edges of the `to` vertex
+}
+```
+**Example**  
+```JavaScript
+// in ECMAScript 6, you can use a for..of loop
+for (let [[from, to], value] of graph.edgesTo(to)) {
+    // iterates over all incoming edges of the `to` vertex
+}
+```
+
+-----
+
+<a name="Graph#verticesWithPathFrom"></a>
+##### *graphOO*.verticesWithPathFrom(from) ⇒ <code>[Iterator](#Iterator)</code>
+Iterate over all vertices reachable from a given vertex in the graph, in no particular order.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| from | <code>string</code> | the key of the vertex to take the reachable vertices from |
+
+**Throws**:
+
+- <code>[VertexNotExistsError](#Graph.VertexNotExistsError)</code> if a vertex with the given `from` key does not exist
+
+**Returns**: <code>[Iterator](#Iterator)</code> - an ES6 iterator yielding vertices  
+**Example**  
+```JavaScript
+for (var it = graph.verticesWithPathFrom(from), kv; !(kv = it.next()).done;) {
+    var key   = kv.value[0],
+        value = kv.value[1];
+    // iterates over all vertices reachable from `from`
+}
+```
+**Example**  
+```JavaScript
+// in ECMAScript 6, you can use a for..of loop
+for (let [key, value] of graph.verticesWithPathFrom(from)) {
+    // iterates over all vertices reachable from `from`
+}
+```
+
+-----
+
+<a name="Graph#verticesWithPathTo"></a>
+##### *graphOO*.verticesWithPathTo(to) ⇒ <code>[Iterator](#Iterator)</code>
+Iterate over all vertices from which a given vertex in the graph can be reached, in no particular order.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| to | <code>string</code> | the key of the vertex to take the reachable vertices from |
+
+**Throws**:
+
+- <code>[VertexNotExistsError](#Graph.VertexNotExistsError)</code> if a vertex with the given `to` key does not exist
+
+**Returns**: <code>[Iterator](#Iterator)</code> - an ES6 iterator yielding vertices  
+**Example**  
+```JavaScript
+for (var it = graph.verticesWithPathTo(to), kv; !(kv = it.next()).done;) {
+    var key   = kv.value[0],
+        value = kv.value[1];
+    // iterates over all vertices from which `to` can be reached
+}
+```
+**Example**  
+```JavaScript
+// in ECMAScript 6, you can use a for..of loop
+for (let [key, value] of graph.verticesWithPathTo(to)) {
+    // iterates over all vertices from which `to` can be reached
+}
+```
+
+-----
+
+<a name="Graph#sources"></a>
+##### *graphOO*.sources() ⇒ <code>[Iterator](#Iterator)</code>
+Iterate over all vertices that have no incoming edges, in no particular order.
+
+**Returns**: <code>[Iterator](#Iterator)</code> - an ES6 iterator yielding vertices  
+**Example**  
+```JavaScript
+for (var it = graph.sources(), kv; !(kv = it.next()).done;) {
+    var key   = kv.value[0],
+        value = kv.value[1];
+    // iterates over all vertices with no incoming edges
+}
+```
+**Example**  
+```JavaScript
+// in ECMAScript 6, you can use a for..of loop
+for (let [key, value] of graph.sources()) {
+    // iterates over all vertices with no incoming edges
+}
+```
+
+-----
+
+<a name="Graph#sinks"></a>
+##### *graphOO*.sinks() ⇒ <code>[Iterator](#Iterator)</code>
+Iterate over all vertices that have no outgoing edges, in no particular order.
+
+**Returns**: <code>[Iterator](#Iterator)</code> - an ES6 iterator yielding vertices  
+**Example**  
+```JavaScript
+for (var it = graph.sinks(), kv; !(kv = it.next()).done;) {
+    var key   = kv.value[0],
+        value = kv.value[1];
+    // iterates over all vertices with no outgoing edges
+}
+```
+**Example**  
+```JavaScript
+// in ECMAScript 6, you can use a for..of loop
+for (let [key, value] of graph.sinks()) {
+    // iterates over all vertices with no outgoing edges
+}
+```
+
+-----
+
+<a name="Graph#clearEdges"></a>
+##### *graphOO*.clearEdges()
+Remove all edges from the graph, but leave the vertices intact.
+
+
+-----
+
+<a name="Graph#clear"></a>
+##### *graphOO*.clear()
+Remove all edges and vertices from the graph, putting it back in its initial state.
+
+
+-----
+
+<a name="Graph#equals"></a>
+##### *graphOO*.equals(other, [eqV], [eqE]) ⇒ <code>boolean</code>
+Ask whether `this` graph and a given `other` graph are equal.
+Two graphs are equal if they have the same vertices and the same edges.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| other | <code>[Graph](#Graph)</code> | the other graph to compare to `this` one |
+| [eqV] | <code>function</code> | a custom equality function for values stored in vertices;     defaults to `===` comparison; The first two arguments are the     values to compare. The third is the corresponding `key`. |
+| [eqE] | <code>function</code> | a custom equality function for values stored in edges;     defaults to the function given for `eqV`; The first two arguments     are the values to compare. The third is the corresponding     `[from, to]` key. |
+
+**Returns**: <code>boolean</code> - `true` if the two graphs are equal; `false` otherwise  
+
+-----
+
+<a name="Graph#cycles"></a>
+##### *graphOO*.cycles() ⇒ <code>[Iterator](#Iterator)</code>
+Iterate over all simple directed cycles in this graph, in no particular order.
+If you mutate the graph in between iterations, behavior of the iterator
+becomes unspecified. (So, don't.)
+
+**Returns**: <code>[Iterator](#Iterator)</code> - an ES6 iterator yielding arrays containing the vertex keys describing a cycle;
+                    These arrays will contain each vertex key only once — even the first/last one.  
+**Example**  
+```JavaScript
+for (var it = graph.cycles(), kv; !(kv = it.next()).done;) {
+    var cycle = kv.value;
+    // iterates over all cycles of the graph
+}
+```
+**Example**  
+```JavaScript
+// in ECMAScript 6, you can use a for..of loop
+for (let cycle of graph.cycles()) {
+    // iterates over all cycles of the graph
+}
+```
+
+-----
+
+<a name="Graph#cycle"></a>
+##### *graphOO*.cycle() ⇒ <code>Array</code>
+Find any directed cycle in this graph.
+
+**Returns**: <code>Array</code> - an array containing the vertex keys describing the cycle; `null`, if there is no cycle;
+                  The array will contain each vertex key only once — even the first/last one.  
+
+-----
+
+<a name="Graph#hasCycle"></a>
+##### *graphOO*.hasCycle() ⇒ <code>boolean</code>
+Test whether this graph contains a directed cycle.
+
+**Returns**: <code>boolean</code> - whether this graph contains any directed cycle  
+
+-----
+
+<a name="Graph#paths"></a>
+##### *graphOO*.paths(from, to) ⇒ <code>[Iterator](#Iterator)</code>
+Iterate over all paths between two given keys in this graph, in no particular order.
+If you mutate the graph in between iterations, behavior of the iterator
+becomes unspecified. (So, don't.)
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| from | <code>string</code> | the key for the originating vertex |
+| to | <code>string</code> | the key for the terminating vertex |
+
+**Throws**:
+
+- <code>[VertexNotExistsError](#Graph.VertexNotExistsError)</code> if the `from` and/or `to` vertices do not yet exist in the graph
+
+**Returns**: <code>[Iterator](#Iterator)</code> - an ES6 iterator yielding arrays containing the vertex-keys describing the path  
+**Example**  
+```JavaScript
+for (var it = graph.paths(from, to), kv; !(kv = it.next()).done;) {
+    var path = kv.value;
+    // iterates over all paths between `from` and `to` in the graph
+}
+```
+**Example**  
+```JavaScript
+// in ECMAScript 6, you can use a for..of loop
+for (let path of graph.paths(from, to)) {
+    // iterates over all paths between `from` and `to` in the graph
+}
+```
+
+-----
+
+<a name="Graph#path"></a>
+##### *graphOO*.path(from, to) ⇒ <code>Array</code>
+Find any path between a given pair of keys.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| from | <code>string</code> | the originating vertex |
+| to | <code>string</code> | the terminating vertex |
+
+**Throws**:
+
+- <code>[VertexNotExistsError](#Graph.VertexNotExistsError)</code> if the `from` and/or `to` vertices do not yet exist in the graph
+
+**Returns**: <code>Array</code> - an array with the keys of the path found between the two vertices,
+                  including those two vertices themselves; `null` if no such path exists  
+
+-----
+
+<a name="Graph#hasPath"></a>
+##### *graphOO*.hasPath(from, to) ⇒ <code>boolean</code>
+Test whether there is a directed path between a given pair of keys.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| from | <code>string</code> | the originating vertex |
+| to | <code>string</code> | the terminating vertex |
+
+**Throws**:
+
+- <code>[VertexNotExistsError](#Graph.VertexNotExistsError)</code> if the `from` and/or `to` vertices do not yet exist in the graph
+
+**Returns**: <code>boolean</code> - whether such a path exists  
+
+-----
+
+<a name="Graph#outDegree"></a>
+##### *graphOO*.outDegree(key) ⇒ <code>number</code>
+Get the number of edges going out of a given vertex.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| key | <code>string</code> | the key of the vertex to query |
+
+**Throws**:
+
+- <code>[VertexNotExistsError](#Graph.VertexNotExistsError)</code> if a vertex with this key does not exist
+
+**Returns**: <code>number</code> - the number of edges going out of the `key` vertex  
+
+-----
+
+<a name="Graph#inDegree"></a>
+##### *graphOO*.inDegree(key) ⇒ <code>number</code>
+Get the number of edges coming into a given vertex.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| key | <code>string</code> | the key of the vertex to query |
+
+**Throws**:
+
+- <code>[VertexNotExistsError](#Graph.VertexNotExistsError)</code> if a vertex with this key does not exist
+
+**Returns**: <code>number</code> - the number of edges coming into the `key` vertex  
+
+-----
+
+<a name="Graph#degree"></a>
+##### *graphOO*.degree(key) ⇒ <code>number</code>
+Get the number of edges connected to a given vertex.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| key | <code>string</code> | the key of the vertex to query |
+
+**Throws**:
+
+- <code>[VertexNotExistsError](#Graph.VertexNotExistsError)</code> if a vertex with this key does not exist
+
+**Returns**: <code>number</code> - the number of edges connected to the `key` vertex  
+
+-----
+
+<a name="Graph#mergeIn"></a>
+##### *graphOO*.mergeIn(other, [mV], [mE])
+Merge another graph into this graph.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| other | <code>[Graph](#Graph)</code> | the other graph to merge into this one |
+| [mV] | <code>function</code> | a custom merge function for values stored in vertices;     defaults to choosing the second value over the first; The first and     second arguments are the vertex values of `this` graph and the     `other` graph respectively. The third is the corresponding `key`. |
+| [mE] | <code>function</code> | a custom merge function for values stored in edges;     defaults to whichever of the two values is not `undefined`,     giving preference to that of the other graph; The first and     second arguments are the edge values of `this` graph and the     `other` graph respectively. The third is the     corresponding `[from, to]` key. |
+
+
+-----
+
+<a name="Graph#clone"></a>
+##### *graphOO*.clone([trV], [trE]) ⇒ <code>[Graph](#Graph)</code>
+Create a clone of this graph.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| [trV] | <code>function</code> | a custom transformation function for values stored in vertices;     defaults to the identity function; The first argument is the     value to clone. The second is the corresponding `key`. |
+| [trE] | <code>function</code> | a custom transformation function for values stored in edges;     defaults to the function given for `trV`; The first argument     is the value to clone. The second is the corresponding     `[from, to]` key. |
+
+**Returns**: <code>[Graph](#Graph)</code> - a clone of this graph  
+
+-----
+
+<a name="Graph#transitiveReduction"></a>
+##### *graphOO*.transitiveReduction([trV], [trE]) ⇒ <code>[Graph](#Graph)</code>
+Create a clone of this graph, but without any transitive edges.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| [trV] | <code>function</code> | a custom transformation function for values stored in vertices;     defaults to the identity function; The first argument is the     value to clone. The second is the corresponding `key`. |
+| [trE] | <code>function</code> | a custom transformation function for values stored in edges;     defaults to the function given for `trV`; The first argument     is the value to clone. The second is the corresponding     `[from, to]` key. |
+
+**Returns**: <code>[Graph](#Graph)</code> - a clone of this graph with all transitive edges removed  
+
+-----
+
+<a name="Graph#contractPaths"></a>
+##### *graphOO*.contractPaths([isNexus])
+This method replaces stretches of non-branching directed pathway into single edges.
+More specifically, it identifies all 'nexus' vertices in the graph and preserves them.
+It then removes all other vertices and all edges from the graph, then inserts edges
+between nexuses that summarize the connectivity that was there before.
+
+A nexus is any vertex that is *not* characterized by '1 edge in, 1 edge out'.
+A custom `isNexus` function may be provided to manually select additional vertices
+that should be preserved as nexus.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| [isNexus] | <code>function</code> | a predicate for identifying additional vertices that should be treated as nexus;                  It receives a `key` and `value` associated to a vertex and should return                  true if and only if that vertex should be a nexus. |
+
+**Throws**:
+
+- <code>[BranchlessCycleError](#Graph.BranchlessCycleError)</code> if the graph contains a cycle with no branches or nexuses
+
+
+-----
+
+<a name="Graph#event_vertex-added"></a>
+##### "vertex-added"
+An event that is triggered just after a vertex is added to this graph.
+Handlers receive the new vertex `[key, value]` as an argument.
+
+**See**: [on](#Graph#on), [off](#Graph#off)
+
+-----
+
+<a name="Graph#event_vertex-removed"></a>
+##### "vertex-removed"
+An event that is triggered just after a vertex is removed from this graph.
+Handlers receive the vertex key as an argument.
+
+**See**: [on](#Graph#on), [off](#Graph#off)
+
+-----
+
+<a name="Graph#event_vertex-modified"></a>
+##### "vertex-modified"
+An event that is triggered after a vertex in this graph is modified.
+It is also triggered after any ["vertex-added"](#Graph#event_vertex-added) event.
+Handlers receive the vertex `[key, value]` as an argument.
+
+**See**: [on](#Graph#on), [off](#Graph#off)
+
+-----
+
+<a name="Graph#event_edge-added"></a>
+##### "edge-added"
+An event that is triggered just after an edge is added to this graph.
+Handlers receive the new edge `[[from, to], value]` as an argument.
+
+**See**: [on](#Graph#on), [off](#Graph#off)
+
+-----
+
+<a name="Graph#event_edge-removed"></a>
+##### "edge-removed"
+An event that is triggered just after an edge is removed from this graph.
+Handlers receive the edge key `[from, to]` as an argument.
+
+**See**: [on](#Graph#on), [off](#Graph#off)
+
+-----
+
+<a name="Graph#event_edge-modified"></a>
+##### "edge-modified"
 An event that is triggered after an edge in this graph is modified.
 It is also triggered after any ["edge-added"](#Graph#event_edge-added) event.
 Handlers receive the edge `[[from, to], value]` as an argument.
@@ -1375,6 +2538,20 @@ This type of error is thrown when a graph is expected not to have a branch-less 
 <a name="Graph.CycleError#cycle"></a>
 ##### *branchlessCycleError*.cycle : <code>Array.&lt;string&gt;</code>
 the vertices involved in the cycle, in order but with an unspecified starting point
+
+
+-----
+
+<a name="Iterator"></a>
+### Iterator : <code>Object</code>
+an object conforming to the [ES6 iterator protocol](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol);
+Note that ES6 offers nice syntax for dealing with iterators.
+
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| next | <code>function</code> | a zero arguments function that returns an object `{ done, value }`                                                            <ul><li>If `done === false`, then `value` is the next value in the iterated sequence.</li>                                                                <li>If `done === true`, the iterator is past the end of the iterated sequence.   </li></ul> |
 
 
 -----

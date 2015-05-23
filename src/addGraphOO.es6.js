@@ -12,17 +12,28 @@ export default function addGraphOO(Graph) {
 	const _vertexObjects = Symbol("vertex objects");
 	const _edgeObjects   = Symbol("edge objects");
 	const _init          = Symbol("init");
-	const _initialized   = Symbol("initialized");
 
+	/**
+	 * @class Graph.GraphOO
+	 * @extends Graph
+	 * @classdesc A subclass of Graph, in which vertices and edges are represented by smart objects.
+	 *            `GraphOO` instances are fully backwards-compatible, and can stand in for `Graph`
+	 *            instances in any context.
+	 * @see {@link Graph}
+	 */
 	return Graph.GraphOO = class GraphOO extends Graph {
 
 		[_init]() {
-			if (!this[_initialized]) {
-				this[_initialized] = true;
+			if (!this[_vertexObjects]) {
 				this[_vertexObjects] = new Map();
 				this[_edgeObjects]   = new Map();
 
 				let thisGraph = this;
+
+				/**
+				 * @class Graph.GraphOO#Vertex
+				 * @classdesc A class for representing vertices in a `GraphOO` instance.
+				 */
 				this.Vertex = class Vertex extends Array {
 					constructor(key, value) {
 						super(2);
@@ -55,6 +66,11 @@ export default function addGraphOO(Graph) {
 					inDegree ()            { return thisGraph.inDegree (this.key)             }
 					degree   ()            { return thisGraph.degree   (this.key)             }
 				};
+
+				/**
+				 * @class Graph.GraphOO#Edge
+				 * @classdesc A class for representing edges in a `GraphOO` instance.
+				 */
 				this.Edge = class Edge extends Array {
 					constructor(from, to, value) {
 						super(2);
@@ -71,9 +87,9 @@ export default function addGraphOO(Graph) {
 					get to()         { return this[0][1]                             }
 					get value()      { return this[1]                                }
 					set value(value) { return this.set(value)                        }
-					set(value)       { return thisGraph.setEdge(this.key, value)     }
 					get source()     { return thisGraph.vertex(this.from)            }
 					get target()     { return thisGraph.vertex(this.to)              }
+					set(value)       { return thisGraph.setEdge(this.key, value)     }
 					remove()         { return thisGraph.removeExistingEdge(this.key) }
 				};
 			}

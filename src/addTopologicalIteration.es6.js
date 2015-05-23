@@ -10,11 +10,11 @@ import {
 
 export default function addTopologicalIteration(Graph) {
 
-	Object.assign(Graph.prototype, /** @lends Graph */ {
+	Object.assign(Graph.prototype, /** @lends Graph.prototype */ {
 
 		/**
 		 * Iterate over all vertices of the graph in topological order.
-		 * @returns { Iterator.<string, *> } an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}
+		 * @returns {Iterator} an ES6 iterator yielding vertices
 		 * @example
 		 * for (var it = graph.vertices_topologically(), kv; !(kv = it.next()).done;) {
 		 *     var key   = kv.value[0],

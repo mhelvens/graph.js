@@ -1,36 +1,23 @@
-'use strict';
+import {
+	_vertices, _edges, _reverseEdges, _sources, _sinks, _edgeCount, _listeners,
+	_extractTwoArgs, _extractThreeArgs, _trigger,
+	_verticesFrom, _verticesTo, _edgesFrom, _edgesTo,
+	_verticesWithPathTo, _verticesWithPathFrom, _paths,
+	_expectVertices, _expectVerticesAbsent, _expectEdges, _expectEdgesAbsent,_expectNoConnectedEdges
+} from './private.es6.js';
 
 //  ////////////////////////////////////////////////////////////////////////////////////////////////
-//  // Symbols for private members /////////////////////////////////////////////////////////////////
+//  // JSDoc stuff /////////////////////////////////////////////////////////////////////////////////
 //  ////////////////////////////////////////////////////////////////////////////////////////////////
 
-const _vertices     = Symbol("vertices");
-const _edges        = Symbol("edges");
-const _reverseEdges = Symbol("reverse edges");
-const _sources      = Symbol("sources");
-const _sinks        = Symbol("sinks");
-const _edgeCount    = Symbol("edge count");
-
-const _extractTwoArgs   = Symbol("extract ([a, b]) or (a, b) arguments");
-const _extractThreeArgs = Symbol("extract ([[a, b], c]), ([a, b], c) or (a, b, c) arguments");
-
-const _listeners = Symbol("listeners");
-const _trigger   = Symbol("trigger");
-
-const _verticesFrom         = Symbol("vertices from");
-const _verticesTo           = Symbol("vertices to");
-const _edgesFrom            = Symbol("edges from");
-const _edgesTo              = Symbol("edges to");
-const _verticesWithPathTo   = Symbol("vertices with path to");
-const _verticesWithPathFrom = Symbol("vertices with path from");
-const _paths                = Symbol("paths");
-
-const _expectVertices         = Symbol("expect vertices");
-const _expectVerticesAbsent   = Symbol("expect vertex absent");
-const _expectEdges            = Symbol("expect edge");
-const _expectEdgesAbsent      = Symbol("expect edge absent");
-const _expectNoConnectedEdges = Symbol("expect no connected edges");
-
+/**
+ * an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol};
+ * Note that ES6 offers nice syntax for dealing with iterators.
+ * @typedef {Object} Iterator
+ * @property {function(): { done: boolean, value: * }} next - a zero arguments function that returns an object `{ done, value }`
+ *                                                            <ul><li>If `done === false`, then `value` is the next value in the iterated sequence.</li>
+ *                                                                <li>If `done === true`, the iterator is past the end of the iterated sequence.   </li></ul>
+ */
 
 //  ////////////////////////////////////////////////////////////////////////////////////////////////
 //  // Graph class /////////////////////////////////////////////////////////////////////////////////
@@ -41,7 +28,7 @@ const _expectNoConnectedEdges = Symbol("expect no connected edges");
  * @classdesc The main class of this library, to be used for representing a mathematical (di)graph.
  *
  * @description Constructor arguments can be used to supply initial vertices and edges.
- * @param ...parts {Array.<Array>}
+ * @param parts {...Array}
  *        a short notation for vertices and edges to initially add to the graph;
  *        A vertex should be an array of the form `[key, value]`.
  *        An edge should be an array of the form `[[from, to], value]`.
@@ -74,8 +61,7 @@ export default class Graph {
 		/* add vertices and values from constructor arguments */
 		for (let [key, value] of parts) {
 			if (Array.isArray(key)) {/////////////// an edge
-				let [from, to] = key;
-				this.createEdge(from, to, value);
+				this.createEdge(key, value);
 			} else {//////////////////////////////// a vertex
 				this.addVertex(key, value);
 			}
@@ -562,7 +548,7 @@ export default class Graph {
 
 	/**
 	 * Iterate over all vertices of the graph, in no particular order.
-	 * @returns { Iterator.<string, *> } an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}
+	 * @returns {Iterator} an ES6 iterator yielding vertices
 	 * @example
 	 * for (var it = graph.vertices(), kv; !(kv = it.next()).done;) {
 	 *     var key   = kv.value[0],
@@ -578,10 +564,10 @@ export default class Graph {
 	 */
 	*vertices() {
 		let done = new Set();
-		for (let [key, value] of this[_vertices]) {
+		for (let [key] of this[_vertices]) {
 			if (this.hasVertex(key) && !done.has(key)) {
 				done.add(key);
-				yield [key, value];
+				yield this.vertex(key);
 			}
 		}
 	}
@@ -590,7 +576,7 @@ export default class Graph {
 	 * A {@link Graph} object is itself {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterable_protocol|iterable},
 	 * and serves as a short notation in ECMAScript 6 to iterate over all vertices in the graph, in no particular order.
 	 * @method Graph#@@iterator
-	 * @returns { Iterator.<string, *> } an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}
+	 * @returns {Iterator} an ES6 iterator yielding vertices
 	 * @example
 	 * for (let [key, value] of graph) {
 	 *     // iterates over all vertices of the graph
@@ -601,7 +587,7 @@ export default class Graph {
 
 	/**
 	 * Iterate over all edges of the graph, in no particular order.
-	 * @returns { Iterator.<string, string, *> } an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}
+	 * @returns {Iterator} an ES6 iterator yielding edges
 	 * @example
 	 * for (var it = graph.edges(), kv; !(kv = it.next()).done;) {
 	 *     var from  = kv.value[0][0],
@@ -632,7 +618,7 @@ export default class Graph {
 	 * Iterate over the vertices directly reachable from a given vertex in the graph, in no particular order.
 	 * @throws {Graph.VertexNotExistsError} if a vertex with the given `from` key does not exist
 	 * @param key {string} the key of the vertex to take the outgoing edges from
-	 * @returns { Iterator.<string, *> } an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}
+	 * @returns {Iterator} an ES6 iterator yielding vertices
 	 * @example
 	 * for (var it = graph.verticesFrom(from), kv; !(kv = it.next()).done;) {
 	 *     var to    = kv.value[0],
@@ -663,7 +649,7 @@ export default class Graph {
 	 * Iterate over the vertices from which a given vertex in the graph is directly reachable, in no particular order.
 	 * @throws {Graph.VertexNotExistsError} if a vertex with the given `to` key does not exist
 	 * @param key {string} the key of the vertex to take the incoming edges from
-	 * @returns { Iterator.<string, *> } an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}
+	 * @returns {Iterator} an ES6 iterator yielding vertices
 	 * @example
 	 * for (var it = graph.verticesTo(to), kv; !(kv = it.next()).done;) {
 	 *     var from  = kv.value[0],
@@ -694,7 +680,7 @@ export default class Graph {
 	 * Iterate over the outgoing edges of a given vertex in the graph, in no particular order.
 	 * @throws {Graph.VertexNotExistsError} if a vertex with the given `from` key does not exist
 	 * @param key {string} the key of the vertex to take the outgoing edges from
-	 * @returns { Iterator.<string, string, *> } an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}
+	 * @returns {Iterator} an ES6 iterator yielding edges
 	 * @example
 	 * for (var it = graph.edgesFrom(from), kv; !(kv = it.next()).done;) {
 	 *     var from  = kv.value[0][0],
@@ -726,7 +712,7 @@ export default class Graph {
 	 * Iterate over the incoming edges of a given vertex in the graph, in no particular order.
 	 * @throws {Graph.VertexNotExistsError} if a vertex with the given `to` key does not exist
 	 * @param key {string} the key of the vertex to take the incoming edges from
-	 * @returns { Iterator.<string, string, *> } an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}
+	 * @returns {Iterator} an ES6 iterator yielding edges
 	 * @example
 	 * for (var it = graph.edgesTo(to), kv; !(kv = it.next()).done;) {
 	 *     var from  = kv.value[0][0],
@@ -758,7 +744,7 @@ export default class Graph {
 	 * Iterate over all vertices reachable from a given vertex in the graph, in no particular order.
 	 * @throws {Graph.VertexNotExistsError} if a vertex with the given `from` key does not exist
 	 * @param from {string} the key of the vertex to take the reachable vertices from
-	 * @returns { Iterator.<string, *> } an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}
+	 * @returns {Iterator} an ES6 iterator yielding vertices
 	 * @example
 	 * for (var it = graph.verticesWithPathFrom(from), kv; !(kv = it.next()).done;) {
 	 *     var key   = kv.value[0],
@@ -776,10 +762,10 @@ export default class Graph {
 		return this[_verticesWithPathFrom](from, new Set());
 	}
 	*[_verticesWithPathFrom](from, done) {
-		for (let to of this[_edges].get(from).keys()) {
-			if (this.hasEdge(from, to) && !done.has(to)) {
+		for (let [to] of this.verticesFrom(from)) {
+			if (!done.has(to) && this.hasEdge(from, to)) {
 				done.add(to);
-				yield [to, this[_vertices].get(to)];
+				yield this.vertex(to);
 				yield* this[_verticesWithPathFrom](to, done);
 			}
 		}
@@ -789,7 +775,7 @@ export default class Graph {
 	 * Iterate over all vertices from which a given vertex in the graph can be reached, in no particular order.
 	 * @throws {Graph.VertexNotExistsError} if a vertex with the given `to` key does not exist
 	 * @param to {string} the key of the vertex to take the reachable vertices from
-	 * @returns { Iterator.<string, *> } an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}
+	 * @returns {Iterator} an ES6 iterator yielding vertices
 	 * @example
 	 * for (var it = graph.verticesWithPathTo(to), kv; !(kv = it.next()).done;) {
 	 *     var key   = kv.value[0],
@@ -807,10 +793,10 @@ export default class Graph {
 		return this[_verticesWithPathTo](to, new Set());
 	}
 	*[_verticesWithPathTo](to, done) {
-		for (let from of this[_reverseEdges].get(to)) {
-			if (this.hasEdge(from, to) && !done.has(from)) {
+		for (let [from] of this.verticesTo(to)) {
+			if (!done.has(from) && this.hasEdge(from, to)) {
 				done.add(from);
-				yield [from, this[_vertices].get(from)];
+				yield this.vertex(from);
 				yield* this[_verticesWithPathTo](from, done);
 			}
 		}
@@ -819,7 +805,7 @@ export default class Graph {
 
 	/**
 	 * Iterate over all vertices that have no incoming edges, in no particular order.
-	 * @returns { Iterator.<string, *> } an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}
+	 * @returns {Iterator} an ES6 iterator yielding vertices
 	 * @example
 	 * for (var it = graph.sources(), kv; !(kv = it.next()).done;) {
 	 *     var key   = kv.value[0],
@@ -837,7 +823,7 @@ export default class Graph {
 		for (let key of this[_sources]) {
 			if (this.hasVertex(key) && !done.has(key)) {
 				done.add(key);
-				yield [key, this.vertexValue(key)];
+				yield this.vertex(key);
 			}
 		}
 	}
@@ -845,7 +831,7 @@ export default class Graph {
 
 	/**
 	 * Iterate over all vertices that have no outgoing edges, in no particular order.
-	 * @returns { Iterator.<string, *> } an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}
+	 * @returns {Iterator} an ES6 iterator yielding vertices
 	 * @example
 	 * for (var it = graph.sinks(), kv; !(kv = it.next()).done;) {
 	 *     var key   = kv.value[0],
@@ -863,53 +849,7 @@ export default class Graph {
 		for (let key of this[_sinks]) {
 			if (this.hasVertex(key) && !done.has(key)) {
 				done.add(key);
-				yield [key, this.vertexValue(key)];
-			}
-		}
-	}
-
-
-	/**
-	 * Iterate over all vertices of the graph in topological order.
-	 * @returns { Iterator.<string, *> } an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}
-	 * @example
-	 * for (var it = graph.vertices_topologically(), kv; !(kv = it.next()).done;) {
-	 *     var key   = kv.value[0],
-	 *         value = kv.value[1];
-	 *     // iterates over all vertices of the graph in topological order
-	 * }
-	 * @example
-	 * // in ECMAScript 6, you can use a for..of loop
-	 * for (let [key, value] of graph.vertices_topologically()) {
-	 *     // iterates over all vertices of the graph in topological order
-	 * }
-	 */
-	*vertices_topologically() {
-		let visited = []; // stack
-		let handled = new Set();
-
-		let _this = this;
-		function *visit(a) {
-			visited.push(a);
-			let i = visited.indexOf(a);
-			if (i !== visited.length - 1) {
-				let cycle = visited.slice(i + 1).reverse();
-				throw new Graph.CycleError(cycle);
-			}
-			if (!handled.has(a)) {
-				for (let [b] of _this.verticesTo(a)) {
-					yield* visit(b);
-				}
-				if (_this.hasVertex(a)) {
-					yield [a, _this[_vertices].get(a)];
-				}
-				handled.add(a);
-			}
-			visited.pop();
-		}
-		for (let [a] of this.vertices()) {
-			if (!handled.has(a)) {
-				yield* visit(a);
+				yield this.vertex(key);
 			}
 		}
 	}
@@ -923,14 +863,14 @@ export default class Graph {
 	 * Remove all edges from the graph, but leave the vertices intact.
 	 */
 	clearEdges() {
-		for (let [[from, to]] of this.edges()) { this.removeEdge(from, to) }
+		for (let [key] of this.edges()) { this.removeEdge(key) }
 	}
 
 	/**
 	 * Remove all edges and vertices from the graph, putting it back in its initial state.
 	 */
 	clear() {
-		for (let [v] of this.vertices()) { this.destroyVertex(v) }
+		for (let [key] of this.vertices()) { this.destroyVertex(key) }
 	}
 
 
@@ -947,11 +887,11 @@ export default class Graph {
 	 *     a custom equality function for values stored in vertices;
 	 *     defaults to `===` comparison; The first two arguments are the
 	 *     values to compare. The third is the corresponding `key`.
-	 * @param [eqE] {function(*, *, string, string): boolean}
+	 * @param [eqE] {function(*, *, Array): boolean}
 	 *     a custom equality function for values stored in edges;
-	 *     defaults to the function given for `trV`; The first two arguments
-	 *     are the values to compare. The third and fourth are the `from`
-	 *     and `to` keys respectively.
+	 *     defaults to the function given for `eqV`; The first two arguments
+	 *     are the values to compare. The third is the corresponding
+	 *     `[from, to]` key.
 	 * @returns {boolean} `true` if the two graphs are equal; `false` otherwise
 	 */
 	equals(other, eqV=(x,y)=>(x===y), eqE=eqV) {
@@ -962,9 +902,9 @@ export default class Graph {
 			if (!other.hasVertex(key))                    { return false }
 			if (!eqV(value, other.vertexValue(key), key)) { return false }
 		}
-		for (let [[from, to], value] of this.edges()) {
-			if (!other.hasEdge(from, to))                         { return false }
-			if (!eqE(value, other.edgeValue(from, to), from, to)) { return false }
+		for (let [key, value] of this.edges()) {
+			if (!other.hasEdge(key))                      { return false }
+			if (!eqE(value, other.edgeValue(key), key))   { return false }
 		}
 		return true;
 	}
@@ -974,10 +914,8 @@ export default class Graph {
 	 * Iterate over all simple directed cycles in this graph, in no particular order.
 	 * If you mutate the graph in between iterations, behavior of the iterator
 	 * becomes unspecified. (So, don't.)
-	 * @returns { Iterator.< Array.<string> > }
-	 *          an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}.
-	 *          Each iterated value is an array containing the vertex keys describing the cycle.
-	 *          These arrays will contain each vertex key only once — even the first/last one.
+	 * @returns {Iterator} an ES6 iterator yielding arrays containing the vertex keys describing a cycle;
+	 *                     These arrays will contain each vertex key only once — even the first/last one.
 	 * @example
 	 * for (var it = graph.cycles(), kv; !(kv = it.next()).done;) {
 	 *     var cycle = kv.value;
@@ -1065,9 +1003,7 @@ export default class Graph {
 	 * @param from {string} the key for the originating vertex
 	 * @param to   {string} the key for the terminating vertex
 	 * @throws {Graph.VertexNotExistsError} if the `from` and/or `to` vertices do not yet exist in the graph
-	 * @returns { Iterator.< Array.<string> > }
-	 *          an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}.
-	 *          Each iterated value is an array containing the vertex-keys describing the path.
+	 * @returns {Iterator} an ES6 iterator yielding arrays containing the vertex-keys describing the path
 	 * @example
 	 * for (var it = graph.paths(from, to), kv; !(kv = it.next()).done;) {
 	 *     var path = kv.value;
@@ -1078,7 +1014,7 @@ export default class Graph {
 	 * for (let path of graph.paths(from, to)) {
 	 *     // iterates over all paths between `from` and `to` in the graph
 	 * }
-	 */
+	 */ // TODO: allow [from, to] array to be given as argument in docs
 	paths(from, to) {
 		[from, to] = Graph[_extractTwoArgs](from, to);
 		this[_expectVertices](from, to);
@@ -1111,7 +1047,7 @@ export default class Graph {
 	 * @throws {Graph.VertexNotExistsError} if the `from` and/or `to` vertices do not yet exist in the graph
 	 * @returns {?Array} an array with the keys of the path found between the two vertices,
 	 *                   including those two vertices themselves; `null` if no such path exists
-	 */
+	 */ // TODO: allow [from, to] array to be given as argument in docs
 	path(from, to) {
 		let result = this.paths(from, to).next();
 		return result.done ? null : result.value;
@@ -1124,7 +1060,7 @@ export default class Graph {
 	 * @param to   {string} the terminating vertex
 	 * @throws {Graph.VertexNotExistsError} if the `from` and/or `to` vertices do not yet exist in the graph
 	 * @returns {boolean} whether such a path exists
-	 */
+	 */ // TODO: allow [from, to] array to be given as argument in docs
 	hasPath(from, to) { return !this.paths(from, to).next().done }
 
 
@@ -1171,26 +1107,23 @@ export default class Graph {
 	 * @param other {Graph} the other graph to merge into this one
 	 * @param [mV] {function(*, *, string): *}
 	 *     a custom merge function for values stored in vertices;
-	 *     defaults to whichever of the two values is not `undefined`,
-	 *     giving preference to that of the other graph; The first and
+	 *     defaults to choosing the second value over the first; The first and
 	 *     second arguments are the vertex values of `this` graph and the
 	 *     `other` graph respectively. The third is the corresponding `key`.
-	 * @param [mE] {function(*, *, string, string): *}
+	 * @param [mE] {function(*, *, Array): *}
 	 *     a custom merge function for values stored in edges;
 	 *     defaults to whichever of the two values is not `undefined`,
 	 *     giving preference to that of the other graph; The first and
 	 *     second arguments are the edge values of `this` graph and the
-	 *     `other` graph respectively. The third and fourth are the
-	 *     corresponding `from` and `to` keys.
+	 *     `other` graph respectively. The third is the
+	 *     corresponding `[from, to]` key.
 	 */
-	mergeIn(other, mV, mE) {
-		if (!mV) { mV = (v1,v2)=>(typeof v2 === 'undefined' ? v1 : v2) }
-		if (!mE) { mE = mV }
-		for (let [key] of other.vertices()) {
-			this.addVertex(key, mV(this.vertexValue(key), other.vertexValue(key)));
+	mergeIn(other, mV=((v1,v2)=>v2), mE=mV) {
+		for (let [key, value] of other.vertices()) {
+			this.addVertex(key, mV(this.vertexValue(key), value, key));
 		}
-		for (let [[from, to]] of other.edges()) {
-			this.addEdge(from, to, mE(this.edgeValue(from, to), other.edgeValue(from, to), from, to));
+		for (let [key, value] of other.edges()) {
+			this.addEdge(key, mE(this.edgeValue(key), value, key));
 		}
 	}
 
@@ -1201,11 +1134,11 @@ export default class Graph {
 	 *     a custom transformation function for values stored in vertices;
 	 *     defaults to the identity function; The first argument is the
 	 *     value to clone. The second is the corresponding `key`.
-	 * @param [trE] {function(*, string, string): *}
+	 * @param [trE] {function(*, Array): *}
 	 *     a custom transformation function for values stored in edges;
 	 *     defaults to the function given for `trV`; The first argument
-	 *     is the value to clone. The second and third are the `from`
-	 *     and `to` keys respectively.
+	 *     is the value to clone. The second is the corresponding
+	 *     `[from, to]` key.
 	 * @returns {Graph} a clone of this graph
 	 */
 	clone(trV=(v=>v), trE=trV) {
@@ -1221,11 +1154,11 @@ export default class Graph {
 	 *     a custom transformation function for values stored in vertices;
 	 *     defaults to the identity function; The first argument is the
 	 *     value to clone. The second is the corresponding `key`.
-	 * @param [trE] {function(*, string, string): *}
+	 * @param [trE] {function(*, Array): *}
 	 *     a custom transformation function for values stored in edges;
 	 *     defaults to the function given for `trV`; The first argument
-	 *     is the value to clone. The second and third are the `from`
-	 *     and `to` keys respectively.
+	 *     is the value to clone. The second is the corresponding
+	 *     `[from, to]` key.
 	 * @returns {Graph} a clone of this graph with all transitive edges removed
 	 */
 	transitiveReduction(trV, trE) {
@@ -1276,8 +1209,8 @@ export default class Graph {
 			for (let key of nexuses) { checkForBlCycle(key) }
 			if (unhandledVertices.size > 0) {
 				let startingKey = unhandledVertices.values().next().value,
-				    cycle       = [],
-				    current     = startingKey;
+					cycle       = [],
+					current     = startingKey;
 				do {
 					cycle.push(current);
 					current = this.verticesFrom(current).next().value[0];
@@ -1298,7 +1231,7 @@ export default class Graph {
 			/* bookkeeping */
 			let verticesToRemove = new Set();
 			let edgesToRemove    = new Set();
-			let path = new Graph();
+			let path = new (this.constructor)();
 
 			/* process the start of the path */
 			path.addVertex(start, this.vertexValue(start));
@@ -1317,8 +1250,8 @@ export default class Graph {
 			}
 
 			/* register new path contraction */
-			if (!contractionsToAdd.get(fromTo()[0]))                  { contractionsToAdd.set(fromTo()[0], new Map())                    }
-			if (!contractionsToAdd.get(fromTo()[0]).get(fromTo()[1])) { contractionsToAdd.get(fromTo()[0]).set(fromTo()[1], new Graph()) }
+			if (!contractionsToAdd.get(fromTo()[0]))                  { contractionsToAdd.set(fromTo()[0], new Map())                                 }
+			if (!contractionsToAdd.get(fromTo()[0]).get(fromTo()[1])) { contractionsToAdd.get(fromTo()[0]).set(fromTo()[1], new (this.constructor)()) }
 			contractionsToAdd.get(fromTo()[0]).get(fromTo()[1]).mergeIn(path);
 
 			/* remove old edges and vertices */
@@ -1342,7 +1275,7 @@ export default class Graph {
 	////////////////////////////////
 	////////// Assertions //////////
 	////////////////////////////////
-	
+
 	[_expectVertices](...keys) {
 		let missingVertices = keys.filter(k => !this.hasVertex(k));
 		if (missingVertices.length) { throw new Graph.VertexNotExistsError(...missingVertices) }
@@ -1413,7 +1346,7 @@ Graph.VertexExistsError = class VertexExistsError extends Error {
  * @classdesc This type of error is thrown when specific vertices are expected to exist, but don't.
  * @extends Error
  */
-Graph.VertexNotExistsError = class VertexNotExistError extends Error {
+Graph.VertexNotExistsError = class VertexNotExistsError extends Error {
 	constructor(...keys) {
 		super();
 		/**
@@ -1453,7 +1386,7 @@ Graph.EdgeExistsError = class EdgeExistsError extends Error {
 		this.message = `This graph has ${
 			this.edges.size === 1 ? "an edge" : "edges"
 		} ${
-			[...this.edges].map(([[from, to]]) => `['${from}', '${to}']`).join(`, `)
+			[...this.edges].map(([key]) => `[${key}]`).join(`, `)
 		}`;
 	}
 };
@@ -1478,7 +1411,7 @@ Graph.EdgeNotExistsError = class EdgeNotExistsError extends Error {
 		this.message = `This graph does not have ${
 			this.edges.size === 1 ? "an edge" : "edges"
 		} ${
-			[...this.edges].map(([from, to]) => `['${from}', '${to}']`).join(`, `)
+			[...this.edges].map(([key]) => `[${key}]`).join(`, `)
 		}`;
 	}
 };
@@ -1503,7 +1436,7 @@ Graph.HasConnectedEdgesError = class HasConnectedEdgesError extends Graph.EdgeEx
 		this.message = `The '${key}' vertex has connected ${
 			this.edges.size === 1 ? "an edge" : "edges"
 		} ${
-			[...this.edges].map(([[from, to]]) => `['${from}', '${to}']`).join(`, `)
+			[...this.edges].map(([key]) => `[${key}]`).join(`, `)
 		}`;
 	}
 };

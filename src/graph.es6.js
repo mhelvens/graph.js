@@ -7,6 +7,19 @@ import {
 } from './private.es6.js';
 
 //  ////////////////////////////////////////////////////////////////////////////////////////////////
+//  // JSDoc stuff /////////////////////////////////////////////////////////////////////////////////
+//  ////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol};
+ * Note that ES6 offers nice syntax for dealing with iterators.
+ * @typedef {Object} Iterator
+ * @property {function(): { done: boolean, value: * }} next - a zero arguments function that returns an object `{ done, value }`
+ *                                                            <ul><li>If `done === false`, then `value` is the next value in the iterated sequence.</li>
+ *                                                                <li>If `done === true`, the iterator is past the end of the iterated sequence.   </li></ul>
+ */
+
+//  ////////////////////////////////////////////////////////////////////////////////////////////////
 //  // Graph class /////////////////////////////////////////////////////////////////////////////////
 //  ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -15,7 +28,7 @@ import {
  * @classdesc The main class of this library, to be used for representing a mathematical (di)graph.
  *
  * @description Constructor arguments can be used to supply initial vertices and edges.
- * @param ...parts {Array.<Array>}
+ * @param parts {...Array}
  *        a short notation for vertices and edges to initially add to the graph;
  *        A vertex should be an array of the form `[key, value]`.
  *        An edge should be an array of the form `[[from, to], value]`.
@@ -535,7 +548,7 @@ export default class Graph {
 
 	/**
 	 * Iterate over all vertices of the graph, in no particular order.
-	 * @returns { Iterator.<string, *> } an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}
+	 * @returns {Iterator} an ES6 iterator yielding vertices
 	 * @example
 	 * for (var it = graph.vertices(), kv; !(kv = it.next()).done;) {
 	 *     var key   = kv.value[0],
@@ -551,7 +564,7 @@ export default class Graph {
 	 */
 	*vertices() {
 		let done = new Set();
-		for (let [key, value] of this[_vertices]) {
+		for (let [key] of this[_vertices]) {
 			if (this.hasVertex(key) && !done.has(key)) {
 				done.add(key);
 				yield this.vertex(key);
@@ -563,7 +576,7 @@ export default class Graph {
 	 * A {@link Graph} object is itself {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterable_protocol|iterable},
 	 * and serves as a short notation in ECMAScript 6 to iterate over all vertices in the graph, in no particular order.
 	 * @method Graph#@@iterator
-	 * @returns { Iterator.<string, *> } an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}
+	 * @returns {Iterator} an ES6 iterator yielding vertices
 	 * @example
 	 * for (let [key, value] of graph) {
 	 *     // iterates over all vertices of the graph
@@ -574,7 +587,7 @@ export default class Graph {
 
 	/**
 	 * Iterate over all edges of the graph, in no particular order.
-	 * @returns { Iterator.<string, string, *> } an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}
+	 * @returns {Iterator} an ES6 iterator yielding edges
 	 * @example
 	 * for (var it = graph.edges(), kv; !(kv = it.next()).done;) {
 	 *     var from  = kv.value[0][0],
@@ -605,7 +618,7 @@ export default class Graph {
 	 * Iterate over the vertices directly reachable from a given vertex in the graph, in no particular order.
 	 * @throws {Graph.VertexNotExistsError} if a vertex with the given `from` key does not exist
 	 * @param key {string} the key of the vertex to take the outgoing edges from
-	 * @returns { Iterator.<string, *> } an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}
+	 * @returns {Iterator} an ES6 iterator yielding vertices
 	 * @example
 	 * for (var it = graph.verticesFrom(from), kv; !(kv = it.next()).done;) {
 	 *     var to    = kv.value[0],
@@ -636,7 +649,7 @@ export default class Graph {
 	 * Iterate over the vertices from which a given vertex in the graph is directly reachable, in no particular order.
 	 * @throws {Graph.VertexNotExistsError} if a vertex with the given `to` key does not exist
 	 * @param key {string} the key of the vertex to take the incoming edges from
-	 * @returns { Iterator.<string, *> } an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}
+	 * @returns {Iterator} an ES6 iterator yielding vertices
 	 * @example
 	 * for (var it = graph.verticesTo(to), kv; !(kv = it.next()).done;) {
 	 *     var from  = kv.value[0],
@@ -667,7 +680,7 @@ export default class Graph {
 	 * Iterate over the outgoing edges of a given vertex in the graph, in no particular order.
 	 * @throws {Graph.VertexNotExistsError} if a vertex with the given `from` key does not exist
 	 * @param key {string} the key of the vertex to take the outgoing edges from
-	 * @returns { Iterator.<string, string, *> } an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}
+	 * @returns {Iterator} an ES6 iterator yielding edges
 	 * @example
 	 * for (var it = graph.edgesFrom(from), kv; !(kv = it.next()).done;) {
 	 *     var from  = kv.value[0][0],
@@ -699,7 +712,7 @@ export default class Graph {
 	 * Iterate over the incoming edges of a given vertex in the graph, in no particular order.
 	 * @throws {Graph.VertexNotExistsError} if a vertex with the given `to` key does not exist
 	 * @param key {string} the key of the vertex to take the incoming edges from
-	 * @returns { Iterator.<string, string, *> } an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}
+	 * @returns {Iterator} an ES6 iterator yielding edges
 	 * @example
 	 * for (var it = graph.edgesTo(to), kv; !(kv = it.next()).done;) {
 	 *     var from  = kv.value[0][0],
@@ -731,7 +744,7 @@ export default class Graph {
 	 * Iterate over all vertices reachable from a given vertex in the graph, in no particular order.
 	 * @throws {Graph.VertexNotExistsError} if a vertex with the given `from` key does not exist
 	 * @param from {string} the key of the vertex to take the reachable vertices from
-	 * @returns { Iterator.<string, *> } an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}
+	 * @returns {Iterator} an ES6 iterator yielding vertices
 	 * @example
 	 * for (var it = graph.verticesWithPathFrom(from), kv; !(kv = it.next()).done;) {
 	 *     var key   = kv.value[0],
@@ -762,7 +775,7 @@ export default class Graph {
 	 * Iterate over all vertices from which a given vertex in the graph can be reached, in no particular order.
 	 * @throws {Graph.VertexNotExistsError} if a vertex with the given `to` key does not exist
 	 * @param to {string} the key of the vertex to take the reachable vertices from
-	 * @returns { Iterator.<string, *> } an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}
+	 * @returns {Iterator} an ES6 iterator yielding vertices
 	 * @example
 	 * for (var it = graph.verticesWithPathTo(to), kv; !(kv = it.next()).done;) {
 	 *     var key   = kv.value[0],
@@ -792,7 +805,7 @@ export default class Graph {
 
 	/**
 	 * Iterate over all vertices that have no incoming edges, in no particular order.
-	 * @returns { Iterator.<string, *> } an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}
+	 * @returns {Iterator} an ES6 iterator yielding vertices
 	 * @example
 	 * for (var it = graph.sources(), kv; !(kv = it.next()).done;) {
 	 *     var key   = kv.value[0],
@@ -818,7 +831,7 @@ export default class Graph {
 
 	/**
 	 * Iterate over all vertices that have no outgoing edges, in no particular order.
-	 * @returns { Iterator.<string, *> } an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}
+	 * @returns {Iterator} an ES6 iterator yielding vertices
 	 * @example
 	 * for (var it = graph.sinks(), kv; !(kv = it.next()).done;) {
 	 *     var key   = kv.value[0],
@@ -901,10 +914,8 @@ export default class Graph {
 	 * Iterate over all simple directed cycles in this graph, in no particular order.
 	 * If you mutate the graph in between iterations, behavior of the iterator
 	 * becomes unspecified. (So, don't.)
-	 * @returns { Iterator.< Array.<string> > }
-	 *          an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}.
-	 *          Each iterated value is an array containing the vertex keys describing the cycle.
-	 *          These arrays will contain each vertex key only once — even the first/last one.
+	 * @returns {Iterator} an ES6 iterator yielding arrays containing the vertex keys describing a cycle;
+	 *                     These arrays will contain each vertex key only once — even the first/last one.
 	 * @example
 	 * for (var it = graph.cycles(), kv; !(kv = it.next()).done;) {
 	 *     var cycle = kv.value;
@@ -992,9 +1003,7 @@ export default class Graph {
 	 * @param from {string} the key for the originating vertex
 	 * @param to   {string} the key for the terminating vertex
 	 * @throws {Graph.VertexNotExistsError} if the `from` and/or `to` vertices do not yet exist in the graph
-	 * @returns { Iterator.< Array.<string> > }
-	 *          an object conforming to the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol|ES6 iterator protocol}.
-	 *          Each iterated value is an array containing the vertex-keys describing the path.
+	 * @returns {Iterator} an ES6 iterator yielding arrays containing the vertex-keys describing the path
 	 * @example
 	 * for (var it = graph.paths(from, to), kv; !(kv = it.next()).done;) {
 	 *     var path = kv.value;
