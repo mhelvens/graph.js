@@ -58,6 +58,19 @@ specs(GraphOO, () => {
 				expect(vertex).toEqual(any(VertexSuper));
 				expect(vertex.foo).toEqual("bar");
 			});
+
+			it("can have a custom superclass initialized with custom arguments", () => {
+				class VertexSuper {
+					constructor(keyVal) { this._keyVal = keyVal }
+					keyVal() { return `(${this._keyVal})` }
+				}
+				graph = new GraphOO(['n1', "n1Value"], {
+					VertexSuperclass: VertexSuper,
+					vertexSuperArguments(key, value) { return [`${key}:${value}`]; }
+				});
+				vertex = graph.vertex('n1');
+				expect(vertex.keyVal()).toEqual("(n1:n1Value)");
+			});
 		});
 
 
@@ -729,6 +742,19 @@ specs(GraphOO, () => {
 				edge = graph.edge('n1', 'n2');
 				expect(edge).toEqual(any(EdgeSuper));
 				expect(edge.foo).toEqual("bar");
+			});
+
+			it("can have a custom superclass initialized with custom arguments", () => {
+				class EdgeSuper {
+					constructor(fromToVal) { this._fromToVal = fromToVal }
+					fromToVal() { return `(${this._fromToVal})` }
+				}
+				graph = new GraphOO([['n1', 'n2'], "n1n2Value"], {
+					EdgeSuperclass: EdgeSuper,
+					edgeSuperArguments(from, to, value) { return [`${from}:${to}:${value}`]; }
+				});
+				edge = graph.edge('n1', 'n2');
+				expect(edge.fromToVal()).toEqual("(n1:n2:n1n2Value)");
 			});
 		});
 

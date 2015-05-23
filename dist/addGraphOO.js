@@ -220,11 +220,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	       * @classdesc A class for representing vertices in a `GraphOO` instance.
 	       */
 							var VertexSuperclass = _this2[_options$_extractTwoArgs$_extractThreeArgs$_expectVertices$_expectVerticesAbsent$_expectEdges$_expectEdgesAbsent$_expectNoConnectedEdges._options].VertexSuperclass || Object;
+							var vertexSuperArguments = _this2[_options$_extractTwoArgs$_extractThreeArgs$_expectVertices$_expectVerticesAbsent$_expectEdges$_expectEdgesAbsent$_expectNoConnectedEdges._options].vertexSuperArguments || function () {
+								for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+									args[_key] = arguments[_key];
+								}
+	
+								return args;
+							};
 							_this2.Vertex = (function (_VertexSuperclass) {
 								function Vertex(key, value) {
 									_classCallCheck(this, Vertex);
 	
-									_get(Object.getPrototypeOf(Vertex.prototype), "constructor", this).call(this);
+									_get(Object.getPrototypeOf(Vertex.prototype), "constructor", this).apply(this, vertexSuperArguments(key, value));
 									this[0] = key;
 									this[1] = value;
 									if (!thisGraph[_vertexObjects].has(key)) {
@@ -383,11 +390,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	       * @classdesc A class for representing edges in a `GraphOO` instance.
 	       */
 							var EdgeSuperclass = _this2[_options$_extractTwoArgs$_extractThreeArgs$_expectVertices$_expectVerticesAbsent$_expectEdges$_expectEdgesAbsent$_expectNoConnectedEdges._options].EdgeSuperclass || Object;
+							var edgeSuperArguments = _this2[_options$_extractTwoArgs$_extractThreeArgs$_expectVertices$_expectVerticesAbsent$_expectEdges$_expectEdgesAbsent$_expectNoConnectedEdges._options].edgeSuperArguments || function () {
+								for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+									args[_key2] = arguments[_key2];
+								}
+	
+								return args;
+							};
 							_this2.Edge = (function (_EdgeSuperclass) {
 								function Edge(from, to, value) {
 									_classCallCheck(this, Edge);
 	
-									_get(Object.getPrototypeOf(Edge.prototype), "constructor", this).call(this);
+									_get(Object.getPrototypeOf(Edge.prototype), "constructor", this).apply(this, edgeSuperArguments(from, to, value));
 									this[0] = [from, to];
 									this[1] = value;
 									if (!thisGraph[_edgeObjects].has(from)) {

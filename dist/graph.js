@@ -236,7 +236,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			this[_options$_vertices$_edges$_reverseEdges$_sources$_sinks$_edgeCount$_listeners$_extractTwoArgs$_extractThreeArgs$_trigger$_verticesFrom$_verticesTo$_edgesFrom$_edgesTo$_verticesWithPathTo$_verticesWithPathFrom$_paths$_expectVertices$_expectVerticesAbsent$_expectEdges$_expectEdgesAbsent$_expectNoConnectedEdges._listeners] = new Map();
 	
 			/* graph options */
-			this[_options$_vertices$_edges$_reverseEdges$_sources$_sinks$_edgeCount$_listeners$_extractTwoArgs$_extractThreeArgs$_trigger$_verticesFrom$_verticesTo$_edgesFrom$_edgesTo$_verticesWithPathTo$_verticesWithPathFrom$_paths$_expectVertices$_expectVerticesAbsent$_expectEdges$_expectEdgesAbsent$_expectNoConnectedEdges._options] = {}; // TODO: document + test options
+			this[_options$_vertices$_edges$_reverseEdges$_sources$_sinks$_edgeCount$_listeners$_extractTwoArgs$_extractThreeArgs$_trigger$_verticesFrom$_verticesTo$_edgesFrom$_edgesTo$_verticesWithPathTo$_verticesWithPathFrom$_paths$_expectVertices$_expectVerticesAbsent$_expectEdges$_expectEdgesAbsent$_expectNoConnectedEdges._options] = {};
 			var _iteratorNormalCompletion = true;
 			var _didIteratorError = false;
 			var _iteratorError = undefined;
@@ -1060,9 +1060,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 						case 18:
 							context$2$0.prev = 18;
-							context$2$0.t4 = context$2$0['catch'](4);
+							context$2$0.t0 = context$2$0['catch'](4);
 							_didIteratorError6 = true;
-							_iteratorError6 = context$2$0.t4;
+							_iteratorError6 = context$2$0.t0;
 	
 						case 22:
 							context$2$0.prev = 22;
@@ -1186,9 +1186,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 						case 25:
 							context$2$0.prev = 25;
-							context$2$0.t5 = context$2$0['catch'](12);
+							context$2$0.t1 = context$2$0['catch'](12);
 							_didIteratorError8 = true;
-							_iteratorError8 = context$2$0.t5;
+							_iteratorError8 = context$2$0.t1;
 	
 						case 29:
 							context$2$0.prev = 29;
@@ -1225,9 +1225,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 						case 42:
 							context$2$0.prev = 42;
-							context$2$0.t6 = context$2$0['catch'](4);
+							context$2$0.t2 = context$2$0['catch'](4);
 							_didIteratorError7 = true;
-							_iteratorError7 = context$2$0.t6;
+							_iteratorError7 = context$2$0.t2;
 	
 						case 46:
 							context$2$0.prev = 46;
@@ -1326,9 +1326,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 						case 17:
 							context$2$0.prev = 17;
-							context$2$0.t7 = context$2$0['catch'](4);
+							context$2$0.t3 = context$2$0['catch'](4);
 							_didIteratorError9 = true;
-							_iteratorError9 = context$2$0.t7;
+							_iteratorError9 = context$2$0.t3;
 	
 						case 21:
 							context$2$0.prev = 21;
@@ -1427,9 +1427,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 						case 17:
 							context$2$0.prev = 17;
-							context$2$0.t8 = context$2$0['catch'](4);
+							context$2$0.t4 = context$2$0['catch'](4);
 							_didIteratorError10 = true;
-							_iteratorError10 = context$2$0.t8;
+							_iteratorError10 = context$2$0.t4;
 	
 						case 21:
 							context$2$0.prev = 21;
@@ -1529,9 +1529,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 						case 17:
 							context$2$0.prev = 17;
-							context$2$0.t9 = context$2$0['catch'](4);
+							context$2$0.t5 = context$2$0['catch'](4);
 							_didIteratorError11 = true;
-							_iteratorError11 = context$2$0.t9;
+							_iteratorError11 = context$2$0.t5;
 	
 						case 21:
 							context$2$0.prev = 21;
@@ -1631,9 +1631,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 						case 17:
 							context$2$0.prev = 17;
-							context$2$0.t10 = context$2$0['catch'](4);
+							context$2$0.t6 = context$2$0['catch'](4);
 							_didIteratorError12 = true;
-							_iteratorError12 = context$2$0.t10;
+							_iteratorError12 = context$2$0.t6;
 	
 						case 21:
 							context$2$0.prev = 21;
@@ -1722,7 +1722,7 @@ return /******/ (function(modules) { // webpackBootstrap
 							return this.vertex(to);
 	
 						case 12:
-							return context$2$0.delegateYield(this[_options$_vertices$_edges$_reverseEdges$_sources$_sinks$_edgeCount$_listeners$_extractTwoArgs$_extractThreeArgs$_trigger$_verticesFrom$_verticesTo$_edgesFrom$_edgesTo$_verticesWithPathTo$_verticesWithPathFrom$_paths$_expectVertices$_expectVerticesAbsent$_expectEdges$_expectEdgesAbsent$_expectNoConnectedEdges._verticesWithPathFrom](to, done), 't11', 13);
+							return context$2$0.delegateYield(this[_options$_vertices$_edges$_reverseEdges$_sources$_sinks$_edgeCount$_listeners$_extractTwoArgs$_extractThreeArgs$_trigger$_verticesFrom$_verticesTo$_edgesFrom$_edgesTo$_verticesWithPathTo$_verticesWithPathFrom$_paths$_expectVertices$_expectVerticesAbsent$_expectEdges$_expectEdgesAbsent$_expectNoConnectedEdges._verticesWithPathFrom](to, done), 't7', 13);
 	
 						case 13:
 							_iteratorNormalCompletion13 = true;
@@ -1735,9 +1735,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 						case 18:
 							context$2$0.prev = 18;
-							context$2$0.t12 = context$2$0['catch'](3);
+							context$2$0.t8 = context$2$0['catch'](3);
 							_didIteratorError13 = true;
-							_iteratorError13 = context$2$0.t12;
+							_iteratorError13 = context$2$0.t8;
 	
 						case 22:
 							context$2$0.prev = 22;
@@ -1826,7 +1826,7 @@ return /******/ (function(modules) { // webpackBootstrap
 							return this.vertex(from);
 	
 						case 12:
-							return context$2$0.delegateYield(this[_options$_vertices$_edges$_reverseEdges$_sources$_sinks$_edgeCount$_listeners$_extractTwoArgs$_extractThreeArgs$_trigger$_verticesFrom$_verticesTo$_edgesFrom$_edgesTo$_verticesWithPathTo$_verticesWithPathFrom$_paths$_expectVertices$_expectVerticesAbsent$_expectEdges$_expectEdgesAbsent$_expectNoConnectedEdges._verticesWithPathTo](from, done), 't13', 13);
+							return context$2$0.delegateYield(this[_options$_vertices$_edges$_reverseEdges$_sources$_sinks$_edgeCount$_listeners$_extractTwoArgs$_extractThreeArgs$_trigger$_verticesFrom$_verticesTo$_edgesFrom$_edgesTo$_verticesWithPathTo$_verticesWithPathFrom$_paths$_expectVertices$_expectVerticesAbsent$_expectEdges$_expectEdgesAbsent$_expectNoConnectedEdges._verticesWithPathTo](from, done), 't9', 13);
 	
 						case 13:
 							_iteratorNormalCompletion14 = true;
@@ -1839,9 +1839,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 						case 18:
 							context$2$0.prev = 18;
-							context$2$0.t14 = context$2$0['catch'](3);
+							context$2$0.t10 = context$2$0['catch'](3);
 							_didIteratorError14 = true;
-							_iteratorError14 = context$2$0.t14;
+							_iteratorError14 = context$2$0.t10;
 	
 						case 22:
 							context$2$0.prev = 22;
@@ -1932,9 +1932,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 						case 17:
 							context$2$0.prev = 17;
-							context$2$0.t15 = context$2$0['catch'](4);
+							context$2$0.t11 = context$2$0['catch'](4);
 							_didIteratorError15 = true;
-							_iteratorError15 = context$2$0.t15;
+							_iteratorError15 = context$2$0.t11;
 	
 						case 21:
 							context$2$0.prev = 21;
@@ -2025,9 +2025,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 						case 17:
 							context$2$0.prev = 17;
-							context$2$0.t16 = context$2$0['catch'](4);
+							context$2$0.t12 = context$2$0['catch'](4);
 							_didIteratorError16 = true;
-							_iteratorError16 = context$2$0.t16;
+							_iteratorError16 = context$2$0.t12;
 	
 						case 21:
 							context$2$0.prev = 21;
@@ -2312,7 +2312,7 @@ return /******/ (function(modules) { // webpackBootstrap
 											}
 	
 											o = {};
-											return context$3$0.delegateYield(backtrack(w, o), 't17', 19);
+											return context$3$0.delegateYield(backtrack(w, o), 't13', 19);
 	
 										case 19:
 											out.found = out.found || o.found;
@@ -2361,7 +2361,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 							markedStack = [];
 							mark = new Set();
-							return context$2$0.delegateYield(backtrack(a), 't18', 16);
+							return context$2$0.delegateYield(backtrack(a), 't14', 16);
 	
 						case 16:
 							_iteratorNormalCompletion21 = true;
@@ -2374,9 +2374,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 						case 21:
 							context$2$0.prev = 21;
-							context$2$0.t19 = context$2$0['catch'](8);
+							context$2$0.t15 = context$2$0['catch'](8);
 							_didIteratorError21 = true;
-							_iteratorError21 = context$2$0.t19;
+							_iteratorError21 = context$2$0.t15;
 	
 						case 25:
 							context$2$0.prev = 25;
@@ -2511,7 +2511,7 @@ return /******/ (function(modules) { // webpackBootstrap
 												break;
 											}
 	
-											return context$3$0.delegateYield(pathsFromPrefix(next), 't20', 16);
+											return context$3$0.delegateYield(pathsFromPrefix(next), 't16', 16);
 	
 										case 16:
 											_iteratorNormalCompletion22 = true;
@@ -2524,9 +2524,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 										case 21:
 											context$3$0.prev = 21;
-											context$3$0.t21 = context$3$0['catch'](4);
+											context$3$0.t17 = context$3$0['catch'](4);
 											_didIteratorError22 = true;
-											_iteratorError22 = context$3$0.t21;
+											_iteratorError22 = context$3$0.t17;
 	
 										case 25:
 											context$3$0.prev = 25;
@@ -2565,7 +2565,7 @@ return /******/ (function(modules) { // webpackBootstrap
 							marked2$0 = [pathsFromPrefix].map(regeneratorRuntime.mark);
 							stack = [];
 							_this = this;
-							return context$2$0.delegateYield(pathsFromPrefix(from), 't22', 5);
+							return context$2$0.delegateYield(pathsFromPrefix(from), 't18', 5);
 	
 						case 5:
 						case 'end':

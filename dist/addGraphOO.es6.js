@@ -36,9 +36,10 @@ export default function addGraphOO(Graph) {
 				 * @classdesc A class for representing vertices in a `GraphOO` instance.
 				 */
 				let VertexSuperclass = this[_options].VertexSuperclass || Object;
+				let vertexSuperArguments = this[_options].vertexSuperArguments || ((...args)=>args);
 				this.Vertex = class Vertex extends VertexSuperclass {
 					constructor(key, value) {
-						super();
+						super(...vertexSuperArguments(key, value));
 						this[0] = key;
 						this[1] = value;
 						if (!thisGraph[_vertexObjects].has(key)) {
@@ -46,8 +47,8 @@ export default function addGraphOO(Graph) {
 							thisGraph.addNewVertex(key, value);
 						}
 					}
-					get length()           { return 2                                                }
-					[Symbol.iterator]()    {
+					get length() { return 2 }
+					[Symbol.iterator]() {
 						// overly verbose because jsdoc doesn't parse *[Symbol.iterator]() notation
 						function *iterator() { yield this[0]; yield this[1] }
 						return iterator.apply(this);
@@ -81,9 +82,10 @@ export default function addGraphOO(Graph) {
 				 * @classdesc A class for representing edges in a `GraphOO` instance.
 				 */
 				let EdgeSuperclass = this[_options].EdgeSuperclass || Object;
+				let edgeSuperArguments = this[_options].edgeSuperArguments || ((...args)=>args);
 				this.Edge = class Edge extends EdgeSuperclass {
 					constructor(from, to, value) {
-						super();
+						super(...edgeSuperArguments(from, to, value));
 						this[0] = [from, to];
 						this[1] =  value;
 						if (!thisGraph[_edgeObjects].has(from)) { thisGraph[_edgeObjects].set(from, new Map()) }
@@ -92,22 +94,22 @@ export default function addGraphOO(Graph) {
 							thisGraph.addNewEdge(from, to, value);
 						}
 					}
-					get length()         { return 2                                      }
-					[Symbol.iterator]()    {
+					get length() { return 2 }
+					[Symbol.iterator]() {
 						// overly verbose because jsdoc doesn't parse *[Symbol.iterator]() notation
 						function *iterator() { yield this[0]; yield this[1] }
 						return iterator.apply(this);
 					}
-					get graph()          { return thisGraph                              }
-					get key()            { return this[0]                                }
-					get from()           { return this[0][0]                             }
-					get to()             { return this[0][1]                             }
-					get value()          { return this[1]                                }
-					set value(value)     { return this.set(value)                        }
-					get source()         { return thisGraph.vertex(this.from)            }
-					get target()         { return thisGraph.vertex(this.to)              }
-					set(value)           { return thisGraph.setEdge(this.key, value)     }
-					remove()             { return thisGraph.removeExistingEdge(this.key) }
+					get graph()      { return thisGraph                              }
+					get key()        { return this[0]                                }
+					get from()       { return this[0][0]                             }
+					get to()         { return this[0][1]                             }
+					get value()      { return this[1]                                }
+					set value(value) { return this.set(value)                        }
+					get source()     { return thisGraph.vertex(this.from)            }
+					get target()     { return thisGraph.vertex(this.to)              }
+					set(value)       { return thisGraph.setEdge(this.key, value)     }
+					remove()         { return thisGraph.removeExistingEdge(this.key) }
 				};
 			}
 		}

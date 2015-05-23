@@ -60,7 +60,7 @@ export default class Graph {
 		this[_listeners] = new Map();
 
 		/* graph options */
-		this[_options] = {}; // TODO: document + test options
+		this[_options] = {};
 		for (let part of parts) {
 			if (!(part instanceof Array) && part instanceof Object) {
 				Object.assign(this[_options], part);
