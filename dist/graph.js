@@ -66,60 +66,85 @@ return /******/ (function(modules) { // webpackBootstrap
 	"use strict";
 	
 	Object.defineProperty(exports, "__esModule", {
-	  value: true
+		value: true
 	});
 	//  ////////////////////////////////////////////////////////////////////////////////////////////////
 	//  // Symbols for private members /////////////////////////////////////////////////////////////////
 	//  ////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	var _vertices = Symbol("vertices");
+	if (!window.__graphjs__private__) {
+		window.__graphjs__private__ = {};
+	}
+	
+	var _vertices = window.__graphjs__private__._vertices || Symbol("vertices");
 	exports._vertices = _vertices;
-	var _edges = Symbol("edges");
+	var _edges = window.__graphjs__private__._edges || Symbol("edges");
 	exports._edges = _edges;
-	var _reverseEdges = Symbol("reverse edges");
+	var _reverseEdges = window.__graphjs__private__._reverseEdges || Symbol("reverse edges");
 	exports._reverseEdges = _reverseEdges;
-	var _sources = Symbol("sources");
+	var _sources = window.__graphjs__private__._sources || Symbol("sources");
 	exports._sources = _sources;
-	var _sinks = Symbol("sinks");
+	var _sinks = window.__graphjs__private__._sinks || Symbol("sinks");
 	exports._sinks = _sinks;
-	var _edgeCount = Symbol("edge count");
-	
+	var _edgeCount = window.__graphjs__private__._edgeCount || Symbol("edge count");
 	exports._edgeCount = _edgeCount;
-	var _extractTwoArgs = Symbol("extract ([a, b]) or (a, b) arguments");
+	var _extractTwoArgs = window.__graphjs__private__._extractTwoArgs || Symbol("extract ([a, b]) or (a, b) arguments");
 	exports._extractTwoArgs = _extractTwoArgs;
-	var _extractThreeArgs = Symbol("extract ([[a, b], c]), ([a, b], c) or (a, b, c) arguments");
-	
+	var _extractThreeArgs = window.__graphjs__private__._extractThreeArgs || Symbol("extract ([[a, b], c]), ([a, b], c) or (a, b, c) arguments");
 	exports._extractThreeArgs = _extractThreeArgs;
-	var _listeners = Symbol("listeners");
+	var _listeners = window.__graphjs__private__._listeners || Symbol("listeners");
 	exports._listeners = _listeners;
-	var _trigger = Symbol("trigger");
-	
+	var _trigger = window.__graphjs__private__._trigger || Symbol("trigger");
 	exports._trigger = _trigger;
-	var _verticesFrom = Symbol("vertices from");
+	var _verticesFrom = window.__graphjs__private__._verticesFrom || Symbol("vertices from");
 	exports._verticesFrom = _verticesFrom;
-	var _verticesTo = Symbol("vertices to");
+	var _verticesTo = window.__graphjs__private__._verticesTo || Symbol("vertices to");
 	exports._verticesTo = _verticesTo;
-	var _edgesFrom = Symbol("edges from");
+	var _edgesFrom = window.__graphjs__private__._edgesFrom || Symbol("edges from");
 	exports._edgesFrom = _edgesFrom;
-	var _edgesTo = Symbol("edges to");
+	var _edgesTo = window.__graphjs__private__._edgesTo || Symbol("edges to");
 	exports._edgesTo = _edgesTo;
-	var _verticesWithPathTo = Symbol("vertices with path to");
+	var _verticesWithPathTo = window.__graphjs__private__._verticesWithPathTo || Symbol("vertices with path to");
 	exports._verticesWithPathTo = _verticesWithPathTo;
-	var _verticesWithPathFrom = Symbol("vertices with path from");
+	var _verticesWithPathFrom = window.__graphjs__private__._verticesWithPathFrom || Symbol("vertices with path from");
 	exports._verticesWithPathFrom = _verticesWithPathFrom;
-	var _paths = Symbol("paths");
-	
+	var _paths = window.__graphjs__private__._paths || Symbol("paths");
 	exports._paths = _paths;
-	var _expectVertices = Symbol("expect vertices");
+	var _expectVertices = window.__graphjs__private__._expectVertices || Symbol("expect vertices");
 	exports._expectVertices = _expectVertices;
-	var _expectVerticesAbsent = Symbol("expect vertex absent");
+	var _expectVerticesAbsent = window.__graphjs__private__._expectVerticesAbsent || Symbol("expect vertex absent");
 	exports._expectVerticesAbsent = _expectVerticesAbsent;
-	var _expectEdges = Symbol("expect edge");
+	var _expectEdges = window.__graphjs__private__._expectEdges || Symbol("expect edge");
 	exports._expectEdges = _expectEdges;
-	var _expectEdgesAbsent = Symbol("expect edge absent");
+	var _expectEdgesAbsent = window.__graphjs__private__._expectEdgesAbsent || Symbol("expect edge absent");
 	exports._expectEdgesAbsent = _expectEdgesAbsent;
-	var _expectNoConnectedEdges = Symbol("expect no connected edges");
+	var _expectNoConnectedEdges = window.__graphjs__private__._expectNoConnectedEdges || Symbol("expect no connected edges");
+	
 	exports._expectNoConnectedEdges = _expectNoConnectedEdges;
+	Object.assign(window.__graphjs__private__, {
+		_vertices: _vertices,
+		_edges: _edges,
+		_reverseEdges: _reverseEdges,
+		_sources: _sources,
+		_sinks: _sinks,
+		_edgeCount: _edgeCount,
+		_extractTwoArgs: _extractTwoArgs,
+		_extractThreeArgs: _extractThreeArgs,
+		_listeners: _listeners,
+		_trigger: _trigger,
+		_verticesFrom: _verticesFrom,
+		_verticesTo: _verticesTo,
+		_edgesFrom: _edgesFrom,
+		_edgesTo: _edgesTo,
+		_verticesWithPathTo: _verticesWithPathTo,
+		_verticesWithPathFrom: _verticesWithPathFrom,
+		_paths: _paths,
+		_expectVertices: _expectVertices,
+		_expectVerticesAbsent: _expectVerticesAbsent,
+		_expectEdges: _expectEdges,
+		_expectEdgesAbsent: _expectEdgesAbsent,
+		_expectNoConnectedEdges: _expectNoConnectedEdges
+	});
 
 /***/ },
 
