@@ -1,11 +1,11 @@
-import {any}                   from './helpers.es6.js';
-import {describeGraphClass}    from './graph-helpers.es6.js';
-import Graph                   from '../src/graph.es6.js';
-import addGraphOO              from '../src/addGraphOO.es6.js';
-import addTopologicalIteration from '../src/addTopologicalIteration.es6.js';
+import {any}                  from './helpers.es6.js';
+import {describeGraphClass}   from './graph-helpers.es6.js';
+import Graph                  from '../src/graph.es6.js';
+import addGraphOO             from '../src/addGraphOO.es6.js';
+import vertices_topologically from '../src/vertices_topologically.es6.js';
 
 let GraphOO = addGraphOO(Graph);
-addTopologicalIteration(Graph);
+Graph.plugin(vertices_topologically);
 
 describeGraphClass(GraphOO, () => {
 	describeMethod('vertices_topologically', () => {

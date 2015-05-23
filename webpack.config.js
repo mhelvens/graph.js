@@ -2,10 +2,10 @@ var webpack = require('webpack');
 module.exports = {
 	devtool: 'source-map',
 	entry: {
-		'graph':                   ['./src/graph.es6.js'],
-		'graph.full':              [ 'babel-core/polyfill.js', './src/graph.es6.js' ],
-		'addGraphOO':              ['./src/addGraphOO.es6.js'],
-		'addTopologicalIteration': ['./src/addTopologicalIteration.es6.js']
+		'graph':                  ['./src/graph.es6.js'],
+		'graph.full':             [ 'babel-core/polyfill.js', './src/graph.es6.js' ],
+		'addGraphOO':             ['./src/addGraphOO.es6.js'],
+		'vertices_topologically': ['./src/vertices_topologically.es6.js']
 	},
 	output: {
 		path: './dist',

@@ -94,7 +94,6 @@ API Documentation
 * [Graph](#Graph)
     * [new Graph(...parts)](#new_Graph_new)
     * <ins><b>instance</b></ins>
-    * [.vertices_topologically()](#Graph#vertices_topologically) ⇒ <code>[Iterator](#Iterator)</code>
     * [.on(event, handler)](#Graph#on)
     * [.off(event, handler)](#Graph#off)
     * [.addNewVertex(key, [value])](#Graph#addNewVertex)
@@ -159,7 +158,6 @@ API Documentation
     * [.GraphOO](#Graph.GraphOO) ⇐ <code>[Graph](#Graph)</code>
         * [.Vertex](#Graph.GraphOO#Vertex)
         * [.Edge](#Graph.GraphOO#Edge)
-        * [.vertices_topologically()](#Graph#vertices_topologically) ⇒ <code>[Iterator](#Iterator)</code>
         * [.on(event, handler)](#Graph#on)
         * [.off(event, handler)](#Graph#off)
         * [.addNewVertex(key, [value])](#Graph#addNewVertex)
@@ -235,6 +233,7 @@ API Documentation
         * [.cycle](#Graph.CycleError#cycle) : <code>Array.&lt;string&gt;</code>
     * [.BranchlessCycleError](#Graph.BranchlessCycleError) ⇐ <code>[CycleError](#Graph.CycleError)</code>
         * [.cycle](#Graph.CycleError#cycle) : <code>Array.&lt;string&gt;</code>
+    * [.plugin([name], method, [context])](#Graph.plugin)
 
 
 -----
@@ -275,29 +274,6 @@ var map = new Graph(
     ['Leiden',                { population: 122000 }], // vertex
     [['Amsterdam', 'Leiden'], { distance:   "40km" }]  // edge
 );
-```
-
------
-
-<a name="Graph#vertices_topologically"></a>
-#### *graph*.vertices_topologically() ⇒ <code>[Iterator](#Iterator)</code>
-Iterate over all vertices of the graph in topological order.
-
-**Returns**: <code>[Iterator](#Iterator)</code> - an ES6 iterator yielding vertices  
-**Example**  
-```JavaScript
-for (var it = graph.vertices_topologically(), kv; !(kv = it.next()).done;) {
-    var key   = kv.value[0],
-        value = kv.value[1];
-    // iterates over all vertices of the graph in topological order
-}
-```
-**Example**  
-```JavaScript
-// in ECMAScript 6, you can use a for..of loop
-for (let [key, value] of graph.vertices_topologically()) {
-    // iterates over all vertices of the graph in topological order
-}
 ```
 
 -----
@@ -1364,29 +1340,6 @@ A class for representing vertices in a `GraphOO` instance.
 ##### *graphOO*.Edge
 A class for representing edges in a `GraphOO` instance.
 
-
------
-
-<a name="Graph#vertices_topologically"></a>
-##### *graphOO*.vertices_topologically() ⇒ <code>[Iterator](#Iterator)</code>
-Iterate over all vertices of the graph in topological order.
-
-**Returns**: <code>[Iterator](#Iterator)</code> - an ES6 iterator yielding vertices  
-**Example**  
-```JavaScript
-for (var it = graph.vertices_topologically(), kv; !(kv = it.next()).done;) {
-    var key   = kv.value[0],
-        value = kv.value[1];
-    // iterates over all vertices of the graph in topological order
-}
-```
-**Example**  
-```JavaScript
-// in ECMAScript 6, you can use a for..of loop
-for (let [key, value] of graph.vertices_topologically()) {
-    // iterates over all vertices of the graph in topological order
-}
-```
 
 -----
 
@@ -2538,6 +2491,20 @@ This type of error is thrown when a graph is expected not to have a branch-less 
 <a name="Graph.CycleError#cycle"></a>
 ##### *branchlessCycleError*.cycle : <code>Array.&lt;string&gt;</code>
 the vertices involved in the cycle, in order but with an unspecified starting point
+
+
+-----
+
+<a name="Graph.plugin"></a>
+#### *Graph*.plugin([name], method, [context])
+Install a new instance method for the `Graph` class.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| [name] | <code>string</code> | the name of the new instance method; defaults to `method.name` |
+| method | <code>function</code> | a function taking a graph as its first argument |
+| [context] | <code>object</code> | an optional object to refer to when using `this` inside the given `method` |
 
 
 -----

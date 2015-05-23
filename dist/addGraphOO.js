@@ -60,7 +60,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 
-/***/ 9:
+/***/ 11:
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -72,10 +72,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	//  // Symbols for private members /////////////////////////////////////////////////////////////////
 	//  ////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	if (!window.__graphjs__private__) {
-		window.__graphjs__private__ = {};
-	}
+	window.__graphjs__private__ = window.__graphjs__private__ || {};
 	
+	var _options = window.__graphjs__private__._options || Symbol("options");
+	exports._options = _options;
 	var _vertices = window.__graphjs__private__._vertices || Symbol("vertices");
 	exports._vertices = _vertices;
 	var _edges = window.__graphjs__private__._edges || Symbol("edges");
@@ -122,6 +122,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	exports._expectNoConnectedEdges = _expectNoConnectedEdges;
 	Object.assign(window.__graphjs__private__, {
+		_options: _options,
 		_vertices: _vertices,
 		_edges: _edges,
 		_reverseEdges: _reverseEdges,
@@ -175,7 +176,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
 	
-	var _extractTwoArgs$_extractThreeArgs$_expectVertices$_expectVerticesAbsent$_expectEdges$_expectEdgesAbsent$_expectNoConnectedEdges = __webpack_require__(9);
+	var _options$_extractTwoArgs$_extractThreeArgs$_expectVertices$_expectVerticesAbsent$_expectEdges$_expectEdgesAbsent$_expectNoConnectedEdges = __webpack_require__(11);
 	
 	function addGraphOO(Graph) {
 	
@@ -218,21 +219,53 @@ return /******/ (function(modules) { // webpackBootstrap
 	       * @class Graph.GraphOO#Vertex
 	       * @classdesc A class for representing vertices in a `GraphOO` instance.
 	       */
-							_this2.Vertex = (function (_Array) {
+							var VertexSuperclass = _this2[_options$_extractTwoArgs$_extractThreeArgs$_expectVertices$_expectVerticesAbsent$_expectEdges$_expectEdgesAbsent$_expectNoConnectedEdges._options].VertexSuperclass || Object;
+							_this2.Vertex = (function (_VertexSuperclass) {
 								function Vertex(key, value) {
 									_classCallCheck(this, Vertex);
 	
-									_get(Object.getPrototypeOf(Vertex.prototype), "constructor", this).call(this, 2);
-									this.push(key, value);
+									_get(Object.getPrototypeOf(Vertex.prototype), "constructor", this).call(this);
+									this[0] = key;
+									this[1] = value;
 									if (!thisGraph[_vertexObjects].has(key)) {
 										thisGraph[_vertexObjects].set(key, this);
 										thisGraph.addNewVertex(key, value);
 									}
 								}
 	
-								_inherits(Vertex, _Array);
+								_inherits(Vertex, _VertexSuperclass);
 	
 								_createClass(Vertex, [{
+									key: "length",
+									get: function () {
+										return 2;
+									}
+								}, {
+									key: Symbol.iterator,
+									value: function () {
+										var marked6$0 = [iterator].map(regeneratorRuntime.mark);
+	
+										// overly verbose because jsdoc doesn't parse *[Symbol.iterator]() notation
+										function iterator() {
+											return regeneratorRuntime.wrap(function iterator$(context$7$0) {
+												while (1) switch (context$7$0.prev = context$7$0.next) {
+													case 0:
+														context$7$0.next = 2;
+														return this[0];
+	
+													case 2:
+														context$7$0.next = 4;
+														return this[1];
+	
+													case 4:
+													case "end":
+														return context$7$0.stop();
+												}
+											}, marked6$0[0], this);
+										}
+										return iterator.apply(this);
+									}
+								}, {
 									key: "graph",
 									get: function () {
 										return thisGraph;
@@ -343,18 +376,20 @@ return /******/ (function(modules) { // webpackBootstrap
 								}]);
 	
 								return Vertex;
-							})(Array);
+							})(VertexSuperclass);
 	
 							/**
 	       * @class Graph.GraphOO#Edge
 	       * @classdesc A class for representing edges in a `GraphOO` instance.
 	       */
-							_this2.Edge = (function (_Array2) {
+							var EdgeSuperclass = _this2[_options$_extractTwoArgs$_extractThreeArgs$_expectVertices$_expectVerticesAbsent$_expectEdges$_expectEdgesAbsent$_expectNoConnectedEdges._options].EdgeSuperclass || Object;
+							_this2.Edge = (function (_EdgeSuperclass) {
 								function Edge(from, to, value) {
 									_classCallCheck(this, Edge);
 	
-									_get(Object.getPrototypeOf(Edge.prototype), "constructor", this).call(this, 2);
-									this.push([from, to], value);
+									_get(Object.getPrototypeOf(Edge.prototype), "constructor", this).call(this);
+									this[0] = [from, to];
+									this[1] = value;
 									if (!thisGraph[_edgeObjects].has(from)) {
 										thisGraph[_edgeObjects].set(from, new Map());
 									}
@@ -364,9 +399,39 @@ return /******/ (function(modules) { // webpackBootstrap
 									}
 								}
 	
-								_inherits(Edge, _Array2);
+								_inherits(Edge, _EdgeSuperclass);
 	
 								_createClass(Edge, [{
+									key: "length",
+									get: function () {
+										return 2;
+									}
+								}, {
+									key: Symbol.iterator,
+									value: function () {
+										var marked6$0 = [iterator].map(regeneratorRuntime.mark);
+	
+										// overly verbose because jsdoc doesn't parse *[Symbol.iterator]() notation
+										function iterator() {
+											return regeneratorRuntime.wrap(function iterator$(context$7$0) {
+												while (1) switch (context$7$0.prev = context$7$0.next) {
+													case 0:
+														context$7$0.next = 2;
+														return this[0];
+	
+													case 2:
+														context$7$0.next = 4;
+														return this[1];
+	
+													case 4:
+													case "end":
+														return context$7$0.stop();
+												}
+											}, marked6$0[0], this);
+										}
+										return iterator.apply(this);
+									}
+								}, {
 									key: "graph",
 									get: function () {
 										return thisGraph;
@@ -417,7 +482,7 @@ return /******/ (function(modules) { // webpackBootstrap
 								}]);
 	
 								return Edge;
-							})(Array);
+							})(EdgeSuperclass);
 						})();
 					}
 				}
@@ -431,14 +496,14 @@ return /******/ (function(modules) { // webpackBootstrap
 				value: function addNewVertex(key, value) {
 					this[_init]();
 	
-					var _Graph$_extractTwoArgs = Graph[_extractTwoArgs$_extractThreeArgs$_expectVertices$_expectVerticesAbsent$_expectEdges$_expectEdgesAbsent$_expectNoConnectedEdges._extractTwoArgs](key, value);
+					var _Graph$_extractTwoArgs = Graph[_options$_extractTwoArgs$_extractThreeArgs$_expectVertices$_expectVerticesAbsent$_expectEdges$_expectEdgesAbsent$_expectNoConnectedEdges._extractTwoArgs](key, value);
 	
 					var _Graph$_extractTwoArgs2 = _slicedToArray(_Graph$_extractTwoArgs, 2);
 	
 					key = _Graph$_extractTwoArgs2[0];
 					value = _Graph$_extractTwoArgs2[1];
 	
-					this[_extractTwoArgs$_extractThreeArgs$_expectVertices$_expectVerticesAbsent$_expectEdges$_expectEdgesAbsent$_expectNoConnectedEdges._expectVerticesAbsent](key);
+					this[_options$_extractTwoArgs$_extractThreeArgs$_expectVertices$_expectVerticesAbsent$_expectEdges$_expectEdgesAbsent$_expectNoConnectedEdges._expectVerticesAbsent](key);
 					if (!this[_vertexObjects].has(key)) {
 						this[_vertexObjects].set(key, null);
 						this[_vertexObjects].set(key, new this.Vertex(key, value));
@@ -451,14 +516,14 @@ return /******/ (function(modules) { // webpackBootstrap
 				value: function setVertex(key, value) {
 					this[_init]();
 	
-					var _Graph$_extractTwoArgs3 = Graph[_extractTwoArgs$_extractThreeArgs$_expectVertices$_expectVerticesAbsent$_expectEdges$_expectEdgesAbsent$_expectNoConnectedEdges._extractTwoArgs](key, value);
+					var _Graph$_extractTwoArgs3 = Graph[_options$_extractTwoArgs$_extractThreeArgs$_expectVertices$_expectVerticesAbsent$_expectEdges$_expectEdgesAbsent$_expectNoConnectedEdges._extractTwoArgs](key, value);
 	
 					var _Graph$_extractTwoArgs32 = _slicedToArray(_Graph$_extractTwoArgs3, 2);
 	
 					key = _Graph$_extractTwoArgs32[0];
 					value = _Graph$_extractTwoArgs32[1];
 	
-					this[_extractTwoArgs$_extractThreeArgs$_expectVertices$_expectVerticesAbsent$_expectEdges$_expectEdgesAbsent$_expectNoConnectedEdges._expectVertices](key);
+					this[_options$_extractTwoArgs$_extractThreeArgs$_expectVertices$_expectVerticesAbsent$_expectEdges$_expectEdgesAbsent$_expectNoConnectedEdges._expectVertices](key);
 					this[_vertexObjects].get(key)[1] = value;
 					return _get(Object.getPrototypeOf(GraphOO.prototype), "setVertex", this).call(this, key, value);
 				}
@@ -466,8 +531,8 @@ return /******/ (function(modules) { // webpackBootstrap
 				key: "removeExistingVertex",
 				value: function removeExistingVertex(key) {
 					this[_init]();
-					this[_extractTwoArgs$_extractThreeArgs$_expectVertices$_expectVerticesAbsent$_expectEdges$_expectEdgesAbsent$_expectNoConnectedEdges._expectVertices](key);
-					this[_extractTwoArgs$_extractThreeArgs$_expectVertices$_expectVerticesAbsent$_expectEdges$_expectEdgesAbsent$_expectNoConnectedEdges._expectNoConnectedEdges](key);
+					this[_options$_extractTwoArgs$_extractThreeArgs$_expectVertices$_expectVerticesAbsent$_expectEdges$_expectEdgesAbsent$_expectNoConnectedEdges._expectVertices](key);
+					this[_options$_extractTwoArgs$_extractThreeArgs$_expectVertices$_expectVerticesAbsent$_expectEdges$_expectEdgesAbsent$_expectNoConnectedEdges._expectNoConnectedEdges](key);
 					this[_vertexObjects]["delete"](key);
 					return _get(Object.getPrototypeOf(GraphOO.prototype), "removeExistingVertex", this).call(this, key);
 				}
@@ -475,7 +540,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				key: "vertex",
 				value: function vertex(key) {
 					this[_init]();
-					this[_extractTwoArgs$_extractThreeArgs$_expectVertices$_expectVerticesAbsent$_expectEdges$_expectEdgesAbsent$_expectNoConnectedEdges._expectVertices](key);
+					this[_options$_extractTwoArgs$_extractThreeArgs$_expectVertices$_expectVerticesAbsent$_expectEdges$_expectEdgesAbsent$_expectNoConnectedEdges._expectVertices](key);
 					return this[_vertexObjects].get(key);
 				}
 			}, {
@@ -483,7 +548,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				value: function addNewEdge(from, to, value) {
 					this[_init]();
 	
-					var _Graph$_extractThreeArgs = Graph[_extractTwoArgs$_extractThreeArgs$_expectVertices$_expectVerticesAbsent$_expectEdges$_expectEdgesAbsent$_expectNoConnectedEdges._extractThreeArgs](from, to, value);
+					var _Graph$_extractThreeArgs = Graph[_options$_extractTwoArgs$_extractThreeArgs$_expectVertices$_expectVerticesAbsent$_expectEdges$_expectEdgesAbsent$_expectNoConnectedEdges._extractThreeArgs](from, to, value);
 	
 					var _Graph$_extractThreeArgs2 = _slicedToArray(_Graph$_extractThreeArgs, 3);
 	
@@ -491,8 +556,8 @@ return /******/ (function(modules) { // webpackBootstrap
 					to = _Graph$_extractThreeArgs2[1];
 					value = _Graph$_extractThreeArgs2[2];
 	
-					this[_extractTwoArgs$_extractThreeArgs$_expectVertices$_expectVerticesAbsent$_expectEdges$_expectEdgesAbsent$_expectNoConnectedEdges._expectEdgesAbsent]([from, to]);
-					this[_extractTwoArgs$_extractThreeArgs$_expectVertices$_expectVerticesAbsent$_expectEdges$_expectEdgesAbsent$_expectNoConnectedEdges._expectVertices](from, to);
+					this[_options$_extractTwoArgs$_extractThreeArgs$_expectVertices$_expectVerticesAbsent$_expectEdges$_expectEdgesAbsent$_expectNoConnectedEdges._expectEdgesAbsent]([from, to]);
+					this[_options$_extractTwoArgs$_extractThreeArgs$_expectVertices$_expectVerticesAbsent$_expectEdges$_expectEdgesAbsent$_expectNoConnectedEdges._expectVertices](from, to);
 					if (!this[_edgeObjects].get(from).has(to)) {
 						this[_edgeObjects].get(from).set(to, null);
 						this[_edgeObjects].get(from).set(to, new this.Edge(from, to, value));
@@ -504,7 +569,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				value: function setEdge(from, to, value) {
 					this[_init]();
 	
-					var _Graph$_extractThreeArgs3 = Graph[_extractTwoArgs$_extractThreeArgs$_expectVertices$_expectVerticesAbsent$_expectEdges$_expectEdgesAbsent$_expectNoConnectedEdges._extractThreeArgs](from, to, value);
+					var _Graph$_extractThreeArgs3 = Graph[_options$_extractTwoArgs$_extractThreeArgs$_expectVertices$_expectVerticesAbsent$_expectEdges$_expectEdgesAbsent$_expectNoConnectedEdges._extractThreeArgs](from, to, value);
 	
 					var _Graph$_extractThreeArgs32 = _slicedToArray(_Graph$_extractThreeArgs3, 3);
 	
@@ -512,7 +577,7 @@ return /******/ (function(modules) { // webpackBootstrap
 					to = _Graph$_extractThreeArgs32[1];
 					value = _Graph$_extractThreeArgs32[2];
 	
-					this[_extractTwoArgs$_extractThreeArgs$_expectVertices$_expectVerticesAbsent$_expectEdges$_expectEdgesAbsent$_expectNoConnectedEdges._expectEdges]([from, to]);
+					this[_options$_extractTwoArgs$_extractThreeArgs$_expectVertices$_expectVerticesAbsent$_expectEdges$_expectEdgesAbsent$_expectNoConnectedEdges._expectEdges]([from, to]);
 					this[_edgeObjects].get(from).get(to)[1] = value;
 					return _get(Object.getPrototypeOf(GraphOO.prototype), "setEdge", this).call(this, from, to, value);
 				}
@@ -521,14 +586,14 @@ return /******/ (function(modules) { // webpackBootstrap
 				value: function removeExistingEdge(from, to) {
 					this[_init]();
 	
-					var _Graph$_extractTwoArgs4 = Graph[_extractTwoArgs$_extractThreeArgs$_expectVertices$_expectVerticesAbsent$_expectEdges$_expectEdgesAbsent$_expectNoConnectedEdges._extractTwoArgs](from, to);
+					var _Graph$_extractTwoArgs4 = Graph[_options$_extractTwoArgs$_extractThreeArgs$_expectVertices$_expectVerticesAbsent$_expectEdges$_expectEdgesAbsent$_expectNoConnectedEdges._extractTwoArgs](from, to);
 	
 					var _Graph$_extractTwoArgs42 = _slicedToArray(_Graph$_extractTwoArgs4, 2);
 	
 					from = _Graph$_extractTwoArgs42[0];
 					to = _Graph$_extractTwoArgs42[1];
 	
-					this[_extractTwoArgs$_extractThreeArgs$_expectVertices$_expectVerticesAbsent$_expectEdges$_expectEdgesAbsent$_expectNoConnectedEdges._expectEdges]([from, to]);
+					this[_options$_extractTwoArgs$_extractThreeArgs$_expectVertices$_expectVerticesAbsent$_expectEdges$_expectEdgesAbsent$_expectNoConnectedEdges._expectEdges]([from, to]);
 					this[_edgeObjects].get(from)["delete"](to);
 					return _get(Object.getPrototypeOf(GraphOO.prototype), "removeExistingEdge", this).call(this, from, to);
 				}
@@ -537,14 +602,14 @@ return /******/ (function(modules) { // webpackBootstrap
 				value: function edge(from, to) {
 					this[_init]();
 	
-					var _Graph$_extractTwoArgs5 = Graph[_extractTwoArgs$_extractThreeArgs$_expectVertices$_expectVerticesAbsent$_expectEdges$_expectEdgesAbsent$_expectNoConnectedEdges._extractTwoArgs](from, to);
+					var _Graph$_extractTwoArgs5 = Graph[_options$_extractTwoArgs$_extractThreeArgs$_expectVertices$_expectVerticesAbsent$_expectEdges$_expectEdgesAbsent$_expectNoConnectedEdges._extractTwoArgs](from, to);
 	
 					var _Graph$_extractTwoArgs52 = _slicedToArray(_Graph$_extractTwoArgs5, 2);
 	
 					from = _Graph$_extractTwoArgs52[0];
 					to = _Graph$_extractTwoArgs52[1];
 	
-					this[_extractTwoArgs$_extractThreeArgs$_expectVertices$_expectVerticesAbsent$_expectEdges$_expectEdgesAbsent$_expectNoConnectedEdges._expectEdges]([from, to]);
+					this[_options$_extractTwoArgs$_extractThreeArgs$_expectVertices$_expectVerticesAbsent$_expectEdges$_expectEdgesAbsent$_expectNoConnectedEdges._expectEdges]([from, to]);
 					return this[_edgeObjects].get(from).get(to);
 				}
 			}]);

@@ -41,13 +41,22 @@ specs(GraphOO, () => {
 			});
 
 			it("can (almost) stand in for the [key, value] vertex representation", () => {
-				expect(vertex).toEqual(any(Array));
+				expect(vertex.length).toEqual(2);
 				expect(vertex[0]).toEqual('k3');
 				expect(vertex[1]).toEqual("newK3Value");
 				let [key, value] = vertex;
 				expect(key).toEqual('k3');
 				expect(value).toEqual("newK3Value");
-				// expect(Array.isArray(vertex)).toBeTruthy(); // nope, sorry...
+				// expect(vertex).toBe(any(Array));            // nope
+				// expect(Array.isArray(vertex)).toBeTruthy(); // nope
+			});
+
+			it("can have a custom superclass given through a graph option", () => {
+				class VertexSuper {  get foo() { return "bar" }  }
+				graph = new GraphOO(['n1'], { VertexSuperclass: VertexSuper });
+				vertex = graph.vertex('n1');
+				expect(vertex).toEqual(any(VertexSuper));
+				expect(vertex.foo).toEqual("bar");
 			});
 		});
 
@@ -701,7 +710,7 @@ specs(GraphOO, () => {
 			});
 
 			it("can (almost) stand in for the [[from, to], value] vertex representation", () => {
-				expect(edge).toEqual(any(Array));
+				expect(edge.length).toEqual(2);
 				expect(edge[0]).toEqual(['k2', 'k3']);
 				expect(edge[0][0]).toEqual('k2');
 				expect(edge[0][1]).toEqual('k3');
@@ -710,7 +719,16 @@ specs(GraphOO, () => {
 				expect(from).toEqual('k2');
 				expect(to).toEqual('k3');
 				expect(value).toEqual("oldValue23");
-				// expect(Array.isArray(vertex)).toBeTruthy(); // nope, sorry...
+				// expect(edge).toBe(any(Array));            // nope
+				// expect(Array.isArray(edge)).toBeTruthy(); // nope
+			});
+
+			it("can have a custom superclass given through a graph option", () => {
+				class EdgeSuper {  get foo() { return "bar" }  }
+				graph = new GraphOO([['n1', 'n2']], { EdgeSuperclass: EdgeSuper });
+				edge = graph.edge('n1', 'n2');
+				expect(edge).toEqual(any(EdgeSuper));
+				expect(edge.foo).toEqual("bar");
 			});
 		});
 
@@ -764,7 +782,7 @@ specs(GraphOO, () => {
 	describeMethod('vertex', () => {
 		it("returns a graph.Vertex instance", () => {
 			let vertex = callItWith('k1');
-			expect(vertex).toEqual(any(Array));
+			expect(vertex).toEqual(any(graph.Vertex));
 			expect(vertex.key)  .toEqual('k1');
 			expect(vertex.value).toEqual("oldValue1");
 		});
@@ -774,7 +792,7 @@ specs(GraphOO, () => {
 	describeMethod('edge', () => {
 		it("returns a graph.Edge instance", () => {
 			let edge = callItWith('k2', 'k3');
-			expect(edge).toEqual(any(Array));
+			expect(edge).toEqual(any(graph.Edge));
 			expect(edge.key)  .toEqual(['k2', 'k3']);
 			expect(edge.value).toEqual("oldValue23");
 		});
@@ -789,8 +807,7 @@ specs(GraphOO, () => {
 		['verticesWithPathFrom',   ['k2']],
 		['verticesWithPathTo',     ['k4']],
 		['sources',                []    ],
-		['sinks',                  []    ],
-		//['vertices_topologically', []    ]
+		['sinks',                  []    ]
 	]) {
 		describeMethod(method, () => {
 			it("yields graph.Vertex instances", () => {

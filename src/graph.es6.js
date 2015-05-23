@@ -1,4 +1,5 @@
 import {
+	_options,
 	_vertices, _edges, _reverseEdges, _sources, _sinks, _edgeCount, _listeners,
 	_extractTwoArgs, _extractThreeArgs, _trigger,
 	_verticesFrom, _verticesTo, _edgesFrom, _edgesTo,
@@ -58,12 +59,23 @@ export default class Graph {
 		/* listeners */
 		this[_listeners] = new Map();
 
+		/* graph options */
+		this[_options] = {};
+		for (let part of parts) {
+			if (!(part instanceof Array) && part instanceof Object) {
+				Object.assign(this[_options], part);
+			}
+		}
+
 		/* add vertices and values from constructor arguments */
-		for (let [key, value] of parts) {
-			if (Array.isArray(key)) {/////////////// an edge
-				this.createEdge(key, value);
-			} else {//////////////////////////////// a vertex
-				this.addVertex(key, value);
+		for (let part of parts) {
+			if (part instanceof Array) {
+				let [key, value] = part;
+				if (Array.isArray(key)) {/////////////// an edge
+					this.createEdge(key, value);
+				} else {//////////////////////////////// a vertex
+					this.addVertex(key, value);
+				}
 			}
 		}
 	}
@@ -80,6 +92,39 @@ export default class Graph {
 		if (Array.isArray(a)) { [a, b, c] = [...a, b] }
 		if (Array.isArray(a)) { [a, b, c] = [...a, b] }
 		return [a, b, c];
+	}
+
+	////////////////////////////
+	////////// Mixins //////////
+	////////////////////////////
+
+	/**
+	 * Install a new instance method for the `Graph` class.
+	 * @static
+	 * @param [name]    {string  } the name of the new instance method; defaults to `method.name`
+	 * @param method    {function} a function taking a graph as its first argument
+	 * @param [context] {object  } an optional object to refer to when using `this` inside the given `method`
+	 */
+	static plugin(name, method, context) {
+		if (typeof name === 'function' && typeof name.name === 'string') {
+			[name, method, context] = [name.name, name, method];
+		}
+		if (typeof name === 'string') {
+			if (typeof method === 'function') {
+				Object.assign(this.prototype, {
+					[name](...args) {
+						return method.apply(context, [this, ...args]);
+					}
+				});
+			} else {
+				this.prototype[name] = method; // document ability to add non-function values
+			}
+		} else {
+			let [obj, context] = [name, method];
+			for (let name of Object.keys(obj)) {
+				this.plugin(name, obj[name], context || obj);
+			}
+		}
 	}
 
 	/////////////////////////////////////

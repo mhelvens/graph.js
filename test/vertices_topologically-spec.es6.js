@@ -1,9 +1,9 @@
 import {any, set, describeClass, cycleArrays} from './helpers.es6.js';
 import {describeGraphClass}                   from './graph-helpers.es6.js';
 import Graph                                  from '../src/graph.es6.js';
-import addTopologicalIteration                from '../src/addTopologicalIteration.es6.js';
+import vertices_topologically                 from '../src/vertices_topologically.es6.js';
 
-addTopologicalIteration(Graph);
+Graph.plugin(vertices_topologically);
 
 describeGraphClass(Graph, () => {
 	describeMethod('vertices_topologically', () => {

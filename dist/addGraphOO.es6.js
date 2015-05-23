@@ -1,4 +1,5 @@
 import {
+	_options,
 	_extractTwoArgs, _extractThreeArgs,
 	_expectVertices, _expectVerticesAbsent, _expectEdges, _expectEdgesAbsent,_expectNoConnectedEdges
 } from './private.es6.js';
@@ -34,63 +35,79 @@ export default function addGraphOO(Graph) {
 				 * @class Graph.GraphOO#Vertex
 				 * @classdesc A class for representing vertices in a `GraphOO` instance.
 				 */
-				this.Vertex = class Vertex extends Array {
+				let VertexSuperclass = this[_options].VertexSuperclass || Object;
+				this.Vertex = class Vertex extends VertexSuperclass {
 					constructor(key, value) {
-						super(2);
-						this.push(key, value);
+						super();
+						this[0] = key;
+						this[1] = value;
 						if (!thisGraph[_vertexObjects].has(key)) {
 							thisGraph[_vertexObjects].set(key, this);
 							thisGraph.addNewVertex(key, value);
 						}
 					}
-					get graph()            { return thisGraph                                 }
-					get key()              { return this[0]                                   }
-					get value()            { return this[1]                                   }
-					set value(value)       { return this.set(value)                           }
-					set(value)             { return thisGraph.setVertex     (this.key, value) }
-					remove()               { return thisGraph.removeExistingVertex (this.key) }
-					destroy()              { return thisGraph.destroyExistingVertex(this.key) }
-					verticesFrom()         { return thisGraph.verticesFrom         (this.key) }
-					verticesTo()           { return thisGraph.verticesTo           (this.key) }
-					edgesFrom()            { return thisGraph.edgesFrom            (this.key) }
-					edgesTo()              { return thisGraph.edgesTo              (this.key) }
-					verticesWithPathFrom() { return thisGraph.verticesWithPathFrom (this.key) }
-					verticesWithPathTo()   { return thisGraph.verticesWithPathTo   (this.key) }
-					pathTo(to)             { return thisGraph.path   (this.key, to)           }
-					pathFrom(from)         { return thisGraph.path   (from, this.key)         }
-					pathsTo(to)            { return thisGraph.paths  (this.key, to)           }
-					pathsFrom(from)        { return thisGraph.paths  (from, this.key)         }
-					hasPathTo(to)          { return thisGraph.hasPath(this.key, to)           }
-					hasPathFrom(from)      { return thisGraph.hasPath(from, this.key)         }
-					outDegree()            { return thisGraph.outDegree(this.key)             }
-					inDegree ()            { return thisGraph.inDegree (this.key)             }
-					degree   ()            { return thisGraph.degree   (this.key)             }
+					get length()           { return 2                                                }
+					[Symbol.iterator]()    {
+						// overly verbose because jsdoc doesn't parse *[Symbol.iterator]() notation
+						function *iterator() { yield this[0]; yield this[1] }
+						return iterator.apply(this);
+					}
+					get graph()            { return thisGraph                                        }
+					get key()              { return this[0]                                          }
+					get value()            { return this[1]                                          }
+					set value(value)       { return this.set(value)                                  }
+					set(value)             { return thisGraph.setVertex            (this.key, value) }
+					remove()               { return thisGraph.removeExistingVertex (this.key)        }
+					destroy()              { return thisGraph.destroyExistingVertex(this.key)        }
+					verticesFrom()         { return thisGraph.verticesFrom         (this.key)        }
+					verticesTo()           { return thisGraph.verticesTo           (this.key)        }
+					edgesFrom()            { return thisGraph.edgesFrom            (this.key)        }
+					edgesTo()              { return thisGraph.edgesTo              (this.key)        }
+					verticesWithPathFrom() { return thisGraph.verticesWithPathFrom (this.key)        }
+					verticesWithPathTo()   { return thisGraph.verticesWithPathTo   (this.key)        }
+					pathTo(to)             { return thisGraph.path                 (this.key, to)    }
+					pathFrom(from)         { return thisGraph.path           (from, this.key)        }
+					pathsTo(to)            { return thisGraph.paths                (this.key, to)    }
+					pathsFrom(from)        { return thisGraph.paths          (from, this.key)        }
+					hasPathTo(to)          { return thisGraph.hasPath              (this.key, to)    }
+					hasPathFrom(from)      { return thisGraph.hasPath        (from, this.key)        }
+					outDegree()            { return thisGraph.outDegree            (this.key)        }
+					inDegree ()            { return thisGraph.inDegree             (this.key)        }
+					degree   ()            { return thisGraph.degree               (this.key)        }
 				};
 
 				/**
 				 * @class Graph.GraphOO#Edge
 				 * @classdesc A class for representing edges in a `GraphOO` instance.
 				 */
-				this.Edge = class Edge extends Array {
+				let EdgeSuperclass = this[_options].EdgeSuperclass || Object;
+				this.Edge = class Edge extends EdgeSuperclass {
 					constructor(from, to, value) {
-						super(2);
-						this.push([from, to], value);
+						super();
+						this[0] = [from, to];
+						this[1] =  value;
 						if (!thisGraph[_edgeObjects].has(from)) { thisGraph[_edgeObjects].set(from, new Map()) }
 						if (!thisGraph[_edgeObjects].get(from).has(to)) {
 							thisGraph[_edgeObjects].get(from).set(to, this);
 							thisGraph.addNewEdge(from, to, value);
 						}
 					}
-					get graph()      { return thisGraph                              }
-					get key()        { return this[0]                                }
-					get from()       { return this[0][0]                             }
-					get to()         { return this[0][1]                             }
-					get value()      { return this[1]                                }
-					set value(value) { return this.set(value)                        }
-					get source()     { return thisGraph.vertex(this.from)            }
-					get target()     { return thisGraph.vertex(this.to)              }
-					set(value)       { return thisGraph.setEdge(this.key, value)     }
-					remove()         { return thisGraph.removeExistingEdge(this.key) }
+					get length()         { return 2                                      }
+					[Symbol.iterator]()    {
+						// overly verbose because jsdoc doesn't parse *[Symbol.iterator]() notation
+						function *iterator() { yield this[0]; yield this[1] }
+						return iterator.apply(this);
+					}
+					get graph()          { return thisGraph                              }
+					get key()            { return this[0]                                }
+					get from()           { return this[0][0]                             }
+					get to()             { return this[0][1]                             }
+					get value()          { return this[1]                                }
+					set value(value)     { return this.set(value)                        }
+					get source()         { return thisGraph.vertex(this.from)            }
+					get target()         { return thisGraph.vertex(this.to)              }
+					set(value)           { return thisGraph.setEdge(this.key, value)     }
+					remove()             { return thisGraph.removeExistingEdge(this.key) }
 				};
 			}
 		}

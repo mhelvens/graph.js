@@ -2,8 +2,9 @@
 //  // Symbols for private members /////////////////////////////////////////////////////////////////
 //  ////////////////////////////////////////////////////////////////////////////////////////////////
 
-if (!window.__graphjs__private__) { window.__graphjs__private__ = {} }
+window.__graphjs__private__ = window.__graphjs__private__ || {};
 
+export const _options                = window.__graphjs__private__._options                || Symbol("options");
 export const _vertices               = window.__graphjs__private__._vertices               || Symbol("vertices");
 export const _edges                  = window.__graphjs__private__._edges                  || Symbol("edges");
 export const _reverseEdges           = window.__graphjs__private__._reverseEdges           || Symbol("reverse edges");
@@ -28,6 +29,7 @@ export const _expectEdgesAbsent      = window.__graphjs__private__._expectEdgesA
 export const _expectNoConnectedEdges = window.__graphjs__private__._expectNoConnectedEdges || Symbol("expect no connected edges");
 
 Object.assign(window.__graphjs__private__, {
+	_options,
 	_vertices,
 	_edges,
 	_reverseEdges,

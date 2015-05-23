@@ -34,6 +34,21 @@ export default function specs(GraphClass, additionalTests=(()=>{})) {
 				)).toEqual(graph);
 			});
 
+			it("can also be used to add options objects", () => {
+				expect(new GraphClass(
+					['k1', "oldValue1"],
+					['k2'             ],
+					['k3'             ],
+					['k4',            ],
+					['k5', "oldValue5"],
+					[['k2', 'k3'], "oldValue23"],
+					[['k3', 'k4']              ],
+					[['k2', 'k5']              ],
+					[['k5', 'k3']              ],
+					{ option1: "something", option2: "something else" }
+				)).toEqual(graph);
+			});
+
 		});
 
 
@@ -51,6 +66,57 @@ export default function specs(GraphClass, additionalTests=(()=>{})) {
 				expect(graph.edgeCount()).toBe(0);
 				for (let vertex of graph.edges()) { expect().not.toBeReachable() }
 				expect().toBeReachable();
+			});
+
+		});
+
+
+		// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
+
+
+		describe("static 'plugin' method", () => {
+
+			it("is present", () => {
+				expect(GraphClass.plugin).toEqual(any(Function));
+			});
+
+			it("can add a graph-taking function as an eponymous graph method", () => {
+				function surroundVertexCount(g, before, after) {
+					return `${before}${g.vertexCount()}${after}`;
+				}
+				expect(surroundVertexCount(graph, "(", ")")).toEqual("(5)");
+				GraphClass.plugin(surroundVertexCount);
+				expect(graph.surroundVertexCount("(", ")")).toEqual("(5)");
+			});
+
+			it("can add a graph-taking function as a graph method with a custom name", () => {
+				function surroundVertexCount(g, before, after) {
+					return `${before}${g.vertexCount()}${after}`;
+				}
+				expect(surroundVertexCount(graph, "(", ")")).toEqual("(5)");
+				GraphClass.plugin('svCount', surroundVertexCount);
+				expect(graph.svCount("(", ")")).toEqual("(5)");
+			});
+
+			it("can add a bunch of graph-taking functions as graph methods", () => {
+				let newMethods = {
+					surroundVertexCount(g, before, after) {
+						return `${before}${g.vertexCount()}${after}`;
+					},
+					surroundEdgeCount(g, before, after) {
+						return `${before}${g.edgeCount()}${after}`;
+					}
+				};
+				expect(newMethods.surroundVertexCount(graph, "(", ")")).toEqual("(5)");
+				expect(newMethods.surroundEdgeCount  (graph, "(", ")")).toEqual("(4)");
+				GraphClass.plugin(newMethods);
+				expect(graph.surroundVertexCount("(", ")")).toEqual("(5)");
+				expect(graph.surroundEdgeCount  ("(", ")")).toEqual("(4)");
+			});
+
+			it("can add any non-function value as a Graph prototype field method with a custom name", () => {
+				GraphClass.plugin('foo', "bar");
+				expect(graph.foo).toEqual("bar");
 			});
 
 		});
@@ -135,11 +201,23 @@ export default function specs(GraphClass, additionalTests=(()=>{})) {
 			it_throwsErrorIfVertexDoesNotExist();
 
 			it("returns the proper key/value pair belonging to a vertex", () => {
-				expectItWhenCalledWith('k1').toEqual(['k1', 'oldValue1']);
+				let vertex = callItWith('k1');
+				expect(vertex.length).toEqual(2);
+				expect(vertex[0]).toEqual('k1');
+				expect(vertex[1]).toEqual("oldValue1");
+				let [key, value] = vertex;
+				expect(key)  .toEqual('k1');
+				expect(value).toEqual("oldValue1");
 			});
 
 			it("returns a key/value pair with an 'undefined' value for vertices with no value", () => {
-				expectItWhenCalledWith('k2').toEqual(['k2',  undefined ]);
+				let vertex = callItWith('k2');
+				expect(vertex.length).toEqual(2);
+				expect(vertex[0]).toEqual('k2');
+				expect(vertex[1]).toEqual(undefined);
+				let [key, value] = vertex;
+				expect(key)  .toEqual('k2');
+				expect(value).toEqual(undefined);
 			});
 
 		});
@@ -171,11 +249,25 @@ export default function specs(GraphClass, additionalTests=(()=>{})) {
 			it_throwsErrorIfEdgeDoesNotExist();
 
 			it("returns the proper key/value pair belonging to an edge", () => {
-				expectItWhenCalledWith('k2', 'k3').toEqual([['k2', 'k3'], 'oldValue23']);
+				let edge = callItWith('k2', 'k3');
+				expect(edge.length).toEqual(2);
+				expect(edge[0]).toEqual(['k2', 'k3']);
+				expect(edge[1]).toEqual("oldValue23");
+				let [[from, to], value] = edge;
+				expect(from) .toEqual('k2');
+				expect(to)   .toEqual('k3');
+				expect(value).toEqual("oldValue23");
 			});
 
 			it("returns a key/value pair with an 'undefined' value for edges with no value", () => {
-				expectItWhenCalledWith('k3', 'k4').toEqual([['k3', 'k4'],  undefined  ]);
+				let edge = callItWith('k3', 'k4');
+				expect(edge.length).toEqual(2);
+				expect(edge[0]).toEqual(['k3', 'k4']);
+				expect(edge[1]).toEqual(undefined);
+				let [[from, to], value] = edge;
+				expect(from) .toEqual('k3');
+				expect(to)   .toEqual('k4');
+				expect(value).toEqual(undefined);
 			});
 
 		});
