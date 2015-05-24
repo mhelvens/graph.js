@@ -1268,7 +1268,10 @@ export default class Graph {
 	 *                  true if and only if that vertex should be a nexus.
 	 * @throws {Graph.BranchlessCycleError} if the graph contains a cycle with no branches or nexuses
 	 */
-	contractPaths(isNexus=(()=>false)) {
+	contractPaths({ isNexus } = {}) {
+		/* defaults */
+		if (!isNexus) { isNexus=(()=>false) }
+
 
 		/* what makes a a vertex a nexus (start/end-point) */
 		let nexuses = new Set(

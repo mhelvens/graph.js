@@ -2000,7 +2000,9 @@ export default function specs(GraphClass, additionalTests=(()=>{})) {
 					[['n5', 'n6'], "n5,n6"],
 					[['n6', 'n7'], "n6,n7"]
 				);
-				callItWith((key) => (key === 'n3' || key === 'n5'));
+				callItWith({
+					isNexus: (key) => (key === 'n3' || key === 'n5')
+				});
 				expect(graph).toEqual(new GraphClass(
 					[['n1', 'n3'], new GraphClass(
 						[['n1', 'n2'], "n1,n2"],
@@ -2026,7 +2028,9 @@ export default function specs(GraphClass, additionalTests=(()=>{})) {
 					[['n5', 'n6'], "n5,n6"],
 					[['n6', 'n7'], "n6,n7"]
 				);
-				callItWith(() => true);
+				callItWith({
+					isNexus: () => true
+				});
 				expect(graph).toEqual(new GraphClass(
 					[['n1', 'n2'], new GraphClass(
 						[['n1', 'n2'], "n1,n2"]
@@ -2188,7 +2192,9 @@ export default function specs(GraphClass, additionalTests=(()=>{})) {
 					[['n3', 'n4'], "n3,n4"],
 					[['n4', 'n1'], "n4,n1"]
 				);
-				callItWith((key) => (key === 'n2'));
+				callItWith({
+					isNexus: (key) => (key === 'n2')
+				});
 				expect(graph).toEqual(new GraphClass(
 					[['n2', 'n2'], new GraphClass(
 						[['n1', 'n2'], "n1,n2"],
