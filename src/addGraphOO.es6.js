@@ -93,6 +93,8 @@ export default function addGraphOO(Graph) {
 							thisGraph[_edgeObjects].get(from).set(to, this);
 							thisGraph.addNewEdge(from, to, value);
 						}
+						this._source = thisGraph.vertex(from);
+						this._target = thisGraph.vertex(to);
 					}
 					get length() { return 2 }
 					[Symbol.iterator]() {
@@ -106,8 +108,8 @@ export default function addGraphOO(Graph) {
 					get to()         { return this[0][1]                             }
 					get value()      { return this[1]                                }
 					set value(value) { return this.set(value)                        }
-					get source()     { return thisGraph.vertex(this.from)            }
-					get target()     { return thisGraph.vertex(this.to)              }
+					get source()     { return this._source                           }
+					get target()     { return this._target                           }
 					set(value)       { return thisGraph.setEdge(this.key, value)     }
 					remove()         { return thisGraph.removeExistingEdge(this.key) }
 				};
