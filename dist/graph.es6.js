@@ -238,8 +238,8 @@ export default class Graph {
 		this[_reverseEdges].set(key, new Set());
 		this[_sources].add(key);
 		this[_sinks].add(key);
-		this[_trigger]('vertex-added',    [key, value]);
-		this[_trigger]('vertex-modified', [key, value]);
+		this[_trigger]('vertex-added',    this.vertex(key));
+		this[_trigger]('vertex-modified', this.vertex(key));
 	}
 
 	/**
@@ -252,7 +252,7 @@ export default class Graph {
 		[key, value] = Graph[_extractTwoArgs](key, value);
 		this[_expectVertices](key);
 		this[_vertices].set(key, value);
-		this[_trigger]('vertex-modified', [key, value]);
+		this[_trigger]('vertex-modified', this.vertex(key));
 	}
 
 	/**
@@ -399,8 +399,8 @@ export default class Graph {
 		this[_edgeCount] += 1;
 		this[_sources].delete(to);
 		this[_sinks].delete(from);
-		this[_trigger]('edge-added',    [[from, to], value]);
-		this[_trigger]('edge-modified', [[from, to], value]);
+		this[_trigger]('edge-added',    this.edge(from, to));
+		this[_trigger]('edge-modified', this.edge(from, to));
 	}
 
 	/**
@@ -430,7 +430,7 @@ export default class Graph {
 		[from, to, value] = Graph[_extractThreeArgs](from, to, value);
 		this[_expectEdges]([from, to]);
 		this[_edges].get(from).set(to, value);
-		this[_trigger]('edge-modified', [[from, to], value]);
+		this[_trigger]('edge-modified', this.edge(from, to));
 	}
 
 	/**
@@ -900,9 +900,44 @@ export default class Graph {
 	}
 
 
-	//////////////////////////////
-	////////// Clearing //////////
-	//////////////////////////////
+	////////////////////////////////////////
+	////////// Setting & Clearing //////////
+	////////////////////////////////////////
+
+
+	/**
+	 * Set this graph to become equal to another graph, so that it has
+	 * all the same vertices and edges. It emits only those signals
+	 * that are strictly necessary.
+	 * @param other {Graph} the graph copy to this graph
+	 */
+	set(other) {
+		for (let [key, value] of this.edges()) {
+			if (!other.hasEdge(key)) {
+				this.removeExistingEdge(key);
+			} else if (value !== other.edgeValue(key)) {
+				this.setEdge(key, other.edgeValue(key));
+			}
+		}
+		for (let [key, value] of this.vertices()) {
+			if (!other.hasVertex(key)) {
+				this.removeExistingVertex(key);
+			} else if (value !== other.vertexValue(key)) {
+				this.setVertex(key, other.vertexValue(key));
+			}
+		}
+		for (let [key, value] of other.vertices()) {
+			if (!this.hasVertex(key)) {
+				this.addNewVertex(key, value);
+			}
+		}
+		for (let [key, value] of other.edges()) {
+			if (!this.hasEdge(key)) {
+				this.addNewEdge(key, value);
+			}
+		}
+	}
+
 
 	/**
 	 * Remove all edges from the graph, but leave the vertices intact.

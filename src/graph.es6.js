@@ -238,8 +238,8 @@ export default class Graph {
 		this[_reverseEdges].set(key, new Set());
 		this[_sources].add(key);
 		this[_sinks].add(key);
-		this[_trigger]('vertex-added',    [key, value]);
-		this[_trigger]('vertex-modified', [key, value]);
+		this[_trigger]('vertex-added',    this.vertex(key));
+		this[_trigger]('vertex-modified', this.vertex(key));
 	}
 
 	/**
@@ -252,7 +252,7 @@ export default class Graph {
 		[key, value] = Graph[_extractTwoArgs](key, value);
 		this[_expectVertices](key);
 		this[_vertices].set(key, value);
-		this[_trigger]('vertex-modified', [key, value]);
+		this[_trigger]('vertex-modified', this.vertex(key));
 	}
 
 	/**
@@ -399,8 +399,8 @@ export default class Graph {
 		this[_edgeCount] += 1;
 		this[_sources].delete(to);
 		this[_sinks].delete(from);
-		this[_trigger]('edge-added',    [[from, to], value]);
-		this[_trigger]('edge-modified', [[from, to], value]);
+		this[_trigger]('edge-added',    this.edge(from, to));
+		this[_trigger]('edge-modified', this.edge(from, to));
 	}
 
 	/**
@@ -430,7 +430,7 @@ export default class Graph {
 		[from, to, value] = Graph[_extractThreeArgs](from, to, value);
 		this[_expectEdges]([from, to]);
 		this[_edges].get(from).set(to, value);
-		this[_trigger]('edge-modified', [[from, to], value]);
+		this[_trigger]('edge-modified', this.edge(from, to));
 	}
 
 	/**

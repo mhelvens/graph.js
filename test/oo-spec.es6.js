@@ -1,7 +1,7 @@
-import {any, set, describeClass} from './helpers.es6.js';
-import Graph                     from '../src/graph.es6.js';
-import addGraphOO                from '../src/addGraphOO.es6.js';
-import specs                     from './spec-template.es6.js';
+import {any, createSpy, set, describeClass} from './helpers.es6.js';
+import Graph                                from '../src/graph.es6.js';
+import addGraphOO                           from '../src/addGraphOO.es6.js';
+import specs                                from './spec-template.es6.js';
 
 let GraphOO = addGraphOO(Graph);
 
@@ -859,5 +859,59 @@ specs(GraphOO, () => {
 			});
 		});
 	}
+
+	/* expect "add" and "modify" events to emit Edge and Vertex instances */
+	describeMethod('on', () => {
+
+		let callback;
+		beforeEach(() => {
+			callback = createSpy('callback');
+		});
+
+		describe("— \"vertex-added\" —", () => {
+			it("emits a graph.Vertex instance", () => {
+				graph.on('vertex-added', callback);
+				graph.addVertex('n1', "newValue1");
+				expect(callback).toHaveBeenCalledWith(any(graph.Vertex));
+			});
+		});
+
+		describe("— \"vertex-modified\" —", () => {
+			it("emits a graph.Vertex instance when a vertex is added", () => {
+				graph.on('vertex-modified', callback);
+				graph.addNewVertex('n1', "newValue1");
+				expect(callback).toHaveBeenCalledWith(any(graph.Vertex));
+			});
+			it("emits a graph.Vertex instance when a vertex value is set", () => {
+				graph.on('vertex-modified', callback);
+				graph.setVertex('k1', "newValue1");
+				expect(callback).toHaveBeenCalledWith(any(graph.Vertex));
+			});
+		});
+
+		describe("— \"edge-added\" —", () => {
+			it("emits a graph.Edge instance", () => {
+				graph.on('edge-added', callback);
+				graph.createNewEdge('n1', 'n2', "newValue12");
+				expect(callback).toHaveBeenCalledWith(any(graph.Edge));
+			});
+		});
+
+		describe("— \"edge-modified\" —", () => {
+			it("emits a graph.Edge instance when an edge is added", () => {
+				graph.on('edge-modified', callback);
+				graph.createNewEdge('n1', 'n2', "newValue12");
+				expect(callback).toHaveBeenCalledWith(any(graph.Edge));
+			});
+			it("emits a graph.Edge instance when an edge value is set", () => {
+				graph.on('edge-modified', callback);
+				graph.setEdge('k2', 'k3', "newValue23");
+				expect(callback).toHaveBeenCalledWith(any(graph.Edge));
+			});
+		});
+
+	});
+
+	// TODO: assert that Edge and Vertex objects are used in thrown exceptions
 
 });

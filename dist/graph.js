@@ -449,8 +449,8 @@ return /******/ (function(modules) { // webpackBootstrap
 				this[_options$_vertices$_edges$_reverseEdges$_sources$_sinks$_edgeCount$_listeners$_extractTwoArgs$_extractThreeArgs$_trigger$_verticesFrom$_verticesTo$_edgesFrom$_edgesTo$_verticesWithPathTo$_verticesWithPathFrom$_paths$_expectVertices$_expectVerticesAbsent$_expectEdges$_expectEdgesAbsent$_expectNoConnectedEdges._reverseEdges].set(key, new Set());
 				this[_options$_vertices$_edges$_reverseEdges$_sources$_sinks$_edgeCount$_listeners$_extractTwoArgs$_extractThreeArgs$_trigger$_verticesFrom$_verticesTo$_edgesFrom$_edgesTo$_verticesWithPathTo$_verticesWithPathFrom$_paths$_expectVertices$_expectVerticesAbsent$_expectEdges$_expectEdgesAbsent$_expectNoConnectedEdges._sources].add(key);
 				this[_options$_vertices$_edges$_reverseEdges$_sources$_sinks$_edgeCount$_listeners$_extractTwoArgs$_extractThreeArgs$_trigger$_verticesFrom$_verticesTo$_edgesFrom$_edgesTo$_verticesWithPathTo$_verticesWithPathFrom$_paths$_expectVertices$_expectVerticesAbsent$_expectEdges$_expectEdgesAbsent$_expectNoConnectedEdges._sinks].add(key);
-				this[_options$_vertices$_edges$_reverseEdges$_sources$_sinks$_edgeCount$_listeners$_extractTwoArgs$_extractThreeArgs$_trigger$_verticesFrom$_verticesTo$_edgesFrom$_edgesTo$_verticesWithPathTo$_verticesWithPathFrom$_paths$_expectVertices$_expectVerticesAbsent$_expectEdges$_expectEdgesAbsent$_expectNoConnectedEdges._trigger]('vertex-added', [key, value]);
-				this[_options$_vertices$_edges$_reverseEdges$_sources$_sinks$_edgeCount$_listeners$_extractTwoArgs$_extractThreeArgs$_trigger$_verticesFrom$_verticesTo$_edgesFrom$_edgesTo$_verticesWithPathTo$_verticesWithPathFrom$_paths$_expectVertices$_expectVerticesAbsent$_expectEdges$_expectEdgesAbsent$_expectNoConnectedEdges._trigger]('vertex-modified', [key, value]);
+				this[_options$_vertices$_edges$_reverseEdges$_sources$_sinks$_edgeCount$_listeners$_extractTwoArgs$_extractThreeArgs$_trigger$_verticesFrom$_verticesTo$_edgesFrom$_edgesTo$_verticesWithPathTo$_verticesWithPathFrom$_paths$_expectVertices$_expectVerticesAbsent$_expectEdges$_expectEdgesAbsent$_expectNoConnectedEdges._trigger]('vertex-added', this.vertex(key));
+				this[_options$_vertices$_edges$_reverseEdges$_sources$_sinks$_edgeCount$_listeners$_extractTwoArgs$_extractThreeArgs$_trigger$_verticesFrom$_verticesTo$_edgesFrom$_edgesTo$_verticesWithPathTo$_verticesWithPathFrom$_paths$_expectVertices$_expectVerticesAbsent$_expectEdges$_expectEdgesAbsent$_expectNoConnectedEdges._trigger]('vertex-modified', this.vertex(key));
 			}
 		}, {
 			key: 'setVertex',
@@ -471,7 +471,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 				this[_options$_vertices$_edges$_reverseEdges$_sources$_sinks$_edgeCount$_listeners$_extractTwoArgs$_extractThreeArgs$_trigger$_verticesFrom$_verticesTo$_edgesFrom$_edgesTo$_verticesWithPathTo$_verticesWithPathFrom$_paths$_expectVertices$_expectVerticesAbsent$_expectEdges$_expectEdgesAbsent$_expectNoConnectedEdges._expectVertices](key);
 				this[_options$_vertices$_edges$_reverseEdges$_sources$_sinks$_edgeCount$_listeners$_extractTwoArgs$_extractThreeArgs$_trigger$_verticesFrom$_verticesTo$_edgesFrom$_edgesTo$_verticesWithPathTo$_verticesWithPathFrom$_paths$_expectVertices$_expectVerticesAbsent$_expectEdges$_expectEdgesAbsent$_expectNoConnectedEdges._vertices].set(key, value);
-				this[_options$_vertices$_edges$_reverseEdges$_sources$_sinks$_edgeCount$_listeners$_extractTwoArgs$_extractThreeArgs$_trigger$_verticesFrom$_verticesTo$_edgesFrom$_edgesTo$_verticesWithPathTo$_verticesWithPathFrom$_paths$_expectVertices$_expectVerticesAbsent$_expectEdges$_expectEdgesAbsent$_expectNoConnectedEdges._trigger]('vertex-modified', [key, value]);
+				this[_options$_vertices$_edges$_reverseEdges$_sources$_sinks$_edgeCount$_listeners$_extractTwoArgs$_extractThreeArgs$_trigger$_verticesFrom$_verticesTo$_edgesFrom$_edgesTo$_verticesWithPathTo$_verticesWithPathFrom$_paths$_expectVertices$_expectVerticesAbsent$_expectEdges$_expectEdgesAbsent$_expectNoConnectedEdges._trigger]('vertex-modified', this.vertex(key));
 			}
 		}, {
 			key: 'ensureVertex',
@@ -712,8 +712,8 @@ return /******/ (function(modules) { // webpackBootstrap
 				this[_options$_vertices$_edges$_reverseEdges$_sources$_sinks$_edgeCount$_listeners$_extractTwoArgs$_extractThreeArgs$_trigger$_verticesFrom$_verticesTo$_edgesFrom$_edgesTo$_verticesWithPathTo$_verticesWithPathFrom$_paths$_expectVertices$_expectVerticesAbsent$_expectEdges$_expectEdgesAbsent$_expectNoConnectedEdges._edgeCount] += 1;
 				this[_options$_vertices$_edges$_reverseEdges$_sources$_sinks$_edgeCount$_listeners$_extractTwoArgs$_extractThreeArgs$_trigger$_verticesFrom$_verticesTo$_edgesFrom$_edgesTo$_verticesWithPathTo$_verticesWithPathFrom$_paths$_expectVertices$_expectVerticesAbsent$_expectEdges$_expectEdgesAbsent$_expectNoConnectedEdges._sources]['delete'](to);
 				this[_options$_vertices$_edges$_reverseEdges$_sources$_sinks$_edgeCount$_listeners$_extractTwoArgs$_extractThreeArgs$_trigger$_verticesFrom$_verticesTo$_edgesFrom$_edgesTo$_verticesWithPathTo$_verticesWithPathFrom$_paths$_expectVertices$_expectVerticesAbsent$_expectEdges$_expectEdgesAbsent$_expectNoConnectedEdges._sinks]['delete'](from);
-				this[_options$_vertices$_edges$_reverseEdges$_sources$_sinks$_edgeCount$_listeners$_extractTwoArgs$_extractThreeArgs$_trigger$_verticesFrom$_verticesTo$_edgesFrom$_edgesTo$_verticesWithPathTo$_verticesWithPathFrom$_paths$_expectVertices$_expectVerticesAbsent$_expectEdges$_expectEdgesAbsent$_expectNoConnectedEdges._trigger]('edge-added', [[from, to], value]);
-				this[_options$_vertices$_edges$_reverseEdges$_sources$_sinks$_edgeCount$_listeners$_extractTwoArgs$_extractThreeArgs$_trigger$_verticesFrom$_verticesTo$_edgesFrom$_edgesTo$_verticesWithPathTo$_verticesWithPathFrom$_paths$_expectVertices$_expectVerticesAbsent$_expectEdges$_expectEdgesAbsent$_expectNoConnectedEdges._trigger]('edge-modified', [[from, to], value]);
+				this[_options$_vertices$_edges$_reverseEdges$_sources$_sinks$_edgeCount$_listeners$_extractTwoArgs$_extractThreeArgs$_trigger$_verticesFrom$_verticesTo$_edgesFrom$_edgesTo$_verticesWithPathTo$_verticesWithPathFrom$_paths$_expectVertices$_expectVerticesAbsent$_expectEdges$_expectEdgesAbsent$_expectNoConnectedEdges._trigger]('edge-added', this.edge(from, to));
+				this[_options$_vertices$_edges$_reverseEdges$_sources$_sinks$_edgeCount$_listeners$_extractTwoArgs$_extractThreeArgs$_trigger$_verticesFrom$_verticesTo$_edgesFrom$_edgesTo$_verticesWithPathTo$_verticesWithPathFrom$_paths$_expectVertices$_expectVerticesAbsent$_expectEdges$_expectEdgesAbsent$_expectNoConnectedEdges._trigger]('edge-modified', this.edge(from, to));
 			}
 		}, {
 			key: 'createNewEdge',
@@ -761,7 +761,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 				this[_options$_vertices$_edges$_reverseEdges$_sources$_sinks$_edgeCount$_listeners$_extractTwoArgs$_extractThreeArgs$_trigger$_verticesFrom$_verticesTo$_edgesFrom$_edgesTo$_verticesWithPathTo$_verticesWithPathFrom$_paths$_expectVertices$_expectVerticesAbsent$_expectEdges$_expectEdgesAbsent$_expectNoConnectedEdges._expectEdges]([from, to]);
 				this[_options$_vertices$_edges$_reverseEdges$_sources$_sinks$_edgeCount$_listeners$_extractTwoArgs$_extractThreeArgs$_trigger$_verticesFrom$_verticesTo$_edgesFrom$_edgesTo$_verticesWithPathTo$_verticesWithPathFrom$_paths$_expectVertices$_expectVerticesAbsent$_expectEdges$_expectEdgesAbsent$_expectNoConnectedEdges._edges].get(from).set(to, value);
-				this[_options$_vertices$_edges$_reverseEdges$_sources$_sinks$_edgeCount$_listeners$_extractTwoArgs$_extractThreeArgs$_trigger$_verticesFrom$_verticesTo$_edgesFrom$_edgesTo$_verticesWithPathTo$_verticesWithPathFrom$_paths$_expectVertices$_expectVerticesAbsent$_expectEdges$_expectEdgesAbsent$_expectNoConnectedEdges._trigger]('edge-modified', [[from, to], value]);
+				this[_options$_vertices$_edges$_reverseEdges$_sources$_sinks$_edgeCount$_listeners$_extractTwoArgs$_extractThreeArgs$_trigger$_verticesFrom$_verticesTo$_edgesFrom$_edgesTo$_verticesWithPathTo$_verticesWithPathFrom$_paths$_expectVertices$_expectVerticesAbsent$_expectEdges$_expectEdgesAbsent$_expectNoConnectedEdges._trigger]('edge-modified', this.edge(from, to));
 			}
 		}, {
 			key: 'spanEdge',
@@ -2060,26 +2060,35 @@ return /******/ (function(modules) { // webpackBootstrap
 				}, sinks, this, [[4, 17, 21, 29], [22,, 24, 28]]);
 			})
 		}, {
-			key: 'clearEdges',
+			key: 'set',
 	
-			//////////////////////////////
-			////////// Clearing //////////
-			//////////////////////////////
+			////////////////////////////////////////
+			////////// Setting & Clearing //////////
+			////////////////////////////////////////
 	
 			/**
-	   * Remove all edges from the graph, but leave the vertices intact.
+	   * Set this graph to become equal to another graph, so that it has
+	   * all the same vertices and edges. It emits only those signals
+	   * that are strictly necessary.
+	   * @param other {Graph} the graph copy to this graph
 	   */
-			value: function clearEdges() {
+			value: function set(other) {
 				var _iteratorNormalCompletion17 = true;
 				var _didIteratorError17 = false;
 				var _iteratorError17 = undefined;
 	
 				try {
 					for (var _iterator17 = this.edges()[Symbol.iterator](), _step17; !(_iteratorNormalCompletion17 = (_step17 = _iterator17.next()).done); _iteratorNormalCompletion17 = true) {
-						var _step17$value = _slicedToArray(_step17.value, 1);
+						var _step17$value = _slicedToArray(_step17.value, 2);
 	
 						var key = _step17$value[0];
-						this.removeEdge(key);
+						var value = _step17$value[1];
+	
+						if (!other.hasEdge(key)) {
+							this.removeExistingEdge(key);
+						} else if (value !== other.edgeValue(key)) {
+							this.setEdge(key, other.edgeValue(key));
+						}
 					}
 				} catch (err) {
 					_didIteratorError17 = true;
@@ -2095,24 +2104,23 @@ return /******/ (function(modules) { // webpackBootstrap
 						}
 					}
 				}
-			}
-		}, {
-			key: 'clear',
 	
-			/**
-	   * Remove all edges and vertices from the graph, putting it back in its initial state.
-	   */
-			value: function clear() {
 				var _iteratorNormalCompletion18 = true;
 				var _didIteratorError18 = false;
 				var _iteratorError18 = undefined;
 	
 				try {
 					for (var _iterator18 = this.vertices()[Symbol.iterator](), _step18; !(_iteratorNormalCompletion18 = (_step18 = _iterator18.next()).done); _iteratorNormalCompletion18 = true) {
-						var _step18$value = _slicedToArray(_step18.value, 1);
+						var _step18$value = _slicedToArray(_step18.value, 2);
 	
 						var key = _step18$value[0];
-						this.destroyVertex(key);
+						var value = _step18$value[1];
+	
+						if (!other.hasVertex(key)) {
+							this.removeExistingVertex(key);
+						} else if (value !== other.vertexValue(key)) {
+							this.setVertex(key, other.vertexValue(key));
+						}
 					}
 				} catch (err) {
 					_didIteratorError18 = true;
@@ -2125,6 +2133,132 @@ return /******/ (function(modules) { // webpackBootstrap
 					} finally {
 						if (_didIteratorError18) {
 							throw _iteratorError18;
+						}
+					}
+				}
+	
+				var _iteratorNormalCompletion19 = true;
+				var _didIteratorError19 = false;
+				var _iteratorError19 = undefined;
+	
+				try {
+					for (var _iterator19 = other.vertices()[Symbol.iterator](), _step19; !(_iteratorNormalCompletion19 = (_step19 = _iterator19.next()).done); _iteratorNormalCompletion19 = true) {
+						var _step19$value = _slicedToArray(_step19.value, 2);
+	
+						var key = _step19$value[0];
+						var value = _step19$value[1];
+	
+						if (!this.hasVertex(key)) {
+							this.addNewVertex(key, value);
+						}
+					}
+				} catch (err) {
+					_didIteratorError19 = true;
+					_iteratorError19 = err;
+				} finally {
+					try {
+						if (!_iteratorNormalCompletion19 && _iterator19['return']) {
+							_iterator19['return']();
+						}
+					} finally {
+						if (_didIteratorError19) {
+							throw _iteratorError19;
+						}
+					}
+				}
+	
+				var _iteratorNormalCompletion20 = true;
+				var _didIteratorError20 = false;
+				var _iteratorError20 = undefined;
+	
+				try {
+					for (var _iterator20 = other.edges()[Symbol.iterator](), _step20; !(_iteratorNormalCompletion20 = (_step20 = _iterator20.next()).done); _iteratorNormalCompletion20 = true) {
+						var _step20$value = _slicedToArray(_step20.value, 2);
+	
+						var key = _step20$value[0];
+						var value = _step20$value[1];
+	
+						if (!this.hasEdge(key)) {
+							this.addNewEdge(key, value);
+						}
+					}
+				} catch (err) {
+					_didIteratorError20 = true;
+					_iteratorError20 = err;
+				} finally {
+					try {
+						if (!_iteratorNormalCompletion20 && _iterator20['return']) {
+							_iterator20['return']();
+						}
+					} finally {
+						if (_didIteratorError20) {
+							throw _iteratorError20;
+						}
+					}
+				}
+			}
+		}, {
+			key: 'clearEdges',
+	
+			/**
+	   * Remove all edges from the graph, but leave the vertices intact.
+	   */
+			value: function clearEdges() {
+				var _iteratorNormalCompletion21 = true;
+				var _didIteratorError21 = false;
+				var _iteratorError21 = undefined;
+	
+				try {
+					for (var _iterator21 = this.edges()[Symbol.iterator](), _step21; !(_iteratorNormalCompletion21 = (_step21 = _iterator21.next()).done); _iteratorNormalCompletion21 = true) {
+						var _step21$value = _slicedToArray(_step21.value, 1);
+	
+						var key = _step21$value[0];
+						this.removeEdge(key);
+					}
+				} catch (err) {
+					_didIteratorError21 = true;
+					_iteratorError21 = err;
+				} finally {
+					try {
+						if (!_iteratorNormalCompletion21 && _iterator21['return']) {
+							_iterator21['return']();
+						}
+					} finally {
+						if (_didIteratorError21) {
+							throw _iteratorError21;
+						}
+					}
+				}
+			}
+		}, {
+			key: 'clear',
+	
+			/**
+	   * Remove all edges and vertices from the graph, putting it back in its initial state.
+	   */
+			value: function clear() {
+				var _iteratorNormalCompletion22 = true;
+				var _didIteratorError22 = false;
+				var _iteratorError22 = undefined;
+	
+				try {
+					for (var _iterator22 = this.vertices()[Symbol.iterator](), _step22; !(_iteratorNormalCompletion22 = (_step22 = _iterator22.next()).done); _iteratorNormalCompletion22 = true) {
+						var _step22$value = _slicedToArray(_step22.value, 1);
+	
+						var key = _step22$value[0];
+						this.destroyVertex(key);
+					}
+				} catch (err) {
+					_didIteratorError22 = true;
+					_iteratorError22 = err;
+				} finally {
+					try {
+						if (!_iteratorNormalCompletion22 && _iterator22['return']) {
+							_iterator22['return']();
+						}
+					} finally {
+						if (_didIteratorError22) {
+							throw _iteratorError22;
 						}
 					}
 				}
@@ -2166,16 +2300,16 @@ return /******/ (function(modules) { // webpackBootstrap
 					if (this.edgeCount() !== other.edgeCount()) {
 						return false;
 					}
-					var _iteratorNormalCompletion19 = true;
-					var _didIteratorError19 = false;
-					var _iteratorError19 = undefined;
+					var _iteratorNormalCompletion23 = true;
+					var _didIteratorError23 = false;
+					var _iteratorError23 = undefined;
 	
 					try {
-						for (var _iterator19 = this.vertices()[Symbol.iterator](), _step19; !(_iteratorNormalCompletion19 = (_step19 = _iterator19.next()).done); _iteratorNormalCompletion19 = true) {
-							var _step19$value = _slicedToArray(_step19.value, 2);
+						for (var _iterator23 = this.vertices()[Symbol.iterator](), _step23; !(_iteratorNormalCompletion23 = (_step23 = _iterator23.next()).done); _iteratorNormalCompletion23 = true) {
+							var _step23$value = _slicedToArray(_step23.value, 2);
 	
-							var key = _step19$value[0];
-							var value = _step19$value[1];
+							var key = _step23$value[0];
+							var value = _step23$value[1];
 	
 							if (!other.hasVertex(key)) {
 								return false;
@@ -2185,30 +2319,30 @@ return /******/ (function(modules) { // webpackBootstrap
 							}
 						}
 					} catch (err) {
-						_didIteratorError19 = true;
-						_iteratorError19 = err;
+						_didIteratorError23 = true;
+						_iteratorError23 = err;
 					} finally {
 						try {
-							if (!_iteratorNormalCompletion19 && _iterator19['return']) {
-								_iterator19['return']();
+							if (!_iteratorNormalCompletion23 && _iterator23['return']) {
+								_iterator23['return']();
 							}
 						} finally {
-							if (_didIteratorError19) {
-								throw _iteratorError19;
+							if (_didIteratorError23) {
+								throw _iteratorError23;
 							}
 						}
 					}
 	
-					var _iteratorNormalCompletion20 = true;
-					var _didIteratorError20 = false;
-					var _iteratorError20 = undefined;
+					var _iteratorNormalCompletion24 = true;
+					var _didIteratorError24 = false;
+					var _iteratorError24 = undefined;
 	
 					try {
-						for (var _iterator20 = this.edges()[Symbol.iterator](), _step20; !(_iteratorNormalCompletion20 = (_step20 = _iterator20.next()).done); _iteratorNormalCompletion20 = true) {
-							var _step20$value = _slicedToArray(_step20.value, 2);
+						for (var _iterator24 = this.edges()[Symbol.iterator](), _step24; !(_iteratorNormalCompletion24 = (_step24 = _iterator24.next()).done); _iteratorNormalCompletion24 = true) {
+							var _step24$value = _slicedToArray(_step24.value, 2);
 	
-							var key = _step20$value[0];
-							var value = _step20$value[1];
+							var key = _step24$value[0];
+							var value = _step24$value[1];
 	
 							if (!other.hasEdge(key)) {
 								return false;
@@ -2218,16 +2352,16 @@ return /******/ (function(modules) { // webpackBootstrap
 							}
 						}
 					} catch (err) {
-						_didIteratorError20 = true;
-						_iteratorError20 = err;
+						_didIteratorError24 = true;
+						_iteratorError24 = err;
 					} finally {
 						try {
-							if (!_iteratorNormalCompletion20 && _iterator20['return']) {
-								_iterator20['return']();
+							if (!_iteratorNormalCompletion24 && _iterator24['return']) {
+								_iterator24['return']();
 							}
 						} finally {
-							if (_didIteratorError20) {
-								throw _iteratorError20;
+							if (_didIteratorError24) {
+								throw _iteratorError24;
 							}
 						}
 					}
@@ -2256,7 +2390,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * }
 	   */
 			value: regeneratorRuntime.mark(function cycles() {
-				var marked2$0, pointStack, markedStack, mark, _this, backtrack, _iteratorNormalCompletion21, _didIteratorError21, _iteratorError21, _iterator21, _step21, _step21$value, a;
+				var marked2$0, pointStack, markedStack, mark, _this, backtrack, _iteratorNormalCompletion25, _didIteratorError25, _iteratorError25, _iterator25, _step25, _step25$value, a;
 	
 				return regeneratorRuntime.wrap(function cycles$(context$2$0) {
 					while (1) switch (context$2$0.prev = context$2$0.next) {
@@ -2344,27 +2478,27 @@ return /******/ (function(modules) { // webpackBootstrap
 							pointStack = [];
 							markedStack = undefined, mark = undefined;
 							_this = this;
-							_iteratorNormalCompletion21 = true;
-							_didIteratorError21 = false;
-							_iteratorError21 = undefined;
+							_iteratorNormalCompletion25 = true;
+							_didIteratorError25 = false;
+							_iteratorError25 = undefined;
 							context$2$0.prev = 8;
-							_iterator21 = this.vertices()[Symbol.iterator]();
+							_iterator25 = this.vertices()[Symbol.iterator]();
 	
 						case 10:
-							if (_iteratorNormalCompletion21 = (_step21 = _iterator21.next()).done) {
+							if (_iteratorNormalCompletion25 = (_step25 = _iterator25.next()).done) {
 								context$2$0.next = 19;
 								break;
 							}
 	
-							_step21$value = _slicedToArray(_step21.value, 1);
-							a = _step21$value[0];
+							_step25$value = _slicedToArray(_step25.value, 1);
+							a = _step25$value[0];
 	
 							markedStack = [];
 							mark = new Set();
 							return context$2$0.delegateYield(backtrack(a), 't14', 16);
 	
 						case 16:
-							_iteratorNormalCompletion21 = true;
+							_iteratorNormalCompletion25 = true;
 							context$2$0.next = 10;
 							break;
 	
@@ -2375,26 +2509,26 @@ return /******/ (function(modules) { // webpackBootstrap
 						case 21:
 							context$2$0.prev = 21;
 							context$2$0.t15 = context$2$0['catch'](8);
-							_didIteratorError21 = true;
-							_iteratorError21 = context$2$0.t15;
+							_didIteratorError25 = true;
+							_iteratorError25 = context$2$0.t15;
 	
 						case 25:
 							context$2$0.prev = 25;
 							context$2$0.prev = 26;
 	
-							if (!_iteratorNormalCompletion21 && _iterator21['return']) {
-								_iterator21['return']();
+							if (!_iteratorNormalCompletion25 && _iterator25['return']) {
+								_iterator25['return']();
 							}
 	
 						case 28:
 							context$2$0.prev = 28;
 	
-							if (!_didIteratorError21) {
+							if (!_didIteratorError25) {
 								context$2$0.next = 31;
 								break;
 							}
 	
-							throw _iteratorError21;
+							throw _iteratorError25;
 	
 						case 31:
 							return context$2$0.finish(28);
@@ -2472,26 +2606,26 @@ return /******/ (function(modules) { // webpackBootstrap
 					while (1) switch (context$2$0.prev = context$2$0.next) {
 						case 0:
 							pathsFromPrefix = function pathsFromPrefix(current) {
-								var _iteratorNormalCompletion22, _didIteratorError22, _iteratorError22, _iterator22, _step22, _step22$value, next;
+								var _iteratorNormalCompletion26, _didIteratorError26, _iteratorError26, _iterator26, _step26, _step26$value, next;
 	
 								return regeneratorRuntime.wrap(function pathsFromPrefix$(context$3$0) {
 									while (1) switch (context$3$0.prev = context$3$0.next) {
 										case 0:
 											stack.push(current);
-											_iteratorNormalCompletion22 = true;
-											_didIteratorError22 = false;
-											_iteratorError22 = undefined;
+											_iteratorNormalCompletion26 = true;
+											_didIteratorError26 = false;
+											_iteratorError26 = undefined;
 											context$3$0.prev = 4;
-											_iterator22 = _this.verticesFrom(current)[Symbol.iterator]();
+											_iterator26 = _this.verticesFrom(current)[Symbol.iterator]();
 	
 										case 6:
-											if (_iteratorNormalCompletion22 = (_step22 = _iterator22.next()).done) {
+											if (_iteratorNormalCompletion26 = (_step26 = _iterator26.next()).done) {
 												context$3$0.next = 19;
 												break;
 											}
 	
-											_step22$value = _slicedToArray(_step22.value, 1);
-											next = _step22$value[0];
+											_step26$value = _slicedToArray(_step26.value, 1);
+											next = _step26$value[0];
 	
 											if (!(next === to)) {
 												context$3$0.next = 14;
@@ -2514,7 +2648,7 @@ return /******/ (function(modules) { // webpackBootstrap
 											return context$3$0.delegateYield(pathsFromPrefix(next), 't16', 16);
 	
 										case 16:
-											_iteratorNormalCompletion22 = true;
+											_iteratorNormalCompletion26 = true;
 											context$3$0.next = 6;
 											break;
 	
@@ -2525,26 +2659,26 @@ return /******/ (function(modules) { // webpackBootstrap
 										case 21:
 											context$3$0.prev = 21;
 											context$3$0.t17 = context$3$0['catch'](4);
-											_didIteratorError22 = true;
-											_iteratorError22 = context$3$0.t17;
+											_didIteratorError26 = true;
+											_iteratorError26 = context$3$0.t17;
 	
 										case 25:
 											context$3$0.prev = 25;
 											context$3$0.prev = 26;
 	
-											if (!_iteratorNormalCompletion22 && _iterator22['return']) {
-												_iterator22['return']();
+											if (!_iteratorNormalCompletion26 && _iterator26['return']) {
+												_iterator26['return']();
 											}
 	
 										case 28:
 											context$3$0.prev = 28;
 	
-											if (!_didIteratorError22) {
+											if (!_didIteratorError26) {
 												context$3$0.next = 31;
 												break;
 											}
 	
-											throw _iteratorError22;
+											throw _iteratorError26;
 	
 										case 31:
 											return context$3$0.finish(28);
@@ -2668,58 +2802,58 @@ return /******/ (function(modules) { // webpackBootstrap
 				} : arguments[1];
 				var mE = arguments[2] === undefined ? mV : arguments[2];
 				return (function () {
-					var _iteratorNormalCompletion23 = true;
-					var _didIteratorError23 = false;
-					var _iteratorError23 = undefined;
+					var _iteratorNormalCompletion27 = true;
+					var _didIteratorError27 = false;
+					var _iteratorError27 = undefined;
 	
 					try {
-						for (var _iterator23 = other.vertices()[Symbol.iterator](), _step23; !(_iteratorNormalCompletion23 = (_step23 = _iterator23.next()).done); _iteratorNormalCompletion23 = true) {
-							var _step23$value = _slicedToArray(_step23.value, 2);
+						for (var _iterator27 = other.vertices()[Symbol.iterator](), _step27; !(_iteratorNormalCompletion27 = (_step27 = _iterator27.next()).done); _iteratorNormalCompletion27 = true) {
+							var _step27$value = _slicedToArray(_step27.value, 2);
 	
-							var key = _step23$value[0];
-							var value = _step23$value[1];
+							var key = _step27$value[0];
+							var value = _step27$value[1];
 	
 							this.addVertex(key, mV(this.vertexValue(key), value, key));
 						}
 					} catch (err) {
-						_didIteratorError23 = true;
-						_iteratorError23 = err;
+						_didIteratorError27 = true;
+						_iteratorError27 = err;
 					} finally {
 						try {
-							if (!_iteratorNormalCompletion23 && _iterator23['return']) {
-								_iterator23['return']();
+							if (!_iteratorNormalCompletion27 && _iterator27['return']) {
+								_iterator27['return']();
 							}
 						} finally {
-							if (_didIteratorError23) {
-								throw _iteratorError23;
+							if (_didIteratorError27) {
+								throw _iteratorError27;
 							}
 						}
 					}
 	
-					var _iteratorNormalCompletion24 = true;
-					var _didIteratorError24 = false;
-					var _iteratorError24 = undefined;
+					var _iteratorNormalCompletion28 = true;
+					var _didIteratorError28 = false;
+					var _iteratorError28 = undefined;
 	
 					try {
-						for (var _iterator24 = other.edges()[Symbol.iterator](), _step24; !(_iteratorNormalCompletion24 = (_step24 = _iterator24.next()).done); _iteratorNormalCompletion24 = true) {
-							var _step24$value = _slicedToArray(_step24.value, 2);
+						for (var _iterator28 = other.edges()[Symbol.iterator](), _step28; !(_iteratorNormalCompletion28 = (_step28 = _iterator28.next()).done); _iteratorNormalCompletion28 = true) {
+							var _step28$value = _slicedToArray(_step28.value, 2);
 	
-							var key = _step24$value[0];
-							var value = _step24$value[1];
+							var key = _step28$value[0];
+							var value = _step28$value[1];
 	
 							this.addEdge(key, mE(this.edgeValue(key), value, key));
 						}
 					} catch (err) {
-						_didIteratorError24 = true;
-						_iteratorError24 = err;
+						_didIteratorError28 = true;
+						_iteratorError28 = err;
 					} finally {
 						try {
-							if (!_iteratorNormalCompletion24 && _iterator24['return']) {
-								_iterator24['return']();
+							if (!_iteratorNormalCompletion28 && _iterator28['return']) {
+								_iterator28['return']();
 							}
 						} finally {
-							if (_didIteratorError24) {
-								throw _iteratorError24;
+							if (_didIteratorError28) {
+								throw _iteratorError28;
 							}
 						}
 					}
@@ -2775,80 +2909,80 @@ return /******/ (function(modules) { // webpackBootstrap
 			value: function transitiveReduction(trV, trE) {
 				// argument defaults are handled in `clone`
 				var result = this.clone(trV, trE);
-				var _iteratorNormalCompletion25 = true;
-				var _didIteratorError25 = false;
-				var _iteratorError25 = undefined;
+				var _iteratorNormalCompletion29 = true;
+				var _didIteratorError29 = false;
+				var _iteratorError29 = undefined;
 	
 				try {
-					for (var _iterator25 = this.vertices()[Symbol.iterator](), _step25; !(_iteratorNormalCompletion25 = (_step25 = _iterator25.next()).done); _iteratorNormalCompletion25 = true) {
-						var _step25$value = _slicedToArray(_step25.value, 1);
+					for (var _iterator29 = this.vertices()[Symbol.iterator](), _step29; !(_iteratorNormalCompletion29 = (_step29 = _iterator29.next()).done); _iteratorNormalCompletion29 = true) {
+						var _step29$value = _slicedToArray(_step29.value, 1);
 	
-						var x = _step25$value[0];
-						var _iteratorNormalCompletion26 = true;
-						var _didIteratorError26 = false;
-						var _iteratorError26 = undefined;
+						var x = _step29$value[0];
+						var _iteratorNormalCompletion30 = true;
+						var _didIteratorError30 = false;
+						var _iteratorError30 = undefined;
 	
 						try {
-							for (var _iterator26 = this.vertices()[Symbol.iterator](), _step26; !(_iteratorNormalCompletion26 = (_step26 = _iterator26.next()).done); _iteratorNormalCompletion26 = true) {
-								var _step26$value = _slicedToArray(_step26.value, 1);
+							for (var _iterator30 = this.vertices()[Symbol.iterator](), _step30; !(_iteratorNormalCompletion30 = (_step30 = _iterator30.next()).done); _iteratorNormalCompletion30 = true) {
+								var _step30$value = _slicedToArray(_step30.value, 1);
 	
-								var y = _step26$value[0];
+								var y = _step30$value[0];
 	
 								if (result.hasEdge(x, y)) {
-									var _iteratorNormalCompletion27 = true;
-									var _didIteratorError27 = false;
-									var _iteratorError27 = undefined;
+									var _iteratorNormalCompletion31 = true;
+									var _didIteratorError31 = false;
+									var _iteratorError31 = undefined;
 	
 									try {
-										for (var _iterator27 = this.vertices()[Symbol.iterator](), _step27; !(_iteratorNormalCompletion27 = (_step27 = _iterator27.next()).done); _iteratorNormalCompletion27 = true) {
-											var _step27$value = _slicedToArray(_step27.value, 1);
+										for (var _iterator31 = this.vertices()[Symbol.iterator](), _step31; !(_iteratorNormalCompletion31 = (_step31 = _iterator31.next()).done); _iteratorNormalCompletion31 = true) {
+											var _step31$value = _slicedToArray(_step31.value, 1);
 	
-											var z = _step27$value[0];
+											var z = _step31$value[0];
 	
 											if (result.hasPath(y, z)) result.removeEdge(x, z);
 										}
 									} catch (err) {
-										_didIteratorError27 = true;
-										_iteratorError27 = err;
+										_didIteratorError31 = true;
+										_iteratorError31 = err;
 									} finally {
 										try {
-											if (!_iteratorNormalCompletion27 && _iterator27['return']) {
-												_iterator27['return']();
+											if (!_iteratorNormalCompletion31 && _iterator31['return']) {
+												_iterator31['return']();
 											}
 										} finally {
-											if (_didIteratorError27) {
-												throw _iteratorError27;
+											if (_didIteratorError31) {
+												throw _iteratorError31;
 											}
 										}
 									}
 								}
 							}
 						} catch (err) {
-							_didIteratorError26 = true;
-							_iteratorError26 = err;
+							_didIteratorError30 = true;
+							_iteratorError30 = err;
 						} finally {
 							try {
-								if (!_iteratorNormalCompletion26 && _iterator26['return']) {
-									_iterator26['return']();
+								if (!_iteratorNormalCompletion30 && _iterator30['return']) {
+									_iterator30['return']();
 								}
 							} finally {
-								if (_didIteratorError26) {
-									throw _iteratorError26;
+								if (_didIteratorError30) {
+									throw _iteratorError30;
 								}
 							}
 						}
 					}
 				} catch (err) {
-					_didIteratorError25 = true;
-					_iteratorError25 = err;
+					_didIteratorError29 = true;
+					_iteratorError29 = err;
 				} finally {
 					try {
-						if (!_iteratorNormalCompletion25 && _iterator25['return']) {
-							_iterator25['return']();
+						if (!_iteratorNormalCompletion29 && _iterator29['return']) {
+							_iterator29['return']();
 						}
 					} finally {
-						if (_didIteratorError25) {
-							throw _iteratorError25;
+						if (_didIteratorError29) {
+							throw _iteratorError29;
 						}
 					}
 				}
@@ -2896,13 +3030,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 				/* error if there is a branch-less cycle */
 				{
-					var _iteratorNormalCompletion30;
+					var _iteratorNormalCompletion34;
 	
-					var _didIteratorError30;
+					var _didIteratorError34;
 	
-					var _iteratorError30;
+					var _iteratorError34;
 	
-					var _iterator30, _step30;
+					var _iterator34, _step34;
 	
 					(function () {
 						var unhandledVertices = new Set([].concat(_toConsumableArray(_this3.vertices())).map(function (_ref4) {
@@ -2916,78 +3050,78 @@ return /******/ (function(modules) { // webpackBootstrap
 								return;
 							}
 							unhandledVertices['delete'](key);
-							var _iteratorNormalCompletion28 = true;
-							var _didIteratorError28 = false;
-							var _iteratorError28 = undefined;
+							var _iteratorNormalCompletion32 = true;
+							var _didIteratorError32 = false;
+							var _iteratorError32 = undefined;
 	
 							try {
-								for (var _iterator28 = _this3.verticesFrom(key)[Symbol.iterator](), _step28; !(_iteratorNormalCompletion28 = (_step28 = _iterator28.next()).done); _iteratorNormalCompletion28 = true) {
-									var _step28$value = _slicedToArray(_step28.value, 1);
+								for (var _iterator32 = _this3.verticesFrom(key)[Symbol.iterator](), _step32; !(_iteratorNormalCompletion32 = (_step32 = _iterator32.next()).done); _iteratorNormalCompletion32 = true) {
+									var _step32$value = _slicedToArray(_step32.value, 1);
 	
-									var next = _step28$value[0];
+									var next = _step32$value[0];
 									checkForBlCycle(next);
 								}
 							} catch (err) {
-								_didIteratorError28 = true;
-								_iteratorError28 = err;
+								_didIteratorError32 = true;
+								_iteratorError32 = err;
 							} finally {
 								try {
-									if (!_iteratorNormalCompletion28 && _iterator28['return']) {
-										_iterator28['return']();
+									if (!_iteratorNormalCompletion32 && _iterator32['return']) {
+										_iterator32['return']();
 									}
 								} finally {
-									if (_didIteratorError28) {
-										throw _iteratorError28;
+									if (_didIteratorError32) {
+										throw _iteratorError32;
 									}
 								}
 							}
 	
-							var _iteratorNormalCompletion29 = true;
-							var _didIteratorError29 = false;
-							var _iteratorError29 = undefined;
+							var _iteratorNormalCompletion33 = true;
+							var _didIteratorError33 = false;
+							var _iteratorError33 = undefined;
 	
 							try {
-								for (var _iterator29 = _this3.verticesTo(key)[Symbol.iterator](), _step29; !(_iteratorNormalCompletion29 = (_step29 = _iterator29.next()).done); _iteratorNormalCompletion29 = true) {
-									var _step29$value = _slicedToArray(_step29.value, 1);
+								for (var _iterator33 = _this3.verticesTo(key)[Symbol.iterator](), _step33; !(_iteratorNormalCompletion33 = (_step33 = _iterator33.next()).done); _iteratorNormalCompletion33 = true) {
+									var _step33$value = _slicedToArray(_step33.value, 1);
 	
-									var next = _step29$value[0];
+									var next = _step33$value[0];
 									checkForBlCycle(next);
 								}
 							} catch (err) {
-								_didIteratorError29 = true;
-								_iteratorError29 = err;
+								_didIteratorError33 = true;
+								_iteratorError33 = err;
 							} finally {
 								try {
-									if (!_iteratorNormalCompletion29 && _iterator29['return']) {
-										_iterator29['return']();
+									if (!_iteratorNormalCompletion33 && _iterator33['return']) {
+										_iterator33['return']();
 									}
 								} finally {
-									if (_didIteratorError29) {
-										throw _iteratorError29;
+									if (_didIteratorError33) {
+										throw _iteratorError33;
 									}
 								}
 							}
 						};
-						_iteratorNormalCompletion30 = true;
-						_didIteratorError30 = false;
-						_iteratorError30 = undefined;
+						_iteratorNormalCompletion34 = true;
+						_didIteratorError34 = false;
+						_iteratorError34 = undefined;
 	
 						try {
-							for (_iterator30 = nexuses[Symbol.iterator](); !(_iteratorNormalCompletion30 = (_step30 = _iterator30.next()).done); _iteratorNormalCompletion30 = true) {
-								var key = _step30.value;
+							for (_iterator34 = nexuses[Symbol.iterator](); !(_iteratorNormalCompletion34 = (_step34 = _iterator34.next()).done); _iteratorNormalCompletion34 = true) {
+								var key = _step34.value;
 								checkForBlCycle(key);
 							}
 						} catch (err) {
-							_didIteratorError30 = true;
-							_iteratorError30 = err;
+							_didIteratorError34 = true;
+							_iteratorError34 = err;
 						} finally {
 							try {
-								if (!_iteratorNormalCompletion30 && _iterator30['return']) {
-									_iterator30['return']();
+								if (!_iteratorNormalCompletion34 && _iterator34['return']) {
+									_iterator34['return']();
 								}
 							} finally {
-								if (_didIteratorError30) {
-									throw _iteratorError30;
+								if (_didIteratorError34) {
+									throw _iteratorError34;
 								}
 							}
 						}
@@ -3054,180 +3188,180 @@ return /******/ (function(modules) { // webpackBootstrap
 					contractionsToAdd.get(fromTo()[0]).get(fromTo()[1]).mergeIn(path);
 	
 					/* remove old edges and vertices */
-					var _iteratorNormalCompletion31 = true;
-					var _didIteratorError31 = false;
-					var _iteratorError31 = undefined;
+					var _iteratorNormalCompletion35 = true;
+					var _didIteratorError35 = false;
+					var _iteratorError35 = undefined;
 	
 					try {
-						for (var _iterator31 = edgesToRemove[Symbol.iterator](), _step31; !(_iteratorNormalCompletion31 = (_step31 = _iterator31.next()).done); _iteratorNormalCompletion31 = true) {
-							var key = _step31.value;
+						for (var _iterator35 = edgesToRemove[Symbol.iterator](), _step35; !(_iteratorNormalCompletion35 = (_step35 = _iterator35.next()).done); _iteratorNormalCompletion35 = true) {
+							var key = _step35.value;
 							_this3.removeExistingEdge.apply(_this3, _toConsumableArray(key));
 						}
 					} catch (err) {
-						_didIteratorError31 = true;
-						_iteratorError31 = err;
+						_didIteratorError35 = true;
+						_iteratorError35 = err;
 					} finally {
 						try {
-							if (!_iteratorNormalCompletion31 && _iterator31['return']) {
-								_iterator31['return']();
+							if (!_iteratorNormalCompletion35 && _iterator35['return']) {
+								_iterator35['return']();
 							}
 						} finally {
-							if (_didIteratorError31) {
-								throw _iteratorError31;
+							if (_didIteratorError35) {
+								throw _iteratorError35;
 							}
 						}
 					}
 	
-					var _iteratorNormalCompletion32 = true;
-					var _didIteratorError32 = false;
-					var _iteratorError32 = undefined;
+					var _iteratorNormalCompletion36 = true;
+					var _didIteratorError36 = false;
+					var _iteratorError36 = undefined;
 	
 					try {
-						for (var _iterator32 = verticesToRemove[Symbol.iterator](), _step32; !(_iteratorNormalCompletion32 = (_step32 = _iterator32.next()).done); _iteratorNormalCompletion32 = true) {
-							var key = _step32.value;
+						for (var _iterator36 = verticesToRemove[Symbol.iterator](), _step36; !(_iteratorNormalCompletion36 = (_step36 = _iterator36.next()).done); _iteratorNormalCompletion36 = true) {
+							var key = _step36.value;
 							_this3.destroyExistingVertex(key);
 						}
 					} catch (err) {
-						_didIteratorError32 = true;
-						_iteratorError32 = err;
+						_didIteratorError36 = true;
+						_iteratorError36 = err;
 					} finally {
 						try {
-							if (!_iteratorNormalCompletion32 && _iterator32['return']) {
-								_iterator32['return']();
+							if (!_iteratorNormalCompletion36 && _iterator36['return']) {
+								_iterator36['return']();
 							}
 						} finally {
-							if (_didIteratorError32) {
-								throw _iteratorError32;
+							if (_didIteratorError36) {
+								throw _iteratorError36;
 							}
 						}
 					}
 				};
 	
 				/* process paths starting at all nexus points */
-				var _iteratorNormalCompletion33 = true;
-				var _didIteratorError33 = false;
-				var _iteratorError33 = undefined;
+				var _iteratorNormalCompletion37 = true;
+				var _didIteratorError37 = false;
+				var _iteratorError37 = undefined;
 	
 				try {
-					for (var _iterator33 = nexuses[Symbol.iterator](), _step33; !(_iteratorNormalCompletion33 = (_step33 = _iterator33.next()).done); _iteratorNormalCompletion33 = true) {
-						var first = _step33.value;
-						var _iteratorNormalCompletion35 = true;
-						var _didIteratorError35 = false;
-						var _iteratorError35 = undefined;
+					for (var _iterator37 = nexuses[Symbol.iterator](), _step37; !(_iteratorNormalCompletion37 = (_step37 = _iterator37.next()).done); _iteratorNormalCompletion37 = true) {
+						var first = _step37.value;
+						var _iteratorNormalCompletion39 = true;
+						var _didIteratorError39 = false;
+						var _iteratorError39 = undefined;
 	
 						try {
-							for (var _iterator35 = this.verticesFrom(first)[Symbol.iterator](), _step35; !(_iteratorNormalCompletion35 = (_step35 = _iterator35.next()).done); _iteratorNormalCompletion35 = true) {
-								var _step35$value = _slicedToArray(_step35.value, 1);
+							for (var _iterator39 = this.verticesFrom(first)[Symbol.iterator](), _step39; !(_iteratorNormalCompletion39 = (_step39 = _iterator39.next()).done); _iteratorNormalCompletion39 = true) {
+								var _step39$value = _slicedToArray(_step39.value, 1);
 	
-								var next = _step35$value[0];
+								var next = _step39$value[0];
 								startPath(first, next, false);
 							}
 						} catch (err) {
-							_didIteratorError35 = true;
-							_iteratorError35 = err;
+							_didIteratorError39 = true;
+							_iteratorError39 = err;
 						} finally {
 							try {
-								if (!_iteratorNormalCompletion35 && _iterator35['return']) {
-									_iterator35['return']();
+								if (!_iteratorNormalCompletion39 && _iterator39['return']) {
+									_iterator39['return']();
 								}
 							} finally {
-								if (_didIteratorError35) {
-									throw _iteratorError35;
+								if (_didIteratorError39) {
+									throw _iteratorError39;
 								}
 							}
 						}
 	
-						var _iteratorNormalCompletion36 = true;
-						var _didIteratorError36 = false;
-						var _iteratorError36 = undefined;
+						var _iteratorNormalCompletion40 = true;
+						var _didIteratorError40 = false;
+						var _iteratorError40 = undefined;
 	
 						try {
-							for (var _iterator36 = this.verticesTo(first)[Symbol.iterator](), _step36; !(_iteratorNormalCompletion36 = (_step36 = _iterator36.next()).done); _iteratorNormalCompletion36 = true) {
-								var _step36$value = _slicedToArray(_step36.value, 1);
+							for (var _iterator40 = this.verticesTo(first)[Symbol.iterator](), _step40; !(_iteratorNormalCompletion40 = (_step40 = _iterator40.next()).done); _iteratorNormalCompletion40 = true) {
+								var _step40$value = _slicedToArray(_step40.value, 1);
 	
-								var next = _step36$value[0];
+								var next = _step40$value[0];
 								startPath(first, next, true);
 							}
 						} catch (err) {
-							_didIteratorError36 = true;
-							_iteratorError36 = err;
+							_didIteratorError40 = true;
+							_iteratorError40 = err;
 						} finally {
 							try {
-								if (!_iteratorNormalCompletion36 && _iterator36['return']) {
-									_iterator36['return']();
+								if (!_iteratorNormalCompletion40 && _iterator40['return']) {
+									_iterator40['return']();
 								}
 							} finally {
-								if (_didIteratorError36) {
-									throw _iteratorError36;
+								if (_didIteratorError40) {
+									throw _iteratorError40;
 								}
 							}
 						}
 					}
 				} catch (err) {
-					_didIteratorError33 = true;
-					_iteratorError33 = err;
+					_didIteratorError37 = true;
+					_iteratorError37 = err;
 				} finally {
 					try {
-						if (!_iteratorNormalCompletion33 && _iterator33['return']) {
-							_iterator33['return']();
+						if (!_iteratorNormalCompletion37 && _iterator37['return']) {
+							_iterator37['return']();
 						}
 					} finally {
-						if (_didIteratorError33) {
-							throw _iteratorError33;
+						if (_didIteratorError37) {
+							throw _iteratorError37;
 						}
 					}
 				}
 	
 				/* add the replacement edges */
-				var _iteratorNormalCompletion34 = true;
-				var _didIteratorError34 = false;
-				var _iteratorError34 = undefined;
+				var _iteratorNormalCompletion38 = true;
+				var _didIteratorError38 = false;
+				var _iteratorError38 = undefined;
 	
 				try {
-					for (var _iterator34 = contractionsToAdd[Symbol.iterator](), _step34; !(_iteratorNormalCompletion34 = (_step34 = _iterator34.next()).done); _iteratorNormalCompletion34 = true) {
-						var _step34$value = _slicedToArray(_step34.value, 2);
+					for (var _iterator38 = contractionsToAdd[Symbol.iterator](), _step38; !(_iteratorNormalCompletion38 = (_step38 = _iterator38.next()).done); _iteratorNormalCompletion38 = true) {
+						var _step38$value = _slicedToArray(_step38.value, 2);
 	
-						var from = _step34$value[0];
-						var toVal = _step34$value[1];
-						var _iteratorNormalCompletion37 = true;
-						var _didIteratorError37 = false;
-						var _iteratorError37 = undefined;
+						var from = _step38$value[0];
+						var toVal = _step38$value[1];
+						var _iteratorNormalCompletion41 = true;
+						var _didIteratorError41 = false;
+						var _iteratorError41 = undefined;
 	
 						try {
-							for (var _iterator37 = toVal[Symbol.iterator](), _step37; !(_iteratorNormalCompletion37 = (_step37 = _iterator37.next()).done); _iteratorNormalCompletion37 = true) {
-								var _step37$value = _slicedToArray(_step37.value, 2);
+							for (var _iterator41 = toVal[Symbol.iterator](), _step41; !(_iteratorNormalCompletion41 = (_step41 = _iterator41.next()).done); _iteratorNormalCompletion41 = true) {
+								var _step41$value = _slicedToArray(_step41.value, 2);
 	
-								var to = _step37$value[0];
-								var rememberedPath = _step37$value[1];
+								var to = _step41$value[0];
+								var rememberedPath = _step41$value[1];
 	
 								this.addNewEdge(from, to, rememberedPath);
 							}
 						} catch (err) {
-							_didIteratorError37 = true;
-							_iteratorError37 = err;
+							_didIteratorError41 = true;
+							_iteratorError41 = err;
 						} finally {
 							try {
-								if (!_iteratorNormalCompletion37 && _iterator37['return']) {
-									_iterator37['return']();
+								if (!_iteratorNormalCompletion41 && _iterator41['return']) {
+									_iterator41['return']();
 								}
 							} finally {
-								if (_didIteratorError37) {
-									throw _iteratorError37;
+								if (_didIteratorError41) {
+									throw _iteratorError41;
 								}
 							}
 						}
 					}
 				} catch (err) {
-					_didIteratorError34 = true;
-					_iteratorError34 = err;
+					_didIteratorError38 = true;
+					_iteratorError38 = err;
 				} finally {
 					try {
-						if (!_iteratorNormalCompletion34 && _iterator34['return']) {
-							_iterator34['return']();
+						if (!_iteratorNormalCompletion38 && _iterator38['return']) {
+							_iterator38['return']();
 						}
 					} finally {
-						if (_didIteratorError34) {
-							throw _iteratorError34;
+						if (_didIteratorError38) {
+							throw _iteratorError38;
 						}
 					}
 				}
@@ -3309,54 +3443,54 @@ return /******/ (function(modules) { // webpackBootstrap
 			key: _options$_vertices$_edges$_reverseEdges$_sources$_sinks$_edgeCount$_listeners$_extractTwoArgs$_extractThreeArgs$_trigger$_verticesFrom$_verticesTo$_edgesFrom$_edgesTo$_verticesWithPathTo$_verticesWithPathFrom$_paths$_expectVertices$_expectVerticesAbsent$_expectEdges$_expectEdgesAbsent$_expectNoConnectedEdges._expectNoConnectedEdges,
 			value: function (key) {
 				var edges = [];
-				var _iteratorNormalCompletion38 = true;
-				var _didIteratorError38 = false;
-				var _iteratorError38 = undefined;
+				var _iteratorNormalCompletion42 = true;
+				var _didIteratorError42 = false;
+				var _iteratorError42 = undefined;
 	
 				try {
-					for (var _iterator38 = this.verticesFrom(key)[Symbol.iterator](), _step38; !(_iteratorNormalCompletion38 = (_step38 = _iterator38.next()).done); _iteratorNormalCompletion38 = true) {
-						var _step38$value = _slicedToArray(_step38.value, 1);
+					for (var _iterator42 = this.verticesFrom(key)[Symbol.iterator](), _step42; !(_iteratorNormalCompletion42 = (_step42 = _iterator42.next()).done); _iteratorNormalCompletion42 = true) {
+						var _step42$value = _slicedToArray(_step42.value, 1);
 	
-						var to = _step38$value[0];
+						var to = _step42$value[0];
 						edges.push([[key, to], this.edgeValue(key, to)]);
 					}
 				} catch (err) {
-					_didIteratorError38 = true;
-					_iteratorError38 = err;
+					_didIteratorError42 = true;
+					_iteratorError42 = err;
 				} finally {
 					try {
-						if (!_iteratorNormalCompletion38 && _iterator38['return']) {
-							_iterator38['return']();
+						if (!_iteratorNormalCompletion42 && _iterator42['return']) {
+							_iterator42['return']();
 						}
 					} finally {
-						if (_didIteratorError38) {
-							throw _iteratorError38;
+						if (_didIteratorError42) {
+							throw _iteratorError42;
 						}
 					}
 				}
 	
-				var _iteratorNormalCompletion39 = true;
-				var _didIteratorError39 = false;
-				var _iteratorError39 = undefined;
+				var _iteratorNormalCompletion43 = true;
+				var _didIteratorError43 = false;
+				var _iteratorError43 = undefined;
 	
 				try {
-					for (var _iterator39 = this.verticesTo(key)[Symbol.iterator](), _step39; !(_iteratorNormalCompletion39 = (_step39 = _iterator39.next()).done); _iteratorNormalCompletion39 = true) {
-						var _step39$value = _slicedToArray(_step39.value, 1);
+					for (var _iterator43 = this.verticesTo(key)[Symbol.iterator](), _step43; !(_iteratorNormalCompletion43 = (_step43 = _iterator43.next()).done); _iteratorNormalCompletion43 = true) {
+						var _step43$value = _slicedToArray(_step43.value, 1);
 	
-						var from = _step39$value[0];
+						var from = _step43$value[0];
 						edges.push([[from, key], this.edgeValue(from, key)]);
 					}
 				} catch (err) {
-					_didIteratorError39 = true;
-					_iteratorError39 = err;
+					_didIteratorError43 = true;
+					_iteratorError43 = err;
 				} finally {
 					try {
-						if (!_iteratorNormalCompletion39 && _iterator39['return']) {
-							_iterator39['return']();
+						if (!_iteratorNormalCompletion43 && _iterator43['return']) {
+							_iterator43['return']();
 						}
 					} finally {
-						if (_didIteratorError39) {
-							throw _iteratorError39;
+						if (_didIteratorError43) {
+							throw _iteratorError43;
 						}
 					}
 				}
@@ -3437,27 +3571,27 @@ return /******/ (function(modules) { // webpackBootstrap
 				} else {
 					var obj = name;
 					var _context = method;
-					var _iteratorNormalCompletion40 = true;
-					var _didIteratorError40 = false;
-					var _iteratorError40 = undefined;
+					var _iteratorNormalCompletion44 = true;
+					var _didIteratorError44 = false;
+					var _iteratorError44 = undefined;
 	
 					try {
-						for (var _iterator40 = Object.keys(obj)[Symbol.iterator](), _step40; !(_iteratorNormalCompletion40 = (_step40 = _iterator40.next()).done); _iteratorNormalCompletion40 = true) {
-							var _name = _step40.value;
+						for (var _iterator44 = Object.keys(obj)[Symbol.iterator](), _step44; !(_iteratorNormalCompletion44 = (_step44 = _iterator44.next()).done); _iteratorNormalCompletion44 = true) {
+							var _name = _step44.value;
 	
 							this.plugin(_name, obj[_name], _context || obj);
 						}
 					} catch (err) {
-						_didIteratorError40 = true;
-						_iteratorError40 = err;
+						_didIteratorError44 = true;
+						_iteratorError44 = err;
 					} finally {
 						try {
-							if (!_iteratorNormalCompletion40 && _iterator40['return']) {
-								_iterator40['return']();
+							if (!_iteratorNormalCompletion44 && _iterator44['return']) {
+								_iterator44['return']();
 							}
 						} finally {
-							if (_didIteratorError40) {
-								throw _iteratorError40;
+							if (_didIteratorError44) {
+								throw _iteratorError44;
 							}
 						}
 					}
