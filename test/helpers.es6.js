@@ -11,6 +11,7 @@ export function cycleArrays(...vertices) {
 }
 
 export function set(...elements) { return new Set(elements) }
+export function map(...elements) { return new Map(elements) }
 
 /* convenience notation for testing methods */
 let _describeClassStack = [];

@@ -132,6 +132,7 @@ API Documentation
     * [.verticesWithPathTo(to)](#Graph#verticesWithPathTo) ⇒ <code>[Iterator](#Iterator)</code>
     * [.sources()](#Graph#sources) ⇒ <code>[Iterator](#Iterator)</code>
     * [.sinks()](#Graph#sinks) ⇒ <code>[Iterator](#Iterator)</code>
+    * [.set(other)](#Graph#set)
     * [.clearEdges()](#Graph#clearEdges)
     * [.clear()](#Graph#clear)
     * [.equals(other, [eqV], [eqE])](#Graph#equals) ⇒ <code>boolean</code>
@@ -196,6 +197,7 @@ API Documentation
         * [.verticesWithPathTo(to)](#Graph#verticesWithPathTo) ⇒ <code>[Iterator](#Iterator)</code>
         * [.sources()](#Graph#sources) ⇒ <code>[Iterator](#Iterator)</code>
         * [.sinks()](#Graph#sinks) ⇒ <code>[Iterator](#Iterator)</code>
+        * [.set(other)](#Graph#set)
         * [.clearEdges()](#Graph#clearEdges)
         * [.clear()](#Graph#clear)
         * [.equals(other, [eqV], [eqE])](#Graph#equals) ⇒ <code>boolean</code>
@@ -1000,6 +1002,20 @@ for (let [key, value] of graph.sinks()) {
     // iterates over all vertices with no outgoing edges
 }
 ```
+
+-----
+
+<a name="Graph#set"></a>
+#### *graph*.set(other)
+Set this graph to become equal to another graph, so that it has
+all the same vertices and edges. It emits only those signals
+that are strictly necessary.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| other | <code>[Graph](#Graph)</code> | the graph copy to this graph |
+
 
 -----
 
@@ -2065,6 +2081,20 @@ for (let [key, value] of graph.sinks()) {
     // iterates over all vertices with no outgoing edges
 }
 ```
+
+-----
+
+<a name="Graph#set"></a>
+##### *graphOO*.set(other)
+Set this graph to become equal to another graph, so that it has
+all the same vertices and edges. It emits only those signals
+that are strictly necessary.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| other | <code>[Graph](#Graph)</code> | the graph copy to this graph |
+
 
 -----
 

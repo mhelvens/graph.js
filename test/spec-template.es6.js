@@ -1,6 +1,6 @@
-import {any, cycleArrays, set} from './helpers.es6.js';
-import {describeGraphClass}    from './graph-helpers.es6.js';
-import Graph                   from '../src/graph.es6.js'
+import {any, cycleArrays, set, map} from './helpers.es6.js';
+import {describeGraphClass}         from './graph-helpers.es6.js';
+import Graph                        from '../src/graph.es6.js'
 
 export default function specs(GraphClass, additionalTests=(()=>{})) {
 	describeGraphClass(GraphClass, () => {
@@ -894,6 +894,72 @@ export default function specs(GraphClass, additionalTests=(()=>{})) {
 			it("leaves the graph without vertices", () => {
 				callItWith();
 				expect(graph.vertexCount()).toBe(0);
+			});
+
+		});
+
+
+		describeMethod('set', () => {
+
+			it_throwsNothingWhenPassedAnotherGraph();
+
+			it("leaves this graph equal to the specified graph (partly overlapping graph)", () => {
+				let other = new GraphClass(
+					['k1', "oldValue1"],          // existing vertex same value
+					['k2', "newValue2"],          // existing vertex new value
+					[['k1', 'k2'], "k1k2Value"],  // new edge
+					[['k2', 'k3'], "oldValue23"], // existing edge same value
+					[['k3', 'k4'], "newValue34"], // existing edge new value
+					['n4', "n4Value"]             // new vertex
+					// k4, k5, [k2, k5], [k5, k3] are deleted
+				);
+				callItWith(other);
+				expect(graph).toEqual(other);
+			});
+
+			it("leaves this graph equal to the specified graph (empty graph)", () => {
+				let other = new GraphClass();
+				callItWith(other);
+				expect(graph).toEqual(other);
+			});
+
+			it("leaves this graph equal to the specified graph (identical graph)", () => {
+				let other = graph.clone();
+				callItWith(other);
+				expect(graph).toEqual(other);
+			});
+
+			it("emits exactly those events that are strictly necessary to indicate the update", () => {
+				let other = new GraphClass(
+					['k1', "oldValue1"],          // existing vertex same value
+					['k2', "newValue2"],          // existing vertex new value
+					['k3'],                       // existing vertex same value
+					['k4'],                       // existing vertex same value
+					[['k1', 'k2'], "k1k2Value"],  // new edge
+					[['k2', 'k3'], "oldValue23"], // existing edge same value
+					[['k3', 'k4'], "newValue34"], // existing edge new value
+					['n4', "n4Value"]             // new vertex
+					// k4, k5, [k2, k5], [k5, k3] are removed
+				);
+				let registeredAddedVertices    = {};
+				let registeredRemovedVertices  = {};
+				let registeredModifiedVertices = {};
+				let registeredAddedEdges       = {};
+				let registeredRemovedEdges     = {};
+				let registeredModifiedEdges    = {};
+				graph.on('vertex-added',    ([key, value]) => { registeredAddedVertices   [key] = value });
+				graph.on('vertex-removed',  ( key        ) => { registeredRemovedVertices [key] = true  });
+				graph.on('vertex-modified', ([key, value]) => { registeredModifiedVertices[key] = value });
+				graph.on('edge-added',      ([key, value]) => { registeredAddedEdges      [key] = value });
+				graph.on('edge-removed',    ( key        ) => { registeredRemovedEdges    [key] = true  });
+				graph.on('edge-modified',   ([key, value]) => { registeredModifiedEdges   [key] = value });
+				callItWith(other);
+				expect(registeredAddedVertices)   .toEqual({ 'n4'   : "n4Value"                          });
+				expect(registeredRemovedVertices) .toEqual({ 'k5'   : true                               });
+				expect(registeredModifiedVertices).toEqual({ 'n4'   : "n4Value",   'k2'   : "newValue2"  });
+				expect(registeredAddedEdges)      .toEqual({ 'k1,k2': "k1k2Value"                        });
+				expect(registeredRemovedEdges)    .toEqual({ 'k2,k5': true,        'k5,k3': true         });
+				expect(registeredModifiedEdges)   .toEqual({ 'k1,k2': "k1k2Value", 'k3,k4': "newValue34" });
 			});
 
 		});
