@@ -3637,16 +3637,23 @@ return /******/ (function(modules) { // webpackBootstrap
 			value: function contractPaths() {
 				var _this3 = this;
 	
-				var isNexus = arguments[0] === undefined ? function () {
-					return false;
-				} : arguments[0];
+				var _ref = arguments[0] === undefined ? {} : arguments[0];
+	
+				var isNexus = _ref.isNexus;
+	
+				/* defaults */
+				if (!isNexus) {
+					isNexus = function () {
+						return false;
+					};
+				}
 	
 				/* what makes a a vertex a nexus (start/end-point) */
-				var nexuses = new Set([].concat(_toConsumableArray(this.vertices())).filter(function (_ref) {
-					var _ref2 = _slicedToArray(_ref, 2);
+				var nexuses = new Set([].concat(_toConsumableArray(this.vertices())).filter(function (_ref2) {
+					var _ref22 = _slicedToArray(_ref2, 2);
 	
-					var key = _ref2[0];
-					var val = _ref2[1];
+					var key = _ref22[0];
+					var val = _ref22[1];
 					return _this3.outDegree(key) !== 1 || _this3.inDegree(key) !== 1 || isNexus(key, val);
 				}).map(function (_ref3) {
 					var _ref32 = _slicedToArray(_ref3, 1);
@@ -4027,8 +4034,8 @@ return /******/ (function(modules) { // webpackBootstrap
 					return _this5.hasVertex(k);
 				});
 				if (presentVertices.length) {
-					throw new (_bind.apply(Graph.VertexExistsError, [null].concat(_toConsumableArray(presentVertices.map(function (k) {
-						return [k, _this5.vertexValue(k)];
+					throw new (_bind.apply(Graph.VertexExistsError, [null].concat(_toConsumableArray(presentVertices.map(function (key) {
+						return _this5.vertex(key);
 					})))))();
 				}
 			}
@@ -4061,8 +4068,8 @@ return /******/ (function(modules) { // webpackBootstrap
 					return _this7.hasEdge.apply(_this7, _toConsumableArray(k));
 				});
 				if (presentEdges.length) {
-					throw new (_bind.apply(Graph.EdgeExistsError, [null].concat(_toConsumableArray(presentEdges.map(function (k) {
-						return [k, _this7.edgeValue.apply(_this7, _toConsumableArray(k))];
+					throw new (_bind.apply(Graph.EdgeExistsError, [null].concat(_toConsumableArray(presentEdges.map(function (key) {
+						return _this7.edge(key);
 					})))))();
 				}
 			}
@@ -4079,7 +4086,7 @@ return /******/ (function(modules) { // webpackBootstrap
 						var _step42$value = _slicedToArray(_step42.value, 1);
 	
 						var to = _step42$value[0];
-						edges.push([[key, to], this.edgeValue(key, to)]);
+						edges.push(this.edge(key, to));
 					}
 				} catch (err) {
 					_didIteratorError42 = true;
@@ -4105,7 +4112,7 @@ return /******/ (function(modules) { // webpackBootstrap
 						var _step43$value = _slicedToArray(_step43.value, 1);
 	
 						var from = _step43$value[0];
-						edges.push([[from, key], this.edgeValue(from, key)]);
+						edges.push(this.edge(from, key));
 					}
 				} catch (err) {
 					_didIteratorError43 = true;

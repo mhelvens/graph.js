@@ -411,6 +411,8 @@ return /******/ (function(modules) { // webpackBootstrap
 										thisGraph[_edgeObjects].get(from).set(to, this);
 										thisGraph.addNewEdge(from, to, value);
 									}
+									this._source = thisGraph.vertex(from);
+									this._target = thisGraph.vertex(to);
 								}
 	
 								_inherits(Edge, _EdgeSuperclass);
@@ -476,12 +478,12 @@ return /******/ (function(modules) { // webpackBootstrap
 								}, {
 									key: "source",
 									get: function () {
-										return thisGraph.vertex(this.from);
+										return this._source;
 									}
 								}, {
 									key: "target",
 									get: function () {
-										return thisGraph.vertex(this.to);
+										return this._target;
 									}
 								}, {
 									key: "set",

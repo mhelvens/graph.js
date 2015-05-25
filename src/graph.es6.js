@@ -1367,7 +1367,7 @@ export default class Graph {
 	[_expectVerticesAbsent](...keys) {
 		let presentVertices = keys.filter(k => this.hasVertex(k));
 		if (presentVertices.length) {
-			throw new Graph.VertexExistsError(...presentVertices.map(k => [k, this.vertexValue(k)]));
+			throw new Graph.VertexExistsError(...presentVertices.map(key => this.vertex(key)));
 		}
 	}
 
@@ -1381,14 +1381,14 @@ export default class Graph {
 	[_expectEdgesAbsent](...keys) {
 		let presentEdges = keys.filter(k => this.hasEdge(...k));
 		if (presentEdges.length) {
-			throw new Graph.EdgeExistsError(...presentEdges.map(k => [k, this.edgeValue(...k)]));
+			throw new Graph.EdgeExistsError(...presentEdges.map(key => this.edge(key)));
 		}
 	}
 
 	[_expectNoConnectedEdges](key) {
 		let edges = [];
-		for (let [to]   of this.verticesFrom(key)) { edges.push([[key,  to ], this.edgeValue(key,  to )]) }
-		for (let [from] of this.verticesTo  (key)) { edges.push([[from, key], this.edgeValue(from, key)]) }
+		for (let [to]   of this.verticesFrom(key)) { edges.push(this.edge(key,  to )) }
+		for (let [from] of this.verticesTo  (key)) { edges.push(this.edge(from, key)) }
 		if (edges.length) { throw new Graph.HasConnectedEdgesError(key, ...edges) }
 	}
 

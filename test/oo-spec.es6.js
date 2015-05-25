@@ -5,6 +5,30 @@ import specs                                from './spec-template.es6.js';
 
 let GraphOO = addGraphOO(Graph);
 
+
+
+
+/* loosen the equality tester for arrays to allow Edge and Vertex instances as well */
+const isArrayLike = (o) => (
+	Array.isArray(o) ||
+	o && o.constructor && (o.constructor.name === 'Vertex' || o.constructor.name === 'Edge')
+);
+beforeEach(() => {
+	jasmine.addCustomEqualityTester(function setEquals(a, b) {
+		if (isArrayLike(a) && isArrayLike(b)) {
+			if (a.length !== b.length) { return false }
+			for (let i = 0; i < a.length; ++i) {
+				if (!jasmine.matchersUtil.equals(a[i], b[i], this)) {
+					return false;
+				}
+			}
+			return true;
+		}
+	});
+});
+
+
+
 /* perform the 'Graph' tests also on GraphOO, since GraphOO is a behavioral subtype */
 specs(GraphOO, () => {
 
@@ -860,6 +884,7 @@ specs(GraphOO, () => {
 		});
 	}
 
+
 	/* expect "add" and "modify" events to emit Edge and Vertex instances */
 	describeMethod('on', () => {
 
@@ -912,6 +937,41 @@ specs(GraphOO, () => {
 
 	});
 
-	// TODO: assert that Edge and Vertex objects are used in thrown exceptions
+
+	describeMethod('addNewVertex', () => {
+		it("when throwing an error, throws one with a graph.Vertex instance inside", () => {
+			try { callItWith('k1', "newValue") } catch (err) {
+				expect(err.vertices).toEqual(set( any(graph.Vertex) ));
+			}
+		});
+	});
+
+
+	describeMethod('removeVertex', () => {
+		it("when throwing an error, throws one with graph.Edge instance(s) inside", () => {
+			try { callItWith('k4') } catch (err) {
+				expect(err.edges).toEqual(set( any(graph.Edge) ));
+			}
+		});
+	});
+
+
+	describeMethod('addNewEdge', () => {
+		it("when throwing an error, throws one with a graph.Edge instance inside", () => {
+			try { callItWith('k2', 'k3', "newValue") } catch (err) {
+				expect(err.edges).toEqual(set( any(graph.Edge) ));
+			}
+		});
+	});
+
+
+	describeMethod('createNewEdge', () => {
+		it("when throwing an error, throws one with a graph.Edge instance inside", () => {
+			try { callItWith('k2', 'k3', "newValue") } catch (err) {
+				expect(err.edges).toEqual(set( any(graph.Edge) ));
+			}
+		});
+	});
+
 
 });

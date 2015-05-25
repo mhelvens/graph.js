@@ -94,20 +94,17 @@ beforeEach(() => {
 		}
 	});
 
-	/* loosen the equality tester for arrays to allow array subclasses */
-	jasmine.addCustomEqualityTester(function setEquals(a, b) {
-		if (a instanceof Array && b instanceof Array) {
-			if (a.length !== b.length) { return false }
-			for (let i = 0; i < a.length; ++i) {
-				if (!jasmine.matchersUtil.equals(a[i], b[i], this)) {
-					return false;
-				}
-			}
-			return true;
-		}
-	});
-
 	jasmine.addMatchers({
+		toConsistOf(util, customEqualityTesters) {
+			return {
+				compare(actual, ...expected) {
+					var result = {};
+					result.pass = util.equals(new Set(actual), new Set(expected), customEqualityTesters);
+					result.message = "Expected " + JSON.stringify(actual) + " to consist of the same elements as: " + JSON.stringify(actual);
+					return result;
+				}
+			};
+		},
 		toBeReachable(/*util, customEqualityTesters*/) {
 			return {
 				compare() {
