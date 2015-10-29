@@ -94,79 +94,79 @@ API Documentation
 * [Graph](#Graph)
     * [new Graph(...parts)](#new_Graph_new)
     * <ins><b>instance</b></ins>
-    * [.on(event, handler)](#Graph#on)
-    * [.off(event, handler)](#Graph#off)
-    * [.addNewVertex(key, [value])](#Graph#addNewVertex)
-    * [.setVertex(key, [value])](#Graph#setVertex)
-    * [.ensureVertex(key, [value])](#Graph#ensureVertex)
-    * [.addVertex(key, [value])](#Graph#addVertex)
-    * [.removeExistingVertex(key)](#Graph#removeExistingVertex)
-    * [.destroyExistingVertex(key)](#Graph#destroyExistingVertex)
-    * [.removeVertex(key)](#Graph#removeVertex)
-    * [.destroyVertex(key)](#Graph#destroyVertex)
-    * [.vertexCount()](#Graph#vertexCount) ⇒ <code>number</code>
-    * [.hasVertex(key)](#Graph#hasVertex) ⇒ <code>boolean</code>
-    * [.vertexValue(key)](#Graph#vertexValue) ⇒ <code>\*</code>
-    * [.addNewEdge(from, to, [value])](#Graph#addNewEdge)
-    * [.createNewEdge(from, to, [value])](#Graph#createNewEdge)
-    * [.setEdge(from, to, [value])](#Graph#setEdge)
-    * [.spanEdge(from, to, [value])](#Graph#spanEdge)
-    * [.addEdge(from, to, [value])](#Graph#addEdge)
-    * [.ensureEdge(from, to, [value])](#Graph#ensureEdge)
-    * [.createEdge(from, to, [value])](#Graph#createEdge)
-    * [.removeExistingEdge(from, to)](#Graph#removeExistingEdge)
-    * [.removeEdge(from, to)](#Graph#removeEdge)
-    * [.edgeCount()](#Graph#edgeCount) ⇒ <code>number</code>
-    * [.hasEdge(from, to)](#Graph#hasEdge) ⇒ <code>boolean</code>
-    * [.edgeValue(from, to)](#Graph#edgeValue) ⇒ <code>\*</code>
-    * [.vertices()](#Graph#vertices) ⇒ <code>Iterator.&lt;string, \*&gt;</code>
-    * [.@@iterator()](#Graph#@@iterator) ⇒ <code>Iterator.&lt;string, \*&gt;</code>
-    * [.edges()](#Graph#edges) ⇒ <code>Iterator.&lt;string, string, \*&gt;</code>
-    * [.verticesFrom(from)](#Graph#verticesFrom) ⇒ <code>Iterator.&lt;string, \*, \*&gt;</code>
-    * [.verticesTo(to)](#Graph#verticesTo) ⇒ <code>Iterator.&lt;string, \*, \*&gt;</code>
-    * [.verticesWithPathFrom(from)](#Graph#verticesWithPathFrom) ⇒ <code>Iterator.&lt;string, \*&gt;</code>
-    * [.verticesWithPathTo(to)](#Graph#verticesWithPathTo) ⇒ <code>Iterator.&lt;string, \*&gt;</code>
-    * [.sources()](#Graph#sources) ⇒ <code>Iterator.&lt;string, \*&gt;</code>
-    * [.sinks()](#Graph#sinks) ⇒ <code>Iterator.&lt;string, \*&gt;</code>
-    * [.vertices_topologically()](#Graph#vertices_topologically) ⇒ <code>Iterator.&lt;string, \*&gt;</code>
-    * [.clearEdges()](#Graph#clearEdges)
-    * [.clear()](#Graph#clear)
-    * [.equals(other, [eqV], [eqE])](#Graph#equals) ⇒ <code>boolean</code>
-    * [.cycles()](#Graph#cycles) ⇒ <code>Iterator.&lt;Array.&lt;string&gt;&gt;</code>
-    * [.cycle()](#Graph#cycle) ⇒ <code>Array</code>
-    * [.hasCycle()](#Graph#hasCycle) ⇒ <code>boolean</code>
-    * [.paths(from, to)](#Graph#paths) ⇒ <code>Iterator.&lt;Array.&lt;string&gt;&gt;</code>
-    * [.path(from, to)](#Graph#path) ⇒ <code>Array</code>
-    * [.hasPath(from, to)](#Graph#hasPath) ⇒ <code>boolean</code>
-    * [.outDegree(key)](#Graph#outDegree) ⇒ <code>number</code>
-    * [.inDegree(key)](#Graph#inDegree) ⇒ <code>number</code>
-    * [.degree(key)](#Graph#degree) ⇒ <code>number</code>
-    * [.mergeIn(other, [mV], [mE])](#Graph#mergeIn)
-    * [.clone([trV], [trE])](#Graph#clone) ⇒ <code>[Graph](#Graph)</code>
-    * [.transitiveReduction([trV], [trE])](#Graph#transitiveReduction) ⇒ <code>[Graph](#Graph)</code>
-    * [.contractPaths([isNexus])](#Graph#contractPaths)
-    * ["vertex-added"](#Graph#event_vertex-added)
-    * ["vertex-removed"](#Graph#event_vertex-removed)
-    * ["vertex-modified"](#Graph#event_vertex-modified)
-    * ["edge-added"](#Graph#event_edge-added)
-    * ["edge-removed"](#Graph#event_edge-removed)
-    * ["edge-modified"](#Graph#event_edge-modified)
+    * [.on(event, handler)](#Graph+on)
+    * [.off(event, handler)](#Graph+off)
+    * [.addNewVertex(key, [value])](#Graph+addNewVertex)
+    * [.setVertex(key, [value])](#Graph+setVertex)
+    * [.ensureVertex(key, [value])](#Graph+ensureVertex)
+    * [.addVertex(key, [value])](#Graph+addVertex)
+    * [.removeExistingVertex(key)](#Graph+removeExistingVertex)
+    * [.destroyExistingVertex(key)](#Graph+destroyExistingVertex)
+    * [.removeVertex(key)](#Graph+removeVertex)
+    * [.destroyVertex(key)](#Graph+destroyVertex)
+    * [.vertexCount()](#Graph+vertexCount) ⇒ <code>number</code>
+    * [.hasVertex(key)](#Graph+hasVertex) ⇒ <code>boolean</code>
+    * [.vertexValue(key)](#Graph+vertexValue) ⇒ <code>\*</code>
+    * [.addNewEdge(from, to, [value])](#Graph+addNewEdge)
+    * [.createNewEdge(from, to, [value])](#Graph+createNewEdge)
+    * [.setEdge(from, to, [value])](#Graph+setEdge)
+    * [.spanEdge(from, to, [value])](#Graph+spanEdge)
+    * [.addEdge(from, to, [value])](#Graph+addEdge)
+    * [.ensureEdge(from, to, [value])](#Graph+ensureEdge)
+    * [.createEdge(from, to, [value])](#Graph+createEdge)
+    * [.removeExistingEdge(from, to)](#Graph+removeExistingEdge)
+    * [.removeEdge(from, to)](#Graph+removeEdge)
+    * [.edgeCount()](#Graph+edgeCount) ⇒ <code>number</code>
+    * [.hasEdge(from, to)](#Graph+hasEdge) ⇒ <code>boolean</code>
+    * [.edgeValue(from, to)](#Graph+edgeValue) ⇒ <code>\*</code>
+    * [.vertices()](#Graph+vertices) ⇒ <code>Iterator.&lt;string, \*&gt;</code>
+    * [.@@iterator()](#Graph+@@iterator) ⇒ <code>Iterator.&lt;string, \*&gt;</code>
+    * [.edges()](#Graph+edges) ⇒ <code>Iterator.&lt;string, string, \*&gt;</code>
+    * [.verticesFrom(from)](#Graph+verticesFrom) ⇒ <code>Iterator.&lt;string, \*, \*&gt;</code>
+    * [.verticesTo(to)](#Graph+verticesTo) ⇒ <code>Iterator.&lt;string, \*, \*&gt;</code>
+    * [.verticesWithPathFrom(from)](#Graph+verticesWithPathFrom) ⇒ <code>Iterator.&lt;string, \*&gt;</code>
+    * [.verticesWithPathTo(to)](#Graph+verticesWithPathTo) ⇒ <code>Iterator.&lt;string, \*&gt;</code>
+    * [.sources()](#Graph+sources) ⇒ <code>Iterator.&lt;string, \*&gt;</code>
+    * [.sinks()](#Graph+sinks) ⇒ <code>Iterator.&lt;string, \*&gt;</code>
+    * [.vertices_topologically()](#Graph+vertices_topologically) ⇒ <code>Iterator.&lt;string, \*&gt;</code>
+    * [.clearEdges()](#Graph+clearEdges)
+    * [.clear()](#Graph+clear)
+    * [.equals(other, [eqV], [eqE])](#Graph+equals) ⇒ <code>boolean</code>
+    * [.cycles()](#Graph+cycles) ⇒ <code>Iterator.&lt;Array.&lt;string&gt;&gt;</code>
+    * [.cycle()](#Graph+cycle) ⇒ <code>Array</code>
+    * [.hasCycle()](#Graph+hasCycle) ⇒ <code>boolean</code>
+    * [.paths(from, to)](#Graph+paths) ⇒ <code>Iterator.&lt;Array.&lt;string&gt;&gt;</code>
+    * [.path(from, to)](#Graph+path) ⇒ <code>Array</code>
+    * [.hasPath(from, to)](#Graph+hasPath) ⇒ <code>boolean</code>
+    * [.outDegree(key)](#Graph+outDegree) ⇒ <code>number</code>
+    * [.inDegree(key)](#Graph+inDegree) ⇒ <code>number</code>
+    * [.degree(key)](#Graph+degree) ⇒ <code>number</code>
+    * [.mergeIn(other, [mV], [mE])](#Graph+mergeIn)
+    * [.clone([trV], [trE])](#Graph+clone) ⇒ <code>[Graph](#Graph)</code>
+    * [.transitiveReduction([trV], [trE])](#Graph+transitiveReduction) ⇒ <code>[Graph](#Graph)</code>
+    * [.contractPaths([isNexus])](#Graph+contractPaths)
+    * ["vertex-added"](#Graph+event_vertex-added)
+    * ["vertex-removed"](#Graph+event_vertex-removed)
+    * ["vertex-modified"](#Graph+event_vertex-modified)
+    * ["edge-added"](#Graph+event_edge-added)
+    * ["edge-removed"](#Graph+event_edge-removed)
+    * ["edge-modified"](#Graph+event_edge-modified)
     * <ins><b>static</b></ins>
     * [.VertexExistsError](#Graph.VertexExistsError) ⇐ <code>Error</code>
-        * [.vertices](#Graph.VertexExistsError#vertices) : <code>Set.&lt;Array&gt;</code>
+        * [.vertices](#Graph.VertexExistsError+vertices) : <code>Set.&lt;Array&gt;</code>
     * [.VertexNotExistsError](#Graph.VertexNotExistsError) ⇐ <code>Error</code>
-        * [.vertices](#Graph.VertexNotExistsError#vertices) : <code>Set.&lt;string&gt;</code>
+        * [.vertices](#Graph.VertexNotExistsError+vertices) : <code>Set.&lt;string&gt;</code>
     * [.EdgeExistsError](#Graph.EdgeExistsError) ⇐ <code>Error</code>
-        * [.edges](#Graph.EdgeExistsError#edges) : <code>Set.&lt;Array&gt;</code>
+        * [.edges](#Graph.EdgeExistsError+edges) : <code>Set.&lt;Array&gt;</code>
     * [.EdgeNotExistsError](#Graph.EdgeNotExistsError) ⇐ <code>Error</code>
-        * [.edges](#Graph.EdgeNotExistsError#edges) : <code>Set.&lt;Array.&lt;string&gt;&gt;</code>
+        * [.edges](#Graph.EdgeNotExistsError+edges) : <code>Set.&lt;Array.&lt;string&gt;&gt;</code>
     * [.HasConnectedEdgesError](#Graph.HasConnectedEdgesError) ⇐ <code>[EdgeExistsError](#Graph.EdgeExistsError)</code>
-        * [.vertex](#Graph.HasConnectedEdgesError#vertex) : <code>string</code>
-        * [.edges](#Graph.EdgeExistsError#edges) : <code>Set.&lt;Array&gt;</code>
+        * [.vertex](#Graph.HasConnectedEdgesError+vertex) : <code>string</code>
+        * [.edges](#Graph.EdgeExistsError+edges) : <code>Set.&lt;Array&gt;</code>
     * [.CycleError](#Graph.CycleError) ⇐ <code>Error</code>
-        * [.cycle](#Graph.CycleError#cycle) : <code>Array.&lt;string&gt;</code>
+        * [.cycle](#Graph.CycleError+cycle) : <code>Array.&lt;string&gt;</code>
     * [.BranchlessCycleError](#Graph.BranchlessCycleError) ⇐ <code>[CycleError](#Graph.CycleError)</code>
-        * [.cycle](#Graph.CycleError#cycle) : <code>Array.&lt;string&gt;</code>
+        * [.cycle](#Graph.CycleError+cycle) : <code>Array.&lt;string&gt;</code>
 
 
 -----
@@ -198,7 +198,7 @@ var map = new Graph(
 
 -----
 
-<a name="Graph#on"></a>
+<a name="Graph+on"></a>
 #### *graph*.on(event, handler)
 Register an event handler.
 
@@ -211,7 +211,7 @@ Register an event handler.
 
 -----
 
-<a name="Graph#off"></a>
+<a name="Graph+off"></a>
 #### *graph*.off(event, handler)
 Deregister a previously registered event handler.
 
@@ -224,7 +224,7 @@ Deregister a previously registered event handler.
 
 -----
 
-<a name="Graph#addNewVertex"></a>
+<a name="Graph+addNewVertex"></a>
 #### *graph*.addNewVertex(key, [value])
 Add a new vertex to this graph.
 
@@ -241,7 +241,7 @@ Add a new vertex to this graph.
 
 -----
 
-<a name="Graph#setVertex"></a>
+<a name="Graph+setVertex"></a>
 #### *graph*.setVertex(key, [value])
 Set the value of an existing vertex in this graph.
 
@@ -258,7 +258,7 @@ Set the value of an existing vertex in this graph.
 
 -----
 
-<a name="Graph#ensureVertex"></a>
+<a name="Graph+ensureVertex"></a>
 #### *graph*.ensureVertex(key, [value])
 Make sure a vertex with a specific key exists in this graph. If it already exists,
 do nothing. If it does not yet exist, add a new vertex with the given value.
@@ -272,7 +272,7 @@ do nothing. If it does not yet exist, add a new vertex with the given value.
 
 -----
 
-<a name="Graph#addVertex"></a>
+<a name="Graph+addVertex"></a>
 #### *graph*.addVertex(key, [value])
 Add a new vertex to this graph. If a vertex with this key already exists,
 the value of that vertex is overwritten.
@@ -286,7 +286,7 @@ the value of that vertex is overwritten.
 
 -----
 
-<a name="Graph#removeExistingVertex"></a>
+<a name="Graph+removeExistingVertex"></a>
 #### *graph*.removeExistingVertex(key)
 Remove an existing vertex from this graph.
 
@@ -303,7 +303,7 @@ Remove an existing vertex from this graph.
 
 -----
 
-<a name="Graph#destroyExistingVertex"></a>
+<a name="Graph+destroyExistingVertex"></a>
 #### *graph*.destroyExistingVertex(key)
 Remove an existing vertex from this graph, as well as all edges connected to it.
 
@@ -319,7 +319,7 @@ Remove an existing vertex from this graph, as well as all edges connected to it.
 
 -----
 
-<a name="Graph#removeVertex"></a>
+<a name="Graph+removeVertex"></a>
 #### *graph*.removeVertex(key)
 Remove an existing vertex from this graph.
 If a vertex with this key does not exist, nothing happens.
@@ -336,7 +336,7 @@ If a vertex with this key does not exist, nothing happens.
 
 -----
 
-<a name="Graph#destroyVertex"></a>
+<a name="Graph+destroyVertex"></a>
 #### *graph*.destroyVertex(key)
 Remove a vertex from this graph, as well as all edges connected to it.
 If a vertex with this key does not exist, nothing happens.
@@ -349,13 +349,13 @@ If a vertex with this key does not exist, nothing happens.
 
 -----
 
-<a name="Graph#vertexCount"></a>
+<a name="Graph+vertexCount"></a>
 #### *graph*.vertexCount() ⇒ <code>number</code>
 **Returns**: <code>number</code> - the number of vertices in the whole graph  
 
 -----
 
-<a name="Graph#hasVertex"></a>
+<a name="Graph+hasVertex"></a>
 #### *graph*.hasVertex(key) ⇒ <code>boolean</code>
 Ask whether a vertex with a given key exists.
 
@@ -368,7 +368,7 @@ Ask whether a vertex with a given key exists.
 
 -----
 
-<a name="Graph#vertexValue"></a>
+<a name="Graph+vertexValue"></a>
 #### *graph*.vertexValue(key) ⇒ <code>\*</code>
 Get the value associated with the vertex of a given key.
 
@@ -383,11 +383,11 @@ Note that a return value of `undefined` can mean
 1. that there is no such vertex, or
 2. that the stored value is actually `undefined`.
 
-Use [hasVertex](#Graph#hasVertex) to distinguish these cases.  
+Use [hasVertex](#Graph+hasVertex) to distinguish these cases.  
 
 -----
 
-<a name="Graph#addNewEdge"></a>
+<a name="Graph+addNewEdge"></a>
 #### *graph*.addNewEdge(from, to, [value])
 Add a new edge to this graph.
 
@@ -406,7 +406,7 @@ Add a new edge to this graph.
 
 -----
 
-<a name="Graph#createNewEdge"></a>
+<a name="Graph+createNewEdge"></a>
 #### *graph*.createNewEdge(from, to, [value])
 Add a new edge to this graph. If the `from` and/or `to` vertices do not yet exist
 in the graph, they are implicitly added with an `undefined` value.
@@ -425,7 +425,7 @@ in the graph, they are implicitly added with an `undefined` value.
 
 -----
 
-<a name="Graph#setEdge"></a>
+<a name="Graph+setEdge"></a>
 #### *graph*.setEdge(from, to, [value])
 Set the value of an existing edge in this graph.
 
@@ -443,7 +443,7 @@ Set the value of an existing edge in this graph.
 
 -----
 
-<a name="Graph#spanEdge"></a>
+<a name="Graph+spanEdge"></a>
 #### *graph*.spanEdge(from, to, [value])
 Make sure an edge between the `from` and `to` vertices in this graph.
 If one already exists, nothing is done.
@@ -463,7 +463,7 @@ If one does not yet exist, a new edge is added with the given value.
 
 -----
 
-<a name="Graph#addEdge"></a>
+<a name="Graph+addEdge"></a>
 #### *graph*.addEdge(from, to, [value])
 Add a new edge to this graph. If an edge between `from` and `to` already exists,
 the value of that edge is overwritten.
@@ -482,7 +482,7 @@ the value of that edge is overwritten.
 
 -----
 
-<a name="Graph#ensureEdge"></a>
+<a name="Graph+ensureEdge"></a>
 #### *graph*.ensureEdge(from, to, [value])
 Make sure an edge between the `from` and `to` vertices exists in this graph.
 If it already exists, nothing is done.
@@ -500,7 +500,7 @@ in the graph, they are implicitly added with an `undefined` value.
 
 -----
 
-<a name="Graph#createEdge"></a>
+<a name="Graph+createEdge"></a>
 #### *graph*.createEdge(from, to, [value])
 Add a new edge to this graph. If an edge between the `from` and `to`
 vertices already exists, the value of that edge is overwritten.
@@ -517,7 +517,7 @@ in the graph, they are implicitly added with an `undefined` value.
 
 -----
 
-<a name="Graph#removeExistingEdge"></a>
+<a name="Graph+removeExistingEdge"></a>
 #### *graph*.removeExistingEdge(from, to)
 Remove an existing edge from this graph.
 
@@ -534,7 +534,7 @@ Remove an existing edge from this graph.
 
 -----
 
-<a name="Graph#removeEdge"></a>
+<a name="Graph+removeEdge"></a>
 #### *graph*.removeEdge(from, to)
 Remove an edge from this graph.
 If an edge between the `from` and `to` vertices doesn't exist, nothing happens.
@@ -548,13 +548,13 @@ If an edge between the `from` and `to` vertices doesn't exist, nothing happens.
 
 -----
 
-<a name="Graph#edgeCount"></a>
+<a name="Graph+edgeCount"></a>
 #### *graph*.edgeCount() ⇒ <code>number</code>
 **Returns**: <code>number</code> - the number of edges in the whole graph  
 
 -----
 
-<a name="Graph#hasEdge"></a>
+<a name="Graph+hasEdge"></a>
 #### *graph*.hasEdge(from, to) ⇒ <code>boolean</code>
 Ask whether an edge between given `from` and `to` vertices exist.
 
@@ -568,7 +568,7 @@ Ask whether an edge between given `from` and `to` vertices exist.
 
 -----
 
-<a name="Graph#edgeValue"></a>
+<a name="Graph+edgeValue"></a>
 #### *graph*.edgeValue(from, to) ⇒ <code>\*</code>
 Get the value associated with the edge between given `from` and `to` vertices.
 
@@ -584,11 +584,11 @@ Note that a return value of `undefined` can mean
 1. that there is no such edge, or
 2. that the stored value is actually `undefined`.
 
-Use [hasEdge](#Graph#hasEdge) to distinguish these cases.  
+Use [hasEdge](#Graph+hasEdge) to distinguish these cases.  
 
 -----
 
-<a name="Graph#vertices"></a>
+<a name="Graph+vertices"></a>
 #### *graph*.vertices() ⇒ <code>Iterator.&lt;string, \*&gt;</code>
 Iterate over all vertices of the graph, in no particular order.
 
@@ -608,11 +608,11 @@ for (let [key, value] of graph.vertices()) {
     // iterates over all vertices of the graph
 }
 ```
-**See**: [@@iterator](#Graph#@@iterator)
+**See**: [@@iterator](#Graph+@@iterator)
 
 -----
 
-<a name="Graph#@@iterator"></a>
+<a name="Graph+@@iterator"></a>
 #### *graph*.@@iterator() ⇒ <code>Iterator.&lt;string, \*&gt;</code>
 A [Graph](#Graph) object is itself [iterable](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterable_protocol),
 and serves as a short notation in ECMAScript 6 to iterate over all vertices in the graph, in no particular order.
@@ -624,11 +624,11 @@ for (let [key, value] of graph) {
     // iterates over all vertices of the graph
 }
 ```
-**See**: [vertices](#Graph#vertices)
+**See**: [vertices](#Graph+vertices)
 
 -----
 
-<a name="Graph#edges"></a>
+<a name="Graph+edges"></a>
 #### *graph*.edges() ⇒ <code>Iterator.&lt;string, string, \*&gt;</code>
 Iterate over all edges of the graph, in no particular order.
 
@@ -652,7 +652,7 @@ for (let [from, to, value] of graph.edges()) {
 
 -----
 
-<a name="Graph#verticesFrom"></a>
+<a name="Graph+verticesFrom"></a>
 #### *graph*.verticesFrom(from) ⇒ <code>Iterator.&lt;string, \*, \*&gt;</code>
 Iterate over the outgoing edges of a given vertex in the graph, in no particular order.
 
@@ -685,7 +685,7 @@ for (let [to, vertexValue, edgeValue] of graph.verticesFrom(from)) {
 
 -----
 
-<a name="Graph#verticesTo"></a>
+<a name="Graph+verticesTo"></a>
 #### *graph*.verticesTo(to) ⇒ <code>Iterator.&lt;string, \*, \*&gt;</code>
 Iterate over the incoming edges of a given vertex in the graph, in no particular order.
 
@@ -718,7 +718,7 @@ for (let [from, vertexValue, edgeValue] of graph.verticesTo(to)) {
 
 -----
 
-<a name="Graph#verticesWithPathFrom"></a>
+<a name="Graph+verticesWithPathFrom"></a>
 #### *graph*.verticesWithPathFrom(from) ⇒ <code>Iterator.&lt;string, \*&gt;</code>
 Iterate over all vertices reachable from a given vertex in the graph, in no particular order.
 
@@ -750,7 +750,7 @@ for (let [key, value] of graph.verticesWithPathFrom(from)) {
 
 -----
 
-<a name="Graph#verticesWithPathTo"></a>
+<a name="Graph+verticesWithPathTo"></a>
 #### *graph*.verticesWithPathTo(to) ⇒ <code>Iterator.&lt;string, \*&gt;</code>
 Iterate over all vertices from which a given vertex in the graph can be reached, in no particular order.
 
@@ -782,7 +782,7 @@ for (let [key, value] of graph.verticesWithPathTo(to)) {
 
 -----
 
-<a name="Graph#sources"></a>
+<a name="Graph+sources"></a>
 #### *graph*.sources() ⇒ <code>Iterator.&lt;string, \*&gt;</code>
 Iterate over all vertices that have no incoming edges, in no particular order.
 
@@ -805,7 +805,7 @@ for (let [key, value] of graph.sources()) {
 
 -----
 
-<a name="Graph#sinks"></a>
+<a name="Graph+sinks"></a>
 #### *graph*.sinks() ⇒ <code>Iterator.&lt;string, \*&gt;</code>
 Iterate over all vertices that have no outgoing edges, in no particular order.
 
@@ -828,7 +828,7 @@ for (let [key, value] of graph.sinks()) {
 
 -----
 
-<a name="Graph#vertices_topologically"></a>
+<a name="Graph+vertices_topologically"></a>
 #### *graph*.vertices_topologically() ⇒ <code>Iterator.&lt;string, \*&gt;</code>
 Iterate over all vertices of the graph in topological order.
 
@@ -851,21 +851,21 @@ for (let [key, value] of graph.vertices_topologically()) {
 
 -----
 
-<a name="Graph#clearEdges"></a>
+<a name="Graph+clearEdges"></a>
 #### *graph*.clearEdges()
 Remove all edges from the graph, but leave the vertices intact.
 
 
 -----
 
-<a name="Graph#clear"></a>
+<a name="Graph+clear"></a>
 #### *graph*.clear()
 Remove all edges and vertices from the graph, putting it back in its initial state.
 
 
 -----
 
-<a name="Graph#equals"></a>
+<a name="Graph+equals"></a>
 #### *graph*.equals(other, [eqV], [eqE]) ⇒ <code>boolean</code>
 Ask whether `this` graph and a given `other` graph are equal.
 Two graphs are equal if they have the same vertices and the same edges.
@@ -881,7 +881,7 @@ Two graphs are equal if they have the same vertices and the same edges.
 
 -----
 
-<a name="Graph#cycles"></a>
+<a name="Graph+cycles"></a>
 #### *graph*.cycles() ⇒ <code>Iterator.&lt;Array.&lt;string&gt;&gt;</code>
 Iterate over all simple directed cycles in this graph, in no particular order.
 If you mutate the graph in between iterations, behavior of the iterator
@@ -907,7 +907,7 @@ for (let cycle of graph.cycles()) {
 
 -----
 
-<a name="Graph#cycle"></a>
+<a name="Graph+cycle"></a>
 #### *graph*.cycle() ⇒ <code>Array</code>
 Find any directed cycle in this graph.
 
@@ -916,7 +916,7 @@ Find any directed cycle in this graph.
 
 -----
 
-<a name="Graph#hasCycle"></a>
+<a name="Graph+hasCycle"></a>
 #### *graph*.hasCycle() ⇒ <code>boolean</code>
 Test whether this graph contains a directed cycle.
 
@@ -924,7 +924,7 @@ Test whether this graph contains a directed cycle.
 
 -----
 
-<a name="Graph#paths"></a>
+<a name="Graph+paths"></a>
 #### *graph*.paths(from, to) ⇒ <code>Iterator.&lt;Array.&lt;string&gt;&gt;</code>
 Iterate over all paths between two given keys in this graph, in no particular order.
 If you mutate the graph in between iterations, behavior of the iterator
@@ -959,7 +959,7 @@ for (let path of graph.paths()) {
 
 -----
 
-<a name="Graph#path"></a>
+<a name="Graph+path"></a>
 #### *graph*.path(from, to) ⇒ <code>Array</code>
 Find any path between a given pair of keys.
 
@@ -978,7 +978,7 @@ Find any path between a given pair of keys.
 
 -----
 
-<a name="Graph#hasPath"></a>
+<a name="Graph+hasPath"></a>
 #### *graph*.hasPath(from, to) ⇒ <code>boolean</code>
 Test whether there is a directed path between a given pair of keys.
 
@@ -996,7 +996,7 @@ Test whether there is a directed path between a given pair of keys.
 
 -----
 
-<a name="Graph#outDegree"></a>
+<a name="Graph+outDegree"></a>
 #### *graph*.outDegree(key) ⇒ <code>number</code>
 Get the number of edges going out of a given vertex.
 
@@ -1013,7 +1013,7 @@ Get the number of edges going out of a given vertex.
 
 -----
 
-<a name="Graph#inDegree"></a>
+<a name="Graph+inDegree"></a>
 #### *graph*.inDegree(key) ⇒ <code>number</code>
 Get the number of edges coming into a given vertex.
 
@@ -1030,7 +1030,7 @@ Get the number of edges coming into a given vertex.
 
 -----
 
-<a name="Graph#degree"></a>
+<a name="Graph+degree"></a>
 #### *graph*.degree(key) ⇒ <code>number</code>
 Get the number of edges connected to a given vertex.
 
@@ -1047,7 +1047,7 @@ Get the number of edges connected to a given vertex.
 
 -----
 
-<a name="Graph#mergeIn"></a>
+<a name="Graph+mergeIn"></a>
 #### *graph*.mergeIn(other, [mV], [mE])
 Merge another graph into this graph.
 
@@ -1061,7 +1061,7 @@ Merge another graph into this graph.
 
 -----
 
-<a name="Graph#clone"></a>
+<a name="Graph+clone"></a>
 #### *graph*.clone([trV], [trE]) ⇒ <code>[Graph](#Graph)</code>
 Create a clone of this graph.
 
@@ -1075,7 +1075,7 @@ Create a clone of this graph.
 
 -----
 
-<a name="Graph#transitiveReduction"></a>
+<a name="Graph+transitiveReduction"></a>
 #### *graph*.transitiveReduction([trV], [trE]) ⇒ <code>[Graph](#Graph)</code>
 Create a clone of this graph, but without any transitive edges.
 
@@ -1089,7 +1089,7 @@ Create a clone of this graph, but without any transitive edges.
 
 -----
 
-<a name="Graph#contractPaths"></a>
+<a name="Graph+contractPaths"></a>
 #### *graph*.contractPaths([isNexus])
 This method replaces stretches of non-branching directed pathway into single edges.
 More specifically, it identifies all 'nexus' vertices in the graph and preserves them.
@@ -1112,59 +1112,59 @@ that should be preserved as nexus.
 
 -----
 
-<a name="Graph#event_vertex-added"></a>
+<a name="Graph+event_vertex-added"></a>
 #### "vertex-added"
 An event that is triggered just after a vertex is added to this graph.
 Handlers receive the new vertex `[key, value]` as an argument.
 
-**See**: [on](#Graph#on), [off](#Graph#off)
+**See**: [on](#Graph+on), [off](#Graph+off)
 
 -----
 
-<a name="Graph#event_vertex-removed"></a>
+<a name="Graph+event_vertex-removed"></a>
 #### "vertex-removed"
 An event that is triggered just after a vertex is removed from this graph.
 Handlers receive the vertex key as an argument.
 
-**See**: [on](#Graph#on), [off](#Graph#off)
+**See**: [on](#Graph+on), [off](#Graph+off)
 
 -----
 
-<a name="Graph#event_vertex-modified"></a>
+<a name="Graph+event_vertex-modified"></a>
 #### "vertex-modified"
 An event that is triggered after a vertex in this graph is modified.
 It is also triggered after any ["vertex-added"](#Graph#event_vertex-added) event.
 Handlers receive the vertex `[key, value]` as an argument.
 
-**See**: [on](#Graph#on), [off](#Graph#off)
+**See**: [on](#Graph+on), [off](#Graph+off)
 
 -----
 
-<a name="Graph#event_edge-added"></a>
+<a name="Graph+event_edge-added"></a>
 #### "edge-added"
 An event that is triggered just after an edge is added to this graph.
 Handlers receive the new edge `[[from, to], value]` as an argument.
 
-**See**: [on](#Graph#on), [off](#Graph#off)
+**See**: [on](#Graph+on), [off](#Graph+off)
 
 -----
 
-<a name="Graph#event_edge-removed"></a>
+<a name="Graph+event_edge-removed"></a>
 #### "edge-removed"
 An event that is triggered just after an edge is removed from this graph.
 Handlers receive the edge key `[from, to]` as an argument.
 
-**See**: [on](#Graph#on), [off](#Graph#off)
+**See**: [on](#Graph+on), [off](#Graph+off)
 
 -----
 
-<a name="Graph#event_edge-modified"></a>
+<a name="Graph+event_edge-modified"></a>
 #### "edge-modified"
 An event that is triggered after an edge in this graph is modified.
 It is also triggered after any ["edge-added"](#Graph#event_edge-added) event.
 Handlers receive the edge `[[from, to], value]` as an argument.
 
-**See**: [on](#Graph#on), [off](#Graph#off)
+**See**: [on](#Graph+on), [off](#Graph+off)
 
 -----
 
@@ -1176,7 +1176,7 @@ This type of error is thrown when specific vertices are expected not to exist, b
 
 -----
 
-<a name="Graph.VertexExistsError#vertices"></a>
+<a name="Graph.VertexExistsError+vertices"></a>
 ##### *vertexExistsError*.vertices : <code>Set.&lt;Array&gt;</code>
 the set of relevant vertices as `[key, value]` shaped arrays
 
@@ -1191,7 +1191,7 @@ This type of error is thrown when specific vertices are expected to exist, but d
 
 -----
 
-<a name="Graph.VertexNotExistsError#vertices"></a>
+<a name="Graph.VertexNotExistsError+vertices"></a>
 ##### *vertexNotExistsError*.vertices : <code>Set.&lt;string&gt;</code>
 the set of relevant vertex keys
 
@@ -1206,7 +1206,7 @@ This type of error is thrown when specific edges are expected not to exist, but 
 
 -----
 
-<a name="Graph.EdgeExistsError#edges"></a>
+<a name="Graph.EdgeExistsError+edges"></a>
 ##### *edgeExistsError*.edges : <code>Set.&lt;Array&gt;</code>
 the set of relevant edges as `[[from, to], value]` shaped arrays
 
@@ -1221,7 +1221,7 @@ This type of error is thrown when specific edges are expected to exist, but don'
 
 -----
 
-<a name="Graph.EdgeNotExistsError#edges"></a>
+<a name="Graph.EdgeNotExistsError+edges"></a>
 ##### *edgeNotExistsError*.edges : <code>Set.&lt;Array.&lt;string&gt;&gt;</code>
 the set of relevant edge keys as `[from, to]` shaped arrays
 
@@ -1236,14 +1236,14 @@ This type of error is thrown when a vertex is expected not to have any connected
 
 -----
 
-<a name="Graph.HasConnectedEdgesError#vertex"></a>
+<a name="Graph.HasConnectedEdgesError+vertex"></a>
 ##### *hasConnectedEdgesError*.vertex : <code>string</code>
 the key of the vertex that has connected edges
 
 
 -----
 
-<a name="Graph.EdgeExistsError#edges"></a>
+<a name="Graph.EdgeExistsError+edges"></a>
 ##### *hasConnectedEdgesError*.edges : <code>Set.&lt;Array&gt;</code>
 the set of relevant edges as `[[from, to], value]` shaped arrays
 
@@ -1258,7 +1258,7 @@ This type of error is thrown when a graph is expected not to have a directed cyc
 
 -----
 
-<a name="Graph.CycleError#cycle"></a>
+<a name="Graph.CycleError+cycle"></a>
 ##### *cycleError*.cycle : <code>Array.&lt;string&gt;</code>
 the vertices involved in the cycle, in order but with an unspecified starting point
 
@@ -1273,7 +1273,7 @@ This type of error is thrown when a graph is expected not to have a branch-less 
 
 -----
 
-<a name="Graph.CycleError#cycle"></a>
+<a name="Graph.CycleError+cycle"></a>
 ##### *branchlessCycleError*.cycle : <code>Array.&lt;string&gt;</code>
 the vertices involved in the cycle, in order but with an unspecified starting point
 

@@ -1295,7 +1295,7 @@ Graph.VertexExistsError = class VertexExistsError extends Error {
  * @classdesc This type of error is thrown when specific vertices are expected to exist, but don't.
  * @extends Error
  */
-Graph.VertexNotExistsError = class VertexNotExistError extends Error {
+Graph.VertexNotExistsError = class VertexNotExistsError extends Error {
 	constructor(...keys) {
 		super();
 		/**

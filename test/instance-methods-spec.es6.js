@@ -2502,7 +2502,7 @@ describeMethod('edges', () => {
 describeMethod('verticesFrom', () => {
 
 	it("throws an error if the given vertex does not exist", () => {
-		expectItWhenBoundWith('newKey').toThrowSpecific(Graph.VertexNotExistsError, new Set(['newKey']));
+		expectItWhenBoundWith('newKey').toThrowSpecific(Graph.VertexNotExistsError, { vertices: new Set(['newKey']) });
 	});
 
 	it("throws nothing if the given vertex exists", () => {
@@ -2542,7 +2542,7 @@ describeMethod('verticesFrom', () => {
 describeMethod('verticesTo', () => {
 
 	it("throws an error if the given vertex does not exist", () => {
-		expectItWhenBoundWith('newKey').toThrowSpecific(Graph.VertexNotExistsError, new Set(['newKey']));
+		expectItWhenBoundWith('newKey').toThrowSpecific(Graph.VertexNotExistsError, { vertices: new Set(['newKey']) });
 	});
 
 	it("throws nothing if the given vertex exists", () => {
@@ -2582,7 +2582,7 @@ describeMethod('verticesTo', () => {
 describeMethod('verticesWithPathFrom', () => {
 
 	it("throws an error if the given vertex does not exist", () => {
-		expectItWhenBoundWith('newKey').toThrowSpecific(Graph.VertexNotExistsError, new Set(['newKey']));
+		expectItWhenBoundWith('newKey').toThrowSpecific(Graph.VertexNotExistsError, { vertices: new Set(['newKey']) });
 	});
 
 	it("throws nothing if the given vertex exists", () => {
@@ -2623,7 +2623,7 @@ describeMethod('verticesWithPathFrom', () => {
 describeMethod('verticesWithPathTo', () => {
 
 	it("throws an error if the given vertex does not exist", () => {
-		expectItWhenBoundWith('newKey').toThrowSpecific(Graph.VertexNotExistsError, new Set(['newKey']));
+		expectItWhenBoundWith('newKey').toThrowSpecific(Graph.VertexNotExistsError, { vertices: new Set(['newKey']) });
 	});
 
 	it("throws nothing if the given vertex exists", () => {
