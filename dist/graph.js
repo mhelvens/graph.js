@@ -2423,7 +2423,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 						var key = _step22$value[0];
 	
-						this.addVertex(key, mV(this.vertexValue(key), other.vertexValue(key)));
+						this.addVertex(key, mV(this.vertexValue(key), other.vertexValue(key), key));
 					}
 				} catch (err) {
 					_didIteratorError22 = true;
@@ -2491,10 +2491,10 @@ return /******/ (function(modules) { // webpackBootstrap
 				var trE = arguments[1] === undefined ? trV : arguments[1];
 				return (function () {
 					var result = new Graph();
-					result.mergeIn(this, function (v1, v2) {
-						return trV(v2);
-					}, function (v1, v2) {
-						return trE(v2);
+					result.mergeIn(this, function (v1, v2, key) {
+						return trV(v2, key);
+					}, function (v1, v2, from, to) {
+						return trE(v2, from, to);
 					});
 					return result;
 				}).apply(this, arguments);

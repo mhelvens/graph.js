@@ -2000,21 +2000,21 @@ describeMethod('mergeIn', () => {
 	});
 
 	it("properly merges in the other graph when using a custom merge function", () => {
-		graph.mergeIn(other, (v1, v2) => `${v1}:${v2}`);
+		graph.mergeIn(other, (v1, v2, key) => `${key}:${v1}:${v2}`, (v1, v2, from, to) => `${from}:${to}:${v1}:${v2}`);
 
 		expect(graph).toEqual(new Graph(
-			['k1', "oldValue1:newValue1"],
-			['k2', "undefined:newValue2"],
-			['k3', "undefined:undefined"],
-			['k4', "undefined:undefined"],
-			['k5', "oldValue5:undefined"],
-			[['k2', 'k1'], "undefined:newValue21"],
-			[['k2', 'k3'], "oldValue23"          ],
-			[['k2', 'k5']                        ],
-			[['k3', 'k4'], "undefined:undefined" ],
-			[['k5', 'k2'], "undefined:undefined" ],
-			[['k5', 'k3']                        ],
-			[['k5', 'k4'], "undefined:undefined" ]
+			['k1', "k1:oldValue1:newValue1"],
+			['k2', "k2:undefined:newValue2"],
+			['k3', "k3:undefined:undefined"],
+			['k4', "k4:undefined:undefined"],
+			['k5', "k5:oldValue5:undefined"],
+			[['k2', 'k1'], "k2:k1:undefined:newValue21"],
+			[['k2', 'k3'], "oldValue23"],
+			[['k2', 'k5']                              ],
+			[['k3', 'k4'], "k3:k4:undefined:undefined" ],
+			[['k5', 'k2'], "k5:k2:undefined:undefined" ],
+			[['k5', 'k3']                              ],
+			[['k5', 'k4'], "k5:k4:undefined:undefined" ]
 		));
 	});
 
@@ -2056,14 +2056,14 @@ describeMethod('clone', () => {
 	});
 
 	it("returns a new graph with the same vertices and edges as the original, with values influenced by custom vertex value transformer", () => {
-		let newGraph = callItWith(v=>`value:${v}`, v=>v);
+		let newGraph = callItWith((v,k)=>`${k}:${v}`, v=>v);
 		for (let [key, val] of newGraph.vertices()) {
 			expect(graph.hasVertex(key)).toBeTruthy();
-			expect(val).toBe(`value:${graph.vertexValue(key)}`);
+			expect(val).toBe(`${key}:${graph.vertexValue(key)}`);
 		}
 		for (let [key, val] of graph.vertices()) {
 			expect(newGraph.hasVertex(key)).toBeTruthy();
-			expect(`value:${val}`).toBe(newGraph.vertexValue(key));
+			expect(`${key}:${val}`).toBe(newGraph.vertexValue(key));
 		}
 		for (let [from, to, val] of newGraph.edges()) {
 			expect(graph.hasEdge(from, to)).toBeTruthy();
@@ -2889,11 +2889,6 @@ describe("Graph.VertexExistsError", () => {
 			['x', 1],
 			['y', 2]
 		);
-
-		for (let v of err.vertices) {
-			console.log(v);
-		}
-
 		expect(err.vertices).toEqual(new Set([
 			['x', 1],
 			['y', 2]

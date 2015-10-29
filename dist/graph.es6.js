@@ -1069,7 +1069,7 @@ export default class Graph {
 		if (!mV) { mV = (v1,v2)=>(typeof v2 === 'undefined' ? v1 : v2) }
 		if (!mE) { mE = mV }
 		for (let [key] of other.vertices()) {
-			this.addVertex(key, mV(this.vertexValue(key), other.vertexValue(key)));
+			this.addVertex(key, mV(this.vertexValue(key), other.vertexValue(key), key));
 		}
 		for (let [from, to] of other.edges()) {
 			this.addEdge(from, to, mE(this.edgeValue(from, to), other.edgeValue(from, to), from, to));
@@ -1092,7 +1092,7 @@ export default class Graph {
 	 */
 	clone(trV=(v=>v), trE=trV) {
 		let result = new Graph();
-		result.mergeIn(this, (v1, v2) => trV(v2), (v1, v2) => trE(v2));
+		result.mergeIn(this, (v1, v2, key) => trV(v2, key), (v1, v2, from, to) => trE(v2, from, to));
 		return result;
 	}
 
