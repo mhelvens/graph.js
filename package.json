@@ -1,6 +1,6 @@
 {
   "name": "graph.js",
-  "version": "1.20.8",
+  "version": "1.20.9",
   "title": "Javascript Graph Datastructure",
   "homepage": "https://github.com/mhelvens/graph.js",
   "description": "a javascript library for storing arbitrary data in mathematical (di)graphs, as well as traversing and analyzing them in various ways (ECMAScript 6 Ready)",
