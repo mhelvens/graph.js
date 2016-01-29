@@ -1815,6 +1815,17 @@ describeMethod('hasPath', () => {
 		expectItWhenCalledWith('n1', 'n5').toBe(true);
 	});
 
+	it("returns true if the path exists (8: path containing two self-cycles)", () => {
+		graph = new Graph(
+			[['A', 'B']],
+			[['B', 'A']],
+			[['B', 'C']],
+			[['C', 'B']]
+		);
+
+		expectItWhenCalledWith('A', 'C').toBe(true);
+	});
+
 });
 
 
