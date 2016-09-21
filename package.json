@@ -21,11 +21,9 @@
     "url": "https://github.com/mhelvens/graph.js/issues"
   },
   "license": "MIT",
-  "dependencies": {
-    "babel-core": "~5"
-  },
   "devDependencies": {
     "babel": "~5",
+    "babel-core": "~5",
     "babel-loader": "~5",
     "bower": "~1",
     "isparta": "~2",
