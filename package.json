@@ -41,6 +41,7 @@
     "karma-phantomjs-launcher": "~0.1",
     "karma-sourcemap-loader": "~0.3",
     "karma-webpack": "~1",
+    "mversion": "^1.10.1",
     "phantomjs-polyfill": "*",
     "uglifyjs": "~2",
     "wallaby-webpack": "~0",
