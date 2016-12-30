@@ -1,10 +1,9 @@
-import {any, createSpy, cycleArrays, set, map} from './helpers.es6.js';
-import {describeGraphClass}                    from './graph-helpers.es6.js';
-import Graph                                   from '../src/graph.es6.js'
+import {any, createSpy, cycleArrays, set} from './helpers.es6.js';
+import {describeGraphClass}               from './graph-helpers.es6.js';
 
 export default function specs(GraphClass, additionalTests=(()=>{})) {
 	describeGraphClass(GraphClass, () => {
-
+		
 
 		describe("constructor", () => {
 
@@ -58,13 +57,15 @@ export default function specs(GraphClass, additionalTests=(()=>{})) {
 
 			it("has no vertices", () => {
 				expect(graph.vertexCount()).toBe(0);
+				//noinspection JSUnusedLocalSymbols
 				for (let vertex of graph.vertices()) { expect().not.toBeReachable() }
 				expect().toBeReachable();
 			});
 
 			it("has no edges", () => {
 				expect(graph.edgeCount()).toBe(0);
-				for (let vertex of graph.edges()) { expect().not.toBeReachable() }
+				//noinspection JSUnusedLocalSymbols
+				for (let edge of graph.edges()) { expect().not.toBeReachable() }
 				expect().toBeReachable();
 			});
 
@@ -2147,8 +2148,8 @@ export default function specs(GraphClass, additionalTests=(()=>{})) {
 
 			it("iterates over each vertex in the graph (ES5 style)", () => {
 				let verticesFound = {};
-				for (var it = callItWith(), kv; !(kv = it.next()).done;) {
-					var key   = kv.value[0],
+				for (let it = callItWith(), kv; !(kv = it.next()).done;) {
+					let key   = kv.value[0],
 						value = kv.value[1];
 					expect(verticesFound[key]).toBeUndefined();
 					verticesFound[key] = value;
@@ -2172,8 +2173,8 @@ export default function specs(GraphClass, additionalTests=(()=>{})) {
 
 			it("iterates over each edge in the graph (ES5 style)", () => {
 				let edgesFound = {};
-				for (var it = callItWith(), kv; !(kv = it.next()).done;) {
-					var from  = kv.value[0][0],
+				for (let it = callItWith(), kv; !(kv = it.next()).done;) {
+					let from  = kv.value[0][0],
 						to    = kv.value[0][1],
 						value = kv.value[1];
 					let key = from + "," + to;
@@ -2206,8 +2207,8 @@ export default function specs(GraphClass, additionalTests=(()=>{})) {
 
 			it("iterates over each outgoing edge, providing the connected vertex (ES5 style)", () => {
 				let valuesFound = {};
-				for (var it = callItWith('k2'), kv; !(kv = it.next()).done;) {
-					var key   = kv.value[0],
+				for (let it = callItWith('k2'), kv; !(kv = it.next()).done;) {
+					let key   = kv.value[0],
 						value = kv.value[1];
 					expect(valuesFound[key]).toBeUndefined();
 					valuesFound[key] = value;
@@ -2241,8 +2242,8 @@ export default function specs(GraphClass, additionalTests=(()=>{})) {
 
 			it("iterates over each incoming edge, providing the connected vertex (ES5 style)", () => {
 				let valuesFound = {};
-				for (var it = callItWith('k3'), kv; !(kv = it.next()).done;) {
-					var key       = kv.value[0],
+				for (let it = callItWith('k3'), kv; !(kv = it.next()).done;) {
+					let key       = kv.value[0],
 						value     = kv.value[1];
 					expect(valuesFound[key]).toBeUndefined();
 					valuesFound[key] = value;
@@ -2276,8 +2277,8 @@ export default function specs(GraphClass, additionalTests=(()=>{})) {
 
 			it("iterates over each outgoing edge, providing the connected vertex key/value and edge value (ES5 style)", () => {
 				let valuesFound = {};
-				for (var it = callItWith('k2'), kv; !(kv = it.next()).done;) {
-					var from  = kv.value[0][0],
+				for (let it = callItWith('k2'), kv; !(kv = it.next()).done;) {
+					let from  = kv.value[0][0],
 						to    = kv.value[0][1],
 						value = kv.value[1];
 					expect(valuesFound[`${from},${to}`]).toBeUndefined();
@@ -2312,8 +2313,8 @@ export default function specs(GraphClass, additionalTests=(()=>{})) {
 
 			it("iterates over each incoming edge, providing the connected vertex key/value and edge value (ES5 style)", () => {
 				let valuesFound = {};
-				for (var it = callItWith('k3'), kv; !(kv = it.next()).done;) {
-					var from  = kv.value[0][0],
+				for (let it = callItWith('k3'), kv; !(kv = it.next()).done;) {
+					let from  = kv.value[0][0],
 						to    = kv.value[0][1],
 						value = kv.value[1];
 					expect(valuesFound[`${from},${to}`]).toBeUndefined();
@@ -2349,8 +2350,8 @@ export default function specs(GraphClass, additionalTests=(()=>{})) {
 
 			it("iterates once over each vertex that is reachable from the given vertex, in no particular order (ES5 style)", () => {
 				let valuesFound = {};
-				for (var it = callItWith('k2'), kv; !(kv = it.next()).done;) {
-					var key   = kv.value[0],
+				for (let it = callItWith('k2'), kv; !(kv = it.next()).done;) {
+					let key   = kv.value[0],
 						value = kv.value[1];
 					expect(valuesFound[key]).toBeUndefined();
 					valuesFound[key] = value;
@@ -2386,8 +2387,8 @@ export default function specs(GraphClass, additionalTests=(()=>{})) {
 
 			it("iterates once over each vertex that has a path to reach the given vertex, in no particular order (ES5 style)", () => {
 				let valuesFound = {};
-				for (var it = callItWith('k4'), kv; !(kv = it.next()).done;) {
-					var key   = kv.value[0],
+				for (let it = callItWith('k4'), kv; !(kv = it.next()).done;) {
+					let key   = kv.value[0],
 						value = kv.value[1];
 					expect(valuesFound[key]).toBeUndefined();
 					valuesFound[key] = value;
@@ -2421,8 +2422,8 @@ export default function specs(GraphClass, additionalTests=(()=>{})) {
 
 			it("visits all vertices with no incoming edges exactly once (ES5 style)", () => {
 				let valuesFound = {};
-				for (var it = callItWith(), kv; !(kv = it.next()).done;) {
-					var key   = kv.value[0],
+				for (let it = callItWith(), kv; !(kv = it.next()).done;) {
+					let key   = kv.value[0],
 						value = kv.value[1];
 					expect(valuesFound[key]).toBeUndefined();
 					valuesFound[key] = value;
@@ -2472,8 +2473,8 @@ export default function specs(GraphClass, additionalTests=(()=>{})) {
 
 			it("visits all vertices with no outgoing edges exactly once (ES5 style)", () => {
 				let valuesFound = {};
-				for (var it = callItWith(), kv; !(kv = it.next()).done;) {
-					var key   = kv.value[0],
+				for (let it = callItWith(), kv; !(kv = it.next()).done;) {
+					let key   = kv.value[0],
 						value = kv.value[1];
 					expect(valuesFound[key]).toBeUndefined();
 					valuesFound[key] = value;

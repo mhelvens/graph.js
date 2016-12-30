@@ -1,6 +1,6 @@
 /* export utility stuff */
-export var any       = jasmine.any;
-export var createSpy = jasmine.createSpy;
+export const any       = jasmine.any;
+export const createSpy = jasmine.createSpy;
 
 export function cycleArrays(...vertices) {
 	let result = [];

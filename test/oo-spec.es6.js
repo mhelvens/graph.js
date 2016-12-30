@@ -147,6 +147,7 @@ specs(GraphOO, () => {
 			});
 		});
 
+		
 		describeMethod('destroy', () => {
 			it("removes this vertex and all edges connected to it", () => {
 				callItWith();
@@ -157,6 +158,7 @@ specs(GraphOO, () => {
 			});
 		});
 
+		
 		describeMethod('verticesFrom', () => {
 			beforeEach(() => { vertex = k2 });
 			it("iterates over each outgoing edge, providing the connected vertex", () => {
@@ -172,8 +174,8 @@ specs(GraphOO, () => {
 			});
 			it("iterates over each outgoing edge, providing the connected vertex (ES5 style)", () => {
 				let valuesFound = {};
-				for (var it = callItWith(), kv; !(kv = it.next()).done;) {
-					var key   = kv.value[0],
+				for (let it = callItWith(), kv; !(kv = it.next()).done;) {
+					let key   = kv.value[0],
 						value = kv.value[1];
 					expect(valuesFound[key]).toBeUndefined();
 					valuesFound[key] = value;
@@ -184,7 +186,8 @@ specs(GraphOO, () => {
 				});
 			});
 		});
-
+		
+		
 		describeMethod('verticesTo', () => {
 			it("iterates over each incoming edge, providing the connected vertex", () => {
 				let valuesFound = {};
@@ -200,8 +203,8 @@ specs(GraphOO, () => {
 
 			it("iterates over each incoming edge, providing the connected vertex (ES5 style)", () => {
 				let valuesFound = {};
-				for (var it = callItWith(), kv; !(kv = it.next()).done;) {
-					var key       = kv.value[0],
+				for (let it = callItWith(), kv; !(kv = it.next()).done;) {
+					let key       = kv.value[0],
 						value     = kv.value[1];
 					expect(valuesFound[key]).toBeUndefined();
 					valuesFound[key] = value;
@@ -213,6 +216,7 @@ specs(GraphOO, () => {
 			});
 		});
 
+		
 		describeMethod('edgesFrom', () => {
 			beforeEach(() => { vertex = k2 });
 			it("iterates over each outgoing edge, providing the connected vertex key/value and edge value", () => {
@@ -228,8 +232,8 @@ specs(GraphOO, () => {
 			});
 			it("iterates over each outgoing edge, providing the connected vertex key/value and edge value (ES5 style)", () => {
 				let valuesFound = {};
-				for (var it = callItWith(), kv; !(kv = it.next()).done;) {
-					var from  = kv.value[0][0],
+				for (let it = callItWith(), kv; !(kv = it.next()).done;) {
+					let from  = kv.value[0][0],
 						to    = kv.value[0][1],
 						value = kv.value[1];
 					expect(valuesFound[`${from},${to}`]).toBeUndefined();
@@ -241,6 +245,7 @@ specs(GraphOO, () => {
 				});
 			});
 		});
+		
 
 		describeMethod('edgesTo', () => {
 			it("iterates over each incoming edge, providing the connected vertex key/value and edge value", () => {
@@ -256,8 +261,8 @@ specs(GraphOO, () => {
 			});
 			it("iterates over each incoming edge, providing the connected vertex key/value and edge value (ES5 style)", () => {
 				let valuesFound = {};
-				for (var it = callItWith(), kv; !(kv = it.next()).done;) {
-					var from  = kv.value[0][0],
+				for (let it = callItWith(), kv; !(kv = it.next()).done;) {
+					let from  = kv.value[0][0],
 						to    = kv.value[0][1],
 						value = kv.value[1];
 					expect(valuesFound[`${from},${to}`]).toBeUndefined();
@@ -270,6 +275,7 @@ specs(GraphOO, () => {
 			});
 		});
 
+		
 		describeMethod('verticesWithPathFrom', () => {
 			beforeEach(() => { vertex = k2 });
 			it("iterates once over each vertex that is reachable from this vertex, in no particular order", () => {
@@ -286,8 +292,8 @@ specs(GraphOO, () => {
 			});
 			it("iterates once over each vertex that is reachable from this vertex, in no particular order (ES5 style)", () => {
 				let valuesFound = {};
-				for (var it = callItWith(), kv; !(kv = it.next()).done;) {
-					var key   = kv.value[0],
+				for (let it = callItWith(), kv; !(kv = it.next()).done;) {
+					let key   = kv.value[0],
 						value = kv.value[1];
 					expect(valuesFound[key]).toBeUndefined();
 					valuesFound[key] = value;
@@ -299,6 +305,7 @@ specs(GraphOO, () => {
 				});
 			});
 		});
+		
 
 		describeMethod('verticesWithPathTo', () => {
 			beforeEach(() => { vertex = k4 });
@@ -316,8 +323,8 @@ specs(GraphOO, () => {
 			});
 			it("iterates once over each vertex that has a path to reach this vertex, in no particular order (ES5 style)", () => {
 				let valuesFound = {};
-				for (var it = callItWith(), kv; !(kv = it.next()).done;) {
-					var key   = kv.value[0],
+				for (let it = callItWith(), kv; !(kv = it.next()).done;) {
+					let key   = kv.value[0],
 						value = kv.value[1];
 					expect(valuesFound[key]).toBeUndefined();
 					valuesFound[key] = value;
@@ -330,6 +337,7 @@ specs(GraphOO, () => {
 			});
 		});
 
+		
 		describeMethod('pathTo', () => {
 			it("returns null if the path doesn't exist (simple)", () => {
 				expectItWhenCalledWith('k1').toBeNull();
@@ -386,6 +394,7 @@ specs(GraphOO, () => {
 			});
 		});
 
+		
 		describeMethod('pathFrom', () => {
 			it("returns null if the path doesn't exist (simple)", () => {
 				expectItWhenCalledWith('k1').toBeNull();
@@ -440,6 +449,7 @@ specs(GraphOO, () => {
 			});
 		});
 
+		
 		describeMethod('hasPathTo', () => {
 			it("returns null if the path doesn't exist (simple)", () => {
 				expectItWhenCalledWith('k1').toBeFalsy();
@@ -495,6 +505,7 @@ specs(GraphOO, () => {
 				expectItWhenCalledWith('n5').toBeTruthy();
 			});
 		});
+		
 
 		describeMethod('hasPathFrom', () => {
 			it("returns null if the path doesn't exist (simple)", () => {
@@ -550,6 +561,7 @@ specs(GraphOO, () => {
 			});
 		});
 
+		
 		describeMethod('pathsTo', () => {
 			it("returns null if the path doesn't exist (simple)", () => {
 				expect(set( ...callItWith('k1'))).toEqual(set( ));
@@ -606,6 +618,7 @@ specs(GraphOO, () => {
 			});
 		});
 
+		
 		describeMethod('pathsFrom', () => {
 			it("returns null if the path doesn't exist (simple)", () => {
 				expect(set( ...callItWith('k1'))).toEqual(set( ));
@@ -659,6 +672,7 @@ specs(GraphOO, () => {
 				expect(set( ...callItWith('n1'))).toEqual(set( ['n1', 'n2', 'n3', 'n4', 'n5'] ));
 			});
 		});
+		
 
 		describeMethod('outDegree', () => {
 			it("returns the number of edges going out of this vertex", () => {
@@ -674,6 +688,7 @@ specs(GraphOO, () => {
 				expect(callItWith()).toBe(1);
 			});
 		});
+		
 
 		describeMethod('inDegree', () => {
 			it("returns the number of edges coming into this vertex", () => {
@@ -690,6 +705,7 @@ specs(GraphOO, () => {
 			});
 		});
 
+		
 		describeMethod('degree', () => {
 			it("returns the number of edges connected to this vertex", () => {
 				vertex = k1;
@@ -704,7 +720,7 @@ specs(GraphOO, () => {
 				expect(callItWith()).toBe(2);
 			});
 		});
-
+		
 	});
 
 
@@ -972,6 +988,6 @@ specs(GraphOO, () => {
 			}
 		});
 	});
-
-
+	
+	
 });
