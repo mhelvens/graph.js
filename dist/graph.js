@@ -55,12 +55,12 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ 0:
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(49);
+	module.exports = __webpack_require__(39);
 
 
 /***/ },
 
-/***/ 49:
+/***/ 39:
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2983,12 +2983,110 @@ return /******/ (function(modules) { // webpackBootstrap
 				}
 			}
 	
+			///////////////////////////////////
+			////////// Serialization //////////
+			///////////////////////////////////
+	
+			/**
+	   * Serialize this graph into a JSON string.
+	   * The resulting string can be deserialized with `Graph.fromJSON`
+	   * @returns {string} a JSON string representation of the current state of this graph
+	   * @see {@link Graph.fromJSON}
+	   * @example
+	   * let json   = graph1.toJSON();
+	   * let graph2 = Graph.fromJSON(json);
+	   * console.log(graph1.equals(graph2)); // true
+	   */
+		}, {
+			key: "toJSON",
+			value: function toJSON() {
+				var result = [];
+				var _iteratorNormalCompletion37 = true;
+				var _didIteratorError37 = false;
+				var _iteratorError37 = undefined;
+	
+				try {
+					for (var _iterator37 = this.vertices()[Symbol.iterator](), _step37; !(_iteratorNormalCompletion37 = (_step37 = _iterator37.next()).done); _iteratorNormalCompletion37 = true) {
+						var _step37$value = _slicedToArray(_step37.value, 2);
+	
+						var key = _step37$value[0];
+						var val = _step37$value[1];
+	
+						if (typeof val === 'undefined') {
+							result.push([key]);
+						} else {
+							result.push([key, val]);
+						}
+					}
+				} catch (err) {
+					_didIteratorError37 = true;
+					_iteratorError37 = err;
+				} finally {
+					try {
+						if (!_iteratorNormalCompletion37 && _iterator37["return"]) {
+							_iterator37["return"]();
+						}
+					} finally {
+						if (_didIteratorError37) {
+							throw _iteratorError37;
+						}
+					}
+				}
+	
+				var _iteratorNormalCompletion38 = true;
+				var _didIteratorError38 = false;
+				var _iteratorError38 = undefined;
+	
+				try {
+					for (var _iterator38 = this.edges()[Symbol.iterator](), _step38; !(_iteratorNormalCompletion38 = (_step38 = _iterator38.next()).done); _iteratorNormalCompletion38 = true) {
+						var _step38$value = _slicedToArray(_step38.value, 3);
+	
+						var from = _step38$value[0];
+						var to = _step38$value[1];
+						var val = _step38$value[2];
+	
+						if (typeof val === 'undefined') {
+							result.push([[from, to]]);
+						} else {
+							result.push([[from, to], val]);
+						}
+					}
+				} catch (err) {
+					_didIteratorError38 = true;
+					_iteratorError38 = err;
+				} finally {
+					try {
+						if (!_iteratorNormalCompletion38 && _iterator38["return"]) {
+							_iterator38["return"]();
+						}
+					} finally {
+						if (_didIteratorError38) {
+							throw _iteratorError38;
+						}
+					}
+				}
+	
+				return JSON.stringify(result);
+			}
+	
+			/**
+	   * Deserialize a string returned from `.toJSON()`
+	   * into a new `Graph` instance equal to the original.
+	   * @param json {string} a string originally returned from `.toJSON()`
+	   * @returns {Graph} a graph equal to the original
+	   * @see {@link Graph#toJSON}
+	   * @example
+	   * let json   = graph1.toJSON();
+	   * let graph2 = Graph.fromJSON(json);
+	   * console.log(graph1.equals(graph2)); // true
+	   */
+		}, {
+			key: _expectVertices,
+	
 			////////////////////////////////
 			////////// Assertions //////////
 			////////////////////////////////
 	
-		}, {
-			key: _expectVertices,
 			value: function value() {
 				var _this3 = this;
 	
@@ -3059,54 +3157,54 @@ return /******/ (function(modules) { // webpackBootstrap
 			key: _expectNoConnectedEdges,
 			value: function value(key) {
 				var edges = [];
-				var _iteratorNormalCompletion37 = true;
-				var _didIteratorError37 = false;
-				var _iteratorError37 = undefined;
+				var _iteratorNormalCompletion39 = true;
+				var _didIteratorError39 = false;
+				var _iteratorError39 = undefined;
 	
 				try {
-					for (var _iterator37 = this.verticesFrom(key)[Symbol.iterator](), _step37; !(_iteratorNormalCompletion37 = (_step37 = _iterator37.next()).done); _iteratorNormalCompletion37 = true) {
-						var _step37$value = _slicedToArray(_step37.value, 1);
+					for (var _iterator39 = this.verticesFrom(key)[Symbol.iterator](), _step39; !(_iteratorNormalCompletion39 = (_step39 = _iterator39.next()).done); _iteratorNormalCompletion39 = true) {
+						var _step39$value = _slicedToArray(_step39.value, 1);
 	
-						var to = _step37$value[0];
+						var to = _step39$value[0];
 						edges.push([[key, to], this.edgeValue(key, to)]);
 					}
 				} catch (err) {
-					_didIteratorError37 = true;
-					_iteratorError37 = err;
+					_didIteratorError39 = true;
+					_iteratorError39 = err;
 				} finally {
 					try {
-						if (!_iteratorNormalCompletion37 && _iterator37["return"]) {
-							_iterator37["return"]();
+						if (!_iteratorNormalCompletion39 && _iterator39["return"]) {
+							_iterator39["return"]();
 						}
 					} finally {
-						if (_didIteratorError37) {
-							throw _iteratorError37;
+						if (_didIteratorError39) {
+							throw _iteratorError39;
 						}
 					}
 				}
 	
-				var _iteratorNormalCompletion38 = true;
-				var _didIteratorError38 = false;
-				var _iteratorError38 = undefined;
+				var _iteratorNormalCompletion40 = true;
+				var _didIteratorError40 = false;
+				var _iteratorError40 = undefined;
 	
 				try {
-					for (var _iterator38 = this.verticesTo(key)[Symbol.iterator](), _step38; !(_iteratorNormalCompletion38 = (_step38 = _iterator38.next()).done); _iteratorNormalCompletion38 = true) {
-						var _step38$value = _slicedToArray(_step38.value, 1);
+					for (var _iterator40 = this.verticesTo(key)[Symbol.iterator](), _step40; !(_iteratorNormalCompletion40 = (_step40 = _iterator40.next()).done); _iteratorNormalCompletion40 = true) {
+						var _step40$value = _slicedToArray(_step40.value, 1);
 	
-						var from = _step38$value[0];
+						var from = _step40$value[0];
 						edges.push([[from, key], this.edgeValue(from, key)]);
 					}
 				} catch (err) {
-					_didIteratorError38 = true;
-					_iteratorError38 = err;
+					_didIteratorError40 = true;
+					_iteratorError40 = err;
 				} finally {
 					try {
-						if (!_iteratorNormalCompletion38 && _iterator38["return"]) {
-							_iterator38["return"]();
+						if (!_iteratorNormalCompletion40 && _iterator40["return"]) {
+							_iterator40["return"]();
 						}
 					} finally {
-						if (_didIteratorError38) {
-							throw _iteratorError38;
+						if (_didIteratorError40) {
+							throw _iteratorError40;
 						}
 					}
 				}
@@ -3114,6 +3212,11 @@ return /******/ (function(modules) { // webpackBootstrap
 				if (edges.length) {
 					throw new (_bind.apply(Graph.HasConnectedEdgesError, [null].concat([key], edges)))();
 				}
+			}
+		}], [{
+			key: "fromJSON",
+			value: function fromJSON(json) {
+				return new (_bind.apply(this, [null].concat(_toConsumableArray(JSON.parse(json)))))();
 			}
 		}]);
 	

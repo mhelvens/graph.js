@@ -1221,6 +1221,55 @@ export default class Graph {
 	}
 
 
+	///////////////////////////////////
+	////////// Serialization //////////
+	///////////////////////////////////
+
+	/**
+	 * Serialize this graph into a JSON string.
+	 * The resulting string can be deserialized with `Graph.fromJSON`
+	 * @returns {string} a JSON string representation of the current state of this graph
+	 * @see {@link Graph.fromJSON}
+	 * @example
+	 * let json   = graph1.toJSON();
+	 * let graph2 = Graph.fromJSON(json);
+	 * console.log(graph1.equals(graph2)); // true
+	 */
+	toJSON() {
+		let result = [];
+		for (let [key, val] of this.vertices()) {
+			if (typeof val === 'undefined') {
+				result.push([key]);
+			} else {
+				result.push([key, val]);
+			}
+		}
+		for (let [from, to, val] of this.edges()) {
+			if (typeof val === 'undefined') {
+				result.push([[from, to]]);
+			} else {
+				result.push([[from, to], val]);
+			}
+		}
+		return JSON.stringify(result);
+	}
+	
+	/**
+	 * Deserialize a string returned from `.toJSON()`
+	 * into a new `Graph` instance equal to the original.
+	 * @param json {string} a string originally returned from `.toJSON()`
+	 * @returns {Graph} a graph equal to the original
+	 * @see {@link Graph#toJSON}
+	 * @example
+	 * let json   = graph1.toJSON();
+	 * let graph2 = Graph.fromJSON(json);
+	 * console.log(graph1.equals(graph2)); // true
+	 */
+	static fromJSON(json) {
+		return new this(...JSON.parse(json));
+	}
+	
+
 	////////////////////////////////
 	////////// Assertions //////////
 	////////////////////////////////

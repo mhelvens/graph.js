@@ -3010,3 +3010,31 @@ describe("Graph.BranchlessCycleError", () => {
 	});
 
 });
+
+
+
+// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
+
+
+describeMethod('toJSON', () => {
+
+	it_throwsNothing();
+
+	it("generates a valid JSON string", () => {
+		let json = callItWith();
+		expect(() => JSON.parse(json)).not.toThrow();
+	});
+
+	it("output can be deserialized into a graph equal to the original", () => {
+		let json = callItWith();
+		let newGraph = new Graph(...JSON.parse(json));
+		expect(newGraph).toEqual(graph);
+	});
+
+	it("output can be deserialized into a graph equal to the original", () => {
+		let json = callItWith();
+		let newGraph = Graph.fromJSON(json);
+		expect(newGraph).toEqual(graph);
+	});
+
+});
