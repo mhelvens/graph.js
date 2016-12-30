@@ -1,6 +1,6 @@
 {
   "name": "graph.js",
-  "version": "1.21.0",
+  "version": "1.21.1",
   "description": "a javascript library for storing arbitrary data in mathematical (di)graphs, as well as traversing and analyzing them in various ways (ECMAScript 6 Ready)",
   "authors": [
     "Michiel Helvensteijn <mhelvens@gmail.com> (http://mhelvens.net)"
