@@ -4,6 +4,7 @@ graph.js
 [![Coverage Status](http://img.shields.io/coveralls/mhelvens/graph.js.svg)](https://coveralls.io/r/mhelvens/graph.js?branch=master)
 [![npm](https://img.shields.io/npm/v/graph.js.svg)](https://www.npmjs.com/package/graph.js)
 [![Bower](https://img.shields.io/bower/v/graph.js.svg)](http://bower.io/search/?q=graph.js)
+[![Known Vulnerabilities](https://snyk.io/test/github/mhelvens/graph.js/badge.svg)](https://snyk.io/test/github/mhelvens/graph.js)
 
 *formerly known as js-graph*
 
