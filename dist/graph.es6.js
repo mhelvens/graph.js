@@ -50,7 +50,7 @@ const _expectNoConnectedEdges = Symbol("expect no connected edges");
  *     [['Amsterdam', 'Leiden'], { distance:   "40km" }]  // edge
  * );
  */
-export default class Graph {
+class Graph {
 
 	constructor(...parts) {
 		/* storage */
@@ -1253,7 +1253,7 @@ export default class Graph {
 		}
 		return JSON.stringify(result);
 	}
-	
+
 	/**
 	 * Deserialize a string returned from `.toJSON()`
 	 * into a new `Graph` instance equal to the original.
@@ -1268,12 +1268,12 @@ export default class Graph {
 	static fromJSON(json) {
 		return new this(...JSON.parse(json));
 	}
-	
+
 
 	////////////////////////////////
 	////////// Assertions //////////
 	////////////////////////////////
-	
+
 	[_expectVertices](...keys) {
 		let missingVertices = keys.filter(k => !this.hasVertex(k));
 		if (missingVertices.length) { throw new Graph.VertexNotExistsError(...missingVertices) }
@@ -1471,3 +1471,5 @@ Graph.BranchlessCycleError = class BranchlessCycleError extends Graph.CycleError
 		this.message = `This graph contains a branch-less cycle: ${cycle}`;
 	}
 };
+
+module.exports = Graph;
