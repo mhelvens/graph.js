@@ -1,5 +1,5 @@
 // Type definitions for GRAPH.JS 
-// Definitions by: TreeAtOr <[~A URL FOR YOU~]>
+// Definitions by: TreeAtOr
 
 declare module graph {
     type GraphEventType = "vertex-added" | "vertex-removed" | "vertex-modified" | "edge-added" | "adge-removed" | "edge-modified"
