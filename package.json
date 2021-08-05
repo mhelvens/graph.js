@@ -5,6 +5,7 @@
   "homepage": "https://github.com/mhelvens/graph.js",
   "description": "a javascript library for storing arbitrary data in mathematical (di)graphs, as well as traversing and analyzing them in various ways (ECMAScript 6 Ready)",
   "main": "dist/graph.es6.js",
+  "typings": "dist/graph.es6.d.ts",
   "author": "Michiel Helvensteijn <mhelvens@gmail.com> (http://mhelvens.net)",
   "repository": {
     "type": "git",
