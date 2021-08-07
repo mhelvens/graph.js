@@ -7,7 +7,7 @@ declare module graph {
      * @class Graph
      * @classdesc The main class of this library, to be used for representing a mathematical (di)graph.
      *
-     * @description Constructor arguments can be used to supply initial vertices and edges.
+     * @description Constructor arguments can be used to supply initial vertices and edges. 
      * @param ...parts
      *        a short notation for vertices and edges to initially add to the graph;
      *        A vertex should be an array of the form `[key, value]`.
@@ -16,7 +16,7 @@ declare module graph {
      *        values, but vertices need not precede their edges. Vertices that are
      *        connected but store no value need not be listed at all.
      * @example
-     * var map = new Graph(
+     * var map = new Graph<CityData,RoadData,string>(
      *     ['Amsterdam',             { population: 825000 }], // vertex
      *     ['Leiden',                { population: 122000 }], // vertex
      *     [['Amsterdam', 'Leiden'], { distance:   "40km" }]  // edge
@@ -572,7 +572,7 @@ declare module graph {
          * console.log(graph1.equals(graph2)); // true
          */
         static fromJSON(json:string):Graph;
-    }
+    }   
 }
 
 export = graph.Graph;
